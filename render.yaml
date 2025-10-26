@@ -1,0 +1,13 @@
+services:
+    - type: web
+      name: kas-kelas
+      env: node
+      buildCommand: cd server && npm install && npm run build
+      startCommand: cd server && npm start
+      envVars:
+          - key: NODE_ENV
+            value: production
+          - key: MONGODB_URI
+            sync: false
+          - key: PORT
+            value: 10000
