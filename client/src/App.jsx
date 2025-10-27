@@ -27,6 +27,8 @@ import {
 import EventManagement from './components/EventManagement';
 import CustomPayment from './components/CustomPayment';
 import NotificationManager from './components/NotificationManager';
+import DashboardAnalytics from './components/Analytics/DashboardAnalytics';
+import { BarChart3 } from 'lucide-react';
 
 const App = () => {
     const [students, setStudents] = useState([]);
@@ -655,6 +657,7 @@ const App = () => {
                     <div className="flex border-b overflow-x-auto">
                         {[
                             'dashboard',
+                            'analytics',
                             'siswa',
                             'pembayaran',
                             'pengeluaran',
@@ -934,6 +937,9 @@ const App = () => {
                         </div>
                     </div>
                 )}
+
+                {/* Analytics Tab */}
+                {activeTab === 'analytics' && <DashboardAnalytics />}
 
                 {/* Siswa Tab */}
                 {activeTab === 'siswa' && (

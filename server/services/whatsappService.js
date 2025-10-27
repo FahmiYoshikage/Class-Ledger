@@ -757,8 +757,8 @@ class WhatsAppService {
         if (category === 'friendly') {
             message = `🎉 *REMINDER EVENT* 🎉\n\n`;
             message += `Halo semuanya! 👋\n\n`;
-            message += `Reminder untuk event kita:\n`;
-            message += `✨ *${event.name}*\n\n`;
+            message += `Reminder untuk event:\n`;
+            message += `✨ *${event.name}* Sebaiknya segera bayar kalau tidak mau di bacotion panitia nya\n\n`;
         } else if (category === 'urgent') {
             message = `⚡ *URGENT - EVENT REMINDER* ⚡\n\n`;
             message += `Event *${event.name}* sudah dekat!\n\n`;
@@ -793,8 +793,8 @@ class WhatsAppService {
         // Closing
         if (category === 'friendly') {
             message += `Yuk segera bayar ya! 🥰\n`;
-            message += `Biar eventnya sukses! 🎊\n\n`;
-            message += `_Auto-reminder dari sistem kas kelas_`;
+            message += `Pilih bayar atau di hujat irpan 🎊\n\n`;
+            message += `Auto-reminder dari sistem kas kelas`;
         } else if (category === 'urgent') {
             message += `Buruan bayar sebelum terlambat! ⚡\n`;
             message += `Deadline sudah dekat! 🏃‍♂️\n\n`;
