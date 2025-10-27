@@ -9,6 +9,59 @@ const api = axios.create({
     },
 });
 
+// Add token to requests automatically
+api.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+
+// Handle 401 errors (token expired)
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response?.status === 401) {
+            const currentPath = window.location.pathname;
+            if (currentPath !== '/login' && currentPath !== '/') {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.href = '/login';
+            }
+        }
+        return Promise.reject(error);
+    }
+);
+
+// Auth API
+export const authAPI = {
+    login: (credentials) => api.post('/auth/login', credentials),
+    register: (userData) => api.post('/auth/register', userData),
+    getMe: () => api.get('/auth/me'),
+    changePassword: (passwords) => api.post('/auth/change-password', passwords),
+    getUsers: () => api.get('/auth/users'),
+    updateUser: (id, data) => api.patch(`/auth/users/${id}`, data),
+    deleteUser: (id) => api.delete(`/auth/users/${id}`),
+    logout: async () => {
+        try {
+            // Call backend to invalidate session
+            await api.post('/auth/logout');
+        } catch (error) {
+            console.error('Logout error:', error);
+        } finally {
+            // Always clear local storage
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+        }
+    },
+};
+
 // Students API
 export const studentsAPI = {
     getAll: () => api.get('/students'),

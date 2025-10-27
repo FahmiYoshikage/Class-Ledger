@@ -10,7 +10,11 @@ import expenseRoutes from './routes/expenses.js';
 import settingRoutes from './routes/settings.js';
 import eventRoutes from './routes/events.js';
 import notificationRoutes from './routes/notifications.js';
+import authRoutes from './routes/auth.js';
+import auditLogRoutes from './routes/auditLogs.js';
+import sessionRoutes from './routes/sessions.js';
 import notificationScheduler from './services/notificationScheduler.js';
+import { apiLimiter } from './middleware/rateLimiter.js';
 
 dotenv.config();
 
@@ -28,7 +32,13 @@ app.use(express.urlencoded({ extended: true }));
 // Connect to MongoDB
 connectDB();
 
+// Apply rate limiting to all API routes
+app.use('/api/', apiLimiter);
+
 // API Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/audit-logs', auditLogRoutes);
+app.use('/api/sessions', sessionRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/expenses', expenseRoutes);

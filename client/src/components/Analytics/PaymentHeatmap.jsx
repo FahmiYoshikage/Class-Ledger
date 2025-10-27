@@ -86,7 +86,7 @@ const PaymentHeatmap = ({ students, payments }) => {
     return (
         <div className="space-y-4">
             {/* Legend */}
-            <div className="flex items-center gap-6 p-4 bg-gray-50 rounded-lg">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 p-4 bg-gray-50 rounded-lg">
                 <div className="flex items-center gap-2">
                     <div className="w-6 h-6 bg-green-500 rounded flex items-center justify-center">
                         <CheckCircle className="w-4 h-4 text-white" />
@@ -99,20 +99,32 @@ const PaymentHeatmap = ({ students, payments }) => {
                     </div>
                     <span className="text-sm text-gray-700">Belum Bayar</span>
                 </div>
-                <div className="ml-auto text-sm text-gray-600">
+                <div className="sm:ml-auto text-sm text-gray-600">
                     Total: {heatmapData.data.length} siswa ×{' '}
                     {heatmapData.maxWeeks} minggu
+                </div>
+                <div className="text-xs text-gray-500 italic">
+                    💡 Scroll horizontal untuk melihat semua minggu
                 </div>
             </div>
 
             {/* Heatmap Table */}
-            <div className="overflow-x-auto">
-                <div className="inline-block min-w-full">
+            <div
+                className="overflow-x-auto shadow-sm"
+                style={{ WebkitOverflowScrolling: 'touch' }}
+            >
+                <div className="inline-block min-w-full align-middle">
                     <div className="overflow-hidden rounded-lg border border-gray-200">
-                        <table className="min-w-full divide-y divide-gray-200">
+                        <table className="min-w-full divide-y divide-gray-200 table-fixed">
                             <thead className="bg-gray-50">
                                 <tr>
-                                    <th className="sticky left-0 z-10 bg-gray-50 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                    <th
+                                        className="sticky left-0 z-20 bg-gray-50 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase min-w-[200px] border-r-2 border-gray-300 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]"
+                                        style={{
+                                            willChange: 'transform',
+                                            transform: 'translateZ(0)',
+                                        }}
+                                    >
                                         Siswa
                                     </th>
                                     {Array.from(
@@ -132,65 +144,81 @@ const PaymentHeatmap = ({ students, payments }) => {
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
-                                {heatmapData.data.map((row, rowIndex) => (
-                                    <tr
-                                        key={row.student._id}
-                                        className={
-                                            rowIndex % 2 === 0
-                                                ? 'bg-white'
-                                                : 'bg-gray-50'
-                                        }
-                                    >
-                                        <td className="sticky left-0 z-10 bg-inherit px-4 py-3 whitespace-nowrap">
-                                            <div className="flex items-center gap-2">
-                                                <span className="text-xs text-gray-500 w-6">
-                                                    {row.student.absen}
-                                                </span>
-                                                <span className="text-sm font-medium text-gray-900">
-                                                    {row.student.name}
-                                                </span>
-                                            </div>
-                                        </td>
-                                        {row.weeks.map((week, weekIndex) => (
+                                {heatmapData.data.map((row, rowIndex) => {
+                                    const bgColor =
+                                        rowIndex % 2 === 0
+                                            ? 'bg-white'
+                                            : 'bg-gray-50';
+                                    return (
+                                        <tr
+                                            key={row.student._id}
+                                            className={bgColor}
+                                        >
                                             <td
-                                                key={weekIndex}
-                                                className="px-2 py-3 text-center"
+                                                className={`sticky left-0 z-10 ${bgColor} px-4 py-3 whitespace-nowrap min-w-[200px] border-r-2 border-gray-200 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]`}
+                                                style={{
+                                                    willChange: 'transform',
+                                                    transform: 'translateZ(0)',
+                                                    backfaceVisibility:
+                                                        'hidden',
+                                                }}
                                             >
-                                                <div className="flex items-center justify-center">
-                                                    <div
-                                                        className={`w-6 h-6 rounded flex items-center justify-center ${getStatusColor(
-                                                            week.paid
-                                                        )}`}
-                                                        title={`Minggu ${
-                                                            week.week
-                                                        }: ${
-                                                            week.paid
-                                                                ? 'Sudah Bayar'
-                                                                : 'Belum Bayar'
-                                                        }`}
+                                                <div className="flex items-center gap-3">
+                                                    <span className="text-xs text-gray-500 font-semibold bg-gray-100 px-2 py-1 rounded min-w-[40px] text-center">
+                                                        {row.student.absen}
+                                                    </span>
+                                                    <span
+                                                        className="text-sm font-medium text-gray-900 truncate flex-1"
+                                                        title={row.student.name}
                                                     >
-                                                        {getStatusIcon(
-                                                            week.paid
-                                                        )}
-                                                    </div>
+                                                        {row.student.name}
+                                                    </span>
                                                 </div>
                                             </td>
-                                        ))}
-                                        <td className="px-4 py-3 text-center whitespace-nowrap">
-                                            <span
-                                                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getRateColor(
-                                                    row.paymentRate
-                                                )}`}
-                                            >
-                                                {row.paymentRate.toFixed(0)}%
-                                                <span className="ml-1 text-xs">
-                                                    ({row.paidCount}/
-                                                    {row.totalWeeks})
+                                            {row.weeks.map(
+                                                (week, weekIndex) => (
+                                                    <td
+                                                        key={weekIndex}
+                                                        className="px-2 py-3 text-center"
+                                                    >
+                                                        <div className="flex items-center justify-center">
+                                                            <div
+                                                                className={`w-6 h-6 rounded flex items-center justify-center ${getStatusColor(
+                                                                    week.paid
+                                                                )}`}
+                                                                title={`Minggu ${
+                                                                    week.week
+                                                                }: ${
+                                                                    week.paid
+                                                                        ? 'Sudah Bayar'
+                                                                        : 'Belum Bayar'
+                                                                }`}
+                                                            >
+                                                                {getStatusIcon(
+                                                                    week.paid
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                )
+                                            )}
+                                            <td className="px-4 py-3 text-center whitespace-nowrap">
+                                                <span
+                                                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getRateColor(
+                                                        row.paymentRate
+                                                    )}`}
+                                                >
+                                                    {row.paymentRate.toFixed(0)}
+                                                    %
+                                                    <span className="ml-1 text-xs">
+                                                        ({row.paidCount}/
+                                                        {row.totalWeeks})
+                                                    </span>
                                                 </span>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                ))}
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
                     </div>

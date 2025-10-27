@@ -35,7 +35,11 @@ const App = () => {
     const [payments, setPayments] = useState([]);
     const [expenses, setExpenses] = useState([]);
     const [startDate, setStartDate] = useState(new Date('2025-10-27'));
-    const [activeTab, setActiveTab] = useState('dashboard');
+    // Load activeTab from localStorage or default to 'dashboard'
+    const [activeTab, setActiveTab] = useState(() => {
+        const savedTab = localStorage.getItem('activeTab');
+        return savedTab || 'dashboard';
+    });
     const [showAddStudent, setShowAddStudent] = useState(false);
     const [showEditStudent, setShowEditStudent] = useState(false);
     const [editingStudent, setEditingStudent] = useState(null);
@@ -51,6 +55,11 @@ const App = () => {
     const [filterCategory, setFilterCategory] = useState('Semua');
     const [dateFrom, setDateFrom] = useState('');
     const [dateTo, setDateTo] = useState('');
+
+    // Save activeTab to localStorage whenever it changes
+    useEffect(() => {
+        localStorage.setItem('activeTab', activeTab);
+    }, [activeTab]);
 
     // Load data from backend
     useEffect(() => {
