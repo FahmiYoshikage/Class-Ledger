@@ -28,12 +28,16 @@ api.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response?.status === 401) {
-            const currentPath = window.location.pathname;
-            if (currentPath !== '/login' && currentPath !== '/') {
+            // Clear stored auth info but do NOT perform immediate navigation here.
+            // Let the AuthProvider handle redirect/login flow so refresh/load
+            // sequences aren't interrupted by an immediate window.location change.
+            try {
                 localStorage.removeItem('token');
                 localStorage.removeItem('user');
-                window.location.href = '/login';
+            } catch (e) {
+                // ignore
             }
+            // Note: we intentionally do not call window.location.href here.
         }
         return Promise.reject(error);
     }

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import {
     Wallet,
     Users,
@@ -483,6 +485,421 @@ const App = () => {
         );
     };
 
+    // ===== PDF EXPORT FUNCTIONS =====
+
+    // Export Students to PDF
+    const exportStudentsToPDF = () => {
+        const doc = new jsPDF();
+
+        // Header
+        doc.setFontSize(18);
+        doc.setFont(undefined, 'bold');
+        doc.text('LAPORAN DATA SISWA', 105, 15, { align: 'center' });
+
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'normal');
+        doc.text(
+            `Tanggal: ${new Date().toLocaleDateString('id-ID')}`,
+            105,
+            22,
+            { align: 'center' }
+        );
+        doc.text(`Kas Kelas - Minggu ke-${currentWeek}`, 105, 27, {
+            align: 'center',
+        });
+
+        // Table data
+        const tableData = students
+            .sort((a, b) => a.absen - b.absen)
+            .map((student) => [
+                student.absen,
+                student.name,
+                student.status,
+                `Rp ${getTotalPaid(student._id).toLocaleString('id-ID')}`,
+                `Rp ${getTunggakan(student._id).toLocaleString('id-ID')}`,
+            ]);
+
+        // Generate table
+        autoTable(doc, {
+            startY: 35,
+            head: [['Absen', 'Nama', 'Status', 'Total Bayar', 'Tunggakan']],
+            body: tableData,
+            theme: 'grid',
+            styles: { fontSize: 9, cellPadding: 3 },
+            headStyles: {
+                fillColor: [79, 70, 229],
+                textColor: 255,
+                fontStyle: 'bold',
+            },
+            alternateRowStyles: { fillColor: [245, 247, 250] },
+            columnStyles: {
+                0: { halign: 'center', cellWidth: 20 },
+                1: { cellWidth: 60 },
+                2: { halign: 'center', cellWidth: 30 },
+                3: { halign: 'right', cellWidth: 40 },
+                4: { halign: 'right', cellWidth: 40 },
+            },
+        });
+
+        // Footer
+        const finalY = doc.lastAutoTable.finalY + 10;
+        doc.setFontSize(9);
+        doc.setTextColor(100);
+        doc.text(`Total Siswa: ${students.length}`, 14, finalY);
+        doc.text(
+            `Dicetak: ${new Date().toLocaleString('id-ID')}`,
+            14,
+            finalY + 5
+        );
+
+        // Save
+        doc.save(`Data-Siswa-${new Date().toISOString().split('T')[0]}.pdf`);
+    };
+
+    // Export Payments to PDF
+    const exportPaymentsToPDF = () => {
+        const doc = new jsPDF();
+
+        // Header
+        doc.setFontSize(18);
+        doc.setFont(undefined, 'bold');
+        doc.text('LAPORAN PEMBAYARAN', 105, 15, { align: 'center' });
+
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'normal');
+        doc.text(
+            `Tanggal: ${new Date().toLocaleDateString('id-ID')}`,
+            105,
+            22,
+            { align: 'center' }
+        );
+        doc.text(`Total Pembayaran: ${payments.length} transaksi`, 105, 27, {
+            align: 'center',
+        });
+
+        // Table data
+        const tableData = payments.map((payment) => [
+            new Date(payment.date).toLocaleDateString('id-ID'),
+            payment.studentId?.name || '-',
+            `Rp ${payment.amount.toLocaleString('id-ID')}`,
+            payment.method,
+            payment.week || '-',
+            payment.note || '-',
+        ]);
+
+        // Generate table
+        autoTable(doc, {
+            startY: 35,
+            head: [
+                ['Tanggal', 'Nama', 'Jumlah', 'Metode', 'Minggu', 'Catatan'],
+            ],
+            body: tableData,
+            theme: 'grid',
+            styles: { fontSize: 8, cellPadding: 2 },
+            headStyles: {
+                fillColor: [79, 70, 229],
+                textColor: 255,
+                fontStyle: 'bold',
+            },
+            alternateRowStyles: { fillColor: [245, 247, 250] },
+            columnStyles: {
+                0: { cellWidth: 28 },
+                1: { cellWidth: 45 },
+                2: { halign: 'right', cellWidth: 30 },
+                3: { halign: 'center', cellWidth: 25 },
+                4: { halign: 'center', cellWidth: 20 },
+                5: { cellWidth: 42 },
+            },
+        });
+
+        // Summary
+        const finalY = doc.lastAutoTable.finalY + 10;
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'bold');
+        doc.text(
+            `Total Pemasukan: Rp ${totalKasMasuk.toLocaleString('id-ID')}`,
+            14,
+            finalY
+        );
+
+        doc.setFontSize(9);
+        doc.setFont(undefined, 'normal');
+        doc.setTextColor(100);
+        doc.text(
+            `Dicetak: ${new Date().toLocaleString('id-ID')}`,
+            14,
+            finalY + 7
+        );
+
+        // Save
+        doc.save(`Pembayaran-${new Date().toISOString().split('T')[0]}.pdf`);
+    };
+
+    // Export Expenses to PDF
+    const exportExpensesToPDF = () => {
+        const doc = new jsPDF();
+
+        // Header
+        doc.setFontSize(18);
+        doc.setFont(undefined, 'bold');
+        doc.text('LAPORAN PENGELUARAN', 105, 15, { align: 'center' });
+
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'normal');
+        doc.text(
+            `Tanggal: ${new Date().toLocaleDateString('id-ID')}`,
+            105,
+            22,
+            { align: 'center' }
+        );
+        doc.text(`Total Pengeluaran: ${expenses.length} transaksi`, 105, 27, {
+            align: 'center',
+        });
+
+        // Table data
+        const tableData = expenses.map((expense) => [
+            new Date(expense.date).toLocaleDateString('id-ID'),
+            expense.purpose,
+            `Rp ${expense.amount.toLocaleString('id-ID')}`,
+            expense.category,
+            expense.approvedBy,
+        ]);
+
+        // Generate table
+        autoTable(doc, {
+            startY: 35,
+            head: [['Tanggal', 'Keperluan', 'Jumlah', 'Kategori', 'Disetujui']],
+            body: tableData,
+            theme: 'grid',
+            styles: { fontSize: 9, cellPadding: 3 },
+            headStyles: {
+                fillColor: [79, 70, 229],
+                textColor: 255,
+                fontStyle: 'bold',
+            },
+            alternateRowStyles: { fillColor: [245, 247, 250] },
+            columnStyles: {
+                0: { cellWidth: 28 },
+                1: { cellWidth: 60 },
+                2: { halign: 'right', cellWidth: 35 },
+                3: { cellWidth: 30 },
+                4: { cellWidth: 37 },
+            },
+        });
+
+        // Summary
+        const finalY = doc.lastAutoTable.finalY + 10;
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'bold');
+        doc.text(
+            `Total Pengeluaran: Rp ${totalKasKeluar.toLocaleString('id-ID')}`,
+            14,
+            finalY
+        );
+
+        doc.setFontSize(9);
+        doc.setFont(undefined, 'normal');
+        doc.setTextColor(100);
+        doc.text(
+            `Dicetak: ${new Date().toLocaleString('id-ID')}`,
+            14,
+            finalY + 7
+        );
+
+        // Save
+        doc.save(`Pengeluaran-${new Date().toISOString().split('T')[0]}.pdf`);
+    };
+
+    // Export Complete Report to PDF
+    const exportCompleteReportPDF = () => {
+        const doc = new jsPDF();
+
+        // ===== PAGE 1: RINGKASAN =====
+        doc.setFontSize(20);
+        doc.setFont(undefined, 'bold');
+        doc.text('LAPORAN KAS KELAS', 105, 20, { align: 'center' });
+        doc.text('LENGKAP', 105, 28, { align: 'center' });
+
+        doc.setFontSize(11);
+        doc.setFont(undefined, 'normal');
+        doc.text(`Periode: Minggu ke-${currentWeek}`, 105, 38, {
+            align: 'center',
+        });
+        doc.text(
+            `Tanggal Cetak: ${new Date().toLocaleDateString('id-ID', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+            })}`,
+            105,
+            44,
+            { align: 'center' }
+        );
+
+        // Summary Box
+        doc.setFillColor(79, 70, 229);
+        doc.rect(20, 55, 170, 8, 'F');
+        doc.setTextColor(255);
+        doc.setFontSize(12);
+        doc.setFont(undefined, 'bold');
+        doc.text('RINGKASAN KEUANGAN', 105, 60, { align: 'center' });
+
+        // Summary Table
+        doc.setTextColor(0);
+        const summaryData = [
+            ['Total Siswa', `${students.length} orang`],
+            ['Siswa Belum Bayar', `${getUnpaidStudents().length} orang`],
+            ['Total Pemasukan', `Rp ${totalKasMasuk.toLocaleString('id-ID')}`],
+            [
+                'Total Pengeluaran',
+                `Rp ${totalKasKeluar.toLocaleString('id-ID')}`,
+            ],
+            ['Saldo Kas', `Rp ${saldoKas.toLocaleString('id-ID')}`],
+        ];
+
+        autoTable(doc, {
+            startY: 68,
+            body: summaryData,
+            theme: 'plain',
+            styles: { fontSize: 11, cellPadding: 4 },
+            columnStyles: {
+                0: { fontStyle: 'bold', cellWidth: 70 },
+                1: {
+                    halign: 'right',
+                    cellWidth: 100,
+                    fontStyle: 'bold',
+                    textColor: [79, 70, 229],
+                },
+            },
+        });
+
+        // ===== PAGE 2: DATA SISWA =====
+        doc.addPage();
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'bold');
+        doc.setTextColor(0);
+        doc.text('DATA SISWA', 14, 15);
+
+        const studentsData = students
+            .sort((a, b) => a.absen - b.absen)
+            .map((student) => [
+                student.absen,
+                student.name,
+                student.status,
+                `Rp ${getTotalPaid(student._id).toLocaleString('id-ID')}`,
+                `Rp ${getTunggakan(student._id).toLocaleString('id-ID')}`,
+            ]);
+
+        autoTable(doc, {
+            startY: 22,
+            head: [['Absen', 'Nama', 'Status', 'Total Bayar', 'Tunggakan']],
+            body: studentsData,
+            theme: 'grid',
+            styles: { fontSize: 9, cellPadding: 3 },
+            headStyles: {
+                fillColor: [79, 70, 229],
+                textColor: 255,
+                fontStyle: 'bold',
+            },
+            alternateRowStyles: { fillColor: [245, 247, 250] },
+            columnStyles: {
+                0: { halign: 'center', cellWidth: 20 },
+                1: { cellWidth: 60 },
+                2: { halign: 'center', cellWidth: 30 },
+                3: { halign: 'right', cellWidth: 40 },
+                4: { halign: 'right', cellWidth: 40 },
+            },
+        });
+
+        // ===== PAGE 3: PEMBAYARAN =====
+        doc.addPage();
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'bold');
+        doc.text('RIWAYAT PEMBAYARAN', 14, 15);
+
+        const paymentsData = payments
+            .slice(0, 50) // Limit untuk PDF
+            .map((payment) => [
+                new Date(payment.date).toLocaleDateString('id-ID'),
+                payment.studentId?.name || '-',
+                `Rp ${payment.amount.toLocaleString('id-ID')}`,
+                payment.method,
+            ]);
+
+        autoTable(doc, {
+            startY: 22,
+            head: [['Tanggal', 'Nama', 'Jumlah', 'Metode']],
+            body: paymentsData,
+            theme: 'grid',
+            styles: { fontSize: 9, cellPadding: 3 },
+            headStyles: {
+                fillColor: [79, 70, 229],
+                textColor: 255,
+                fontStyle: 'bold',
+            },
+            alternateRowStyles: { fillColor: [245, 247, 250] },
+            columnStyles: {
+                0: { cellWidth: 35 },
+                1: { cellWidth: 70 },
+                2: { halign: 'right', cellWidth: 40 },
+                3: { halign: 'center', cellWidth: 30 },
+            },
+        });
+
+        // ===== PAGE 4: PENGELUARAN =====
+        doc.addPage();
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'bold');
+        doc.text('RIWAYAT PENGELUARAN', 14, 15);
+
+        const expensesData = expenses
+            .slice(0, 50) // Limit untuk PDF
+            .map((expense) => [
+                new Date(expense.date).toLocaleDateString('id-ID'),
+                expense.purpose,
+                `Rp ${expense.amount.toLocaleString('id-ID')}`,
+                expense.category,
+            ]);
+
+        autoTable(doc, {
+            startY: 22,
+            head: [['Tanggal', 'Keperluan', 'Jumlah', 'Kategori']],
+            body: expensesData,
+            theme: 'grid',
+            styles: { fontSize: 9, cellPadding: 3 },
+            headStyles: {
+                fillColor: [79, 70, 229],
+                textColor: 255,
+                fontStyle: 'bold',
+            },
+            alternateRowStyles: { fillColor: [245, 247, 250] },
+            columnStyles: {
+                0: { cellWidth: 35 },
+                1: { cellWidth: 75 },
+                2: { halign: 'right', cellWidth: 40 },
+                3: { cellWidth: 35 },
+            },
+        });
+
+        // Footer on last page
+        const finalY = doc.lastAutoTable.finalY + 15;
+        doc.setFontSize(9);
+        doc.setTextColor(100);
+        doc.text('--- Akhir Laporan ---', 105, finalY, { align: 'center' });
+        doc.text(
+            `Dicetak: ${new Date().toLocaleString('id-ID')}`,
+            105,
+            finalY + 5,
+            { align: 'center' }
+        );
+
+        // Save
+        doc.save(
+            `Laporan-Kas-Lengkap-${new Date().toISOString().split('T')[0]}.pdf`
+        );
+    };
+
     // Calculate totals
     const getTotalPaid = (studentId) => {
         return payments
@@ -641,18 +1058,20 @@ const App = () => {
                 </div>
 
                 {/* Export Complete Report Button */}
-                <div className="mb-6">
+                <div className="mb-6 grid grid-cols-2 gap-4">
                     <button
                         onClick={exportCompleteReport}
-                        className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-4 rounded-lg hover:from-green-700 hover:to-emerald-700 transition flex items-center justify-center gap-3 shadow-lg"
+                        className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-4 rounded-lg hover:from-green-700 hover:to-emerald-700 transition flex items-center justify-center gap-3 shadow-lg"
                     >
                         <FileText className="w-5 h-5" />
-                        <span className="font-semibold">
-                            Export Laporan Lengkap (Excel)
-                        </span>
-                        <span className="text-xs bg-white/20 px-2 py-1 rounded">
-                            Semua Data
-                        </span>
+                        <span className="font-semibold">Excel</span>
+                    </button>
+                    <button
+                        onClick={exportCompleteReportPDF}
+                        className="bg-gradient-to-r from-red-600 to-rose-600 text-white px-6 py-4 rounded-lg hover:from-red-700 hover:to-rose-700 transition flex items-center justify-center gap-3 shadow-lg"
+                    >
+                        <FileText className="w-5 h-5" />
+                        <span className="font-semibold">PDF</span>
                     </button>
                 </div>
 
@@ -962,8 +1381,13 @@ const App = () => {
                                     onClick={exportStudentsToExcel}
                                     className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition flex items-center gap-2"
                                 >
-                                    <Download className="w-4 h-4" /> Export
-                                    Excel
+                                    <Download className="w-4 h-4" /> Excel
+                                </button>
+                                <button
+                                    onClick={exportStudentsToPDF}
+                                    className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition flex items-center gap-2"
+                                >
+                                    <FileText className="w-4 h-4" /> PDF
                                 </button>
                                 <button
                                     onClick={() => setShowAddStudent(true)}
@@ -1109,8 +1533,13 @@ const App = () => {
                                     onClick={exportPaymentsToExcel}
                                     className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition flex items-center gap-2"
                                 >
-                                    <Download className="w-4 h-4" /> Export
-                                    Excel
+                                    <Download className="w-4 h-4" /> Excel
+                                </button>
+                                <button
+                                    onClick={exportPaymentsToPDF}
+                                    className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition flex items-center gap-2"
+                                >
+                                    <Download className="w-4 h-4" /> PDF
                                 </button>
                                 <button
                                     onClick={() => setShowPayment(true)}
@@ -1245,8 +1674,13 @@ const App = () => {
                                     onClick={exportExpensesToExcel}
                                     className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition flex items-center gap-2"
                                 >
-                                    <Download className="w-4 h-4" /> Export
-                                    Excel
+                                    <Download className="w-4 h-4" /> Excel
+                                </button>
+                                <button
+                                    onClick={exportExpensesToPDF}
+                                    className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition flex items-center gap-2"
+                                >
+                                    <Download className="w-4 h-4" /> PDF
                                 </button>
                                 <button
                                     onClick={() => setShowExpense(true)}
