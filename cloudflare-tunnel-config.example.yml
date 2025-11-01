@@ -1,0 +1,16 @@
+# Cloudflare Tunnel Configuration untuk triforce.fahmi.app
+# File ini biasanya di: ~/.cloudflared/config.yml di VPS
+
+tunnel: <YOUR_TUNNEL_ID>
+credentials-file: /root/.cloudflared/<YOUR_TUNNEL_ID>.json
+
+ingress:
+    # Route domain ke Nginx di VPS
+    - hostname: triforce.fahmi.app
+      service: http://localhost:8766
+
+    # Catch-all rule (required)
+    - service: http_status:404
+
+# Optional: Logging
+loglevel: info
