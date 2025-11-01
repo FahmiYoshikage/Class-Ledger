@@ -11,15 +11,8 @@ services:
         # Expose to host on port 5001 (not 5000 to avoid conflict)
         ports:
             - '5001:5000'
-        environment:
-            - NODE_ENV=production
-            - PORT=5000
-            - MONGODB_URI=mongodb+srv://SigmaboyKurangMewing:PasswordKuatNihBosWk_089@material-dashboard.whyz4.mongodb.net/kas-kelas
-            - JWT_SECRET=${JWT_SECRET:-my-production-jwt-secret-change-this}
-            - FONNTE_API_TOKEN=${FONNTE_API_TOKEN}
-            - START_DATE=2025-10-27
-            - WA_TEST_MODE=false
-            - AUTO_REMINDER_ENABLED=true
+        env_file:
+            - ./server/.env.production
         networks:
             - kas-kelas-network
         healthcheck:

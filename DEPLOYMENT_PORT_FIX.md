@@ -5,27 +5,33 @@
 Berdasarkan `netstat -tulpn` output dari VPS Anda:
 
 ### 1. **Port Conflict - Backend (5000)**
+
 ```
 tcp6  0  0  :::5000  :::*  LISTEN  1749/node /root/pro
 ```
-- ❌ Sudah ada Node.js running di port 5000 (PID 1749)
-- ❌ Docker container backend juga mau pakai port 5000
-- **BENTROK!** Docker container tidak akan bisa start
+
+-   ❌ Sudah ada Node.js running di port 5000 (PID 1749)
+-   ❌ Docker container backend juga mau pakai port 5000
+-   **BENTROK!** Docker container tidak akan bisa start
 
 ### 2. **Nginx Configuration**
+
 ```
 tcp  0  0  0.0.0.0:8766  *:*  LISTEN  19951/nginx
 tcp  0  0  0.0.0.0:80    *:*  LISTEN  19951/nginx
 ```
-- ✅ Nginx sudah listen di port 8766
-- ⚠️ Perlu update config untuk proxy ke container ports yang baru
+
+-   ✅ Nginx sudah listen di port 8766
+-   ⚠️ Perlu update config untuk proxy ke container ports yang baru
 
 ### 3. **Cloudflare Tunnel**
+
 ```
 tcp  0  0  127.0.0.1:20241  *:*  LISTEN  16439/cloudflared
 ```
-- ✅ Sudah running dengan benar
-- ✅ Hanya listen di localhost (aman)
+
+-   ✅ Sudah running dengan benar
+-   ✅ Hanya listen di localhost (aman)
 
 ---
 
@@ -34,25 +40,27 @@ tcp  0  0  127.0.0.1:20241  *:*  LISTEN  16439/cloudflared
 ### 1. **Update docker-compose.yml**
 
 **SEBELUM** (❌ Conflict):
+
 ```yaml
 api:
-  ports:
-    - '5000:5000'  # ❌ Bentrok dengan process existing
+    ports:
+        - '5000:5000' # ❌ Bentrok dengan process existing
 
 frontend:
-  ports:
-    - '8766:80'    # ❌ Bentrok dengan Nginx host
+    ports:
+        - '8766:80' # ❌ Bentrok dengan Nginx host
 ```
 
 **SESUDAH** (✅ Fixed):
+
 ```yaml
 api:
-  ports:
-    - '5001:5000'  # ✅ Container internal 5000, host expose di 5001
+    ports:
+        - '5001:5000' # ✅ Container internal 5000, host expose di 5001
 
 frontend:
-  ports:
-    - '8767:80'    # ✅ Container internal 80, host expose di 8767
+    ports:
+        - '8767:80' # ✅ Container internal 80, host expose di 8767
 ```
 
 ### 2. **Nginx Config Baru** (`nginx-vps-host.conf`)
@@ -68,11 +76,11 @@ upstream frontend_static {
 
 server {
     listen 8766;  # Cloudflare Tunnel point here
-    
+
     location /api/ {
         proxy_pass http://backend_api/api/;
     }
-    
+
     location / {
         proxy_pass http://frontend_static/;
     }
@@ -201,13 +209,13 @@ curl https://triforce.fahmi.app/api/health
 
 ## 🔧 Port Mapping Summary
 
-| Service | Host Port | Container Port | Access |
-|---------|-----------|----------------|--------|
-| Cloudflare Tunnel | 20241 | - | localhost only |
-| Nginx | 8766 | - | CF Tunnel points here |
-| Backend (Docker) | 5001 | 5000 | Via Nginx proxy |
-| Frontend (Docker) | 8767 | 80 | Via Nginx proxy |
-| MongoDB | - | - | Atlas (cloud) |
+| Service           | Host Port | Container Port | Access                |
+| ----------------- | --------- | -------------- | --------------------- |
+| Cloudflare Tunnel | 20241     | -              | localhost only        |
+| Nginx             | 8766      | -              | CF Tunnel points here |
+| Backend (Docker)  | 5001      | 5000           | Via Nginx proxy       |
+| Frontend (Docker) | 8767      | 80             | Via Nginx proxy       |
+| MongoDB           | -         | -              | Atlas (cloud)         |
 
 **Tidak Ada Port Conflict!** ✅
 
@@ -246,6 +254,7 @@ curl https://triforce.fahmi.app/api/health
 ## 🆘 Troubleshooting
 
 ### Problem: Docker container won't start
+
 ```bash
 # Check if ports are in use
 sudo netstat -tulpn | grep -E ':(5001|8767)'
@@ -256,6 +265,7 @@ docker-compose logs frontend
 ```
 
 ### Problem: 502 Bad Gateway
+
 ```bash
 # Check if containers are running
 docker-compose ps
@@ -266,6 +276,7 @@ curl http://localhost:8767/
 ```
 
 ### Problem: Can't access via domain
+
 ```bash
 # Check Cloudflare Tunnel
 sudo systemctl status cloudflared
