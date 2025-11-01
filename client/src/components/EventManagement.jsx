@@ -10,6 +10,7 @@ import {
     AlertCircle,
     TrendingUp,
     X,
+    Edit,
 } from 'lucide-react';
 import { eventsAPI, eventPaymentsAPI, studentsAPI } from '../services/api';
 
@@ -20,6 +21,8 @@ const EventManagement = () => {
     const [eventPayments, setEventPayments] = useState([]);
     const [showCreateEvent, setShowCreateEvent] = useState(false);
     const [showPaymentModal, setShowPaymentModal] = useState(false);
+    const [showEditPaymentModal, setShowEditPaymentModal] = useState(false);
+    const [editingPayment, setEditingPayment] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -45,7 +48,9 @@ const EventManagement = () => {
 
     const loadEventPayments = async (eventId) => {
         try {
+            console.log('Loading payments for event:', eventId);
             const response = await eventPaymentsAPI.getByEvent(eventId);
+            console.log('Event payments response:', response.data);
             setEventPayments(response.data);
         } catch (err) {
             console.error('Error loading payments:', err);
@@ -115,6 +120,64 @@ const EventManagement = () => {
         }
     };
 
+    const handleEditPayment = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+
+        try {
+            const paymentData = {
+                studentId: formData.get('studentId'),
+                amount: parseInt(formData.get('amount')),
+                date: formData.get('date'),
+                method: formData.get('method'),
+                note: formData.get('note'),
+            };
+
+            await eventPaymentsAPI.update(
+                activeEvent._id,
+                editingPayment._id,
+                paymentData
+            );
+            await loadData();
+            await loadEventPayments(activeEvent._id);
+
+            // Update active event
+            const updatedEvent = events.find((e) => e._id === activeEvent._id);
+            setActiveEvent(updatedEvent);
+
+            setShowEditPaymentModal(false);
+            setEditingPayment(null);
+            alert('Pembayaran berhasil diupdate!');
+        } catch (err) {
+            alert('Gagal update pembayaran: ' + err.response?.data?.message);
+        }
+    };
+
+    const handleDeletePayment = async (paymentId) => {
+        if (!window.confirm('Yakin ingin menghapus pembayaran ini?')) {
+            return;
+        }
+
+        try {
+            await eventPaymentsAPI.delete(activeEvent._id, paymentId);
+            await loadData();
+            await loadEventPayments(activeEvent._id);
+
+            // Update active event
+            const updatedEvent = events.find((e) => e._id === activeEvent._id);
+            setActiveEvent(updatedEvent);
+
+            alert('Pembayaran berhasil dihapus!');
+        } catch (err) {
+            alert('Gagal menghapus pembayaran: ' + err.response?.data?.message);
+        }
+    };
+
+    const openEditModal = (payment) => {
+        setEditingPayment(payment);
+        setShowEditPaymentModal(true);
+    };
+
     const handleCompleteEvent = async (eventId) => {
         if (
             !window.confirm(
@@ -175,6 +238,12 @@ const EventManagement = () => {
         if (!event) return [];
         const paidIds = event.studentsPaid.map((s) => s._id || s);
         return students.filter((s) => !paidIds.includes(s._id));
+    };
+
+    const getPaidStudents = (event) => {
+        if (!event) return [];
+        const paidIds = event.studentsPaid.map((s) => s._id || s);
+        return students.filter((s) => paidIds.includes(s._id));
     };
 
     return (
@@ -458,6 +527,29 @@ const EventManagement = () => {
                                 </button>
                             </div>
 
+                            {/* Paid Students */}
+                            {getPaidStudents(activeEvent).length > 0 && (
+                                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                                    <h4 className="font-semibold text-green-900 mb-2">
+                                        Siswa Sudah Bayar (
+                                        {getPaidStudents(activeEvent).length})
+                                    </h4>
+                                    <div className="flex flex-wrap gap-2">
+                                        {getPaidStudents(activeEvent)
+                                            .sort((a, b) => a.absen - b.absen)
+                                            .map((student) => (
+                                                <span
+                                                    key={student._id}
+                                                    className="px-2 py-1 bg-green-100 text-green-800 rounded text-sm"
+                                                >
+                                                    {student.absen}.{' '}
+                                                    {student.name}
+                                                </span>
+                                            ))}
+                                    </div>
+                                </div>
+                            )}
+
                             {/* Unpaid Students */}
                             {getUnpaidStudents(activeEvent).length > 0 && (
                                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
@@ -466,8 +558,9 @@ const EventManagement = () => {
                                         {getUnpaidStudents(activeEvent).length})
                                     </h4>
                                     <div className="flex flex-wrap gap-2">
-                                        {getUnpaidStudents(activeEvent).map(
-                                            (student) => (
+                                        {getUnpaidStudents(activeEvent)
+                                            .sort((a, b) => a.absen - b.absen)
+                                            .map((student) => (
                                                 <span
                                                     key={student._id}
                                                     className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-sm"
@@ -475,8 +568,7 @@ const EventManagement = () => {
                                                     {student.absen}.{' '}
                                                     {student.name}
                                                 </span>
-                                            )
-                                        )}
+                                            ))}
                                     </div>
                                 </div>
                             )}
@@ -502,18 +594,31 @@ const EventManagement = () => {
                                                 <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">
                                                     Metode
                                                 </th>
+                                                <th className="px-4 py-2 text-center text-xs font-medium text-gray-500">
+                                                    Aksi
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y">
-                                            {eventPayments.map((payment) => (
-                                                <tr key={payment._id}>
-                                                    <td className="px-4 py-2 text-sm">
-                                                        {new Date(
-                                                            payment.date
-                                                        ).toLocaleDateString(
-                                                            'id-ID'
-                                                        )}
+                                            {eventPayments.length === 0 ? (
+                                                <tr>
+                                                    <td
+                                                        colSpan="5"
+                                                        className="px-4 py-8 text-center text-gray-500"
+                                                    >
+                                                        Belum ada riwayat pembayaran
                                                     </td>
+                                                </tr>
+                                            ) : (
+                                                eventPayments.map((payment) => (
+                                                    <tr key={payment._id}>
+                                                        <td className="px-4 py-2 text-sm">
+                                                            {new Date(
+                                                                payment.date
+                                                            ).toLocaleDateString(
+                                                                'id-ID'
+                                                            )}
+                                                        </td>
                                                     <td className="px-4 py-2 text-sm font-medium">
                                                         {payment.studentId
                                                             ?.name || '-'}
@@ -535,8 +640,35 @@ const EventManagement = () => {
                                                             {payment.method}
                                                         </span>
                                                     </td>
+                                                    <td className="px-4 py-2 text-sm">
+                                                        <div className="flex items-center justify-center gap-2">
+                                                            <button
+                                                                onClick={() =>
+                                                                    openEditModal(
+                                                                        payment
+                                                                    )
+                                                                }
+                                                                className="text-blue-600 hover:text-blue-800 p-1"
+                                                                title="Edit"
+                                                            >
+                                                                <Edit className="w-4 h-4" />
+                                                            </button>
+                                                            <button
+                                                                onClick={() =>
+                                                                    handleDeletePayment(
+                                                                        payment._id
+                                                                    )
+                                                                }
+                                                                className="text-red-600 hover:text-red-800 p-1"
+                                                                title="Hapus"
+                                                            >
+                                                                <Trash2 className="w-4 h-4" />
+                                                            </button>
+                                                        </div>
+                                                    </td>
                                                 </tr>
-                                            ))}
+                                            ))
+                                            )}
                                         </tbody>
                                     </table>
                                 </div>
@@ -797,6 +929,120 @@ const EventManagement = () => {
                                     className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition"
                                 >
                                     Simpan
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Edit Payment Modal */}
+            {showEditPaymentModal && activeEvent && editingPayment && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                    <div className="bg-white rounded-lg max-w-md w-full p-6">
+                        <h3 className="text-xl font-bold mb-4">
+                            Edit Pembayaran Event
+                        </h3>
+                        <form
+                            onSubmit={handleEditPayment}
+                            className="space-y-4"
+                        >
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Siswa
+                                </label>
+                                <select
+                                    name="studentId"
+                                    required
+                                    defaultValue={editingPayment.studentId?._id}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                >
+                                    <option value="">Pilih Siswa</option>
+                                    {students
+                                        .sort((a, b) => a.absen - b.absen)
+                                        .map((student) => (
+                                            <option
+                                                key={student._id}
+                                                value={student._id}
+                                            >
+                                                {student.absen}. {student.name}
+                                            </option>
+                                        ))}
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Jumlah
+                                </label>
+                                <input
+                                    type="number"
+                                    name="amount"
+                                    defaultValue={editingPayment.amount}
+                                    required
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Tanggal
+                                </label>
+                                <input
+                                    type="date"
+                                    name="date"
+                                    defaultValue={
+                                        new Date(editingPayment.date)
+                                            .toISOString()
+                                            .split('T')[0]
+                                    }
+                                    required
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Metode
+                                </label>
+                                <select
+                                    name="method"
+                                    defaultValue={editingPayment.method}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                >
+                                    <option>Tunai</option>
+                                    <option>Transfer</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Catatan (opsional)
+                                </label>
+                                <input
+                                    type="text"
+                                    name="note"
+                                    defaultValue={editingPayment.note || ''}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                />
+                            </div>
+
+                            <div className="flex gap-3">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setShowEditPaymentModal(false);
+                                        setEditingPayment(null);
+                                    }}
+                                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                                >
+                                    Batal
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                                >
+                                    Update
                                 </button>
                             </div>
                         </form>

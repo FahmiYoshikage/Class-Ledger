@@ -229,4 +229,67 @@ router.delete('/:eventId/payments/:paymentId', async (req, res) => {
     }
 });
 
+// Update event payment
+router.patch('/:eventId/payments/:paymentId', async (req, res) => {
+    try {
+        const payment = await EventPayment.findById(req.params.paymentId);
+        if (!payment) {
+            return res.status(404).json({ message: 'Payment not found' });
+        }
+
+        const event = await Event.findById(req.params.eventId);
+        if (!event) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
+
+        // Store old amount to adjust event total
+        const oldAmount = payment.amount;
+        const oldStudentId = payment.studentId;
+
+        // Update payment fields
+        if (req.body.studentId) payment.studentId = req.body.studentId;
+        if (req.body.amount !== undefined) payment.amount = req.body.amount;
+        if (req.body.date) payment.date = req.body.date;
+        if (req.body.method) payment.method = req.body.method;
+        if (req.body.note !== undefined) payment.note = req.body.note;
+
+        await payment.save();
+
+        // Update event total collected
+        const amountDifference = payment.amount - oldAmount;
+        event.totalCollected += amountDifference;
+
+        // Handle student change
+        if (oldStudentId.toString() !== payment.studentId.toString()) {
+            // Remove old student if no other payments
+            const oldStudentPayments = await EventPayment.find({
+                eventId: req.params.eventId,
+                studentId: oldStudentId,
+                _id: { $ne: payment._id },
+            });
+
+            if (oldStudentPayments.length === 0) {
+                event.studentsPaid = event.studentsPaid.filter(
+                    (id) => id.toString() !== oldStudentId.toString()
+                );
+            }
+
+            // Add new student if not exists
+            if (!event.studentsPaid.includes(payment.studentId)) {
+                event.studentsPaid.push(payment.studentId);
+            }
+        }
+
+        await event.save();
+
+        const populatedPayment = await EventPayment.findById(
+            payment._id
+        ).populate('studentId', 'name absen');
+
+        res.json(populatedPayment);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
 export default router;

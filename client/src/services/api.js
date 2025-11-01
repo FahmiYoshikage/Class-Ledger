@@ -112,6 +112,8 @@ export const eventsAPI = {
 export const eventPaymentsAPI = {
     getByEvent: (eventId) => api.get(`/events/${eventId}/payments`),
     create: (eventId, data) => api.post(`/events/${eventId}/payments`, data),
+    update: (eventId, paymentId, data) =>
+        api.patch(`/events/${eventId}/payments/${paymentId}`, data),
     delete: (eventId, paymentId) =>
         api.delete(`/events/${eventId}/payments/${paymentId}`),
 };
