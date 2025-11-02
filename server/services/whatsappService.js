@@ -302,6 +302,10 @@ class WhatsAppService {
                 throw new Error('Nomor telepon tidak valid');
             }
 
+            console.log(`🔧 WA_TEST_MODE: ${process.env.WA_TEST_MODE}`);
+            console.log(`🔧 WA_TEST_MODE type: ${typeof process.env.WA_TEST_MODE}`);
+            console.log(`🔧 Check result: ${process.env.WA_TEST_MODE === 'true'}`);
+
             // Mode test: hanya log tanpa kirim
             if (process.env.WA_TEST_MODE === 'true') {
                 console.log('📱 TEST MODE - Pesan tidak dikirim:');
@@ -316,6 +320,10 @@ class WhatsAppService {
             }
 
             // Kirim via Fonnte API
+            console.log(`📡 Calling Fonnte API...`);
+            console.log(`🔑 API Token: ${this.apiToken ? this.apiToken.substring(0, 10) + '...' : 'NOT SET'}`);
+            console.log(`🎯 Target: ${normalizedPhone}`);
+            
             const response = await axios.post(
                 this.apiUrl,
                 {
@@ -331,6 +339,8 @@ class WhatsAppService {
                 }
             );
 
+            console.log(`📥 Fonnte response:`, response.data);
+
             return {
                 success: response.data.status === true,
                 status: response.data.status ? 'sent' : 'failed',
@@ -338,7 +348,11 @@ class WhatsAppService {
                 detail: response.data.detail || null,
             };
         } catch (error) {
-            console.error('Error sending WhatsApp:', error.message);
+            console.error('❌ Error sending WhatsApp:', error.message);
+            if (error.response) {
+                console.error('📛 Response status:', error.response.status);
+                console.error('📛 Response data:', error.response.data);
+            }
             return {
                 success: false,
                 status: 'failed',
