@@ -25,7 +25,8 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Trust proxy - Required for Cloudflare/Nginx reverse proxy
-app.set('trust proxy', true);
+// Trust only loopback and private IP ranges (Cloudflare/Nginx on same network)
+app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal']);
 
 // Middleware
 app.use(
