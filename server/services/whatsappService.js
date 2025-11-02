@@ -303,8 +303,12 @@ class WhatsAppService {
             }
 
             console.log(`🔧 WA_TEST_MODE: ${process.env.WA_TEST_MODE}`);
-            console.log(`🔧 WA_TEST_MODE type: ${typeof process.env.WA_TEST_MODE}`);
-            console.log(`🔧 Check result: ${process.env.WA_TEST_MODE === 'true'}`);
+            console.log(
+                `🔧 WA_TEST_MODE type: ${typeof process.env.WA_TEST_MODE}`
+            );
+            console.log(
+                `🔧 Check result: ${process.env.WA_TEST_MODE === 'true'}`
+            );
 
             // Mode test: hanya log tanpa kirim
             if (process.env.WA_TEST_MODE === 'true') {
@@ -321,9 +325,15 @@ class WhatsAppService {
 
             // Kirim via Fonnte API
             console.log(`📡 Calling Fonnte API...`);
-            console.log(`🔑 API Token: ${this.apiToken ? this.apiToken.substring(0, 10) + '...' : 'NOT SET'}`);
+            console.log(
+                `🔑 API Token: ${
+                    this.apiToken
+                        ? this.apiToken.substring(0, 10) + '...'
+                        : 'NOT SET'
+                }`
+            );
             console.log(`🎯 Target: ${normalizedPhone}`);
-            
+
             const response = await axios.post(
                 this.apiUrl,
                 {
