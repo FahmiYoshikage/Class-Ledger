@@ -16,7 +16,7 @@ Setelah repository dijadikan **private**, Docker build di VPS gagal karena tidak
 2. Click **"Generate new token (classic)"**
 3. Beri nama: `VPS Deploy Token`
 4. Pilih scope:
-   - ✅ `repo` (Full control of private repositories)
+    - ✅ `repo` (Full control of private repositories)
 5. Click **"Generate token"**
 6. **Copy token** dan simpan (tidak bisa dilihat lagi!)
 
@@ -43,6 +43,7 @@ git pull
 ```
 
 **Format URL dengan token**:
+
 ```
 https://ghp_TOKEN@github.com/USERNAME/REPO.git
 ```
@@ -59,9 +60,10 @@ docker-compose up -d --build
 ```
 
 **✅ Keuntungan**:
-- Docker build dari files lokal (tidak perlu akses GitHub)
-- Token tersimpan di VPS untuk git pull berikutnya
-- Lebih cepat karena tidak re-clone setiap build
+
+-   Docker build dari files lokal (tidak perlu akses GitHub)
+-   Token tersimpan di VPS untuk git pull berikutnya
+-   Lebih cepat karena tidak re-clone setiap build
 
 ---
 
@@ -104,8 +106,9 @@ docker-compose up -d --build
 ```
 
 **✅ Keuntungan**:
-- Lebih aman (tidak ada token di command history)
-- Permanent (key tidak expire)
+
+-   Lebih aman (tidak ada token di command history)
+-   Permanent (key tidak expire)
 
 ---
 
@@ -137,6 +140,7 @@ nano ~/.ssh/config
 ```
 
 Tambahkan:
+
 ```
 Host github-kas-kelas
     HostName github.com
@@ -186,11 +190,13 @@ docker-compose logs -f
 ### 1. **Jangan Hardcode Token di Script**
 
 ❌ **JANGAN**:
+
 ```bash
 git clone https://ghp_TOKEN@github.com/user/repo.git
 ```
 
 ✅ **LAKUKAN**:
+
 ```bash
 # Store credentials securely
 git config --global credential.helper store
@@ -200,14 +206,14 @@ git clone https://github.com/user/repo.git
 
 ### 2. **Limit Token Scope**
 
-- Hanya pilih `repo` scope (jangan `admin`, `delete`, dll)
-- Set expiration date (60-90 days)
-- Regenerate token secara berkala
+-   Hanya pilih `repo` scope (jangan `admin`, `delete`, dll)
+-   Set expiration date (60-90 days)
+-   Regenerate token secara berkala
 
 ### 3. **Gunakan SSH Key untuk Production**
 
-- Personal Access Token: ⏱️ Temporary/testing
-- SSH Key: 🔒 Production/long-term
+-   Personal Access Token: ⏱️ Temporary/testing
+-   SSH Key: 🔒 Production/long-term
 
 ---
 
@@ -247,6 +253,7 @@ echo "🌐 Application available at: https://triforce.fahmi.app"
 ```
 
 **Jalankan**:
+
 ```bash
 chmod +x scripts/vps-deploy.sh
 ./scripts/vps-deploy.sh
@@ -257,19 +264,21 @@ chmod +x scripts/vps-deploy.sh
 ## 📋 Checklist Setup
 
 ### Initial Setup (Sekali Saja):
-- [ ] Generate GitHub Personal Access Token atau SSH Key
-- [ ] Tambahkan key/token ke GitHub settings
-- [ ] Clone repository ke VPS (`/opt/telkom-cup`)
-- [ ] Setup `.env.production` files di VPS
-- [ ] Test `git pull` (pastikan tidak minta password)
+
+-   [ ] Generate GitHub Personal Access Token atau SSH Key
+-   [ ] Tambahkan key/token ke GitHub settings
+-   [ ] Clone repository ke VPS (`/opt/telkom-cup`)
+-   [ ] Setup `.env.production` files di VPS
+-   [ ] Test `git pull` (pastikan tidak minta password)
 
 ### Every Deployment:
-- [ ] Push changes ke GitHub dari local
-- [ ] SSH ke VPS
-- [ ] `cd /opt/telkom-cup && git pull`
-- [ ] `docker-compose up -d --build`
-- [ ] Check logs: `docker-compose logs -f`
-- [ ] Test: `curl https://triforce.fahmi.app/api/health`
+
+-   [ ] Push changes ke GitHub dari local
+-   [ ] SSH ke VPS
+-   [ ] `cd /opt/telkom-cup && git pull`
+-   [ ] `docker-compose up -d --build`
+-   [ ] Check logs: `docker-compose logs -f`
+-   [ ] Test: `curl https://triforce.fahmi.app/api/health`
 
 ---
 
@@ -323,13 +332,14 @@ build:
 **Best Practice untuk Private Repo**:
 
 1. **Development** (local machine):
-   - Clone dengan SSH atau HTTPS + token
-   - Push changes ke GitHub
+
+    - Clone dengan SSH atau HTTPS + token
+    - Push changes ke GitHub
 
 2. **Production** (VPS):
-   - Setup SSH key atau Personal Access Token **sekali saja**
-   - Clone repo ke `/opt/telkom-cup`
-   - Build Docker dari **local files** (bukan re-clone)
-   - Update: `git pull` → `docker-compose up -d --build`
+    - Setup SSH key atau Personal Access Token **sekali saja**
+    - Clone repo ke `/opt/telkom-cup`
+    - Build Docker dari **local files** (bukan re-clone)
+    - Update: `git pull` → `docker-compose up -d --build`
 
 **Docker tidak perlu akses GitHub** karena build dari local context (`./server`, `./client`) yang sudah di-clone! 🎉
