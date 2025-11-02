@@ -10,6 +10,17 @@ export const apiLimiter = rateLimit({
     },
     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+    // Skip rate limiting for notification endpoints (they have their own delays)
+    skip: (req) => req.path.startsWith('/notifications/'),
+    handler: (req, res) => {
+        console.log(
+            `⚠️ Rate limit exceeded for IP: ${req.ip}, Path: ${req.path}`
+        );
+        res.status(429).json({
+            success: false,
+            message: 'Too many requests from this IP, please try again later.',
+        });
+    },
 });
 
 // Strict rate limiter for authentication endpoints (5 requests per 15 minutes)

@@ -179,7 +179,9 @@ const NotificationManager = () => {
         if (!confirm(`Kirim reminder ke ${studentData.student.name}?`)) return;
 
         try {
-            await axios.post(
+            console.log('📤 Sending reminder to:', studentData.student.name);
+
+            const response = await axios.post(
                 `${API_URL}/notifications/send-reminder/${studentData.student._id}`,
                 {
                     category: messageCategory,
@@ -188,10 +190,25 @@ const NotificationManager = () => {
                 }
             );
 
-            alert('✅ Reminder berhasil dikirim!');
+            console.log('✅ Response:', response.data);
+
+            alert(
+                response.data.testMode
+                    ? '✅ Reminder berhasil dikirim! (TEST MODE - cek console)'
+                    : '✅ Reminder berhasil dikirim!'
+            );
             await loadData();
         } catch (error) {
-            alert('❌ Error: ' + error.message);
+            console.error('❌ Error sending reminder:', error);
+            console.error('Error response:', error.response?.data);
+
+            const errorMsg =
+                error.response?.data?.error ||
+                error.response?.data?.message ||
+                error.message ||
+                'Terjadi kesalahan tidak diketahui';
+
+            alert('❌ Error: ' + errorMsg);
         }
     };
 

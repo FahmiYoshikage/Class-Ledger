@@ -104,20 +104,29 @@ router.get('/needs-reminder', async (req, res) => {
 // 📤 SEND REMINDER TO ONE STUDENT
 // ==============================================
 router.post('/send-reminder/:studentId', async (req, res) => {
+    console.log(
+        `📤 Send reminder request for student: ${req.params.studentId}`
+    );
+    console.log(`📋 Request body:`, req.body);
+
     try {
         const { category = 'friendly', weeksLate, amount } = req.body;
 
         const student = await Student.findById(req.params.studentId);
 
         if (!student) {
+            console.log(`❌ Student not found: ${req.params.studentId}`);
             return res.status(404).json({ error: 'Siswa tidak ditemukan' });
         }
 
         if (!student.phoneNumber) {
+            console.log(`❌ Student has no phone number: ${student.name}`);
             return res.status(400).json({
                 error: 'Siswa tidak memiliki nomor WhatsApp',
             });
         }
+
+        console.log(`📞 Sending to: ${student.name} (${student.phoneNumber})`);
 
         // Send reminder
         const result = await whatsappService.sendPaymentReminder(
@@ -126,6 +135,12 @@ router.post('/send-reminder/:studentId', async (req, res) => {
             amount,
             category
         );
+
+        console.log(`✅ Send result:`, {
+            success: result.success,
+            testMode: result.testMode,
+            notificationId: result.notification?._id,
+        });
 
         res.json({
             success: result.success,
@@ -136,6 +151,7 @@ router.post('/send-reminder/:studentId', async (req, res) => {
             testMode: result.testMode,
         });
     } catch (error) {
+        console.error(`❌ Error sending reminder:`, error);
         res.status(500).json({ error: error.message });
     }
 });
