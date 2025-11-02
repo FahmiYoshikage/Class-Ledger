@@ -24,6 +24,9 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Trust proxy - Required for Cloudflare/Nginx reverse proxy
+app.set('trust proxy', true);
+
 // Middleware
 app.use(
     cors({
@@ -34,6 +37,7 @@ app.use(
             'http://127.0.0.1:3001',
             'http://10.252.146.203:3000',
             'http://10.252.146.203:3001',
+            process.env.CORS_ORIGIN || 'https://triforce.fahmi.app',
         ],
         credentials: true,
     })
