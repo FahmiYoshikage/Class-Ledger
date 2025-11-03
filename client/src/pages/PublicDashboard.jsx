@@ -38,12 +38,13 @@ const PublicDashboard = () => {
     const fetchPublicData = async () => {
         try {
             setLoading(true);
-            const [paymentsRes, expensesRes, studentsRes, usersRes] = await Promise.all([
-                paymentsAPI.getAll(),
-                expensesAPI.getAll(),
-                studentsAPI.getAll(),
-                api.get('/users'),
-            ]);
+            const [paymentsRes, expensesRes, studentsRes, usersRes] =
+                await Promise.all([
+                    paymentsAPI.getAll(),
+                    expensesAPI.getAll(),
+                    studentsAPI.getAll(),
+                    api.get('/users'),
+                ]);
 
             const totalIncome = paymentsRes.data.reduce(
                 (sum, p) => sum + (p.amount || 0),
@@ -108,9 +109,12 @@ const PublicDashboard = () => {
                 // Get student name
                 let studentName = 'Unknown';
                 if (typeof u.studentId === 'object' && u.studentId) {
-                    studentName = u.studentId.nama || u.studentId.name || 'Unknown';
+                    studentName =
+                        u.studentId.nama || u.studentId.name || 'Unknown';
                 } else {
-                    const student = studentsRes.data.find(s => s._id === studentId);
+                    const student = studentsRes.data.find(
+                        (s) => s._id === studentId
+                    );
                     studentName = student?.nama || student?.name || 'Unknown';
                 }
 
@@ -125,7 +129,10 @@ const PublicDashboard = () => {
 
             // Sort by total paid (descending) and take top 10
             leaderboardData.sort((a, b) => b.totalPaid - a.totalPaid);
-            console.log('🏆 Public Leaderboard (Top 10):', leaderboardData.slice(0, 10));
+            console.log(
+                '🏆 Public Leaderboard (Top 10):',
+                leaderboardData.slice(0, 10)
+            );
 
             setStats({
                 totalIncome,
@@ -322,11 +329,12 @@ const PublicDashboard = () => {
                                     🏆 Top Contributors
                                 </h3>
                                 <p className="text-xs sm:text-sm text-gray-600 mt-1">
-                                    Siswa dengan kontribusi pembayaran kas terbesar
+                                    Siswa dengan kontribusi pembayaran kas
+                                    terbesar
                                 </p>
                             </div>
                         </div>
-                        
+
                         <div className="space-y-2 sm:space-y-3">
                             {leaderboard.map((member, index) => {
                                 const rankColor =
@@ -376,23 +384,28 @@ const PublicDashboard = () => {
                                                     {member.studentName}
                                                 </h4>
                                                 <p className="text-xs sm:text-sm text-gray-500">
-                                                    {member.paymentCount} transaksi
+                                                    {member.paymentCount}{' '}
+                                                    transaksi
                                                 </p>
                                             </div>
                                         </div>
 
                                         {/* Total Amount */}
                                         <div className="text-right flex-shrink-0 ml-3">
-                                            <p className={`font-bold text-sm sm:text-base ${
-                                                index === 0 
-                                                    ? 'text-yellow-600'
-                                                    : index === 1
-                                                    ? 'text-gray-600'
-                                                    : index === 2
-                                                    ? 'text-orange-600'
-                                                    : 'text-gray-900'
-                                            }`}>
-                                                {formatCurrency(member.totalPaid)}
+                                            <p
+                                                className={`font-bold text-sm sm:text-base ${
+                                                    index === 0
+                                                        ? 'text-yellow-600'
+                                                        : index === 1
+                                                        ? 'text-gray-600'
+                                                        : index === 2
+                                                        ? 'text-orange-600'
+                                                        : 'text-gray-900'
+                                                }`}
+                                            >
+                                                {formatCurrency(
+                                                    member.totalPaid
+                                                )}
                                             </p>
                                             {index < 3 && (
                                                 <p className="text-xs text-gray-500 mt-0.5">
@@ -411,7 +424,8 @@ const PublicDashboard = () => {
 
                         <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-200">
                             <p className="text-xs sm:text-sm text-center text-indigo-900 font-medium">
-                                💪 Yuk, tingkatkan kontribusimu untuk masuk leaderboard!
+                                💪 Yuk, tingkatkan kontribusimu untuk masuk
+                                leaderboard!
                             </p>
                         </div>
                     </div>
