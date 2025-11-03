@@ -381,6 +381,48 @@ router.patch(
     }
 );
 
+// @route   POST /api/auth/users/:id/reset-password
+// @desc    Reset user password to default (Admin only)
+// @access  Private (Admin)
+router.post(
+    '/users/:id/reset-password',
+    authenticate,
+    authorize('admin'),
+    async (req, res) => {
+        try {
+            const user = await User.findById(req.params.id);
+
+            if (!user) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'User not found',
+                });
+            }
+
+            // Generate default password: username123
+            const defaultPassword = `${user.username}123`;
+            
+            user.password = defaultPassword;
+            user.mustChangePassword = true; // Force user to change password on next login
+            await user.save();
+
+            res.json({
+                success: true,
+                message: 'Password reset successfully',
+                defaultPassword: defaultPassword, // Return the password so admin can tell user
+                username: user.username,
+            });
+        } catch (error) {
+            console.error('Reset password error:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Failed to reset password',
+                error: error.message,
+            });
+        }
+    }
+);
+
 // @route   DELETE /api/auth/users/:id
 // @desc    Delete user (Admin only)
 // @access  Private (Admin)

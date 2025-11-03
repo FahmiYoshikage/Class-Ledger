@@ -52,6 +52,7 @@ export const authAPI = {
     getUsers: () => api.get('/auth/users'),
     updateUser: (id, data) => api.patch(`/auth/users/${id}`, data),
     deleteUser: (id) => api.delete(`/auth/users/${id}`),
+    resetPassword: (id) => api.post(`/auth/users/${id}/reset-password`),
     logout: async () => {
         try {
             // Call backend to invalidate session

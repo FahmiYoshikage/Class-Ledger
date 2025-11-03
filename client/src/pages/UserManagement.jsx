@@ -10,6 +10,9 @@ import {
     CheckCircle,
     XCircle,
     AlertCircle,
+    Key,
+    Copy,
+    Eye,
 } from 'lucide-react';
 
 const UserManagement = () => {
@@ -18,6 +21,8 @@ const UserManagement = () => {
     const [loading, setLoading] = useState(true);
     const [showAddUser, setShowAddUser] = useState(false);
     const [error, setError] = useState('');
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [resetPasswordData, setResetPasswordData] = useState(null);
 
     useEffect(() => {
         loadData();
@@ -50,6 +55,26 @@ const UserManagement = () => {
         } catch (err) {
             alert(err.response?.data?.message || 'Gagal menghapus user');
         }
+    };
+
+    const handleResetPassword = async (user) => {
+        if (!window.confirm(`Reset password untuk ${user.username}?\n\nPassword akan direset ke: ${user.username}123`)) return;
+
+        try {
+            const response = await authAPI.resetPassword(user._id);
+            setResetPasswordData({
+                username: response.data.username,
+                password: response.data.defaultPassword,
+            });
+            setShowPasswordModal(true);
+        } catch (err) {
+            alert(err.response?.data?.message || 'Gagal reset password');
+        }
+    };
+
+    const copyToClipboard = (text) => {
+        navigator.clipboard.writeText(text);
+        alert('Password copied to clipboard!');
     };
 
     const handleToggleActive = async (user) => {
@@ -229,15 +254,24 @@ const UserManagement = () => {
                                         : 'Never'}
                                 </td>
                                 <td className="px-6 py-4">
-                                    <button
-                                        onClick={() =>
-                                            handleDeleteUser(user._id)
-                                        }
-                                        className="text-red-600 hover:text-red-800"
-                                        title="Delete user"
-                                    >
-                                        <Trash2 className="w-4 h-4" />
-                                    </button>
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={() => handleResetPassword(user)}
+                                            className="text-blue-600 hover:text-blue-800"
+                                            title="Reset Password"
+                                        >
+                                            <Key className="w-4 h-4" />
+                                        </button>
+                                        <button
+                                            onClick={() =>
+                                                handleDeleteUser(user._id)
+                                            }
+                                            className="text-red-600 hover:text-red-800"
+                                            title="Delete user"
+                                        >
+                                            <Trash2 className="w-4 h-4" />
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         ))}
@@ -348,6 +382,93 @@ const UserManagement = () => {
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Password Reset Modal */}
+            {showPasswordModal && resetPasswordData && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                    <div className="bg-white rounded-xl max-w-md w-full p-6">
+                        <div className="text-center mb-6">
+                            <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <CheckCircle className="w-8 h-8 text-green-600" />
+                            </div>
+                            <h3 className="text-xl font-bold text-gray-900 mb-2">
+                                Password Berhasil Direset!
+                            </h3>
+                            <p className="text-sm text-gray-600">
+                                Berikan informasi ini kepada user
+                            </p>
+                        </div>
+
+                        <div className="space-y-4 bg-gray-50 rounded-lg p-4 mb-6">
+                            <div>
+                                <label className="text-xs font-semibold text-gray-500 uppercase block mb-2">
+                                    Username
+                                </label>
+                                <div className="flex items-center gap-2">
+                                    <input
+                                        type="text"
+                                        value={resetPasswordData.username}
+                                        readOnly
+                                        className="flex-1 px-3 py-2 bg-white border border-gray-300 rounded-lg font-mono text-sm"
+                                    />
+                                    <button
+                                        onClick={() => copyToClipboard(resetPasswordData.username)}
+                                        className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-200 rounded-lg transition"
+                                        title="Copy username"
+                                    >
+                                        <Copy className="w-4 h-4" />
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="text-xs font-semibold text-gray-500 uppercase block mb-2">
+                                    Password Baru
+                                </label>
+                                <div className="flex items-center gap-2">
+                                    <input
+                                        type="text"
+                                        value={resetPasswordData.password}
+                                        readOnly
+                                        className="flex-1 px-3 py-2 bg-white border border-gray-300 rounded-lg font-mono text-sm font-bold text-indigo-600"
+                                    />
+                                    <button
+                                        onClick={() => copyToClipboard(resetPasswordData.password)}
+                                        className="p-2 text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 rounded-lg transition"
+                                        title="Copy password"
+                                    >
+                                        <Copy className="w-4 h-4" />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                            <div className="flex gap-3">
+                                <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                                <div className="text-sm text-yellow-800">
+                                    <p className="font-semibold mb-1">Penting:</p>
+                                    <ul className="list-disc list-inside space-y-1">
+                                        <li>User akan diminta mengganti password saat login pertama kali</li>
+                                        <li>Simpan password ini sebelum menutup dialog</li>
+                                        <li>Password tidak akan ditampilkan lagi</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button
+                            onClick={() => {
+                                setShowPasswordModal(false);
+                                setResetPasswordData(null);
+                            }}
+                            className="w-full px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-semibold"
+                        >
+                            Tutup
+                        </button>
                     </div>
                 </div>
             )}
