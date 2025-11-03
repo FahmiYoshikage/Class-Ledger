@@ -6,18 +6,25 @@ import {
     TrendingDown,
     AlertCircle,
     User,
+    Users,
     Calendar,
     DollarSign,
     CheckCircle,
     XCircle,
+    Trophy,
+    Medal,
+    Award,
 } from 'lucide-react';
 import { paymentsAPI, expensesAPI, studentsAPI } from '../services/api';
+import api from '../services/api';
 
 const MemberDashboard = () => {
     const { user } = useAuth();
     const [studentData, setStudentData] = useState(null);
     const [payments, setPayments] = useState([]);
     const [allPayments, setAllPayments] = useState([]); // All class payments
+    const [allStudents, setAllStudents] = useState([]); // All students
+    const [memberStats, setMemberStats] = useState([]); // Member leaderboard
     const [expenses, setExpenses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [stats, setStats] = useState({
@@ -50,13 +57,16 @@ const MemberDashboard = () => {
     const fetchPayments = async () => {
         try {
             setLoading(true);
-            const [paymentsRes, expensesRes] = await Promise.all([
+            const [paymentsRes, expensesRes, studentsRes, usersRes] = await Promise.all([
                 paymentsAPI.getAll(),
                 expensesAPI.getAll(),
+                studentsAPI.getAll(),
+                api.get('/users'),
             ]);
 
             // Save all payments for class total
             setAllPayments(paymentsRes.data);
+            setAllStudents(studentsRes.data);
 
             // Filter payments for this student only
             const studentPayments = paymentsRes.data.filter(
@@ -94,6 +104,31 @@ const MemberDashboard = () => {
                 totalClassBalance: totalClassIncome - totalExpenses,
                 paymentCount: studentPayments.length,
             });
+
+            // Calculate member leaderboard (exclude admin users)
+            const memberUsers = usersRes.data.filter(u => u.role === 'member' && u.studentId);
+            const leaderboard = memberUsers.map(u => {
+                const studentId = u.studentId._id || u.studentId;
+                const memberPayments = paymentsRes.data.filter(
+                    p => p.student === studentId || p.student?._id === studentId
+                );
+                const total = memberPayments.reduce((sum, p) => sum + (p.amount || 0), 0);
+                
+                return {
+                    userId: u._id,
+                    username: u.username,
+                    fullName: u.fullName,
+                    studentId: studentId,
+                    studentName: u.studentId?.nama || u.studentId?.name || 'Unknown',
+                    totalPaid: total,
+                    paymentCount: memberPayments.length,
+                };
+            });
+
+            // Sort by total paid (descending)
+            leaderboard.sort((a, b) => b.totalPaid - a.totalPaid);
+            setMemberStats(leaderboard);
+
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
@@ -317,12 +352,115 @@ const MemberDashboard = () => {
                     </div>
                 </div>
 
+                {/* Member Leaderboard */}
+                <div className="bg-white rounded-lg shadow mb-4 sm:mb-6">
+                    <div className="p-4 sm:p-6 border-b border-gray-200">
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center gap-2">
+                            <Users className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
+                            Leaderboard Member
+                        </h2>
+                        <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                            Total kontribusi pembayaran kas dari semua member
+                        </p>
+                    </div>
+                    <div className="p-4 sm:p-6">
+                        {loading ? (
+                            <div className="text-center py-8 text-gray-500">
+                                Loading...
+                            </div>
+                        ) : memberStats.length === 0 ? (
+                            <div className="text-center py-8 text-gray-500">
+                                Belum ada data member
+                            </div>
+                        ) : (
+                            <div className="space-y-2 sm:space-y-3">
+                                {memberStats.map((member, index) => {
+                                    const isCurrentUser = member.userId === user._id;
+                                    const rankColor = 
+                                        index === 0 ? 'from-yellow-400 to-yellow-600' :
+                                        index === 1 ? 'from-gray-300 to-gray-500' :
+                                        index === 2 ? 'from-orange-400 to-orange-600' :
+                                        'from-gray-200 to-gray-300';
+                                    
+                                    const RankIcon = 
+                                        index === 0 ? Trophy :
+                                        index === 1 ? Medal :
+                                        index === 2 ? Award :
+                                        null;
+
+                                    return (
+                                        <div
+                                            key={member.userId}
+                                            className={`flex items-center justify-between p-3 sm:p-4 rounded-lg ${
+                                                isCurrentUser 
+                                                    ? 'bg-gradient-to-r from-indigo-50 to-purple-50 border-2 border-indigo-300' 
+                                                    : 'bg-gray-50'
+                                            }`}
+                                        >
+                                            <div className="flex items-center gap-3 flex-1 min-w-0">
+                                                {/* Rank */}
+                                                <div className={`flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center ${
+                                                    index < 3 
+                                                        ? `bg-gradient-to-br ${rankColor} text-white` 
+                                                        : 'bg-gray-200 text-gray-600'
+                                                }`}>
+                                                    {RankIcon ? (
+                                                        <RankIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+                                                    ) : (
+                                                        <span className="text-xs sm:text-sm font-bold">
+                                                            {index + 1}
+                                                        </span>
+                                                    )}
+                                                </div>
+
+                                                {/* Member Info */}
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="flex items-center gap-2">
+                                                        <h3 className="font-semibold text-sm sm:text-base text-gray-900 truncate">
+                                                            {member.studentName}
+                                                        </h3>
+                                                        {isCurrentUser && (
+                                                            <span className="text-xs bg-indigo-600 text-white px-2 py-0.5 rounded-full">
+                                                                Anda
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    <p className="text-xs sm:text-sm text-gray-500">
+                                                        {member.paymentCount} transaksi
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            {/* Total */}
+                                            <div className="text-right flex-shrink-0">
+                                                <p className={`font-bold text-sm sm:text-base ${
+                                                    isCurrentUser ? 'text-indigo-600' : 'text-gray-900'
+                                                }`}>
+                                                    {formatCurrency(member.totalPaid)}
+                                                </p>
+                                                {index < 3 && (
+                                                    <p className="text-xs text-gray-500">
+                                                        {index === 0 ? '👑 Top 1' :
+                                                         index === 1 ? '🥈 Top 2' :
+                                                         '🥉 Top 3'}
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
+                    </div>
+                </div>
+
                 {/* Recent Expenses */}
                 <div className="bg-white rounded-lg shadow">
                     <div className="p-4 sm:p-6 border-b border-gray-200">
                         <h2 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center gap-2">
                             <TrendingDown className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
                             Pengeluaran Kelas Terbaru
+```
                         </h2>
                     </div>
                     <div className="p-4 sm:p-6">
