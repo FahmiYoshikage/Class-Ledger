@@ -10,8 +10,12 @@ import {
     Eye,
     EyeOff,
     Gift,
+    Trophy,
+    Medal,
+    Award,
 } from 'lucide-react';
 import { paymentsAPI, expensesAPI, studentsAPI } from '../services/api';
+import api from '../services/api';
 
 const PublicDashboard = () => {
     const navigate = useNavigate();
@@ -24,6 +28,7 @@ const PublicDashboard = () => {
     });
     const [events, setEvents] = useState([]);
     const [recentPayments, setRecentPayments] = useState([]);
+    const [leaderboard, setLeaderboard] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -33,10 +38,11 @@ const PublicDashboard = () => {
     const fetchPublicData = async () => {
         try {
             setLoading(true);
-            const [paymentsRes, expensesRes, studentsRes] = await Promise.all([
+            const [paymentsRes, expensesRes, studentsRes, usersRes] = await Promise.all([
                 paymentsAPI.getAll(),
                 expensesAPI.getAll(),
                 studentsAPI.getAll(),
+                api.get('/users'),
             ]);
 
             const totalIncome = paymentsRes.data.reduce(
@@ -83,6 +89,44 @@ const PublicDashboard = () => {
                 console.log(`   Payments:`, event.payments);
             });
 
+            // Calculate leaderboard (only member users with studentId)
+            const memberUsers = usersRes.data.filter(
+                (u) => u.role === 'member' && u.studentId
+            );
+
+            const leaderboardData = memberUsers.map((u) => {
+                const studentId = u.studentId._id || u.studentId;
+                const memberPayments = paymentsRes.data.filter((p) => {
+                    const paymentStudentId = p.student?._id || p.student;
+                    return paymentStudentId === studentId;
+                });
+                const total = memberPayments.reduce(
+                    (sum, p) => sum + (p.amount || 0),
+                    0
+                );
+
+                // Get student name
+                let studentName = 'Unknown';
+                if (typeof u.studentId === 'object' && u.studentId) {
+                    studentName = u.studentId.nama || u.studentId.name || 'Unknown';
+                } else {
+                    const student = studentsRes.data.find(s => s._id === studentId);
+                    studentName = student?.nama || student?.name || 'Unknown';
+                }
+
+                return {
+                    userId: u._id,
+                    studentId: studentId,
+                    studentName: studentName,
+                    totalPaid: total,
+                    paymentCount: memberPayments.length,
+                };
+            });
+
+            // Sort by total paid (descending) and take top 10
+            leaderboardData.sort((a, b) => b.totalPaid - a.totalPaid);
+            console.log('🏆 Public Leaderboard (Top 10):', leaderboardData.slice(0, 10));
+
             setStats({
                 totalIncome,
                 totalExpenses,
@@ -94,6 +138,7 @@ const PublicDashboard = () => {
 
             setEvents(Object.values(uniqueEvents));
             setRecentPayments(paymentsRes.data.slice(0, 5));
+            setLeaderboard(leaderboardData.slice(0, 10)); // Top 10 contributors
         } catch (error) {
             console.error('Error fetching public data:', error);
         } finally {
@@ -263,6 +308,111 @@ const PublicDashboard = () => {
                                     </div>
                                 </div>
                             ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* Leaderboard Section */}
+                {leaderboard.length > 0 && (
+                    <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl p-6 sm:p-8 mb-6 sm:mb-8">
+                        <div className="flex items-center gap-3 mb-6">
+                            <Trophy className="w-6 h-6 sm:w-7 sm:h-7 text-yellow-600" />
+                            <div>
+                                <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
+                                    🏆 Top Contributors
+                                </h3>
+                                <p className="text-xs sm:text-sm text-gray-600 mt-1">
+                                    Siswa dengan kontribusi pembayaran kas terbesar
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div className="space-y-2 sm:space-y-3">
+                            {leaderboard.map((member, index) => {
+                                const rankColor =
+                                    index === 0
+                                        ? 'from-yellow-400 to-yellow-600'
+                                        : index === 1
+                                        ? 'from-gray-300 to-gray-500'
+                                        : index === 2
+                                        ? 'from-orange-400 to-orange-600'
+                                        : 'from-gray-200 to-gray-300';
+
+                                const RankIcon =
+                                    index === 0
+                                        ? Trophy
+                                        : index === 1
+                                        ? Medal
+                                        : index === 2
+                                        ? Award
+                                        : null;
+
+                                return (
+                                    <div
+                                        key={member.userId}
+                                        className="flex items-center justify-between p-3 sm:p-4 rounded-xl bg-gradient-to-r from-gray-50 to-white border border-gray-200 hover:shadow-md transition-shadow"
+                                    >
+                                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                                            {/* Rank Badge */}
+                                            <div
+                                                className={`flex-shrink-0 w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center ${
+                                                    index < 3
+                                                        ? `bg-gradient-to-br ${rankColor} text-white shadow-md`
+                                                        : 'bg-gray-100 text-gray-600'
+                                                }`}
+                                            >
+                                                {RankIcon ? (
+                                                    <RankIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+                                                ) : (
+                                                    <span className="text-xs sm:text-sm font-bold">
+                                                        {index + 1}
+                                                    </span>
+                                                )}
+                                            </div>
+
+                                            {/* Student Info */}
+                                            <div className="flex-1 min-w-0">
+                                                <h4 className="font-bold text-sm sm:text-base text-gray-900 truncate">
+                                                    {member.studentName}
+                                                </h4>
+                                                <p className="text-xs sm:text-sm text-gray-500">
+                                                    {member.paymentCount} transaksi
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        {/* Total Amount */}
+                                        <div className="text-right flex-shrink-0 ml-3">
+                                            <p className={`font-bold text-sm sm:text-base ${
+                                                index === 0 
+                                                    ? 'text-yellow-600'
+                                                    : index === 1
+                                                    ? 'text-gray-600'
+                                                    : index === 2
+                                                    ? 'text-orange-600'
+                                                    : 'text-gray-900'
+                                            }`}>
+                                                {formatCurrency(member.totalPaid)}
+                                            </p>
+                                            {index < 3 && (
+                                                <p className="text-xs text-gray-500 mt-0.5">
+                                                    {index === 0
+                                                        ? '👑 #1'
+                                                        : index === 1
+                                                        ? '🥈 #2'
+                                                        : '🥉 #3'}
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-200">
+                            <p className="text-xs sm:text-sm text-center text-indigo-900 font-medium">
+                                💪 Yuk, tingkatkan kontribusimu untuk masuk leaderboard!
+                            </p>
                         </div>
                     </div>
                 )}

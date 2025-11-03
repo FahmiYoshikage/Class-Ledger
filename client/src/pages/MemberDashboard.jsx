@@ -138,13 +138,22 @@ const MemberDashboard = () => {
                     0
                 );
 
+                // Get student name from studentId object or find from students list
+                let studentName = 'Unknown';
+                if (typeof u.studentId === 'object' && u.studentId) {
+                    studentName = u.studentId.nama || u.studentId.name || 'Unknown';
+                } else {
+                    // Find from students list
+                    const student = studentsRes.data.find(s => s._id === studentId);
+                    studentName = student?.nama || student?.name || 'Unknown';
+                }
+
                 return {
                     userId: u._id,
                     username: u.username,
                     fullName: u.fullName,
                     studentId: studentId,
-                    studentName:
-                        u.studentId?.nama || u.studentId?.name || 'Unknown',
+                    studentName: studentName,
                     totalPaid: total,
                     paymentCount: memberPayments.length,
                 };
