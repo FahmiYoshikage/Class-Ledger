@@ -256,6 +256,62 @@ router.post(
     }
 );
 
+// @route   PATCH /api/auth/profile
+// @desc    Update own profile (email, username)
+// @access  Private (Member & Admin)
+router.patch('/profile', authenticate, async (req, res) => {
+    try {
+        const { email, username } = req.body;
+
+        // Get current user
+        const user = await User.findById(req.user._id);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found',
+            });
+        }
+
+        // Check if username is being changed and if it's already taken
+        if (username && username !== user.username) {
+            const existingUser = await User.findOne({ username });
+            if (existingUser) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Username already taken',
+                });
+            }
+            user.username = username;
+        }
+
+        // Update email
+        if (email !== undefined) {
+            // Allow setting null/empty for email
+            user.email = email || undefined;
+        }
+
+        await user.save();
+
+        // Return updated user without password
+        const updatedUser = user.toJSON();
+        delete updatedUser.password;
+
+        res.json({
+            success: true,
+            message: 'Profile updated successfully',
+            user: updatedUser,
+        });
+    } catch (error) {
+        console.error('Update profile error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to update profile',
+            error: error.message,
+        });
+    }
+});
+
 // @route   GET /api/auth/users
 // @desc    Get all users (Admin only)
 // @access  Private (Admin)

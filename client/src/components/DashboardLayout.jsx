@@ -9,6 +9,8 @@ import {
     Home,
     Activity,
     Laptop,
+    Key,
+    Edit,
 } from 'lucide-react';
 
 const DashboardLayout = () => {
@@ -52,9 +54,9 @@ const DashboardLayout = () => {
                         {/* Actions */}
                         <div className="flex items-center gap-2">
                             {/* Back to Dashboard (if not on dashboard) */}
-                            {location.pathname !== '/dashboard' && (
+                            {location.pathname !== '/app/dashboard' && (
                                 <button
-                                    onClick={() => navigate('/dashboard')}
+                                    onClick={() => navigate('/app/dashboard')}
                                     className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-indigo-600 hover:bg-indigo-50 rounded-lg transition"
                                 >
                                     <Home className="w-4 h-4" />
@@ -68,7 +70,7 @@ const DashboardLayout = () => {
                             {user?.role === 'admin' && (
                                 <>
                                     <button
-                                        onClick={() => navigate('/users')}
+                                        onClick={() => navigate('/app/users')}
                                         className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition"
                                     >
                                         <UsersIcon className="w-4 h-4" />
@@ -77,7 +79,7 @@ const DashboardLayout = () => {
                                         </span>
                                     </button>
                                     <button
-                                        onClick={() => navigate('/audit-logs')}
+                                        onClick={() => navigate('/app/audit-logs')}
                                         className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition"
                                     >
                                         <Activity className="w-4 h-4" />
@@ -88,20 +90,31 @@ const DashboardLayout = () => {
                                 </>
                             )}
 
-                            {/* Change Password */}
+                            {/* Edit Profile */}
                             <button
-                                onClick={() => navigate('/change-password')}
+                                onClick={() => navigate('/app/profile')}
                                 className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition"
                             >
-                                <User className="w-4 h-4" />
+                                <Edit className="w-4 h-4" />
                                 <span className="hidden sm:inline">
-                                    Profile
+                                    Edit Profile
+                                </span>
+                            </button>
+
+                            {/* Change Password */}
+                            <button
+                                onClick={() => navigate('/app/change-password')}
+                                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition"
+                            >
+                                <Key className="w-4 h-4" />
+                                <span className="hidden sm:inline">
+                                    Password
                                 </span>
                             </button>
 
                             {/* Sessions */}
                             <button
-                                onClick={() => navigate('/sessions')}
+                                onClick={() => navigate('/app/sessions')}
                                 className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition"
                             >
                                 <Laptop className="w-4 h-4" />
