@@ -232,7 +232,9 @@ const UserManagement = () => {
                                     </td>
                                     <td className="px-3 sm:px-6 py-3 sm:py-4">
                                         <button
-                                            onClick={() => handleToggleActive(user)}
+                                            onClick={() =>
+                                                handleToggleActive(user)
+                                            }
                                             className={`inline-flex items-center gap-1 px-2 sm:px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap ${
                                                 user.isActive
                                                     ? 'bg-green-100 text-green-800'
@@ -242,12 +244,16 @@ const UserManagement = () => {
                                             {user.isActive ? (
                                                 <>
                                                     <CheckCircle className="w-3 h-3" />
-                                                    <span className="hidden sm:inline">Active</span>
+                                                    <span className="hidden sm:inline">
+                                                        Active
+                                                    </span>
                                                 </>
                                             ) : (
                                                 <>
                                                     <XCircle className="w-3 h-3" />
-                                                    <span className="hidden sm:inline">Inactive</span>
+                                                    <span className="hidden sm:inline">
+                                                        Inactive
+                                                    </span>
                                                 </>
                                             )}
                                         </button>

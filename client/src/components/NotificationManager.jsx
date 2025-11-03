@@ -651,7 +651,9 @@ const NotificationManager = () => {
                     <div className="bg-white p-3 sm:p-4 rounded-lg shadow border-l-4 border-red-500">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-gray-600 text-xs sm:text-sm">Gagal</p>
+                                <p className="text-gray-600 text-xs sm:text-sm">
+                                    Gagal
+                                </p>
                                 <p className="text-xl sm:text-2xl font-bold text-gray-800">
                                     {stats.failed}
                                 </p>
@@ -702,7 +704,9 @@ const NotificationManager = () => {
                         }`}
                     >
                         <Send className="w-4 h-4" />
-                        <span className="hidden sm:inline">Kirim Individual</span>
+                        <span className="hidden sm:inline">
+                            Kirim Individual
+                        </span>
                         <span className="sm:hidden">Individual</span>
                     </button>
 

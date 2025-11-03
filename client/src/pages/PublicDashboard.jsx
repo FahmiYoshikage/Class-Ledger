@@ -51,12 +51,12 @@ const PublicDashboard = () => {
             // Get events from payments (unique event IDs)
             const eventPayments = paymentsRes.data.filter((p) => p.event);
             console.log('📅 Event Payments:', eventPayments);
-            
+
             const uniqueEvents = {};
             eventPayments.forEach((p) => {
                 const eventId = p.event._id || p.event;
                 const eventName = p.event?.name || p.event?.title || 'Unknown';
-                
+
                 if (!uniqueEvents[eventId]) {
                     uniqueEvents[eventId] = {
                         ...p.event,

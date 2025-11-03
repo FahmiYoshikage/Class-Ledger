@@ -124,7 +124,7 @@ const MemberDashboard = () => {
             const memberUsers = usersRes.data.filter(
                 (u) => u.role === 'member' && u.studentId
             );
-            
+
             console.log('👥 Member Users for Leaderboard:', memberUsers);
 
             const leaderboard = memberUsers.map((u) => {
