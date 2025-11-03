@@ -12,6 +12,25 @@ router.get('/', async (req, res) => {
         const events = await Event.find()
             .populate('studentsPaid', 'name absen')
             .sort({ createdAt: -1 });
+
+        // Recalculate totalCollected from actual payments to fix any discrepancies
+        for (const event of events) {
+            const payments = await EventPayment.find({ eventId: event._id });
+            const actualTotal = payments.reduce((sum, p) => sum + p.amount, 0);
+            
+            // Update if there's a mismatch
+            if (event.totalCollected !== actualTotal) {
+                console.log(`🔧 Fixing event ${event.name}: stored=${event.totalCollected}, actual=${actualTotal}`);
+                event.totalCollected = actualTotal;
+                
+                // Recalculate studentsPaid from actual payments
+                const uniqueStudents = [...new Set(payments.map(p => p.studentId.toString()))];
+                event.studentsPaid = uniqueStudents;
+                
+                await event.save();
+            }
+        }
+
         res.json(events);
     } catch (error) {
         res.status(500).json({ message: error.message });

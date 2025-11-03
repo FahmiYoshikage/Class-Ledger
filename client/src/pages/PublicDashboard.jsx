@@ -50,18 +50,37 @@ const PublicDashboard = () => {
 
             // Get events from payments (unique event IDs)
             const eventPayments = paymentsRes.data.filter((p) => p.event);
+            console.log('📅 Event Payments:', eventPayments);
+            
             const uniqueEvents = {};
             eventPayments.forEach((p) => {
                 const eventId = p.event._id || p.event;
+                const eventName = p.event?.name || p.event?.title || 'Unknown';
+                
                 if (!uniqueEvents[eventId]) {
                     uniqueEvents[eventId] = {
                         ...p.event,
                         totalPaid: 0,
                         paidCount: 0,
+                        payments: [], // Track individual payments for debugging
                     };
                 }
                 uniqueEvents[eventId].totalPaid += p.amount;
                 uniqueEvents[eventId].paidCount += 1;
+                uniqueEvents[eventId].payments.push({
+                    id: p._id,
+                    student: p.student?.name || p.student?.nama || 'Unknown',
+                    amount: p.amount,
+                    date: p.date,
+                });
+            });
+
+            // Debug: log each event calculation
+            Object.values(uniqueEvents).forEach((event) => {
+                console.log(`🎯 Event: ${event.name || event.title}`);
+                console.log(`   Total Paid: ${event.totalPaid}`);
+                console.log(`   Paid Count: ${event.paidCount}`);
+                console.log(`   Payments:`, event.payments);
             });
 
             setStats({
