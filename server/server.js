@@ -68,14 +68,14 @@ app.get('/api/health', (req, res) => {
     res.json({ status: 'OK', message: 'Server is running' });
 });
 
-// Serve static files in production
-if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '../client/dist')));
-
-    app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-    });
-}
+// Serve static files in production (disabled for separate frontend container)
+// Frontend is served by kas-kelas-frontend container on port 8767
+// if (process.env.NODE_ENV === 'production') {
+//     app.use(express.static(path.join(__dirname, '../client/dist')));
+//     app.get('*', (req, res) => {
+//         res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+//     });
+// }
 
 // Error handling middleware
 app.use((err, req, res, next) => {
