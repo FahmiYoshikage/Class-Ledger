@@ -131,22 +131,22 @@ const UserManagement = () => {
     }
 
     return (
-        <div className="max-w-7xl mx-auto p-6">
+        <div className="max-w-7xl mx-auto p-3 sm:p-6">
             {/* Header */}
-            <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-                <div className="flex items-center justify-between">
+            <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-3">
-                            <Users className="w-8 h-8 text-indigo-600" />
+                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 flex items-center gap-2 sm:gap-3">
+                            <Users className="w-6 h-6 sm:w-8 sm:h-8 text-indigo-600" />
                             User Management
                         </h1>
-                        <p className="text-gray-500 mt-2">
+                        <p className="text-sm sm:text-base text-gray-500 mt-1 sm:mt-2">
                             Kelola akun pengguna sistem
                         </p>
                     </div>
                     <button
                         onClick={() => setShowAddUser(true)}
-                        className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition flex items-center gap-2 font-semibold"
+                        className="w-full sm:w-auto bg-indigo-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-indigo-700 transition flex items-center justify-center gap-2 font-semibold text-sm sm:text-base"
                     >
                         <Plus className="w-5 h-5" />
                         Tambah User
@@ -165,125 +165,127 @@ const UserManagement = () => {
 
             {/* Users Table */}
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-                <table className="w-full">
-                    <thead className="bg-gray-50">
-                        <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                User
-                            </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                Role
-                            </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                Linked Student
-                            </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                Status
-                            </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                Last Login
-                            </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                Actions
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200">
-                        {users.map((user) => (
-                            <tr key={user._id} className="hover:bg-gray-50">
-                                <td className="px-6 py-4">
-                                    <div>
-                                        <p className="font-semibold text-gray-900">
-                                            {user.fullName}
-                                        </p>
-                                        <p className="text-sm text-gray-500">
-                                            @{user.username}
-                                        </p>
-                                        {user.email && (
-                                            <p className="text-xs text-gray-400">
-                                                {user.email}
-                                            </p>
-                                        )}
-                                    </div>
-                                </td>
-                                <td className="px-6 py-4">
-                                    <span
-                                        className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${
-                                            user.role === 'admin'
-                                                ? 'bg-purple-100 text-purple-800'
-                                                : user.role === 'member'
-                                                ? 'bg-blue-100 text-blue-800'
-                                                : 'bg-gray-100 text-gray-800'
-                                        }`}
-                                    >
-                                        {user.role === 'admin' ? (
-                                            <Shield className="w-3 h-3" />
-                                        ) : (
-                                            <User className="w-3 h-3" />
-                                        )}
-                                        {user.role}
-                                    </span>
-                                </td>
-                                <td className="px-6 py-4 text-sm text-gray-600">
-                                    {user.studentId
-                                        ? `${user.studentId.absen} - ${user.studentId.name}`
-                                        : '-'}
-                                </td>
-                                <td className="px-6 py-4">
-                                    <button
-                                        onClick={() => handleToggleActive(user)}
-                                        className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${
-                                            user.isActive
-                                                ? 'bg-green-100 text-green-800'
-                                                : 'bg-red-100 text-red-800'
-                                        }`}
-                                    >
-                                        {user.isActive ? (
-                                            <>
-                                                <CheckCircle className="w-3 h-3" />
-                                                Active
-                                            </>
-                                        ) : (
-                                            <>
-                                                <XCircle className="w-3 h-3" />
-                                                Inactive
-                                            </>
-                                        )}
-                                    </button>
-                                </td>
-                                <td className="px-6 py-4 text-sm text-gray-600">
-                                    {user.lastLogin
-                                        ? new Date(
-                                              user.lastLogin
-                                          ).toLocaleDateString('id-ID')
-                                        : 'Never'}
-                                </td>
-                                <td className="px-6 py-4">
-                                    <div className="flex items-center gap-2">
-                                        <button
-                                            onClick={() =>
-                                                handleResetPassword(user)
-                                            }
-                                            className="text-blue-600 hover:text-blue-800"
-                                            title="Reset Password"
-                                        >
-                                            <Key className="w-4 h-4" />
-                                        </button>
-                                        <button
-                                            onClick={() =>
-                                                handleDeleteUser(user._id)
-                                            }
-                                            className="text-red-600 hover:text-red-800"
-                                            title="Delete user"
-                                        >
-                                            <Trash2 className="w-4 h-4" />
-                                        </button>
-                                    </div>
-                                </td>
+                <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gradient-to-r from-indigo-50 to-purple-50">
+                            <tr>
+                                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
+                                    User
+                                </th>
+                                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
+                                    Role
+                                </th>
+                                <th className="hidden md:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
+                                    Linked Student
+                                </th>
+                                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
+                                    Status
+                                </th>
+                                <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
+                                    Last Login
+                                </th>
+                                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
+                                    Actions
+                                </th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200">
+                            {users.map((user) => (
+                                <tr key={user._id} className="hover:bg-gray-50">
+                                    <td className="px-3 sm:px-6 py-3 sm:py-4">
+                                        <div>
+                                            <p className="font-semibold text-gray-900 text-sm sm:text-base">
+                                                {user.fullName}
+                                            </p>
+                                            <p className="text-xs sm:text-sm text-gray-500">
+                                                @{user.username}
+                                            </p>
+                                            {user.email && (
+                                                <p className="text-xs text-gray-400">
+                                                    {user.email}
+                                                </p>
+                                            )}
+                                        </div>
+                                    </td>
+                                    <td className="px-3 sm:px-6 py-3 sm:py-4">
+                                        <span
+                                            className={`inline-flex items-center gap-1 px-2 sm:px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap ${
+                                                user.role === 'admin'
+                                                    ? 'bg-purple-100 text-purple-800'
+                                                    : user.role === 'member'
+                                                    ? 'bg-blue-100 text-blue-800'
+                                                    : 'bg-gray-100 text-gray-800'
+                                            }`}
+                                        >
+                                            {user.role === 'admin' ? (
+                                                <Shield className="w-3 h-3" />
+                                            ) : (
+                                                <User className="w-3 h-3" />
+                                            )}
+                                            {user.role}
+                                        </span>
+                                    </td>
+                                    <td className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-gray-600">
+                                        {user.studentId
+                                            ? `${user.studentId.absen} - ${user.studentId.name}`
+                                            : '-'}
+                                    </td>
+                                    <td className="px-3 sm:px-6 py-3 sm:py-4">
+                                        <button
+                                            onClick={() => handleToggleActive(user)}
+                                            className={`inline-flex items-center gap-1 px-2 sm:px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap ${
+                                                user.isActive
+                                                    ? 'bg-green-100 text-green-800'
+                                                    : 'bg-red-100 text-red-800'
+                                            }`}
+                                        >
+                                            {user.isActive ? (
+                                                <>
+                                                    <CheckCircle className="w-3 h-3" />
+                                                    <span className="hidden sm:inline">Active</span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <XCircle className="w-3 h-3" />
+                                                    <span className="hidden sm:inline">Inactive</span>
+                                                </>
+                                            )}
+                                        </button>
+                                    </td>
+                                    <td className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-gray-600 whitespace-nowrap">
+                                        {user.lastLogin
+                                            ? new Date(
+                                                  user.lastLogin
+                                              ).toLocaleDateString('id-ID')
+                                            : 'Never'}
+                                    </td>
+                                    <td className="px-3 sm:px-6 py-3 sm:py-4">
+                                        <div className="flex items-center gap-2">
+                                            <button
+                                                onClick={() =>
+                                                    handleResetPassword(user)
+                                                }
+                                                className="text-blue-600 hover:text-blue-800"
+                                                title="Reset Password"
+                                            >
+                                                <Key className="w-4 h-4" />
+                                            </button>
+                                            <button
+                                                onClick={() =>
+                                                    handleDeleteUser(user._id)
+                                                }
+                                                className="text-red-600 hover:text-red-800"
+                                                title="Delete user"
+                                            >
+                                                <Trash2 className="w-4 h-4" />
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             {/* Add User Modal */}

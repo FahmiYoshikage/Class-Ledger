@@ -562,16 +562,16 @@ const NotificationManager = () => {
     }, [activeTab]);
 
     return (
-        <div className="max-w-7xl mx-auto p-6">
+        <div className="max-w-7xl mx-auto p-3 sm:p-6">
             {/* Header */}
-            <div className="mb-6">
-                <div className="flex items-center justify-between mb-4">
+            <div className="mb-4 sm:mb-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mb-3 sm:mb-4">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
-                            <Bell className="w-8 h-8 text-blue-600" />
-                            WhatsApp Notification Center
+                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 flex items-center gap-2">
+                            <Bell className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
+                            WhatsApp Notification
                         </h1>
-                        <p className="text-gray-600 mt-1">
+                        <p className="text-sm sm:text-base text-gray-600 mt-1">
                             Kirim reminder otomatis ke siswa yang belum bayar
                             kas
                         </p>
@@ -580,7 +580,7 @@ const NotificationManager = () => {
                     <button
                         onClick={loadData}
                         disabled={loading}
-                        className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                        className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-white border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                     >
                         <RefreshCw
                             className={`w-4 h-4 ${
@@ -604,24 +604,24 @@ const NotificationManager = () => {
                     >
                         {apiStatus.testMode ? (
                             <>
-                                <AlertCircle className="w-5 h-5 text-yellow-600" />
-                                <span className="text-yellow-800 font-medium">
+                                <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600 flex-shrink-0" />
+                                <span className="text-xs sm:text-sm text-yellow-800 font-medium">
                                     TEST MODE - Pesan tidak akan benar-benar
                                     dikirim
                                 </span>
                             </>
                         ) : apiStatus.connected ? (
                             <>
-                                <CheckCircle className="w-5 h-5 text-green-600" />
-                                <span className="text-green-800">
+                                <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 flex-shrink-0" />
+                                <span className="text-xs sm:text-sm text-green-800">
                                     WhatsApp API Connected • Device:{' '}
                                     {apiStatus.device}
                                 </span>
                             </>
                         ) : (
                             <>
-                                <XCircle className="w-5 h-5 text-red-600" />
-                                <span className="text-red-800">
+                                <XCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 flex-shrink-0" />
+                                <span className="text-xs sm:text-sm text-red-800">
                                     WhatsApp API Tidak Terhubung - Set
                                     FONNTE_API_TOKEN di .env
                                 </span>
@@ -633,105 +633,108 @@ const NotificationManager = () => {
 
             {/* Stats Cards */}
             {stats && (
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                    <div className="bg-white p-4 rounded-lg shadow border-l-4 border-blue-500">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
+                    <div className="bg-white p-3 sm:p-4 rounded-lg shadow border-l-4 border-blue-500">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-gray-600 text-sm">
+                                <p className="text-gray-600 text-xs sm:text-sm">
                                     Total Terkirim
                                 </p>
-                                <p className="text-2xl font-bold text-gray-800">
+                                <p className="text-xl sm:text-2xl font-bold text-gray-800">
                                     {stats.sent}
                                 </p>
                             </div>
-                            <CheckCircle className="w-8 h-8 text-blue-500" />
+                            <CheckCircle className="w-6 h-6 sm:w-8 sm:h-8 text-blue-500" />
                         </div>
                     </div>
 
-                    <div className="bg-white p-4 rounded-lg shadow border-l-4 border-red-500">
+                    <div className="bg-white p-3 sm:p-4 rounded-lg shadow border-l-4 border-red-500">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-gray-600 text-sm">Gagal</p>
-                                <p className="text-2xl font-bold text-gray-800">
+                                <p className="text-gray-600 text-xs sm:text-sm">Gagal</p>
+                                <p className="text-xl sm:text-2xl font-bold text-gray-800">
                                     {stats.failed}
                                 </p>
                             </div>
-                            <XCircle className="w-8 h-8 text-red-500" />
+                            <XCircle className="w-6 h-6 sm:w-8 sm:h-8 text-red-500" />
                         </div>
                     </div>
 
-                    <div className="bg-white p-4 rounded-lg shadow border-l-4 border-green-500">
+                    <div className="bg-white p-3 sm:p-4 rounded-lg shadow border-l-4 border-green-500">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-gray-600 text-sm">
-                                    7 Hari Terakhir
+                                <p className="text-gray-600 text-xs sm:text-sm">
+                                    7 Hari
                                 </p>
-                                <p className="text-2xl font-bold text-gray-800">
+                                <p className="text-xl sm:text-2xl font-bold text-gray-800">
                                     {stats.last7Days}
                                 </p>
                             </div>
-                            <TrendingUp className="w-8 h-8 text-green-500" />
+                            <TrendingUp className="w-6 h-6 sm:w-8 sm:h-8 text-green-500" />
                         </div>
                     </div>
 
-                    <div className="bg-white p-4 rounded-lg shadow border-l-4 border-yellow-500">
+                    <div className="bg-white p-3 sm:p-4 rounded-lg shadow border-l-4 border-yellow-500">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-gray-600 text-sm">
+                                <p className="text-gray-600 text-xs sm:text-sm">
                                     Perlu Reminder
                                 </p>
-                                <p className="text-2xl font-bold text-gray-800">
+                                <p className="text-xl sm:text-2xl font-bold text-gray-800">
                                     {needsReminder.length}
                                 </p>
                             </div>
-                            <Bell className="w-8 h-8 text-yellow-500" />
+                            <Bell className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-500" />
                         </div>
                     </div>
                 </div>
             )}
 
             {/* Tabs */}
-            <div className="bg-white rounded-lg shadow mb-6">
-                <div className="flex border-b">
+            <div className="bg-white rounded-lg shadow mb-4 sm:mb-6 overflow-hidden">
+                <div className="flex overflow-x-auto border-b">
                     <button
                         onClick={() => setActiveTab('send')}
-                        className={`flex items-center gap-2 px-6 py-3 font-medium transition-colors ${
+                        className={`flex items-center gap-2 px-4 sm:px-6 py-3 font-medium transition-colors whitespace-nowrap text-sm sm:text-base ${
                             activeTab === 'send'
                                 ? 'text-blue-600 border-b-2 border-blue-600'
                                 : 'text-gray-600 hover:text-gray-800'
                         }`}
                     >
                         <Send className="w-4 h-4" />
-                        Kirim Individual
+                        <span className="hidden sm:inline">Kirim Individual</span>
+                        <span className="sm:hidden">Individual</span>
                     </button>
 
                     <button
                         onClick={() => setActiveTab('group')}
-                        className={`flex items-center gap-2 px-6 py-3 font-medium transition-colors ${
+                        className={`flex items-center gap-2 px-4 sm:px-6 py-3 font-medium transition-colors whitespace-nowrap text-sm sm:text-base ${
                             activeTab === 'group'
                                 ? 'text-blue-600 border-b-2 border-blue-600'
                                 : 'text-gray-600 hover:text-gray-800'
                         }`}
                     >
                         <Users className="w-4 h-4" />
-                        Kirim ke Grup
+                        <span className="hidden sm:inline">Kirim ke Grup</span>
+                        <span className="sm:hidden">Grup</span>
                     </button>
 
                     <button
                         onClick={() => setActiveTab('event')}
-                        className={`flex items-center gap-2 px-6 py-3 font-medium transition-colors ${
+                        className={`flex items-center gap-2 px-4 sm:px-6 py-3 font-medium transition-colors whitespace-nowrap text-sm sm:text-base ${
                             activeTab === 'event'
                                 ? 'text-blue-600 border-b-2 border-blue-600'
                                 : 'text-gray-600 hover:text-gray-800'
                         }`}
                     >
                         <Calendar className="w-4 h-4" />
-                        Reminder Event
+                        <span className="hidden md:inline">Reminder Event</span>
+                        <span className="md:hidden">Event</span>
                     </button>
 
                     <button
                         onClick={() => setActiveTab('history')}
-                        className={`flex items-center gap-2 px-6 py-3 font-medium transition-colors ${
+                        className={`flex items-center gap-2 px-4 sm:px-6 py-3 font-medium transition-colors whitespace-nowrap text-sm sm:text-base ${
                             activeTab === 'history'
                                 ? 'text-blue-600 border-b-2 border-blue-600'
                                 : 'text-gray-600 hover:text-gray-800'
@@ -743,19 +746,20 @@ const NotificationManager = () => {
 
                     <button
                         onClick={() => setActiveTab('settings')}
-                        className={`flex items-center gap-2 px-6 py-3 font-medium transition-colors ${
+                        className={`flex items-center gap-2 px-4 sm:px-6 py-3 font-medium transition-colors whitespace-nowrap text-sm sm:text-base ${
                             activeTab === 'settings'
                                 ? 'text-blue-600 border-b-2 border-blue-600'
                                 : 'text-gray-600 hover:text-gray-800'
                         }`}
                     >
                         <Settings className="w-4 h-4" />
-                        Pengaturan
+                        <span className="hidden sm:inline">Pengaturan</span>
+                        <span className="sm:hidden">Setup</span>
                     </button>
                 </div>
 
                 {/* Tab Content */}
-                <div className="p-6">
+                <div className="p-3 sm:p-6">
                     {activeTab === 'send' && (
                         <div className="space-y-6">
                             {/* Configuration */}

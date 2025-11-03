@@ -65,18 +65,25 @@ const MemberDashboard = () => {
                     api.get('/users'),
                 ]);
 
+            console.log('👤 Current User:', user);
+            console.log('📦 Payments Data:', paymentsRes.data);
+            console.log('👥 Users Data:', usersRes.data);
+
             // Save all payments for class total
             setAllPayments(paymentsRes.data);
             setAllStudents(studentsRes.data);
 
+            // Get current student ID (handle both string and object)
+            const currentStudentId = user.studentId?._id || user.studentId;
+            console.log('🎯 Current Student ID:', currentStudentId);
+
             // Filter payments for this student only
-            const studentPayments = paymentsRes.data.filter(
-                (p) =>
-                    p.student === user.studentId._id ||
-                    p.student === user.studentId ||
-                    p.student?._id === user.studentId._id ||
-                    p.student?._id === user.studentId
-            );
+            const studentPayments = paymentsRes.data.filter((p) => {
+                const paymentStudentId = p.student?._id || p.student;
+                return paymentStudentId === currentStudentId;
+            });
+
+            console.log('💰 Student Payments:', studentPayments);
 
             setPayments(studentPayments);
             setExpenses(expensesRes.data);
@@ -98,6 +105,13 @@ const MemberDashboard = () => {
                 0
             );
 
+            console.log('📊 Stats:', {
+                totalPaid,
+                totalClassIncome,
+                totalExpenses,
+                totalClassBalance: totalClassIncome - totalExpenses,
+            });
+
             setStats({
                 totalPaid,
                 totalClassIncome,
@@ -110,12 +124,15 @@ const MemberDashboard = () => {
             const memberUsers = usersRes.data.filter(
                 (u) => u.role === 'member' && u.studentId
             );
+            
+            console.log('👥 Member Users for Leaderboard:', memberUsers);
+
             const leaderboard = memberUsers.map((u) => {
                 const studentId = u.studentId._id || u.studentId;
-                const memberPayments = paymentsRes.data.filter(
-                    (p) =>
-                        p.student === studentId || p.student?._id === studentId
-                );
+                const memberPayments = paymentsRes.data.filter((p) => {
+                    const paymentStudentId = p.student?._id || p.student;
+                    return paymentStudentId === studentId;
+                });
                 const total = memberPayments.reduce(
                     (sum, p) => sum + (p.amount || 0),
                     0
@@ -135,6 +152,7 @@ const MemberDashboard = () => {
 
             // Sort by total paid (descending)
             leaderboard.sort((a, b) => b.totalPaid - a.totalPaid);
+            console.log('🏆 Leaderboard:', leaderboard);
             setMemberStats(leaderboard);
         } catch (error) {
             console.error('Error fetching data:', error);
