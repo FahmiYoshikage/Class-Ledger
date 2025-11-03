@@ -17,12 +17,14 @@ const MemberDashboard = () => {
     const { user } = useAuth();
     const [studentData, setStudentData] = useState(null);
     const [payments, setPayments] = useState([]);
+    const [allPayments, setAllPayments] = useState([]); // All class payments
     const [expenses, setExpenses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [stats, setStats] = useState({
-        totalPaid: 0,
-        totalDebt: 0,
+        totalPaid: 0, // Personal payment
+        totalClassIncome: 0, // Total class income
         totalExpenses: 0,
+        totalClassBalance: 0, // Class balance
         paymentCount: 0,
     });
 
@@ -53,6 +55,9 @@ const MemberDashboard = () => {
                 expensesAPI.getAll(),
             ]);
 
+            // Save all payments for class total
+            setAllPayments(paymentsRes.data);
+
             // Filter payments for this student only
             const studentPayments = paymentsRes.data.filter(
                 (p) =>
@@ -70,6 +75,13 @@ const MemberDashboard = () => {
                 (sum, p) => sum + (p.amount || 0),
                 0
             );
+            
+            // Calculate total class income from ALL payments
+            const totalClassIncome = paymentsRes.data.reduce(
+                (sum, p) => sum + (p.amount || 0),
+                0
+            );
+            
             const totalExpenses = expensesRes.data.reduce(
                 (sum, e) => sum + (e.amount || 0),
                 0
@@ -77,8 +89,9 @@ const MemberDashboard = () => {
 
             setStats({
                 totalPaid,
-                totalDebt: 0, // TODO: Calculate from expected weekly amount
+                totalClassIncome,
                 totalExpenses,
+                totalClassBalance: totalClassIncome - totalExpenses,
                 paymentCount: studentPayments.length,
             });
         } catch (error) {
@@ -129,29 +142,29 @@ const MemberDashboard = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 p-6">
+        <div className="min-h-screen bg-gray-50 p-3 sm:p-6">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
-                <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900">
+                <div className="mb-6 sm:mb-8">
+                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
                         Dashboard Member
                     </h1>
-                    <p className="text-gray-600 mt-2">
+                    <p className="text-sm sm:text-base text-gray-600 mt-2">
                         Selamat datang, {user.fullName}!
                     </p>
                 </div>
 
                 {/* Student Info Card */}
-                <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg shadow-lg p-6 mb-6 text-white">
-                    <div className="flex items-center gap-4">
-                        <div className="bg-white/20 p-4 rounded-full">
-                            <User className="w-8 h-8" />
+                <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg shadow-lg p-4 sm:p-6 mb-4 sm:mb-6 text-white">
+                    <div className="flex items-center gap-3 sm:gap-4">
+                        <div className="bg-white/20 p-3 sm:p-4 rounded-full">
+                            <User className="w-6 h-6 sm:w-8 sm:h-8" />
                         </div>
                         <div>
-                            <h2 className="text-2xl font-bold">
+                            <h2 className="text-xl sm:text-2xl font-bold">
                                 {studentData?.nama || user.studentId.nama}
                             </h2>
-                            <p className="text-indigo-100">
+                            <p className="text-sm sm:text-base text-indigo-100">
                                 No. Absen:{' '}
                                 {studentData?.absen || user.studentId.absen}
                             </p>
@@ -160,75 +173,89 @@ const MemberDashboard = () => {
                 </div>
 
                 {/* Statistics */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-                    <div className="bg-white rounded-lg shadow p-6">
-                        <div className="flex items-center justify-between mb-4">
-                            <div className="bg-green-100 p-3 rounded-lg">
-                                <DollarSign className="w-6 h-6 text-green-600" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-4 sm:mb-6">
+                    {/* Personal Payment */}
+                    <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+                        <div className="flex items-center justify-between mb-3 sm:mb-4">
+                            <div className="bg-green-100 p-2 sm:p-3 rounded-lg">
+                                <DollarSign className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
                             </div>
                         </div>
-                        <h3 className="text-sm font-medium text-gray-500">
-                            Total Pembayaran
+                        <h3 className="text-xs sm:text-sm font-medium text-gray-500">
+                            Pembayaran Saya
                         </h3>
-                        <p className="text-2xl font-bold text-gray-900 mt-2">
+                        <p className="text-lg sm:text-2xl font-bold text-gray-900 mt-1 sm:mt-2">
                             {formatCurrency(stats.totalPaid)}
                         </p>
-                    </div>
-
-                    <div className="bg-white rounded-lg shadow p-6">
-                        <div className="flex items-center justify-between mb-4">
-                            <div className="bg-blue-100 p-3 rounded-lg">
-                                <CheckCircle className="w-6 h-6 text-blue-600" />
-                            </div>
-                        </div>
-                        <h3 className="text-sm font-medium text-gray-500">
-                            Jumlah Transaksi
-                        </h3>
-                        <p className="text-2xl font-bold text-gray-900 mt-2">
-                            {stats.paymentCount}
+                        <p className="text-xs text-gray-500 mt-1">
+                            {stats.paymentCount} transaksi
                         </p>
                     </div>
 
-                    <div className="bg-white rounded-lg shadow p-6">
-                        <div className="flex items-center justify-between mb-4">
-                            <div className="bg-red-100 p-3 rounded-lg">
-                                <TrendingDown className="w-6 h-6 text-red-600" />
+                    {/* Total Class Income */}
+                    <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+                        <div className="flex items-center justify-between mb-3 sm:mb-4">
+                            <div className="bg-blue-100 p-2 sm:p-3 rounded-lg">
+                                <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
                             </div>
                         </div>
-                        <h3 className="text-sm font-medium text-gray-500">
+                        <h3 className="text-xs sm:text-sm font-medium text-gray-500">
+                            Total Pemasukan Kelas
+                        </h3>
+                        <p className="text-lg sm:text-2xl font-bold text-gray-900 mt-1 sm:mt-2">
+                            {formatCurrency(stats.totalClassIncome)}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                            {allPayments.length} transaksi total
+                        </p>
+                    </div>
+
+                    {/* Total Expenses */}
+                    <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+                        <div className="flex items-center justify-between mb-3 sm:mb-4">
+                            <div className="bg-red-100 p-2 sm:p-3 rounded-lg">
+                                <TrendingDown className="w-5 h-5 sm:w-6 sm:h-6 text-red-600" />
+                            </div>
+                        </div>
+                        <h3 className="text-xs sm:text-sm font-medium text-gray-500">
                             Total Pengeluaran Kelas
                         </h3>
-                        <p className="text-2xl font-bold text-gray-900 mt-2">
+                        <p className="text-lg sm:text-2xl font-bold text-gray-900 mt-1 sm:mt-2">
                             {formatCurrency(stats.totalExpenses)}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                            {expenses.length} transaksi
                         </p>
                     </div>
 
-                    <div className="bg-white rounded-lg shadow p-6">
-                        <div className="flex items-center justify-between mb-4">
-                            <div className="bg-yellow-100 p-3 rounded-lg">
-                                <Wallet className="w-6 h-6 text-yellow-600" />
+                    {/* Class Balance */}
+                    <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+                        <div className="flex items-center justify-between mb-3 sm:mb-4">
+                            <div className="bg-yellow-100 p-2 sm:p-3 rounded-lg">
+                                <Wallet className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-600" />
                             </div>
                         </div>
-                        <h3 className="text-sm font-medium text-gray-500">
+                        <h3 className="text-xs sm:text-sm font-medium text-gray-500">
                             Saldo Kas Kelas
                         </h3>
-                        <p className="text-2xl font-bold text-gray-900 mt-2">
-                            {formatCurrency(
-                                stats.totalPaid - stats.totalExpenses
-                            )}
+                        <p className="text-lg sm:text-2xl font-bold text-gray-900 mt-1 sm:mt-2">
+                            {formatCurrency(stats.totalClassBalance)}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                            Sisa kas kelas
                         </p>
                     </div>
                 </div>
 
                 {/* Payment History */}
-                <div className="bg-white rounded-lg shadow mb-6">
-                    <div className="p-6 border-b border-gray-200">
-                        <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                            <Calendar className="w-5 h-5 text-indigo-600" />
+                <div className="bg-white rounded-lg shadow mb-4 sm:mb-6">
+                    <div className="p-4 sm:p-6 border-b border-gray-200">
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center gap-2">
+                            <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-600" />
                             Riwayat Pembayaran Saya
                         </h2>
                     </div>
-                    <div className="p-6">
+                    <div className="p-4 sm:p-6">
                         {loading ? (
                             <div className="text-center py-8 text-gray-500">
                                 Loading...
@@ -238,20 +265,20 @@ const MemberDashboard = () => {
                                 Belum ada pembayaran
                             </div>
                         ) : (
-                            <div className="overflow-x-auto">
+                            <div className="overflow-x-auto -mx-4 sm:mx-0">
                                 <table className="min-w-full">
                                     <thead className="bg-gray-50">
                                         <tr>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                                                 Tanggal
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                                Minggu Ke
+                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                                Minggu
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                                                 Jumlah
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                                                 Status
                                             </th>
                                         </tr>
@@ -259,18 +286,21 @@ const MemberDashboard = () => {
                                     <tbody className="bg-white divide-y divide-gray-200">
                                         {payments.map((payment) => (
                                             <tr key={payment._id}>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                    {formatDate(payment.date)}
+                                                <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                                                    {new Date(payment.date).toLocaleDateString('id-ID', {
+                                                        day: 'numeric',
+                                                        month: 'short',
+                                                    })}
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                    Minggu {payment.week}
+                                                <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                                                    {payment.week}
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">
+                                                <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm font-semibold text-green-600">
                                                     {formatCurrency(
                                                         payment.amount
                                                     )}
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
                                                     <span className="flex items-center gap-1 text-green-600">
                                                         <CheckCircle className="w-4 h-4" />
                                                         <span className="text-sm">
@@ -289,13 +319,13 @@ const MemberDashboard = () => {
 
                 {/* Recent Expenses */}
                 <div className="bg-white rounded-lg shadow">
-                    <div className="p-6 border-b border-gray-200">
-                        <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                            <TrendingDown className="w-5 h-5 text-red-600" />
+                    <div className="p-4 sm:p-6 border-b border-gray-200">
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center gap-2">
+                            <TrendingDown className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
                             Pengeluaran Kelas Terbaru
                         </h2>
                     </div>
-                    <div className="p-6">
+                    <div className="p-4 sm:p-6">
                         {loading ? (
                             <div className="text-center py-8 text-gray-500">
                                 Loading...
@@ -305,23 +335,25 @@ const MemberDashboard = () => {
                                 Belum ada pengeluaran
                             </div>
                         ) : (
-                            <div className="space-y-3">
+                            <div className="space-y-2 sm:space-y-3">
                                 {expenses.slice(0, 5).map((expense) => (
                                     <div
                                         key={expense._id}
-                                        className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+                                        className="flex items-center justify-between p-3 sm:p-4 bg-gray-50 rounded-lg gap-3"
                                     >
-                                        <div>
-                                            <h3 className="font-semibold text-gray-900">
+                                        <div className="flex-1 min-w-0">
+                                            <h3 className="font-semibold text-sm sm:text-base text-gray-900 truncate">
                                                 {expense.description}
                                             </h3>
-                                            <p className="text-sm text-gray-500">
-                                                {formatDate(expense.date)} •{' '}
-                                                {expense.category}
+                                            <p className="text-xs sm:text-sm text-gray-500">
+                                                {new Date(expense.date).toLocaleDateString('id-ID', {
+                                                    day: 'numeric',
+                                                    month: 'short',
+                                                })} • {expense.category}
                                             </p>
                                         </div>
-                                        <div className="text-right">
-                                            <p className="font-bold text-red-600">
+                                        <div className="text-right flex-shrink-0">
+                                            <p className="font-bold text-sm sm:text-base text-red-600">
                                                 {formatCurrency(expense.amount)}
                                             </p>
                                         </div>

@@ -9,6 +9,7 @@ import UserManagement from './pages/UserManagement.jsx';
 import AuditLogs from './pages/AuditLogs.jsx';
 import SessionManagement from './pages/SessionManagement.jsx';
 import MemberDashboard from './pages/MemberDashboard.jsx';
+import PublicDashboard from './pages/PublicDashboard.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import DashboardLayout from './components/DashboardLayout.jsx';
 import { useAuth } from './context/AuthContext.jsx';
@@ -32,12 +33,15 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <BrowserRouter>
             <AuthProvider>
                 <Routes>
+                    {/* Public Route - Landing Page */}
+                    <Route path="/" element={<PublicDashboard />} />
+                    
                     {/* Public Routes */}
                     <Route path="/login" element={<Login />} />
 
                     {/* Protected Routes */}
                     <Route
-                        path="/"
+                        path="/app"
                         element={
                             <ProtectedRoute>
                                 <DashboardLayout />
@@ -46,7 +50,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                     >
                         <Route
                             index
-                            element={<Navigate to="/dashboard" replace />}
+                            element={<Navigate to="/app/dashboard" replace />}
                         />
                         <Route
                             path="dashboard"
@@ -89,7 +93,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                     {/* Fallback */}
                     <Route
                         path="*"
-                        element={<Navigate to="/dashboard" replace />}
+                        element={<Navigate to="/" replace />}
                     />
                 </Routes>
             </AuthProvider>

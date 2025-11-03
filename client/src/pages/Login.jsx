@@ -27,7 +27,7 @@ const Login = () => {
                     state: { firstLogin: true },
                 });
             } else {
-                navigate('/dashboard');
+                navigate('/app/dashboard');
             }
         } catch (err) {
             setError(
