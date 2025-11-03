@@ -401,7 +401,7 @@ router.post(
 
             // Generate default password: username123
             const defaultPassword = `${user.username}123`;
-            
+
             user.password = defaultPassword;
             user.mustChangePassword = true; // Force user to change password on next login
             await user.save();

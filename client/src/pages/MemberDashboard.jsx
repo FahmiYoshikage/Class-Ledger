@@ -57,12 +57,13 @@ const MemberDashboard = () => {
     const fetchPayments = async () => {
         try {
             setLoading(true);
-            const [paymentsRes, expensesRes, studentsRes, usersRes] = await Promise.all([
-                paymentsAPI.getAll(),
-                expensesAPI.getAll(),
-                studentsAPI.getAll(),
-                api.get('/users'),
-            ]);
+            const [paymentsRes, expensesRes, studentsRes, usersRes] =
+                await Promise.all([
+                    paymentsAPI.getAll(),
+                    expensesAPI.getAll(),
+                    studentsAPI.getAll(),
+                    api.get('/users'),
+                ]);
 
             // Save all payments for class total
             setAllPayments(paymentsRes.data);
@@ -85,13 +86,13 @@ const MemberDashboard = () => {
                 (sum, p) => sum + (p.amount || 0),
                 0
             );
-            
+
             // Calculate total class income from ALL payments
             const totalClassIncome = paymentsRes.data.reduce(
                 (sum, p) => sum + (p.amount || 0),
                 0
             );
-            
+
             const totalExpenses = expensesRes.data.reduce(
                 (sum, e) => sum + (e.amount || 0),
                 0
@@ -106,20 +107,27 @@ const MemberDashboard = () => {
             });
 
             // Calculate member leaderboard (exclude admin users)
-            const memberUsers = usersRes.data.filter(u => u.role === 'member' && u.studentId);
-            const leaderboard = memberUsers.map(u => {
+            const memberUsers = usersRes.data.filter(
+                (u) => u.role === 'member' && u.studentId
+            );
+            const leaderboard = memberUsers.map((u) => {
                 const studentId = u.studentId._id || u.studentId;
                 const memberPayments = paymentsRes.data.filter(
-                    p => p.student === studentId || p.student?._id === studentId
+                    (p) =>
+                        p.student === studentId || p.student?._id === studentId
                 );
-                const total = memberPayments.reduce((sum, p) => sum + (p.amount || 0), 0);
-                
+                const total = memberPayments.reduce(
+                    (sum, p) => sum + (p.amount || 0),
+                    0
+                );
+
                 return {
                     userId: u._id,
                     username: u.username,
                     fullName: u.fullName,
                     studentId: studentId,
-                    studentName: u.studentId?.nama || u.studentId?.name || 'Unknown',
+                    studentName:
+                        u.studentId?.nama || u.studentId?.name || 'Unknown',
                     totalPaid: total,
                     paymentCount: memberPayments.length,
                 };
@@ -128,7 +136,6 @@ const MemberDashboard = () => {
             // Sort by total paid (descending)
             leaderboard.sort((a, b) => b.totalPaid - a.totalPaid);
             setMemberStats(leaderboard);
-
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
@@ -322,10 +329,15 @@ const MemberDashboard = () => {
                                         {payments.map((payment) => (
                                             <tr key={payment._id}>
                                                 <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
-                                                    {new Date(payment.date).toLocaleDateString('id-ID', {
-                                                        day: 'numeric',
-                                                        month: 'short',
-                                                    })}
+                                                    {new Date(
+                                                        payment.date
+                                                    ).toLocaleDateString(
+                                                        'id-ID',
+                                                        {
+                                                            day: 'numeric',
+                                                            month: 'short',
+                                                        }
+                                                    )}
                                                 </td>
                                                 <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
                                                     {payment.week}
@@ -375,35 +387,44 @@ const MemberDashboard = () => {
                         ) : (
                             <div className="space-y-2 sm:space-y-3">
                                 {memberStats.map((member, index) => {
-                                    const isCurrentUser = member.userId === user._id;
-                                    const rankColor = 
-                                        index === 0 ? 'from-yellow-400 to-yellow-600' :
-                                        index === 1 ? 'from-gray-300 to-gray-500' :
-                                        index === 2 ? 'from-orange-400 to-orange-600' :
-                                        'from-gray-200 to-gray-300';
-                                    
-                                    const RankIcon = 
-                                        index === 0 ? Trophy :
-                                        index === 1 ? Medal :
-                                        index === 2 ? Award :
-                                        null;
+                                    const isCurrentUser =
+                                        member.userId === user._id;
+                                    const rankColor =
+                                        index === 0
+                                            ? 'from-yellow-400 to-yellow-600'
+                                            : index === 1
+                                            ? 'from-gray-300 to-gray-500'
+                                            : index === 2
+                                            ? 'from-orange-400 to-orange-600'
+                                            : 'from-gray-200 to-gray-300';
+
+                                    const RankIcon =
+                                        index === 0
+                                            ? Trophy
+                                            : index === 1
+                                            ? Medal
+                                            : index === 2
+                                            ? Award
+                                            : null;
 
                                     return (
                                         <div
                                             key={member.userId}
                                             className={`flex items-center justify-between p-3 sm:p-4 rounded-lg ${
-                                                isCurrentUser 
-                                                    ? 'bg-gradient-to-r from-indigo-50 to-purple-50 border-2 border-indigo-300' 
+                                                isCurrentUser
+                                                    ? 'bg-gradient-to-r from-indigo-50 to-purple-50 border-2 border-indigo-300'
                                                     : 'bg-gray-50'
                                             }`}
                                         >
                                             <div className="flex items-center gap-3 flex-1 min-w-0">
                                                 {/* Rank */}
-                                                <div className={`flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center ${
-                                                    index < 3 
-                                                        ? `bg-gradient-to-br ${rankColor} text-white` 
-                                                        : 'bg-gray-200 text-gray-600'
-                                                }`}>
+                                                <div
+                                                    className={`flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center ${
+                                                        index < 3
+                                                            ? `bg-gradient-to-br ${rankColor} text-white`
+                                                            : 'bg-gray-200 text-gray-600'
+                                                    }`}
+                                                >
                                                     {RankIcon ? (
                                                         <RankIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                                                     ) : (
@@ -426,23 +447,32 @@ const MemberDashboard = () => {
                                                         )}
                                                     </div>
                                                     <p className="text-xs sm:text-sm text-gray-500">
-                                                        {member.paymentCount} transaksi
+                                                        {member.paymentCount}{' '}
+                                                        transaksi
                                                     </p>
                                                 </div>
                                             </div>
 
                                             {/* Total */}
                                             <div className="text-right flex-shrink-0">
-                                                <p className={`font-bold text-sm sm:text-base ${
-                                                    isCurrentUser ? 'text-indigo-600' : 'text-gray-900'
-                                                }`}>
-                                                    {formatCurrency(member.totalPaid)}
+                                                <p
+                                                    className={`font-bold text-sm sm:text-base ${
+                                                        isCurrentUser
+                                                            ? 'text-indigo-600'
+                                                            : 'text-gray-900'
+                                                    }`}
+                                                >
+                                                    {formatCurrency(
+                                                        member.totalPaid
+                                                    )}
                                                 </p>
                                                 {index < 3 && (
                                                     <p className="text-xs text-gray-500">
-                                                        {index === 0 ? '👑 Top 1' :
-                                                         index === 1 ? '🥈 Top 2' :
-                                                         '🥉 Top 3'}
+                                                        {index === 0
+                                                            ? '👑 Top 1'
+                                                            : index === 1
+                                                            ? '🥈 Top 2'
+                                                            : '🥉 Top 3'}
                                                     </p>
                                                 )}
                                             </div>
@@ -459,8 +489,7 @@ const MemberDashboard = () => {
                     <div className="p-4 sm:p-6 border-b border-gray-200">
                         <h2 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center gap-2">
                             <TrendingDown className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
-                            Pengeluaran Kelas Terbaru
-```
+                            Pengeluaran Kelas Terbaru ```
                         </h2>
                     </div>
                     <div className="p-4 sm:p-6">
@@ -484,10 +513,13 @@ const MemberDashboard = () => {
                                                 {expense.description}
                                             </h3>
                                             <p className="text-xs sm:text-sm text-gray-500">
-                                                {new Date(expense.date).toLocaleDateString('id-ID', {
+                                                {new Date(
+                                                    expense.date
+                                                ).toLocaleDateString('id-ID', {
                                                     day: 'numeric',
                                                     month: 'short',
-                                                })} • {expense.category}
+                                                })}{' '}
+                                                • {expense.category}
                                             </p>
                                         </div>
                                         <div className="text-right flex-shrink-0">

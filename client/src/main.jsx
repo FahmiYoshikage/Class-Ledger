@@ -36,7 +36,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                 <Routes>
                     {/* Public Route - Landing Page */}
                     <Route path="/" element={<PublicDashboard />} />
-                    
+
                     {/* Public Routes */}
                     <Route path="/login" element={<Login />} />
 
@@ -67,10 +67,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                             path="change-password"
                             element={<ChangePassword />}
                         />
-                        <Route
-                            path="profile"
-                            element={<ProfileEdit />}
-                        />
+                        <Route path="profile" element={<ProfileEdit />} />
                         <Route
                             path="sessions"
                             element={<SessionManagement />}
@@ -96,10 +93,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                     </Route>
 
                     {/* Fallback */}
-                    <Route
-                        path="*"
-                        element={<Navigate to="/" replace />}
-                    />
+                    <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
             </AuthProvider>
         </BrowserRouter>

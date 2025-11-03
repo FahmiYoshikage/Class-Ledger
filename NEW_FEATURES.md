@@ -1,208 +1,388 @@
-# 📱 Update Fitur Baru - WhatsApp Notification
+# 🎉 New Features - Class Ledger Update# 📱 Update Fitur Baru - WhatsApp Notification
 
-## 🎉 Fitur Baru yang Ditambahkan:
+## Overview## 🎉 Fitur Baru yang Ditambahkan:
 
-### 1. ✏️ **Edit Data Siswa dengan Nomor WhatsApp**
+Update besar-besaran untuk Class Ledger dengan fokus pada:
 
-#### Apa yang Baru:
+1. ✅ **Mobile Responsive** - Perfect untuk semua device### 1. ✏️ **Edit Data Siswa dengan Nomor WhatsApp**
+
+2. ✅ **Public Dashboard** - Akses tanpa login
+
+3. ✅ **Enhanced Member Experience** - Social features & profile customization#### Apa yang Baru:
+
+4. ✅ **Admin Tools** - Password management
 
 -   Tambah kolom **WhatsApp** di tabel siswa
--   Kolom **Notifikasi** (Aktif/Non-aktif)
+
+---- Kolom **Notifikasi** (Aktif/Non-aktif)
+
 -   Tombol **Edit** untuk setiap siswa
--   Modal edit lengkap dengan semua field
 
-#### Cara Pakai:
+## 🚀 Fitur Baru- Modal edit lengkap dengan semua field
 
-**Opsi 1: Saat Tambah Siswa Baru**
+### 1. 📱 Mobile Responsive Design#### Cara Pakai:
 
-1. Klik tombol "Tambah Siswa"
-2. Isi:
-    - Nomor Absen
-    - Nama Lengkap
-    - **Nomor WhatsApp** (opsional)
-    - ✓ Centang "Aktifkan notifikasi WhatsApp"
-3. Klik Simpan
+**Problem**: Tampilan rusak di mobile view**Opsi 1: Saat Tambah Siswa Baru**
 
-**Opsi 2: Edit Siswa yang Sudah Ada**
+**Solution**: 1. Klik tombol "Tambah Siswa"
 
-1. Masuk ke tab **"Siswa"**
-2. Klik tombol **"Edit"** di samping nama siswa
+-   Semua halaman sekarang menggunakan Tailwind responsive classes (`sm:`, `md:`, `lg:`)2. Isi:
+
+-   Adaptive font sizes, padding, dan spacing - Nomor Absen
+
+-   Mobile-first table layouts dengan horizontal scroll - Nama Lengkap
+
+-   Responsive grid layouts (1 kolom di mobile, 2-4 kolom di desktop) - **Nomor WhatsApp** (opsional)
+
+    -   ✓ Centang "Aktifkan notifikasi WhatsApp"
+
+**Pages Fixed**:3. Klik Simpan
+
+-   ✅ MemberDashboard - Stats cards, payment table, leaderboard
+
+-   ✅ PublicDashboard - Hero stats, events grid**Opsi 2: Edit Siswa yang Sudah Ada**
+
+-   ✅ ProfileEdit - Form layouts
+
+-   ✅ UserManagement - User table actions1. Masuk ke tab **"Siswa"**
+
+-   ✅ NotificationManager - Already responsive2. Klik tombol **"Edit"** di samping nama siswa
+
 3. Update data:
-    - Nama
+
+--- - Nama
+
     - Nomor Absen
-    - **Nomor WhatsApp**
+
+### 2. 🌐 Public Dashboard (No Login Required) - **Nomor WhatsApp**
+
     - Status (Aktif/Tidak Aktif/Alumni)
-    - Toggle **Notifikasi**
+
+**Route**: `/` (Landing page) - Toggle **Notifikasi**
+
 4. Klik "Update"
 
-#### Format Nomor WhatsApp:
+**Features**:
 
-✅ **Valid:**
+-   💰 Total Saldo Kas Kelas (Real-time)#### Format Nomor WhatsApp:
 
--   `08123456789`
+-   📊 Total Pemasukan & Pengeluaran
+
+-   👥 Jumlah Siswa & Transaksi✅ **Valid:**
+
+-   🎁 Daftar Event dengan progress bar
+
+-   🔐 Optional Login Button- `08123456789`
+
 -   `628123456789`
 
-❌ **Tidak Valid:**
+**Design**:
 
--   `+628123456789` (jangan pakai +)
--   `0812-3456-789` (jangan pakai strip)
+-   Beautiful gradient background (indigo → purple → pink)❌ **Tidak Valid:**
+
+-   Glass morphism cards
+
+-   Hero stats display- `+628123456789` (jangan pakai +)
+
+-   Call-to-action untuk login- `0812-3456-789` (jangan pakai strip)
+
 -   `0812 3456 789` (jangan pakai spasi)
 
-#### Screenshot Tabel Siswa:
+**Access**:
 
-```
-Absen | Nama | WhatsApp | Status | Notifikasi | Aksi
-------|------|----------|--------|------------|------
+````#### Screenshot Tabel Siswa:
+
+https://triforce.fahmi.app/         ← Public Dashboard
+
+https://triforce.fahmi.app/login    ← Login Page  ```
+
+https://triforce.fahmi.app/app/dashboard ← Authenticated DashboardAbsen | Nama | WhatsApp | Status | Notifikasi | Aksi
+
+```------|------|----------|--------|------------|------
+
 1     | Budi | 📱 08123  | Aktif  | ✓ Aktif    | Edit | 🗑️
-2     | Ani  | Belum    | Aktif  | ✗ Non-aktif| Edit | 🗑️
-```
+
+---2     | Ani  | Belum    | Aktif  | ✗ Non-aktif| Edit | 🗑️
+
+````
+
+### 3. 🎯 Fixed Member Dashboard - Total Kas Bug
 
 ---
+
+**Problem**: Total Kas Kelas menampilkan Rp 0
 
 ### 2. 📱 **Kirim Reminder ke Grup WhatsApp**
 
-#### Apa itu Fitur Ini?
+**Root Cause**:
+
+-   Hanya menghitung pembayaran member sendiri#### Apa itu Fitur Ini?
+
+-   Seharusnya menghitung SEMUA pembayaran kelas
 
 Alih-alih kirim pesan individual satu per satu, sekarang Anda bisa kirim **1 pesan ke grup kelas** yang otomatis **mention (@)** semua siswa yang belum bayar!
 
-#### Keunggulan:
+**Solution**:
+
+-   Fetch ALL payments untuk calculate total kelas#### Keunggulan:
+
+-   Pisahkan: personal payment vs class total
 
 ✅ **Hemat Kuota API** - 1 pesan untuk semua orang
-✅ **Efisien** - Tidak perlu kirim berulang kali
-✅ **Transparent** - Semua siswa tahu siapa yang belum bayar
-✅ **Auto-Mention** - Sistem otomatis mention setiap nomor
 
-#### Format Pesan Grup:
+**New Stats Cards**:✅ **Efisien** - Tidak perlu kirim berulang kali
 
-**Contoh dengan Style Friendly:**
+1. **Pembayaran Saya** - Total personal payment✅ **Transparent** - Semua siswa tahu siapa yang belum bayar
 
-```
-📢 *REMINDER KAS KELAS* 📢
+2. **Total Pemasukan Kelas** - Total dari SEMUA member✅ **Auto-Mention** - Sistem otomatis mention setiap nomor
+
+3. **Total Pengeluaran Kelas** - Total expenses
+
+4. **Saldo Kas Kelas** - Class balance (Income - Expenses)#### Format Pesan Grup:
+
+---**Contoh dengan Style Friendly:**
+
+### 4. 👥 Member Leaderboard (Social Feature)```
+
+📢 _REMINDER KAS KELAS_ 📢
+
+**Location**: MemberDashboard (below payment history)
 
 Halo semuanya! 👋
 
-Ini pengingat ramah untuk teman-teman
-yang belum bayar kas kelas ya~ 😊
+**Features**:
 
-*3 Minggu (Rp 6.000)*
-• @628123456789 (Budi)
+-   📋 Daftar semua member (exclude admin)Ini pengingat ramah untuk teman-teman
+
+-   💰 Total kontribusi per memberyang belum bayar kas kelas ya~ 😊
+
+-   🏆 Top 3 ranking dengan badges (Gold 👑, Silver 🥈, Bronze 🥉)
+
+-   ✨ Highlight current user dengan border indigo*3 Minggu (Rp 6.000)*
+
+-   📊 Sorted by total payment (descending)• @628123456789 (Budi)
+
 • @628987654321 (Ani)
-
-*2 Minggu (Rp 4.000)*
-• @628111222333 (Citra)
-
-Yuk segera dilunasi ya! 🥰
-Ditunggu pembayarannya~ 💙
-
-_Pesan otomatis dari sistem kas kelas_
-```
-
-**Contoh dengan Style Humorous:**
-
-```
-🔔 *BREAKING NEWS!* 🔔
-
-Wartawan kami melaporkan ada
-beberapa VIP yang belum bayar kas! 😂
-
-*3 Minggu (Rp 6.000)*
-• @628123456789 (Budi)
-• @628987654321 (Ani)
-
-*2 Minggu (Rp 4.000)*
-• @628111222333 (Citra)
-
-Yang disebutkan, buruan bayar
-biar turun dari trending topic! 😆
-
-_Auto-generated by Kas Bot 🤖_
-```
-
-#### Cara Pakai:
-
-##### Step 1: Dapatkan Group ID WhatsApp
-
-**Metode 1: Via Fonnte Dashboard**
-
-1. Login ke https://fonnte.com
-2. Klik menu **"Devices"**
-3. Pilih device yang sudah connect
-4. Lihat daftar **"Groups"**
-5. Copy **Group ID** (format: 628xxx-xxx@g.us)
-
-**Metode 2: Via API Call**
-
-```bash
-curl -X POST https://api.fonnte.com/get-devices \
-  -H "Authorization: YOUR_FONNTE_TOKEN"
-```
-
-Response akan berisi list grup dengan format:
-
-```json
-{
-    "groups": [
-        {
-            "id": "628123456789-1234567890@g.us",
-            "name": "Kelas 12-A IPA"
-        }
-    ]
-}
-```
-
-##### Step 2: Kirim ke Grup
-
-1. Buka aplikasi → Tab **"Notifikasi"**
-2. Klik tab **"Kirim ke Grup"** 📱
-3. Isi:
-    - **Group ID:** `628xxx-xxx@g.us`
-    - **Minimum Minggu Telat:** 1, 2, 3, atau 4
-    - **Style Pesan:** Pilih style (Friendly/Humor/etc)
-4. Klik **"Preview Pesan"** untuk lihat hasil
-5. Jika sudah OK, klik **"Kirim ke Grup"**
-
-##### Step 3: Verifikasi di Grup
-
-Buka grup WhatsApp dan cek:
-
--   ✅ Pesan masuk ke grup
--   ✅ Semua nomor ter-mention (muncul @nama)
--   ✅ Siswa yang di-mention dapat notifikasi
 
 ---
 
-## 🔧 Technical Details
+_2 Minggu (Rp 4.000)_
 
-### Backend Changes:
+### 5. ✏️ Profile Edit Page• @628111222333 (Citra)
 
-**1. Model Student Updated:**
+**Route**: `/app/profile`Yuk segera dilunasi ya! 🥰
 
-```javascript
-// server/models/Student.js
+Ditunggu pembayarannya~ 💙
+
+**Features**:
+
+-   📝 Edit **Username** (must be unique)_Pesan otomatis dari sistem kas kelas_
+
+-   📧 Edit **Email** (optional)```
+
+-   🔐 Link to Change Password page
+
+-   ℹ️ Display current account info**Contoh dengan Style Humorous:**
+
+**API**: `PATCH /api/auth/profile````
+
+🔔 _BREAKING NEWS!_ 🔔
+
+---
+
+Wartawan kami melaporkan ada
+
+### 6. 🔑 Password Reset for Adminbeberapa VIP yang belum bayar kas! 😂
+
+**Problem**: User lupa password, admin tidak bisa bantu*3 Minggu (Rp 6.000)*
+
+• @628123456789 (Budi)
+
+**Solution**: Admin bisa reset password user ke default• @628987654321 (Ani)
+
+**Features**:_2 Minggu (Rp 4.000)_
+
+-   🔄 Reset password button per user• @628111222333 (Citra)
+
+-   🎯 Default password: `{username}123`
+
+-   📋 Copy to clipboard functionalityYang disebutkan, buruan bayar
+
+-   ⚠️ Force user to change password on next loginbiar turun dari trending topic! 😆
+
+**API**: `POST /api/auth/users/:id/reset-password`_Auto-generated by Kas Bot 🤖_
+
+````
+
+---
+
+#### Cara Pakai:
+
+## 🛣️ Routing Changes
+
+##### Step 1: Dapatkan Group ID WhatsApp
+
+### Before:
+
+```**Metode 1: Via Fonnte Dashboard**
+
+/              → Login (Protected)
+
+/dashboard     → Dashboard1. Login ke https://fonnte.com
+
+```2. Klik menu **"Devices"**
+
+3. Pilih device yang sudah connect
+
+### After:4. Lihat daftar **"Groups"**
+
+```5. Copy **Group ID** (format: 628xxx-xxx@g.us)
+
+/                    → Public Dashboard (No auth)
+
+/login               → Login Page**Metode 2: Via API Call**
+
+/app/dashboard       → Member/Admin Dashboard (Protected)
+
+/app/profile         → Edit Profile```bash
+
+/app/change-password → Change Passwordcurl -X POST https://api.fonnte.com/get-devices \
+
+/app/users           → User Management (Admin)  -H "Authorization: YOUR_FONNTE_TOKEN"
+
+````
+
+---Response akan berisi list grup dengan format:
+
+## 🚀 Deployment Steps```json
+
 {
-  name: String,
+
+### 1. Pull & Rebuild: "groups": [
+
+````bash {
+
+cd /opt/Class-Ledger            "id": "628123456789-1234567890@g.us",
+
+git pull            "name": "Kelas 12-A IPA"
+
+docker-compose down        }
+
+docker-compose up -d --build    ]
+
+```}
+
+````
+
+### 2. Verify:
+
+````bash##### Step 2: Kirim ke Grup
+
+docker ps
+
+docker logs kas-kelas-api --tail 501. Buka aplikasi → Tab **"Notifikasi"**
+
+```2. Klik tab **"Kirim ke Grup"** 📱
+
+3. Isi:
+
+### 3. Test:    - **Group ID:** `628xxx-xxx@g.us`
+
+- ✅ https://triforce.fahmi.app/ (public dashboard)    - **Minimum Minggu Telat:** 1, 2, 3, atau 4
+
+- ✅ Login & check member leaderboard    - **Style Pesan:** Pilih style (Friendly/Humor/etc)
+
+- ✅ Test profile edit4. Klik **"Preview Pesan"** untuk lihat hasil
+
+- ✅ Admin test password reset5. Jika sudah OK, klik **"Kirim ke Grup"**
+
+
+
+---##### Step 3: Verifikasi di Grup
+
+
+
+## 📋 Testing ChecklistBuka grup WhatsApp dan cek:
+
+
+
+### Public Dashboard:-   ✅ Pesan masuk ke grup
+
+- [ ] Accessible without login-   ✅ Semua nomor ter-mention (muncul @nama)
+
+- [ ] Shows correct total kas kelas-   ✅ Siswa yang di-mention dapat notifikasi
+
+- [ ] Login button works
+
+- [ ] Mobile responsive---
+
+
+
+### Member Dashboard:## 🔧 Technical Details
+
+- [ ] Total Kas Kelas ≠ 0
+
+- [ ] Leaderboard displays all members### Backend Changes:
+
+- [ ] Top 3 has badges
+
+- [ ] Mobile responsive**1. Model Student Updated:**
+
+
+
+### Profile Edit:```javascript
+
+- [ ] Can update username// server/models/Student.js
+
+- [ ] Username uniqueness validated{
+
+- [ ] Can update email  name: String,
+
   absen: Number,
-  status: String,
-  phoneNumber: String,        // NEW!
-  enableNotification: Boolean, // NEW!
-  lastNotificationSent: Date,  // NEW!
-}
-```
+
+### Password Reset (Admin):  status: String,
+
+- [ ] Reset button visible  phoneNumber: String,        // NEW!
+
+- [ ] Modal displays password  enableNotification: Boolean, // NEW!
+
+- [ ] Copy to clipboard works  lastNotificationSent: Date,  // NEW!
+
+- [ ] User forced to change password on login}
+
+````
+
+---
 
 **2. New WhatsApp Service Method:**
 
-```javascript
-// server/services/whatsappService.js
--generateGroupReminderMessage() - // Generate pesan dengan mention
-    sendToGroup(); // Kirim ke grup WA
-```
+## 🏆 Summary
 
-**3. New API Endpoints:**
+````javascript
 
-```javascript
-POST / api / notifications / send - to - group;
+✅ **8/8 Features Completed**:// server/services/whatsappService.js
+
+1. ✅ Mobile responsive-generateGroupReminderMessage() - // Generate pesan dengan mention
+
+2. ✅ Fixed total kas bug    sendToGroup(); // Kirim ke grup WA
+
+3. ✅ Public dashboard```
+
+4. ✅ Updated routing
+
+5. ✅ Enhanced member dashboard**3. New API Endpoints:**
+
+6. ✅ Member leaderboard
+
+7. ✅ Profile edit```javascript
+
+8. ✅ Password resetPOST / api / notifications / send - to - group;
+
 POST / api / notifications / preview - group;
-```
+
+**Status**: ✅ Ready for Production  ```
+
+**URL**: https://triforce.fahmi.app/
 
 ### Frontend Changes:
 
@@ -362,3 +542,4 @@ Jika ada pertanyaan atau issue:
 **Happy Reminding! 🎉**
 
 Dengan 2 fitur baru ini, manajemen kas kelas jadi lebih mudah dan efisien!
+````

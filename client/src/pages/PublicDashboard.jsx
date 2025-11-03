@@ -232,7 +232,13 @@ const PublicDashboard = () => {
                                         <div
                                             className="bg-gradient-to-r from-purple-500 to-pink-500 h-2"
                                             style={{
-                                                width: `${Math.min(100, ((event.totalPaid || 0) / (event.targetAmount || 1)) * 100)}%`,
+                                                width: `${Math.min(
+                                                    100,
+                                                    ((event.totalPaid || 0) /
+                                                        (event.targetAmount ||
+                                                            1)) *
+                                                        100
+                                                )}%`,
                                             }}
                                         />
                                     </div>
@@ -249,7 +255,8 @@ const PublicDashboard = () => {
                         Ingin Lihat Detail Pembayaran Anda?
                     </h3>
                     <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
-                        Login untuk melihat riwayat pembayaran, total kontribusi, dan informasi keuangan pribadi Anda
+                        Login untuk melihat riwayat pembayaran, total
+                        kontribusi, dan informasi keuangan pribadi Anda
                     </p>
                     <button
                         onClick={() => navigate('/login')}
@@ -265,7 +272,8 @@ const PublicDashboard = () => {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 text-center text-white/80 text-xs sm:text-sm">
                     <p>💰 Sistem Kas Kelas - Transparan & Terpercaya</p>
                     <p className="mt-2">
-                        Data diperbarui secara realtime • Login untuk akses lengkap
+                        Data diperbarui secara realtime • Login untuk akses
+                        lengkap
                     </p>
                 </div>
             </div>

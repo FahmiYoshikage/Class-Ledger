@@ -58,7 +58,12 @@ const UserManagement = () => {
     };
 
     const handleResetPassword = async (user) => {
-        if (!window.confirm(`Reset password untuk ${user.username}?\n\nPassword akan direset ke: ${user.username}123`)) return;
+        if (
+            !window.confirm(
+                `Reset password untuk ${user.username}?\n\nPassword akan direset ke: ${user.username}123`
+            )
+        )
+            return;
 
         try {
             const response = await authAPI.resetPassword(user._id);
@@ -256,7 +261,9 @@ const UserManagement = () => {
                                 <td className="px-6 py-4">
                                     <div className="flex items-center gap-2">
                                         <button
-                                            onClick={() => handleResetPassword(user)}
+                                            onClick={() =>
+                                                handleResetPassword(user)
+                                            }
                                             className="text-blue-600 hover:text-blue-800"
                                             title="Reset Password"
                                         >
@@ -415,7 +422,11 @@ const UserManagement = () => {
                                         className="flex-1 px-3 py-2 bg-white border border-gray-300 rounded-lg font-mono text-sm"
                                     />
                                     <button
-                                        onClick={() => copyToClipboard(resetPasswordData.username)}
+                                        onClick={() =>
+                                            copyToClipboard(
+                                                resetPasswordData.username
+                                            )
+                                        }
                                         className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-200 rounded-lg transition"
                                         title="Copy username"
                                     >
@@ -436,7 +447,11 @@ const UserManagement = () => {
                                         className="flex-1 px-3 py-2 bg-white border border-gray-300 rounded-lg font-mono text-sm font-bold text-indigo-600"
                                     />
                                     <button
-                                        onClick={() => copyToClipboard(resetPasswordData.password)}
+                                        onClick={() =>
+                                            copyToClipboard(
+                                                resetPasswordData.password
+                                            )
+                                        }
                                         className="p-2 text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 rounded-lg transition"
                                         title="Copy password"
                                     >
@@ -450,11 +465,21 @@ const UserManagement = () => {
                             <div className="flex gap-3">
                                 <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
                                 <div className="text-sm text-yellow-800">
-                                    <p className="font-semibold mb-1">Penting:</p>
+                                    <p className="font-semibold mb-1">
+                                        Penting:
+                                    </p>
                                     <ul className="list-disc list-inside space-y-1">
-                                        <li>User akan diminta mengganti password saat login pertama kali</li>
-                                        <li>Simpan password ini sebelum menutup dialog</li>
-                                        <li>Password tidak akan ditampilkan lagi</li>
+                                        <li>
+                                            User akan diminta mengganti password
+                                            saat login pertama kali
+                                        </li>
+                                        <li>
+                                            Simpan password ini sebelum menutup
+                                            dialog
+                                        </li>
+                                        <li>
+                                            Password tidak akan ditampilkan lagi
+                                        </li>
                                     </ul>
                                 </div>
                             </div>

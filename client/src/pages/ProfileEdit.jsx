@@ -37,7 +37,7 @@ const ProfileEdit = () => {
                 setSuccess('Profile updated successfully!');
                 // Update user in context
                 updateUser(response.data.user);
-                
+
                 // Redirect after 1.5 seconds
                 setTimeout(() => {
                     navigate('/app/dashboard');
@@ -89,7 +89,9 @@ const ProfileEdit = () => {
                         <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4">
                             <div className="flex items-center gap-3">
                                 <AlertCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
-                                <p className="text-sm text-green-800">{success}</p>
+                                <p className="text-sm text-green-800">
+                                    {success}
+                                </p>
                             </div>
                         </div>
                     )}
@@ -222,9 +224,12 @@ const ProfileEdit = () => {
                             <p className="font-semibold mb-1">Catatan:</p>
                             <ul className="list-disc list-inside space-y-1">
                                 <li>
-                                    Username harus unik dan belum digunakan user lain
+                                    Username harus unik dan belum digunakan user
+                                    lain
                                 </li>
-                                <li>Email bersifat optional dan bisa dikosongkan</li>
+                                <li>
+                                    Email bersifat optional dan bisa dikosongkan
+                                </li>
                                 <li>
                                     Untuk mengganti password, gunakan menu{' '}
                                     <button

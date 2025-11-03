@@ -79,7 +79,9 @@ const DashboardLayout = () => {
                                         </span>
                                     </button>
                                     <button
-                                        onClick={() => navigate('/app/audit-logs')}
+                                        onClick={() =>
+                                            navigate('/app/audit-logs')
+                                        }
                                         className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition"
                                     >
                                         <Activity className="w-4 h-4" />
