@@ -913,19 +913,20 @@ const App = () => {
 
         const studentPayments = payments.filter((p) => {
             // Try multiple possible formats
-            const pStudentId = p.studentId?._id || p.studentId || p.student?._id || p.student;
+            const pStudentId =
+                p.studentId?._id || p.studentId || p.student?._id || p.student;
             const match = pStudentId === studentId;
-            
+
             // Debug first student matching attempt
             if (students[0]?._id === studentId && payments.indexOf(p) < 3) {
                 console.log(`  Payment ${payments.indexOf(p)}:`, {
                     pStudentId,
                     studentId,
                     match,
-                    paymentData: p
+                    paymentData: p,
                 });
             }
-            
+
             return match;
         });
 
