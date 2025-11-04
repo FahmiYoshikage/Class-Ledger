@@ -340,12 +340,11 @@ const App = () => {
 
     // Get students who haven't paid this week (Tunggakan)
     const getUnpaidStudents = () => {
-        const paidStudentsThisWeek = payments
-            .filter((p) => p.week === currentWeek)
-            .map((p) => p.studentId);
-        return students.filter(
-            (s) => s.status === 'Aktif' && !paidStudentsThisWeek.includes(s._id)
-        );
+        return students.filter((s) => {
+            if (s.status !== 'Aktif') return false;
+            const tunggakan = getTunggakan(s._id);
+            return tunggakan > 0; // Punya tunggakan (belum lunas)
+        });
     };
 
     // ===== EXPORT FUNCTIONS =====
@@ -902,17 +901,41 @@ const App = () => {
 
     // Calculate totals
     const getTotalPaid = (studentId) => {
+        // Debug ALL payments structure for first student
+        if (students[0]?._id === studentId) {
+            console.log('🔍 DEBUG Payment Structure:');
+            console.log('  Total payments in system:', payments.length);
+            console.log('  Sample payment:', payments[0]);
+            console.log('  Looking for student ID:', studentId);
+            console.log('  Sample payment.studentId:', payments[0]?.studentId);
+            console.log('  Sample payment.student:', payments[0]?.student);
+        }
+
         const studentPayments = payments.filter((p) => {
-            const pStudentId = p.studentId?._id || p.studentId;
-            return pStudentId === studentId;
+            // Try multiple possible formats
+            const pStudentId = p.studentId?._id || p.studentId || p.student?._id || p.student;
+            const match = pStudentId === studentId;
+            
+            // Debug first student matching attempt
+            if (students[0]?._id === studentId && payments.indexOf(p) < 3) {
+                console.log(`  Payment ${payments.indexOf(p)}:`, {
+                    pStudentId,
+                    studentId,
+                    match,
+                    paymentData: p
+                });
+            }
+            
+            return match;
         });
 
         const total = studentPayments.reduce((sum, p) => sum + p.amount, 0);
 
         // Debug first student only
         if (students[0]?._id === studentId) {
-            console.log('🔍 getTotalPaid Debug for first student:');
+            console.log('🔍 getTotalPaid Result:');
             console.log('  Student ID:', studentId);
+            console.log('  Matched Payments:', studentPayments.length);
             console.log('  Student Payments:', studentPayments);
             console.log('  Total Paid:', total);
             console.log('  Current Week:', currentWeek);
@@ -1345,7 +1368,7 @@ const App = () => {
                                                                     <AlertCircle className="w-3 h-3" />{' '}
                                                                     Telat
                                                                 </span>
-                                                            ) : tunggakan ===
+                                                            ) : tunggakan <=
                                                               0 ? (
                                                                 <span className="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 flex items-center gap-1 w-fit">
                                                                     <CheckCircle className="w-3 h-3" />{' '}
