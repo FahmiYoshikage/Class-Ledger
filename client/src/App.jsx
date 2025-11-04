@@ -1556,65 +1556,70 @@ const App = () => {
                 {/* Pembayaran Tab */}
                 {activeTab === 'pembayaran' && (
                     <div className="bg-white rounded-lg shadow">
-                        <div className="p-6 border-b flex justify-between items-center">
-                            <div>
-                                <h2 className="text-xl font-bold text-gray-800">
-                                    Riwayat Pembayaran
-                                </h2>
-                                <p className="text-sm text-gray-500 mt-1">
-                                    Total: {filteredPayments.length} pembayaran
-                                </p>
-                            </div>
-                            <div className="flex gap-2">
-                                <button
-                                    onClick={exportPaymentsToExcel}
-                                    className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition flex items-center gap-2"
-                                >
-                                    <Download className="w-4 h-4" /> Excel
-                                </button>
-                                <button
-                                    onClick={exportPaymentsToPDF}
-                                    className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition flex items-center gap-2"
-                                >
-                                    <Download className="w-4 h-4" /> PDF
-                                </button>
-                                <button
-                                    onClick={() => setShowPayment(true)}
-                                    className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition flex items-center gap-2"
-                                >
-                                    <Plus className="w-4 h-4" /> Tambah
-                                    Pembayaran
-                                </button>
+                        <div className="p-4 sm:p-6 border-b">
+                            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+                                <div>
+                                    <h2 className="text-lg sm:text-xl font-bold text-gray-800">
+                                        Riwayat Pembayaran
+                                    </h2>
+                                    <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                                        Total: {filteredPayments.length} pembayaran
+                                    </p>
+                                </div>
+                                <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+                                    <button
+                                        onClick={exportPaymentsToExcel}
+                                        className="flex-1 sm:flex-none bg-green-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-green-700 transition flex items-center justify-center gap-2 text-sm"
+                                    >
+                                        <Download className="w-4 h-4" />
+                                        <span className="hidden sm:inline">Excel</span>
+                                    </button>
+                                    <button
+                                        onClick={exportPaymentsToPDF}
+                                        className="flex-1 sm:flex-none bg-red-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-2 text-sm"
+                                    >
+                                        <Download className="w-4 h-4" />
+                                        <span className="hidden sm:inline">PDF</span>
+                                    </button>
+                                    <button
+                                        onClick={() => setShowPayment(true)}
+                                        className="w-full sm:w-auto bg-indigo-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-indigo-700 transition flex items-center justify-center gap-2 text-sm font-medium"
+                                    >
+                                        <Plus className="w-4 h-4" />
+                                        <span className="hidden sm:inline">Tambah Pembayaran</span>
+                                        <span className="sm:hidden">Tambah</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div className="overflow-x-auto">
-                            <table className="w-full">
+                            <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="bg-gray-50">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Tanggal
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Nama/Sumber
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Jumlah
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                        <th className="hidden md:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Metode
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                        <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Tipe
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                        <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Catatan
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Aksi
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-200">
+                                <tbody className="bg-white divide-y divide-gray-200">
                                     {filteredPayments.map((payment) => {
                                         const studentId =
                                             payment.studentId?._id ||
@@ -1625,25 +1630,32 @@ const App = () => {
 
                                         return (
                                             <tr key={payment._id}>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
                                                     {new Date(
                                                         payment.date
                                                     ).toLocaleDateString(
-                                                        'id-ID'
+                                                        'id-ID',
+                                                        {
+                                                            day: 'numeric',
+                                                            month: 'short',
+                                                            year: '2-digit'
+                                                        }
                                                     )}
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                    {payment.source ===
-                                                        'custom' ||
-                                                    payment.source === 'event'
-                                                        ? payment.sourceName
-                                                        : student?.name ||
-                                                          'Siswa tidak ditemukan'}
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium text-gray-900">
+                                                    <div className="max-w-[150px] sm:max-w-none truncate">
+                                                        {payment.source ===
+                                                            'custom' ||
+                                                        payment.source === 'event'
+                                                            ? payment.sourceName
+                                                            : student?.name ||
+                                                              'Siswa tidak ditemukan'}
+                                                    </div>
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-semibold text-gray-900">
                                                     {formatRp(payment.amount)}
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                <td className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
                                                     <span
                                                         className={`px-2 py-1 text-xs font-semibold rounded-full ${
                                                             payment.method ===
@@ -1655,7 +1667,7 @@ const App = () => {
                                                         {payment.method}
                                                     </span>
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                                <td className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm">
                                                     {payment.source ===
                                                         'custom' && (
                                                         <span className="px-2 py-1 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-800">
@@ -1675,17 +1687,20 @@ const App = () => {
                                                         </span>
                                                     )}
                                                 </td>
-                                                <td className="px-6 py-4 text-sm text-gray-500">
-                                                    {payment.note || '-'}
+                                                <td className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-gray-500">
+                                                    <div className="max-w-[200px] truncate">
+                                                        {payment.note || '-'}
+                                                    </div>
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm">
                                                     <button
                                                         onClick={() =>
                                                             deletePayment(
                                                                 payment._id
                                                             )
                                                         }
-                                                        className="text-red-600 hover:text-red-800"
+                                                        className="text-red-600 hover:text-red-800 p-1"
+                                                        title="Hapus"
                                                     >
                                                         <Trash2 className="w-4 h-4" />
                                                     </button>
@@ -1702,52 +1717,57 @@ const App = () => {
                 {/* Pengeluaran Tab */}
                 {activeTab === 'pengeluaran' && (
                     <div className="bg-white rounded-lg shadow">
-                        <div className="p-6 border-b flex justify-between items-center">
-                            <h2 className="text-xl font-bold text-gray-800">
-                                Riwayat Pengeluaran
-                            </h2>
-                            <div className="flex gap-2">
-                                <button
-                                    onClick={exportExpensesToExcel}
-                                    className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition flex items-center gap-2"
-                                >
-                                    <Download className="w-4 h-4" /> Excel
-                                </button>
-                                <button
-                                    onClick={exportExpensesToPDF}
-                                    className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition flex items-center gap-2"
-                                >
-                                    <Download className="w-4 h-4" /> PDF
-                                </button>
-                                <button
-                                    onClick={() => setShowExpense(true)}
-                                    className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition flex items-center gap-2"
-                                >
-                                    <Plus className="w-4 h-4" /> Tambah
-                                    Pengeluaran
-                                </button>
+                        <div className="p-4 sm:p-6 border-b">
+                            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+                                <h2 className="text-lg sm:text-xl font-bold text-gray-800">
+                                    Riwayat Pengeluaran
+                                </h2>
+                                <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+                                    <button
+                                        onClick={exportExpensesToExcel}
+                                        className="flex-1 sm:flex-none bg-green-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-green-700 transition flex items-center justify-center gap-2 text-sm"
+                                    >
+                                        <Download className="w-4 h-4" />
+                                        <span className="hidden sm:inline">Excel</span>
+                                    </button>
+                                    <button
+                                        onClick={exportExpensesToPDF}
+                                        className="flex-1 sm:flex-none bg-red-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-2 text-sm"
+                                    >
+                                        <Download className="w-4 h-4" />
+                                        <span className="hidden sm:inline">PDF</span>
+                                    </button>
+                                    <button
+                                        onClick={() => setShowExpense(true)}
+                                        className="w-full sm:w-auto bg-indigo-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-indigo-700 transition flex items-center justify-center gap-2 text-sm font-medium"
+                                    >
+                                        <Plus className="w-4 h-4" />
+                                        <span className="hidden sm:inline">Tambah Pengeluaran</span>
+                                        <span className="sm:hidden">Tambah</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div className="overflow-x-auto">
-                            <table className="w-full">
+                            <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="bg-gray-50">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Tanggal
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Keperluan
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Jumlah
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                        <th className="hidden md:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Kategori
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                        <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Disetujui
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Aksi
                                         </th>
                                     </tr>
@@ -1757,7 +1777,7 @@ const App = () => {
                                         <tr>
                                             <td
                                                 colSpan="6"
-                                                className="px-6 py-8 text-center text-gray-500"
+                                                className="px-3 sm:px-6 py-8 text-center text-gray-500 text-xs sm:text-sm"
                                             >
                                                 Tidak ada data pengeluaran yang
                                                 sesuai
@@ -1765,21 +1785,27 @@ const App = () => {
                                         </tr>
                                     ) : (
                                         filteredExpenses.map((expense) => (
-                                            <tr key={expense._id}>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            <tr key={expense._id} className="hover:bg-gray-50">
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
                                                     {new Date(
                                                         expense.date
                                                     ).toLocaleDateString(
-                                                        'id-ID'
+                                                        'id-ID', {
+                                                            day: 'numeric',
+                                                            month: 'short',
+                                                            year: '2-digit'
+                                                        }
                                                     )}
                                                 </td>
-                                                <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                                                    {expense.purpose}
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium text-gray-900">
+                                                    <div className="max-w-[150px] sm:max-w-none truncate">
+                                                        {expense.purpose}
+                                                    </div>
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-semibold text-red-600">
                                                     {formatRp(expense.amount)}
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                                <td className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm">
                                                     <span
                                                         className={`px-2 py-1 text-xs font-semibold rounded-full ${
                                                             expense.category ===
@@ -1797,17 +1823,18 @@ const App = () => {
                                                         {expense.category}
                                                     </span>
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                <td className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500">
                                                     {expense.approvedBy}
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm">
                                                     <button
                                                         onClick={() =>
                                                             deleteExpense(
                                                                 expense._id
                                                             )
                                                         }
-                                                        className="text-red-600 hover:text-red-800"
+                                                        className="text-red-600 hover:text-red-800 p-1"
+                                                        title="Hapus"
                                                     >
                                                         <Trash2 className="w-4 h-4" />
                                                     </button>
