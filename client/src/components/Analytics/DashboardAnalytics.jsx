@@ -40,44 +40,54 @@ const DashboardAnalytics = () => {
                 expensesAPI.getAll(),
             ]);
 
-            setStudents(studentsRes.data);
-            setPayments(paymentsRes.data);
-            setExpenses(expensesRes.data);
+            const studentsData = studentsRes.data || [];
+            const paymentsData = paymentsRes.data || [];
+            const expensesData = expensesRes.data || [];
+
+            setStudents(studentsData);
+            setPayments(paymentsData);
+            setExpenses(expensesData);
 
             // Calculate analytics
-            calculateAnalytics(
-                studentsRes.data,
-                paymentsRes.data,
-                expensesRes.data
-            );
+            calculateAnalytics(studentsData, paymentsData, expensesData);
         } catch (error) {
             console.error('Error loading data:', error);
+            // Set empty data to prevent white screen
+            setStudents([]);
+            setPayments([]);
+            setExpenses([]);
+            calculateAnalytics([], [], []);
         } finally {
             setLoading(false);
         }
     };
 
     const calculateAnalytics = (studentsData, paymentsData, expensesData) => {
+        // Ensure data is arrays
+        const students = Array.isArray(studentsData) ? studentsData : [];
+        const allPayments = Array.isArray(paymentsData) ? paymentsData : [];
+        const allExpenses = Array.isArray(expensesData) ? expensesData : [];
+
         const now = new Date();
         const rangeDate = new Date(
             now.getTime() - timeRange * 24 * 60 * 60 * 1000
         );
 
         // Filter data by time range
-        const filteredPayments = paymentsData.filter(
+        const filteredPayments = allPayments.filter(
             (p) => new Date(p.date) >= rangeDate
         );
-        const filteredExpenses = expensesData.filter(
+        const filteredExpenses = allExpenses.filter(
             (e) => new Date(e.date) >= rangeDate
         );
 
         // Calculate totals
         const totalIncome = filteredPayments.reduce(
-            (sum, p) => sum + p.amount,
+            (sum, p) => sum + (p.amount || 0),
             0
         );
         const totalExpense = filteredExpenses.reduce(
-            (sum, e) => sum + e.amount,
+            (sum, e) => sum + (e.amount || 0),
             0
         );
         const netBalance = totalIncome - totalExpense;
@@ -86,19 +96,19 @@ const DashboardAnalytics = () => {
         const prevRangeStart = new Date(
             rangeDate.getTime() - timeRange * 24 * 60 * 60 * 1000
         );
-        const prevPayments = paymentsData.filter(
+        const prevPayments = allPayments.filter(
             (p) =>
                 new Date(p.date) >= prevRangeStart &&
                 new Date(p.date) < rangeDate
         );
-        const prevExpenses = expensesData.filter(
+        const prevExpenses = allExpenses.filter(
             (e) =>
                 new Date(e.date) >= prevRangeStart &&
                 new Date(e.date) < rangeDate
         );
 
-        const prevIncome = prevPayments.reduce((sum, p) => sum + p.amount, 0);
-        const prevExpense = prevExpenses.reduce((sum, e) => sum + e.amount, 0);
+        const prevIncome = prevPayments.reduce((sum, p) => sum + (p.amount || 0), 0);
+        const prevExpense = prevExpenses.reduce((sum, e) => sum + (e.amount || 0), 0);
 
         const incomeChange =
             prevIncome > 0
@@ -127,12 +137,12 @@ const DashboardAnalytics = () => {
         let totalDebt = 0;
         let studentsWithDebt = 0;
 
-        studentsData.forEach((student) => {
-            const studentPayments = paymentsData.filter(
+        students.forEach((student) => {
+            const studentPayments = allPayments.filter(
                 (p) => (p.studentId?._id || p.studentId) === student._id
             );
             const totalPaid = studentPayments.reduce(
-                (sum, p) => sum + p.amount,
+                (sum, p) => sum + (p.amount || 0),
                 0
             );
             const shouldPay = currentWeek * 2000;

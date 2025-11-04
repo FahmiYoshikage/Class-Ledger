@@ -143,11 +143,27 @@ const PublicDashboard = () => {
                     paymentsRes.data.length + expensesRes.data.length,
             });
 
+            console.log('💰 Public Stats:', {
+                totalIncome,
+                totalExpenses,
+                balance: totalIncome - totalExpenses,
+                totalStudents: studentsRes.data.length,
+            });
+
             setEvents(Object.values(uniqueEvents));
             setRecentPayments(paymentsRes.data.slice(0, 5));
             setLeaderboard(leaderboardData.slice(0, 10)); // Top 10 contributors
         } catch (error) {
             console.error('Error fetching public data:', error);
+            // Set default values on error
+            setStats({
+                totalIncome: 0,
+                totalExpenses: 0,
+                balance: 0,
+                totalStudents: 0,
+                totalTransactions: 0,
+            });
+        } finally {
         } finally {
             setLoading(false);
         }

@@ -811,33 +811,35 @@ const NotificationManager = () => {
                             </div>
 
                             {/* Actions */}
-                            <div className="flex gap-3">
+                            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                                 <button
                                     onClick={handlePreview}
-                                    className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                                    className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm sm:text-base"
                                 >
                                     <Eye className="w-4 h-4" />
                                     Preview Pesan
                                 </button>
 
-                                <button
-                                    onClick={selectAll}
-                                    className="px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
-                                >
-                                    Pilih Semua
-                                </button>
+                                <div className="flex gap-2 sm:gap-3">
+                                    <button
+                                        onClick={selectAll}
+                                        className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors text-sm sm:text-base"
+                                    >
+                                        Pilih Semua
+                                    </button>
 
-                                <button
-                                    onClick={deselectAll}
-                                    className="px-4 py-2 bg-gray-50 text-gray-600 rounded-lg hover:bg-gray-100 transition-colors"
-                                >
-                                    Batal Pilih
-                                </button>
+                                    <button
+                                        onClick={deselectAll}
+                                        className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-gray-50 text-gray-600 rounded-lg hover:bg-gray-100 transition-colors text-sm sm:text-base"
+                                    >
+                                        Batal
+                                    </button>
+                                </div>
 
                                 <button
                                     onClick={handleSendBulk}
                                     disabled={sending}
-                                    className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all ml-auto"
+                                    className="w-full sm:w-auto sm:ml-auto flex items-center justify-center gap-2 px-4 sm:px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm sm:text-base"
                                 >
                                     {sending ? (
                                         <>
@@ -899,7 +901,7 @@ const NotificationManager = () => {
                                         {needsReminder.map((item) => (
                                             <div
                                                 key={item.student._id}
-                                                className={`flex items-center justify-between p-4 rounded-lg border-2 transition-all ${
+                                                className={`flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg border-2 transition-all ${
                                                     selectedStudents.includes(
                                                         item.student._id
                                                     )
@@ -907,7 +909,7 @@ const NotificationManager = () => {
                                                         : 'border-gray-200 bg-white hover:border-gray-300'
                                                 }`}
                                             >
-                                                <div className="flex items-center gap-4">
+                                                <div className="flex items-center gap-3 sm:gap-4 flex-1 w-full">
                                                     <input
                                                         type="checkbox"
                                                         checked={selectedStudents.includes(
@@ -918,13 +920,13 @@ const NotificationManager = () => {
                                                                 item.student._id
                                                             )
                                                         }
-                                                        className="w-5 h-5 text-blue-600 rounded"
+                                                        className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 rounded flex-shrink-0"
                                                     />
 
-                                                    <div>
-                                                        <p className="font-semibold text-gray-800">
+                                                    <div className="flex-1 min-w-0">
+                                                        <p className="font-semibold text-sm sm:text-base text-gray-800 truncate">
                                                             {item.student.name}
-                                                            <span className="text-gray-500 text-sm ml-2">
+                                                            <span className="text-gray-500 text-xs sm:text-sm ml-2">
                                                                 (Absen{' '}
                                                                 {
                                                                     item.student
@@ -933,7 +935,7 @@ const NotificationManager = () => {
                                                                 )
                                                             </span>
                                                         </p>
-                                                        <p className="text-sm text-gray-600">
+                                                        <p className="text-xs sm:text-sm text-gray-600 truncate">
                                                             📱{' '}
                                                             {item.student
                                                                 .phoneNumber ||
@@ -942,14 +944,14 @@ const NotificationManager = () => {
                                                     </div>
                                                 </div>
 
-                                                <div className="flex items-center gap-4">
-                                                    <div className="text-right">
-                                                        <p className="text-sm text-gray-600">
+                                                <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4 w-full sm:w-auto">
+                                                    <div className="text-left sm:text-right">
+                                                        <p className="text-xs sm:text-sm text-gray-600">
                                                             Telat{' '}
                                                             {item.weeksLate}{' '}
                                                             minggu
                                                         </p>
-                                                        <p className="font-bold text-red-600">
+                                                        <p className="font-bold text-sm sm:text-base text-red-600">
                                                             Rp{' '}
                                                             {item.amountOwed.toLocaleString(
                                                                 'id-ID'
@@ -967,7 +969,7 @@ const NotificationManager = () => {
                                                             !item.student
                                                                 .phoneNumber
                                                         }
-                                                        className="px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                                                        className="px-3 py-1.5 sm:py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm flex-shrink-0"
                                                     >
                                                         Kirim
                                                     </button>
