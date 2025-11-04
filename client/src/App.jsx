@@ -1422,22 +1422,30 @@ const App = () => {
                                         className="flex-1 sm:flex-none bg-green-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-green-700 transition flex items-center justify-center gap-2 text-sm"
                                     >
                                         <Download className="w-4 h-4" />
-                                        <span className="hidden sm:inline">Excel</span>
+                                        <span className="hidden sm:inline">
+                                            Excel
+                                        </span>
                                     </button>
                                     <button
                                         onClick={exportStudentsToPDF}
                                         className="flex-1 sm:flex-none bg-red-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-2 text-sm"
                                     >
                                         <FileText className="w-4 h-4" />
-                                        <span className="hidden sm:inline">PDF</span>
+                                        <span className="hidden sm:inline">
+                                            PDF
+                                        </span>
                                     </button>
                                     <button
                                         onClick={() => setShowAddStudent(true)}
                                         className="w-full sm:w-auto bg-indigo-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-indigo-700 transition flex items-center justify-center gap-2 text-sm font-medium"
                                     >
                                         <Plus className="w-4 h-4" />
-                                        <span className="hidden sm:inline">Tambah Siswa</span>
-                                        <span className="sm:hidden">Tambah</span>
+                                        <span className="hidden sm:inline">
+                                            Tambah Siswa
+                                        </span>
+                                        <span className="sm:hidden">
+                                            Tambah
+                                        </span>
                                     </button>
                                 </div>
                             </div>
@@ -1480,7 +1488,10 @@ const App = () => {
                                         filteredStudents
                                             .sort((a, b) => a.absen - b.absen)
                                             .map((student) => (
-                                                <tr key={student._id} className="hover:bg-gray-50">
+                                                <tr
+                                                    key={student._id}
+                                                    className="hover:bg-gray-50"
+                                                >
                                                     <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 font-medium">
                                                         {student.absen}
                                                     </td>
