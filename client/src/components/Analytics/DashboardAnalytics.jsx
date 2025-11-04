@@ -200,43 +200,43 @@ const DashboardAnalytics = () => {
     }
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
             {/* Header */}
-            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-lg p-6 text-white">
-                <div className="flex items-center justify-between mb-4">
+            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-lg p-4 sm:p-6 text-white">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mb-3 sm:mb-4">
                     <div>
-                        <h1 className="text-3xl font-bold mb-2">
+                        <h1 className="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2">
                             📊 Dashboard Analytics
                         </h1>
-                        <p className="text-indigo-100">
+                        <p className="text-sm sm:text-base text-indigo-100">
                             Analisis mendalam keuangan kas kelas
                         </p>
                     </div>
-                    <div className="flex gap-3">
+                    <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
                         <button
                             onClick={loadData}
                             disabled={loading}
-                            className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition flex items-center gap-2"
+                            className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition flex items-center justify-center gap-2 text-sm sm:text-base"
                         >
                             <RefreshCw
                                 className={`w-4 h-4 ${
                                     loading ? 'animate-spin' : ''
                                 }`}
                             />
-                            Refresh
+                            <span className="hidden sm:inline">Refresh</span>
                         </button>
                         <button
                             onClick={exportAnalytics}
-                            className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition flex items-center gap-2"
+                            className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition flex items-center justify-center gap-2 text-sm sm:text-base"
                         >
                             <Download className="w-4 h-4" />
-                            Export
+                            <span className="hidden sm:inline">Export</span>
                         </button>
                     </div>
                 </div>
 
                 {/* Time Range Filter */}
-                <div className="flex gap-2">
+                <div className="flex gap-1.5 sm:gap-2 overflow-x-auto pb-2">
                     {[
                         { label: '7 Hari', value: '7' },
                         { label: '30 Hari', value: '30' },
@@ -246,7 +246,7 @@ const DashboardAnalytics = () => {
                         <button
                             key={range.value}
                             onClick={() => setTimeRange(range.value)}
-                            className={`px-4 py-2 rounded-lg transition ${
+                            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition whitespace-nowrap text-sm sm:text-base ${
                                 timeRange === range.value
                                     ? 'bg-white text-indigo-600 font-semibold'
                                     : 'bg-white/20 hover:bg-white/30'
