@@ -1288,31 +1288,31 @@ const App = () => {
                         )}
 
                         <div className="bg-white rounded-lg shadow overflow-hidden">
-                            <div className="p-6 border-b">
-                                <h2 className="text-xl font-bold text-gray-800">
+                            <div className="p-4 sm:p-6 border-b">
+                                <h2 className="text-lg sm:text-xl font-bold text-gray-800">
                                     Status Pembayaran Siswa
                                 </h2>
                             </div>
                             <div className="overflow-x-auto">
-                                <table className="w-full">
+                                <table className="min-w-full divide-y divide-gray-200">
                                     <thead className="bg-gray-50">
                                         <tr>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Absen
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Nama
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            <th className="hidden md:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Total Bayar
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Tunggakan
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Status
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Aksi
                                             </th>
                                         </tr>
@@ -1332,30 +1332,32 @@ const App = () => {
                                                         key={student._id}
                                                         className={
                                                             late
-                                                                ? 'bg-red-50'
-                                                                : ''
+                                                                ? 'bg-red-50 hover:bg-red-100'
+                                                                : 'hover:bg-gray-50'
                                                         }
                                                     >
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                        <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 font-medium">
                                                             {student.absen}
                                                         </td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                            {student.name}
+                                                        <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium text-gray-900">
+                                                            <div className="max-w-[120px] sm:max-w-none truncate">
+                                                                {student.name}
+                                                            </div>
                                                         </td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                        <td className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
                                                             {formatRp(
                                                                 getTotalPaid(
                                                                     student._id
                                                                 )
                                                             )}
                                                         </td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                                        <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm">
                                                             <span
                                                                 className={
                                                                     tunggakan >
                                                                     0
                                                                         ? 'text-red-600 font-semibold'
-                                                                        : 'text-green-600'
+                                                                        : 'text-green-600 font-semibold'
                                                                 }
                                                             >
                                                                 {formatRp(
@@ -1363,15 +1365,15 @@ const App = () => {
                                                                 )}
                                                             </span>
                                                         </td>
-                                                        <td className="px-6 py-4 whitespace-nowrap">
+                                                        <td className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                             {late ? (
-                                                                <span className="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 flex items-center gap-1 w-fit">
+                                                                <span className="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 inline-flex items-center gap-1">
                                                                     <AlertCircle className="w-3 h-3" />{' '}
                                                                     Telat
                                                                 </span>
                                                             ) : tunggakan <=
                                                               0 ? (
-                                                                <span className="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 flex items-center gap-1 w-fit">
+                                                                <span className="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 inline-flex items-center gap-1">
                                                                     <CheckCircle className="w-3 h-3" />{' '}
                                                                     Lunas
                                                                 </span>
@@ -1381,16 +1383,16 @@ const App = () => {
                                                                 </span>
                                                             )}
                                                         </td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                                        <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm">
                                                             <button
                                                                 onClick={() =>
                                                                     addPaymentQuick(
                                                                         student._id
                                                                     )
                                                                 }
-                                                                className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition text-sm font-medium"
+                                                                className="bg-indigo-600 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-indigo-700 transition text-xs sm:text-sm font-medium w-full sm:w-auto"
                                                             >
-                                                                Bayar Kas
+                                                                💰 Bayar
                                                             </button>
                                                         </td>
                                                     </tr>
@@ -1409,51 +1411,57 @@ const App = () => {
                 {/* Siswa Tab */}
                 {activeTab === 'siswa' && (
                     <div className="bg-white rounded-lg shadow">
-                        <div className="p-6 border-b flex justify-between items-center">
-                            <h2 className="text-xl font-bold text-gray-800">
-                                Data Siswa
-                            </h2>
-                            <div className="flex gap-2">
-                                <button
-                                    onClick={exportStudentsToExcel}
-                                    className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition flex items-center gap-2"
-                                >
-                                    <Download className="w-4 h-4" /> Excel
-                                </button>
-                                <button
-                                    onClick={exportStudentsToPDF}
-                                    className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition flex items-center gap-2"
-                                >
-                                    <FileText className="w-4 h-4" /> PDF
-                                </button>
-                                <button
-                                    onClick={() => setShowAddStudent(true)}
-                                    className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition flex items-center gap-2"
-                                >
-                                    <Plus className="w-4 h-4" /> Tambah Siswa
-                                </button>
+                        <div className="p-4 sm:p-6 border-b">
+                            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+                                <h2 className="text-lg sm:text-xl font-bold text-gray-800">
+                                    Data Siswa
+                                </h2>
+                                <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+                                    <button
+                                        onClick={exportStudentsToExcel}
+                                        className="flex-1 sm:flex-none bg-green-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-green-700 transition flex items-center justify-center gap-2 text-sm"
+                                    >
+                                        <Download className="w-4 h-4" />
+                                        <span className="hidden sm:inline">Excel</span>
+                                    </button>
+                                    <button
+                                        onClick={exportStudentsToPDF}
+                                        className="flex-1 sm:flex-none bg-red-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-2 text-sm"
+                                    >
+                                        <FileText className="w-4 h-4" />
+                                        <span className="hidden sm:inline">PDF</span>
+                                    </button>
+                                    <button
+                                        onClick={() => setShowAddStudent(true)}
+                                        className="w-full sm:w-auto bg-indigo-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-indigo-700 transition flex items-center justify-center gap-2 text-sm font-medium"
+                                    >
+                                        <Plus className="w-4 h-4" />
+                                        <span className="hidden sm:inline">Tambah Siswa</span>
+                                        <span className="sm:hidden">Tambah</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div className="overflow-x-auto">
-                            <table className="w-full">
+                            <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="bg-gray-50">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Absen
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Nama
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                        <th className="hidden md:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             WhatsApp
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                        <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Status
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                        <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Notifikasi
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Aksi
                                         </th>
                                     </tr>
@@ -1463,7 +1471,7 @@ const App = () => {
                                         <tr>
                                             <td
                                                 colSpan="6"
-                                                className="px-6 py-8 text-center text-gray-500"
+                                                className="px-3 sm:px-6 py-8 text-center text-gray-500 text-xs sm:text-sm"
                                             >
                                                 Tidak ada data siswa yang sesuai
                                             </td>
@@ -1472,14 +1480,16 @@ const App = () => {
                                         filteredStudents
                                             .sort((a, b) => a.absen - b.absen)
                                             .map((student) => (
-                                                <tr key={student._id}>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                <tr key={student._id} className="hover:bg-gray-50">
+                                                    <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 font-medium">
                                                         {student.absen}
                                                     </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                        {student.name}
+                                                    <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium text-gray-900">
+                                                        <div className="max-w-[120px] sm:max-w-none truncate">
+                                                            {student.name}
+                                                        </div>
                                                     </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                                    <td className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-600">
                                                         {student.phoneNumber ? (
                                                             <span className="flex items-center gap-1">
                                                                 📱{' '}
@@ -1493,7 +1503,7 @@ const App = () => {
                                                             </span>
                                                         )}
                                                     </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                    <td className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                         <span
                                                             className={`px-2 py-1 text-xs font-semibold rounded-full ${
                                                                 student.status ===
@@ -1508,7 +1518,7 @@ const App = () => {
                                                             {student.status}
                                                         </span>
                                                     </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                    <td className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                         {student.enableNotification !==
                                                         false ? (
                                                             <span className="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
@@ -1520,7 +1530,7 @@ const App = () => {
                                                             </span>
                                                         )}
                                                     </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                                    <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm">
                                                         <div className="flex gap-2">
                                                             <button
                                                                 onClick={() =>
@@ -1528,9 +1538,9 @@ const App = () => {
                                                                         student
                                                                     )
                                                                 }
-                                                                className="text-blue-600 hover:text-blue-800 font-medium"
+                                                                className="bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700 transition font-medium text-xs sm:text-sm"
                                                             >
-                                                                Edit
+                                                                ✏️ Edit
                                                             </button>
                                                             <button
                                                                 onClick={() =>
@@ -1538,7 +1548,8 @@ const App = () => {
                                                                         student._id
                                                                     )
                                                                 }
-                                                                className="text-red-600 hover:text-red-800"
+                                                                className="text-red-600 hover:text-red-800 p-1"
+                                                                title="Hapus"
                                                             >
                                                                 <Trash2 className="w-4 h-4" />
                                                             </button>
