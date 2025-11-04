@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import {
     Clock,
     Filter,
@@ -48,11 +48,12 @@ const AuditLogs = () => {
                 if (!params[key]) delete params[key];
             });
 
-            const response = await axios.get('/api/audit-logs', { params });
-            setLogs(response.data.data);
-            setPagination(response.data.pagination);
+            const response = await api.get('/audit-logs', { params });
+            setLogs(response.data.data || []);
+            setPagination(response.data.pagination || pagination);
         } catch (error) {
             console.error('Error fetching audit logs:', error);
+            setLogs([]);
         } finally {
             setLoading(false);
         }
@@ -64,12 +65,13 @@ const AuditLogs = () => {
             if (filters.startDate) params.startDate = filters.startDate;
             if (filters.endDate) params.endDate = filters.endDate;
 
-            const response = await axios.get('/api/audit-logs/stats', {
+            const response = await api.get('/audit-logs/stats', {
                 params,
             });
-            setStats(response.data.data);
+            setStats(response.data.data || null);
         } catch (error) {
             console.error('Error fetching stats:', error);
+            setStats(null);
         }
     };
 

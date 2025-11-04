@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import {
     Smartphone,
     Monitor,
@@ -37,7 +37,7 @@ const SessionManagement = () => {
         try {
             setLoading(true);
             console.log('Fetching sessions...');
-            const response = await axios.get('/api/sessions');
+            const response = await api.get('/sessions');
             console.log('Sessions response:', response.data);
             setSessions(response.data.data || []);
         } catch (error) {
@@ -53,7 +53,7 @@ const SessionManagement = () => {
     const fetchStats = async () => {
         try {
             console.log('Fetching stats...');
-            const response = await axios.get('/api/sessions/stats');
+            const response = await api.get('/sessions/stats');
             console.log('Stats response:', response.data);
             setStats(response.data.data || { total: 0, active: 0 });
         } catch (error) {
@@ -73,7 +73,7 @@ const SessionManagement = () => {
         }
 
         try {
-            await axios.delete(`/api/sessions/${sessionId}`);
+            await api.delete(`/sessions/${sessionId}`);
             fetchSessions();
             fetchStats();
         } catch (error) {
@@ -92,7 +92,7 @@ const SessionManagement = () => {
         }
 
         try {
-            await axios.delete('/api/sessions/actions/terminate-all');
+            await api.delete('/sessions/actions/terminate-all');
             fetchSessions();
             fetchStats();
         } catch (error) {

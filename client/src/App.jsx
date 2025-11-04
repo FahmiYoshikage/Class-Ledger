@@ -902,12 +902,25 @@ const App = () => {
 
     // Calculate totals
     const getTotalPaid = (studentId) => {
-        return payments
-            .filter((p) => {
-                const pStudentId = p.studentId?._id || p.studentId;
-                return pStudentId === studentId;
-            })
-            .reduce((sum, p) => sum + p.amount, 0);
+        const studentPayments = payments.filter((p) => {
+            const pStudentId = p.studentId?._id || p.studentId;
+            return pStudentId === studentId;
+        });
+
+        const total = studentPayments.reduce((sum, p) => sum + p.amount, 0);
+
+        // Debug first student only
+        if (students[0]?._id === studentId) {
+            console.log('🔍 getTotalPaid Debug for first student:');
+            console.log('  Student ID:', studentId);
+            console.log('  Student Payments:', studentPayments);
+            console.log('  Total Paid:', total);
+            console.log('  Current Week:', currentWeek);
+            console.log('  Should Pay:', currentWeek * 2000);
+            console.log('  Tunggakan:', currentWeek * 2000 - total);
+        }
+
+        return total;
     };
 
     const getTunggakan = (studentId) => {
