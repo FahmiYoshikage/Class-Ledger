@@ -164,7 +164,6 @@ const PublicDashboard = () => {
                 totalTransactions: 0,
             });
         } finally {
-        } finally {
             setLoading(false);
         }
     };

@@ -107,8 +107,14 @@ const DashboardAnalytics = () => {
                 new Date(e.date) < rangeDate
         );
 
-        const prevIncome = prevPayments.reduce((sum, p) => sum + (p.amount || 0), 0);
-        const prevExpense = prevExpenses.reduce((sum, e) => sum + (e.amount || 0), 0);
+        const prevIncome = prevPayments.reduce(
+            (sum, p) => sum + (p.amount || 0),
+            0
+        );
+        const prevExpense = prevExpenses.reduce(
+            (sum, e) => sum + (e.amount || 0),
+            0
+        );
 
         const incomeChange =
             prevIncome > 0
