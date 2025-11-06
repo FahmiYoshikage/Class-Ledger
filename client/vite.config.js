@@ -7,6 +7,49 @@ export default defineConfig({
         react(),
         VitePWA({
             registerType: 'autoUpdate',
+            workbox: {
+                globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+                // Skip waiting and claim clients immediately on update
+                skipWaiting: true,
+                clientsClaim: true,
+                // Clean up old caches
+                cleanupOutdatedCaches: true,
+                runtimeCaching: [
+                    {
+                        // API requests - Network First strategy
+                        urlPattern: ({ url }) => {
+                            return url.pathname.startsWith('/api/');
+                        },
+                        handler: 'NetworkFirst',
+                        options: {
+                            cacheName: 'api-cache',
+                            expiration: {
+                                maxEntries: 50,
+                                maxAgeSeconds: 60 * 5, // 5 minutes only
+                            },
+                            networkTimeoutSeconds: 10,
+                        },
+                    },
+                    {
+                        // Static assets - Cache First with fallback
+                        urlPattern: ({ request }) => {
+                            return (
+                                request.destination === 'style' ||
+                                request.destination === 'script' ||
+                                request.destination === 'image'
+                            );
+                        },
+                        handler: 'CacheFirst',
+                        options: {
+                            cacheName: 'static-resources',
+                            expiration: {
+                                maxEntries: 100,
+                                maxAgeSeconds: 60 * 60 * 24 * 7, // 7 days
+                            },
+                        },
+                    },
+                ],
+            },
             includeAssets: [
                 'favicon.ico',
                 'apple-touch-icon.png',
@@ -47,25 +90,6 @@ export default defineConfig({
                         sizes: '512x512',
                         type: 'image/png',
                         purpose: 'maskable',
-                    },
-                ],
-            },
-            workbox: {
-                globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
-                runtimeCaching: [
-                    {
-                        urlPattern: /^https?:\/\/localhost:8012\/api\/.*/i,
-                        handler: 'NetworkFirst',
-                        options: {
-                            cacheName: 'api-cache',
-                            expiration: {
-                                maxEntries: 100,
-                                maxAgeSeconds: 60 * 60 * 24, // 24 hours
-                            },
-                            cacheableResponse: {
-                                statuses: [0, 200],
-                            },
-                        },
                     },
                 ],
             },

@@ -21,13 +21,23 @@ const Login = () => {
         try {
             const response = await login({ username, password });
 
+            // Clear service worker cache on successful login
+            if ('caches' in window) {
+                const cacheNames = await caches.keys();
+                await Promise.all(
+                    cacheNames.map((cacheName) => caches.delete(cacheName))
+                );
+                console.log('✅ All caches cleared after login');
+            }
+
             // Check if need to change password
             if (response.mustChangePassword) {
                 navigate('/change-password', {
                     state: { firstLogin: true },
                 });
             } else {
-                navigate('/app/dashboard');
+                // Force reload to ensure fresh content after cache clear
+                window.location.href = '/app/dashboard';
             }
         } catch (err) {
             setError(

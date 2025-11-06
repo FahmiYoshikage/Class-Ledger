@@ -16,6 +16,39 @@ import DashboardLayout from './components/DashboardLayout.jsx';
 import { useAuth } from './context/AuthContext.jsx';
 import './index.css';
 
+// Register service worker with proper update handling
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {
+                console.log('SW registered:', registration);
+
+                // Check for updates periodically
+                setInterval(() => {
+                    registration.update();
+                }, 60000); // Check every minute
+
+                // Handle updates
+                registration.addEventListener('updatefound', () => {
+                    const newWorker = registration.installing;
+                    newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'activated') {
+                            console.log(
+                                'New service worker activated, reloading...'
+                            );
+                            // Reload to get new version
+                            window.location.reload();
+                        }
+                    });
+                });
+            })
+            .catch((err) => {
+                console.log('SW registration failed:', err);
+            });
+    });
+}
+
 // Dashboard Router Component
 function DashboardRouter() {
     const { user } = useAuth();
