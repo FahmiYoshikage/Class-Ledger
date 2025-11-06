@@ -39,7 +39,7 @@ const PublicDashboard = () => {
     const fetchPublicData = async () => {
         try {
             setLoading(true);
-            
+
             // Use axios directly without auth interceptor for public access
             const [paymentsRes, expensesRes, studentsRes, usersRes] =
                 await Promise.all([
