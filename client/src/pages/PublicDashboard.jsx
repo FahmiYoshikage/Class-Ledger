@@ -14,8 +14,9 @@ import {
     Medal,
     Award,
 } from 'lucide-react';
-import { paymentsAPI, expensesAPI, studentsAPI } from '../services/api';
-import api from '../services/api';
+import axios from 'axios';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 const PublicDashboard = () => {
     const navigate = useNavigate();
@@ -38,12 +39,14 @@ const PublicDashboard = () => {
     const fetchPublicData = async () => {
         try {
             setLoading(true);
+            
+            // Use axios directly without auth interceptor for public access
             const [paymentsRes, expensesRes, studentsRes, usersRes] =
                 await Promise.all([
-                    paymentsAPI.getAll(),
-                    expensesAPI.getAll(),
-                    studentsAPI.getAll(),
-                    api.get('/users'),
+                    axios.get(`${API_URL}/payments`),
+                    axios.get(`${API_URL}/expenses`),
+                    axios.get(`${API_URL}/students`),
+                    axios.get(`${API_URL}/users`),
                 ]);
 
             const totalIncome = paymentsRes.data.reduce(
