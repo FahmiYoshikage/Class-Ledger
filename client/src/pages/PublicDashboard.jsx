@@ -42,12 +42,11 @@ const PublicDashboard = () => {
 
             // Use axios directly without auth interceptor for public access
             // Only fetch payments, expenses, and students (no users endpoint needed)
-            const [paymentsRes, expensesRes, studentsRes] =
-                await Promise.all([
-                    axios.get(`${API_URL}/payments`),
-                    axios.get(`${API_URL}/expenses`),
-                    axios.get(`${API_URL}/students`),
-                ]);
+            const [paymentsRes, expensesRes, studentsRes] = await Promise.all([
+                axios.get(`${API_URL}/payments`),
+                axios.get(`${API_URL}/expenses`),
+                axios.get(`${API_URL}/students`),
+            ]);
 
             const totalIncome = paymentsRes.data.reduce(
                 (sum, p) => sum + (p.amount || 0),
@@ -96,7 +95,7 @@ const PublicDashboard = () => {
             // Calculate leaderboard based on students and their payments
             // Group payments by student
             const studentPaymentMap = {};
-            
+
             paymentsRes.data.forEach((payment) => {
                 const studentId = payment.student?._id || payment.student;
                 if (studentId) {
@@ -106,7 +105,8 @@ const PublicDashboard = () => {
                             paymentCount: 0,
                         };
                     }
-                    studentPaymentMap[studentId].totalPaid += payment.amount || 0;
+                    studentPaymentMap[studentId].totalPaid +=
+                        payment.amount || 0;
                     studentPaymentMap[studentId].paymentCount += 1;
                 }
             });
