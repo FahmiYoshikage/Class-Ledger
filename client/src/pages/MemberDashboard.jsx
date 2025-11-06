@@ -57,17 +57,15 @@ const MemberDashboard = () => {
     const fetchPayments = async () => {
         try {
             setLoading(true);
-            const [paymentsRes, expensesRes, studentsRes, usersRes] =
-                await Promise.all([
-                    paymentsAPI.getAll(),
-                    expensesAPI.getAll(),
-                    studentsAPI.getAll(),
-                    api.get('/users'),
-                ]);
+            // Remove /api/users dependency - only fetch payments, expenses, students
+            const [paymentsRes, expensesRes, studentsRes] = await Promise.all([
+                paymentsAPI.getAll(),
+                expensesAPI.getAll(),
+                studentsAPI.getAll(),
+            ]);
 
             console.log('👤 Current User:', user);
             console.log('📦 Payments Data:', paymentsRes.data);
-            console.log('👥 Users Data:', usersRes.data);
 
             // Save all payments for class total
             setAllPayments(paymentsRes.data);
@@ -120,50 +118,40 @@ const MemberDashboard = () => {
                 paymentCount: studentPayments.length,
             });
 
-            // Calculate member leaderboard (exclude admin users)
-            const memberUsers = usersRes.data.filter(
-                (u) => u.role === 'member' && u.studentId
-            );
+            // Calculate member leaderboard based on students and their payments
+            // Group payments by student
+            const studentPaymentMap = {};
 
-            console.log('👥 Member Users for Leaderboard:', memberUsers);
-
-            const leaderboard = memberUsers.map((u) => {
-                const studentId = u.studentId._id || u.studentId;
-                const memberPayments = paymentsRes.data.filter((p) => {
-                    const paymentStudentId = p.student?._id || p.student;
-                    return paymentStudentId === studentId;
-                });
-                const total = memberPayments.reduce(
-                    (sum, p) => sum + (p.amount || 0),
-                    0
-                );
-
-                // Get student name from studentId object or find from students list
-                let studentName = 'Unknown';
-                if (typeof u.studentId === 'object' && u.studentId) {
-                    studentName =
-                        u.studentId.nama || u.studentId.name || 'Unknown';
-                } else {
-                    // Find from students list
-                    const student = studentsRes.data.find(
-                        (s) => s._id === studentId
-                    );
-                    studentName = student?.nama || student?.name || 'Unknown';
+            paymentsRes.data.forEach((payment) => {
+                const studentId = payment.student?._id || payment.student;
+                if (studentId) {
+                    if (!studentPaymentMap[studentId]) {
+                        studentPaymentMap[studentId] = {
+                            totalPaid: 0,
+                            paymentCount: 0,
+                        };
+                    }
+                    studentPaymentMap[studentId].totalPaid +=
+                        payment.amount || 0;
+                    studentPaymentMap[studentId].paymentCount += 1;
                 }
-
-                return {
-                    userId: u._id,
-                    username: u.username,
-                    fullName: u.fullName,
-                    studentId: studentId,
-                    studentName: studentName,
-                    totalPaid: total,
-                    paymentCount: memberPayments.length,
-                };
             });
 
-            // Sort by total paid (descending)
-            leaderboard.sort((a, b) => b.totalPaid - a.totalPaid);
+            // Create leaderboard from students with payments
+            const leaderboard = studentsRes.data
+                .filter((student) => studentPaymentMap[student._id])
+                .map((student) => {
+                    const paymentData = studentPaymentMap[student._id];
+                    return {
+                        studentId: student._id,
+                        studentName: student.name || student.nama || 'Unknown',
+                        absen: student.absen,
+                        totalPaid: paymentData.totalPaid,
+                        paymentCount: paymentData.paymentCount,
+                    };
+                })
+                .sort((a, b) => b.totalPaid - a.totalPaid); // Sort by total paid descending
+
             console.log('🏆 Leaderboard:', leaderboard);
             setMemberStats(leaderboard);
         } catch (error) {

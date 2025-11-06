@@ -16,36 +16,62 @@ import DashboardLayout from './components/DashboardLayout.jsx';
 import { useAuth } from './context/AuthContext.jsx';
 import './index.css';
 
-// Register service worker with proper update handling
+// Clean up old service workers and caches on load
 if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker
-            .register('/sw.js')
-            .then((registration) => {
-                console.log('SW registered:', registration);
+    window.addEventListener('load', async () => {
+        try {
+            // Get all registrations
+            const registrations =
+                await navigator.serviceWorker.getRegistrations();
 
-                // Check for updates periodically
-                setInterval(() => {
-                    registration.update();
-                }, 60000); // Check every minute
+            // Unregister ALL old service workers
+            for (const registration of registrations) {
+                await registration.unregister();
+                console.log('✅ Unregistered old service worker');
+            }
 
-                // Handle updates
-                registration.addEventListener('updatefound', () => {
-                    const newWorker = registration.installing;
-                    newWorker.addEventListener('statechange', () => {
-                        if (newWorker.state === 'activated') {
-                            console.log(
-                                'New service worker activated, reloading...'
-                            );
-                            // Reload to get new version
-                            window.location.reload();
-                        }
-                    });
+            // Clear all caches
+            const cacheNames = await caches.keys();
+            for (const cacheName of cacheNames) {
+                await caches.delete(cacheName);
+                console.log(`✅ Deleted cache: ${cacheName}`);
+            }
+
+            console.log('🔄 All service workers and caches cleared');
+
+            // Now register the new service worker
+            const registration = await navigator.serviceWorker.register(
+                '/sw.js',
+                {
+                    updateViaCache: 'none', // Don't cache the service worker itself
+                }
+            );
+
+            console.log('✅ SW registered:', registration);
+
+            // Force update check immediately
+            await registration.update();
+
+            // Check for updates periodically
+            setInterval(() => {
+                registration.update();
+            }, 60000); // Check every minute
+
+            // Handle updates
+            registration.addEventListener('updatefound', () => {
+                const newWorker = registration.installing;
+                newWorker.addEventListener('statechange', () => {
+                    if (newWorker.state === 'activated') {
+                        console.log(
+                            '🆕 New service worker activated, reloading...'
+                        );
+                        window.location.reload();
+                    }
                 });
-            })
-            .catch((err) => {
-                console.log('SW registration failed:', err);
             });
+        } catch (err) {
+            console.error('❌ SW error:', err);
+        }
     });
 }
 
