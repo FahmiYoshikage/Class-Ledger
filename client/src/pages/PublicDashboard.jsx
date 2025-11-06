@@ -41,12 +41,12 @@ const PublicDashboard = () => {
             setLoading(true);
 
             // Use axios directly without auth interceptor for public access
-            const [paymentsRes, expensesRes, studentsRes, usersRes] =
+            // Only fetch payments, expenses, and students (no users endpoint needed)
+            const [paymentsRes, expensesRes, studentsRes] =
                 await Promise.all([
                     axios.get(`${API_URL}/payments`),
                     axios.get(`${API_URL}/expenses`),
                     axios.get(`${API_URL}/students`),
-                    axios.get(`${API_URL}/users`),
                 ]);
 
             const totalIncome = paymentsRes.data.reduce(
@@ -93,49 +93,41 @@ const PublicDashboard = () => {
                 console.log(`   Payments:`, event.payments);
             });
 
-            // Calculate leaderboard (only member users with studentId)
-            const memberUsers = usersRes.data.filter(
-                (u) => u.role === 'member' && u.studentId
-            );
-
-            const leaderboardData = memberUsers.map((u) => {
-                const studentId = u.studentId._id || u.studentId;
-                const memberPayments = paymentsRes.data.filter((p) => {
-                    const paymentStudentId = p.student?._id || p.student;
-                    return paymentStudentId === studentId;
-                });
-                const total = memberPayments.reduce(
-                    (sum, p) => sum + (p.amount || 0),
-                    0
-                );
-
-                // Get student name
-                let studentName = 'Unknown';
-                if (typeof u.studentId === 'object' && u.studentId) {
-                    studentName =
-                        u.studentId.nama || u.studentId.name || 'Unknown';
-                } else {
-                    const student = studentsRes.data.find(
-                        (s) => s._id === studentId
-                    );
-                    studentName = student?.nama || student?.name || 'Unknown';
+            // Calculate leaderboard based on students and their payments
+            // Group payments by student
+            const studentPaymentMap = {};
+            
+            paymentsRes.data.forEach((payment) => {
+                const studentId = payment.student?._id || payment.student;
+                if (studentId) {
+                    if (!studentPaymentMap[studentId]) {
+                        studentPaymentMap[studentId] = {
+                            totalPaid: 0,
+                            paymentCount: 0,
+                        };
+                    }
+                    studentPaymentMap[studentId].totalPaid += payment.amount || 0;
+                    studentPaymentMap[studentId].paymentCount += 1;
                 }
-
-                return {
-                    userId: u._id,
-                    studentId: studentId,
-                    studentName: studentName,
-                    totalPaid: total,
-                    paymentCount: memberPayments.length,
-                };
             });
 
-            // Sort by total paid (descending) and take top 10
-            leaderboardData.sort((a, b) => b.totalPaid - a.totalPaid);
-            console.log(
-                '🏆 Public Leaderboard (Top 10):',
-                leaderboardData.slice(0, 10)
-            );
+            // Create leaderboard from students with payments
+            const leaderboardData = studentsRes.data
+                .filter((student) => studentPaymentMap[student._id])
+                .map((student) => {
+                    const paymentData = studentPaymentMap[student._id];
+                    return {
+                        studentId: student._id,
+                        studentName: student.name || student.nama || 'Unknown',
+                        absen: student.absen,
+                        totalPaid: paymentData.totalPaid,
+                        paymentCount: paymentData.paymentCount,
+                    };
+                })
+                .sort((a, b) => b.totalPaid - a.totalPaid)
+                .slice(0, 10); // Top 10 contributors
+
+            console.log('🏆 Public Leaderboard (Top 10):', leaderboardData);
 
             setStats({
                 totalIncome,
@@ -155,7 +147,7 @@ const PublicDashboard = () => {
 
             setEvents(Object.values(uniqueEvents));
             setRecentPayments(paymentsRes.data.slice(0, 5));
-            setLeaderboard(leaderboardData.slice(0, 10)); // Top 10 contributors
+            setLeaderboard(leaderboardData);
         } catch (error) {
             console.error('Error fetching public data:', error);
             // Set default values on error
@@ -166,6 +158,9 @@ const PublicDashboard = () => {
                 totalStudents: 0,
                 totalTransactions: 0,
             });
+            setEvents([]);
+            setRecentPayments([]);
+            setLeaderboard([]);
         } finally {
             setLoading(false);
         }
