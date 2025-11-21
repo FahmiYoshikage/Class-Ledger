@@ -1001,4 +1001,67 @@ _Mohon konfirmasi setelah transfer ya!_ ✅`;
     }
 });
 
+// ==============================================
+// 🔍 TEST FONNTE API CONNECTION
+// ==============================================
+router.get('/test-fonnte', async (req, res) => {
+    try {
+        console.log('🧪 Testing Fonnte API connection...');
+
+        const apiToken = process.env.FONNTE_API_TOKEN;
+        const testMode = process.env.WA_TEST_MODE === 'true';
+
+        if (!apiToken) {
+            return res.json({
+                success: false,
+                error: 'FONNTE_API_TOKEN tidak ditemukan di .env',
+                recommendation:
+                    'Tambahkan FONNTE_API_TOKEN=your_token di file .env',
+                testMode: testMode,
+            });
+        }
+
+        if (testMode) {
+            return res.json({
+                success: true,
+                message: 'TEST MODE aktif - pesan tidak akan dikirim',
+                testMode: true,
+                tokenLength: apiToken.length,
+                tokenPreview: apiToken.substring(0, 10) + '...',
+            });
+        }
+
+        // Test dengan Fonnte API
+        const response = await axios.get('https://api.fonnte.com/validate', {
+            headers: {
+                Authorization: apiToken,
+            },
+        });
+
+        console.log('✅ Fonnte validation response:', response.data);
+
+        res.json({
+            success: true,
+            message: 'Koneksi Fonnte API berhasil!',
+            data: response.data,
+            testMode: false,
+        });
+    } catch (error) {
+        console.error(
+            '❌ Fonnte test error:',
+            error.response?.data || error.message
+        );
+
+        res.json({
+            success: false,
+            error: error.response?.data?.reason || error.message,
+            detail: error.response?.data,
+            recommendation:
+                error.response?.status === 401
+                    ? 'API Token tidak valid. Periksa kembali token Fonnte Anda.'
+                    : 'Terjadi kesalahan saat menghubungi API Fonnte.',
+        });
+    }
+});
+
 export default router;

@@ -39,38 +39,38 @@ if ('serviceWorker' in navigator) {
 
             console.log('🔄 All service workers and caches cleared');
 
-            // Now register the new service worker
-            const registration = await navigator.serviceWorker.register(
-                '/sw.js',
-                {
-                    updateViaCache: 'none', // Don't cache the service worker itself
-                }
-            );
-
-            console.log('✅ SW registered:', registration);
-
-            // Force update check immediately
-            await registration.update();
-
-            // Check for updates periodically
-            setInterval(() => {
-                registration.update();
-            }, 60000); // Check every minute
-
-            // Handle updates
-            registration.addEventListener('updatefound', () => {
-                const newWorker = registration.installing;
-                newWorker.addEventListener('statechange', () => {
-                    if (newWorker.state === 'activated') {
-                        console.log(
-                            '🆕 New service worker activated, reloading...'
-                        );
-                        window.location.reload();
+            // Try to register new service worker (if exists)
+            try {
+                const registration = await navigator.serviceWorker.register(
+                    '/sw.js',
+                    {
+                        updateViaCache: 'none',
                     }
+                );
+
+                console.log('✅ SW registered:', registration);
+
+                // Force update check
+                await registration.update();
+
+                // Handle updates
+                registration.addEventListener('updatefound', () => {
+                    const newWorker = registration.installing;
+                    newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'activated') {
+                            console.log('🆕 New SW activated');
+                            // Don't auto-reload, let user decide
+                        }
+                    });
                 });
-            });
+            } catch (swError) {
+                // SW file not found or error - not critical, continue without it
+                console.log(
+                    'ℹ️ Service worker not available, running without PWA features'
+                );
+            }
         } catch (err) {
-            console.error('❌ SW error:', err);
+            console.error('❌ Cache cleanup error:', err);
         }
     });
 }

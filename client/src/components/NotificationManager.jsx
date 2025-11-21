@@ -54,7 +54,8 @@ const NotificationManager = () => {
     const [customMessage, setCustomMessage] = useState('');
     const [customPreview, setCustomPreview] = useState('');
     const [sendingCustom, setSendingCustom] = useState(false);
-    const [selectedStudentForCustom, setSelectedStudentForCustom] = useState('');
+    const [selectedStudentForCustom, setSelectedStudentForCustom] =
+        useState('');
 
     const [activeTab, setActiveTab] = useState('send'); // send, history, stats, group, event, custom
 
@@ -199,12 +200,26 @@ const NotificationManager = () => {
 
             console.log('✅ Response:', response.data);
 
-            alert(
-                response.data.testMode
-                    ? '✅ Reminder berhasil dikirim! (TEST MODE - cek console)'
-                    : '✅ Reminder berhasil dikirim!'
-            );
-            await loadData();
+            // Check if actually successful
+            if (response.data.success) {
+                alert(
+                    response.data.testMode
+                        ? '✅ Reminder berhasil dikirim! (TEST MODE - cek console)'
+                        : '✅ Reminder berhasil dikirim!'
+                );
+                await loadData();
+            } else {
+                // Success false - show error
+                alert(
+                    '❌ Gagal mengirim pesan!\n\n' +
+                        'Kemungkinan penyebab:\n' +
+                        '1. API Token Fonnte tidak valid atau kadaluarsa\n' +
+                        '2. Nomor WhatsApp tidak terdaftar\n' +
+                        '3. Format nomor tidak valid\n' +
+                        '4. Kuota API habis\n\n' +
+                        'Cek console untuk detail error.'
+                );
+            }
         } catch (error) {
             console.error('❌ Error sending reminder:', error);
             console.error('Error response:', error.response?.data);
@@ -1776,7 +1791,10 @@ const NotificationManager = () => {
                                             💌 Pesan Custom
                                         </h3>
                                         <p className="text-sm text-purple-800">
-                                            Kirim pesan kustom untuk urusan personal. Pesan akan otomatis ditambahkan informasi pembayaran di akhir.
+                                            Kirim pesan kustom untuk urusan
+                                            personal. Pesan akan otomatis
+                                            ditambahkan informasi pembayaran di
+                                            akhir.
                                         </p>
                                     </div>
                                 </div>
@@ -1808,12 +1826,15 @@ const NotificationManager = () => {
                                                     key={student._id}
                                                     value={student._id}
                                                 >
-                                                    {student.absen} - {student.name} ({student.phoneNumber})
+                                                    {student.absen} -{' '}
+                                                    {student.name} (
+                                                    {student.phoneNumber})
                                                 </option>
                                             ))}
                                     </select>
                                     <p className="text-xs text-gray-500 mt-1">
-                                        Pilih siswa untuk auto-fill nomor telepon, atau input manual di bawah
+                                        Pilih siswa untuk auto-fill nomor
+                                        telepon, atau input manual di bawah
                                     </p>
                                 </div>
 
@@ -1851,7 +1872,8 @@ const NotificationManager = () => {
                                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 resize-none"
                                     />
                                     <p className="text-xs text-gray-500 mt-1">
-                                        ℹ️ Informasi pembayaran akan otomatis ditambahkan di akhir pesan
+                                        ℹ️ Informasi pembayaran akan otomatis
+                                        ditambahkan di akhir pesan
                                     </p>
                                 </div>
 
@@ -1895,7 +1917,8 @@ const NotificationManager = () => {
                                     <div className="flex items-center gap-2 mb-3">
                                         <Eye className="w-5 h-5 text-gray-600" />
                                         <h4 className="font-semibold text-gray-800">
-                                            Preview Pesan (Dengan Info Pembayaran)
+                                            Preview Pesan (Dengan Info
+                                            Pembayaran)
                                         </h4>
                                     </div>
                                     <div className="bg-white p-4 rounded-lg border border-gray-300">
@@ -1904,7 +1927,8 @@ const NotificationManager = () => {
                                         </pre>
                                     </div>
                                     <p className="text-xs text-gray-500 mt-2">
-                                        ✅ Pesan ini yang akan dikirim ke penerima
+                                        ✅ Pesan ini yang akan dikirim ke
+                                        penerima
                                     </p>
                                 </div>
                             )}
@@ -1915,9 +1939,16 @@ const NotificationManager = () => {
                                     💡 Tips Penggunaan:
                                 </h4>
                                 <ul className="text-sm text-blue-800 space-y-1">
-                                    <li>• Pesan bisa untuk urusan personal/individual</li>
-                                    <li>• Info pembayaran otomatis ditambahkan</li>
-                                    <li>• Gunakan bahasa yang sopan dan jelas</li>
+                                    <li>
+                                        • Pesan bisa untuk urusan
+                                        personal/individual
+                                    </li>
+                                    <li>
+                                        • Info pembayaran otomatis ditambahkan
+                                    </li>
+                                    <li>
+                                        • Gunakan bahasa yang sopan dan jelas
+                                    </li>
                                     <li>• Preview dulu sebelum mengirim</li>
                                 </ul>
                             </div>
