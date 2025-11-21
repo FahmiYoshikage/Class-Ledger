@@ -201,7 +201,9 @@ const PublicDashboard = () => {
                             className="flex items-center gap-2 bg-yellow-400 text-gray-900 px-3 sm:px-4 py-2 rounded-lg hover:bg-yellow-300 transition-all shadow-lg text-sm sm:text-base font-medium"
                         >
                             <Trophy className="w-4 h-4" />
-                            <span className="hidden sm:inline">Leaderboard</span>
+                            <span className="hidden sm:inline">
+                                Leaderboard
+                            </span>
                         </button>
                         <button
                             onClick={() => navigate('/login')}
