@@ -80,7 +80,9 @@ const Leaderboard = () => {
             <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 flex items-center justify-center">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-purple-600 mx-auto mb-4"></div>
-                    <p className="text-gray-600 text-lg">Memuat leaderboard...</p>
+                    <p className="text-gray-600 text-lg">
+                        Memuat leaderboard...
+                    </p>
                 </div>
             </div>
         );
@@ -150,10 +152,13 @@ const Leaderboard = () => {
                                 Update Terakhir
                             </p>
                             <p className="text-lg font-semibold text-gray-800">
-                                {stats.lastUpdated?.toLocaleTimeString('id-ID', {
-                                    hour: '2-digit',
-                                    minute: '2-digit',
-                                })}
+                                {stats.lastUpdated?.toLocaleTimeString(
+                                    'id-ID',
+                                    {
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                    }
+                                )}
                             </p>
                         </div>
                     </div>
@@ -182,7 +187,11 @@ const Leaderboard = () => {
                                     className={`
                                         bg-white rounded-2xl shadow-lg overflow-hidden
                                         transform transition-all duration-300 hover:scale-102 hover:shadow-2xl
-                                        ${isTopThree ? 'ring-4 ring-offset-2' : ''}
+                                        ${
+                                            isTopThree
+                                                ? 'ring-4 ring-offset-2'
+                                                : ''
+                                        }
                                         ${rank === 1 ? 'ring-yellow-400' : ''}
                                         ${rank === 2 ? 'ring-gray-400' : ''}
                                         ${rank === 3 ? 'ring-orange-400' : ''}
@@ -193,13 +202,17 @@ const Leaderboard = () => {
                                         <div
                                             className={`
                                             flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 
-                                            rounded-full bg-gradient-to-br ${getRankColor(rank)} 
+                                            rounded-full bg-gradient-to-br ${getRankColor(
+                                                rank
+                                            )} 
                                             flex items-center justify-center text-white 
                                             font-bold text-2xl sm:text-3xl shadow-lg
                                             ${isTopThree ? 'animate-pulse' : ''}
                                         `}
                                         >
-                                            {isTopThree ? getRankEmoji(rank) : rank}
+                                            {isTopThree
+                                                ? getRankEmoji(rank)
+                                                : rank}
                                         </div>
 
                                         {/* Donor Info */}
@@ -211,7 +224,8 @@ const Leaderboard = () => {
                                                     </h3>
                                                     <p className="text-sm text-gray-500">
                                                         Absen {donor.absen} •{' '}
-                                                        {donor.paymentCount}x bayar
+                                                        {donor.paymentCount}x
+                                                        bayar
                                                     </p>
                                                 </div>
                                                 {isTopThree && (
@@ -223,7 +237,9 @@ const Leaderboard = () => {
                                             <div className="flex items-center gap-2 mb-2">
                                                 <TrendingUp className="w-5 h-5 text-green-600" />
                                                 <span className="text-2xl sm:text-3xl font-extrabold text-green-600">
-                                                    {formatRupiah(donor.totalDonation)}
+                                                    {formatRupiah(
+                                                        donor.totalDonation
+                                                    )}
                                                 </span>
                                             </div>
 
@@ -234,10 +250,13 @@ const Leaderboard = () => {
                                                     Pertama bayar:{' '}
                                                     {new Date(
                                                         donor.earliestPayment
-                                                    ).toLocaleDateString('id-ID', {
-                                                        day: 'numeric',
-                                                        month: 'short',
-                                                    })}
+                                                    ).toLocaleDateString(
+                                                        'id-ID',
+                                                        {
+                                                            day: 'numeric',
+                                                            month: 'short',
+                                                        }
+                                                    )}
                                                 </div>
                                             )}
                                         </div>
@@ -246,7 +265,9 @@ const Leaderboard = () => {
                                     {/* Top 3 Special Background */}
                                     {isTopThree && (
                                         <div
-                                            className={`h-2 bg-gradient-to-r ${getRankColor(rank)}`}
+                                            className={`h-2 bg-gradient-to-r ${getRankColor(
+                                                rank
+                                            )}`}
                                         ></div>
                                     )}
                                 </div>

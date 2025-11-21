@@ -52,7 +52,8 @@ router.patch('/:id', async (req, res) => {
         }
 
         if (req.body.name != null) student.name = req.body.name;
-        if (req.body.nickname !== undefined) student.nickname = req.body.nickname;
+        if (req.body.nickname !== undefined)
+            student.nickname = req.body.nickname;
         if (req.body.absen != null) student.absen = req.body.absen;
         if (req.body.status != null) student.status = req.body.status;
         if (req.body.phoneNumber !== undefined)

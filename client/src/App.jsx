@@ -2064,7 +2064,8 @@ const App = () => {
                                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                                     />
                                     <p className="text-xs text-gray-500 mt-1">
-                                        Nama panggilan untuk ditampilkan di leaderboard
+                                        Nama panggilan untuk ditampilkan di
+                                        leaderboard
                                     </p>
                                 </div>
                                 <div>
@@ -2166,7 +2167,8 @@ const App = () => {
                                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                                     />
                                     <p className="text-xs text-gray-500 mt-1">
-                                        Nama panggilan untuk ditampilkan di leaderboard
+                                        Nama panggilan untuk ditampilkan di
+                                        leaderboard
                                     </p>
                                 </div>
                                 <div>

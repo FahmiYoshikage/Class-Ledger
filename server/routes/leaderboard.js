@@ -51,7 +51,9 @@ router.get('/', async (req, res) => {
         });
 
         // Filter: only students with donations > 0
-        const eligibleDonors = leaderboardData.filter((d) => d.totalDonation > 0);
+        const eligibleDonors = leaderboardData.filter(
+            (d) => d.totalDonation > 0
+        );
 
         // Sort by:
         // 1. Total donation (descending)
