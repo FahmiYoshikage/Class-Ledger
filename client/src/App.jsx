@@ -129,6 +129,7 @@ const App = () => {
         try {
             const newStudent = {
                 name: formData.get('name'),
+                nickname: formData.get('nickname') || '',
                 absen: parseInt(formData.get('absen')),
                 status: 'Aktif',
                 phoneNumber: formData.get('phoneNumber') || '',
@@ -157,6 +158,7 @@ const App = () => {
         try {
             const updatedData = {
                 name: formData.get('name'),
+                nickname: formData.get('nickname') || '',
                 absen: parseInt(formData.get('absen')),
                 status: formData.get('status'),
                 phoneNumber: formData.get('phoneNumber') || '',
@@ -2053,6 +2055,20 @@ const App = () => {
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        Nama Panggilan (Opsional)
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="nickname"
+                                        placeholder="Contoh: Budi, Andi, Siti"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                    />
+                                    <p className="text-xs text-gray-500 mt-1">
+                                        Nama panggilan untuk ditampilkan di leaderboard
+                                    </p>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
                                         Nomor WhatsApp (Opsional)
                                     </label>
                                     <input
@@ -2135,6 +2151,23 @@ const App = () => {
                                         required
                                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                                     />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        Nama Panggilan (Opsional)
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="nickname"
+                                        defaultValue={
+                                            editingStudent.nickname || ''
+                                        }
+                                        placeholder="Contoh: Budi, Andi, Siti"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                    />
+                                    <p className="text-xs text-gray-500 mt-1">
+                                        Nama panggilan untuk ditampilkan di leaderboard
+                                    </p>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">

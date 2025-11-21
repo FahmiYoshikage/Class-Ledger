@@ -7,6 +7,11 @@ const studentSchema = new mongoose.Schema(
             required: true,
             trim: true,
         },
+        nickname: {
+            type: String,
+            trim: true,
+            default: '',
+        },
         absen: {
             type: Number,
             required: true,

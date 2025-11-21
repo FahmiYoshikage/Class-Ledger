@@ -10,6 +10,7 @@ import AuditLogs from './pages/AuditLogs.jsx';
 import SessionManagement from './pages/SessionManagement.jsx';
 import MemberDashboard from './pages/MemberDashboard.jsx';
 import PublicDashboard from './pages/PublicDashboard.jsx';
+import Leaderboard from './components/Leaderboard.jsx';
 import ProfileEdit from './pages/ProfileEdit.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import DashboardLayout from './components/DashboardLayout.jsx';
@@ -97,6 +98,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                     <Route path="/" element={<PublicDashboard />} />
 
                     {/* Public Routes */}
+                    <Route path="/leaderboard" element={<Leaderboard />} />
                     <Route path="/login" element={<Login />} />
 
                     {/* Protected Routes */}
