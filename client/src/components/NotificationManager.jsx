@@ -49,7 +49,14 @@ const NotificationManager = () => {
     const [eventCategory, setEventCategory] = useState('friendly');
     const [selectedEventStudents, setSelectedEventStudents] = useState([]);
 
-    const [activeTab, setActiveTab] = useState('send'); // send, history, stats, group, event
+    // Custom message states
+    const [customPhoneNumber, setCustomPhoneNumber] = useState('');
+    const [customMessage, setCustomMessage] = useState('');
+    const [customPreview, setCustomPreview] = useState('');
+    const [sendingCustom, setSendingCustom] = useState(false);
+    const [selectedStudentForCustom, setSelectedStudentForCustom] = useState('');
+
+    const [activeTab, setActiveTab] = useState('send'); // send, history, stats, group, event, custom
 
     const categories = [
         { value: 'friendly', label: '😊 Friendly & Santai', color: 'blue' },
@@ -549,6 +556,86 @@ const NotificationManager = () => {
         }
     };
 
+    // Custom message handlers
+    const handleCustomPreview = async () => {
+        if (!customMessage.trim()) {
+            alert('⚠️ Pesan tidak boleh kosong!');
+            return;
+        }
+
+        try {
+            const response = await axios.post(
+                `${API_URL}/notifications/preview-custom-message`,
+                { message: customMessage }
+            );
+            setCustomPreview(response.data.preview);
+        } catch (error) {
+            console.error('Error preview custom message:', error);
+            alert('Error saat preview pesan: ' + error.message);
+        }
+    };
+
+    const handleSendCustomMessage = async () => {
+        if (!customPhoneNumber.trim() || !customMessage.trim()) {
+            alert('⚠️ Nomor telepon dan pesan harus diisi!');
+            return;
+        }
+
+        if (
+            !confirm(
+                `Kirim pesan custom ke:\n${customPhoneNumber}?\n\nPesan akan otomatis ditambahkan info pembayaran.`
+            )
+        ) {
+            return;
+        }
+
+        setSendingCustom(true);
+
+        try {
+            const response = await axios.post(
+                `${API_URL}/notifications/send-custom-message`,
+                {
+                    phoneNumber: customPhoneNumber,
+                    message: customMessage,
+                    studentId: selectedStudentForCustom || null,
+                }
+            );
+
+            if (response.data.success) {
+                alert('✅ Pesan berhasil dikirim!');
+                setCustomMessage('');
+                setCustomPhoneNumber('');
+                setSelectedStudentForCustom('');
+                setCustomPreview('');
+                await loadData();
+            } else {
+                alert(
+                    `❌ Gagal mengirim pesan\n\n${
+                        response.data.error || 'Unknown error'
+                    }`
+                );
+            }
+        } catch (error) {
+            const errorMsg = error.response?.data?.error || error.message;
+            alert(`❌ Error mengirim pesan:\n\n${errorMsg}`);
+            console.error('Send error:', error.response?.data || error);
+        } finally {
+            setSendingCustom(false);
+        }
+    };
+
+    const handleStudentSelectForCustom = (studentId) => {
+        setSelectedStudentForCustom(studentId);
+        if (studentId) {
+            const student = students.find((s) => s._id === studentId);
+            if (student && student.phoneNumber) {
+                setCustomPhoneNumber(student.phoneNumber);
+            }
+        } else {
+            setCustomPhoneNumber('');
+        }
+    };
+
     useEffect(() => {
         loadData();
         loadEvents();
@@ -734,6 +821,19 @@ const NotificationManager = () => {
                         <Calendar className="w-4 h-4" />
                         <span className="hidden md:inline">Reminder Event</span>
                         <span className="md:hidden">Event</span>
+                    </button>
+
+                    <button
+                        onClick={() => setActiveTab('custom')}
+                        className={`flex items-center gap-2 px-4 sm:px-6 py-3 font-medium transition-colors whitespace-nowrap text-sm sm:text-base ${
+                            activeTab === 'custom'
+                                ? 'text-purple-600 border-b-2 border-purple-600'
+                                : 'text-gray-600 hover:text-gray-800'
+                        }`}
+                    >
+                        <MessageSquare className="w-4 h-4" />
+                        <span className="hidden sm:inline">Pesan Custom</span>
+                        <span className="sm:hidden">Custom</span>
                     </button>
 
                     <button
@@ -1662,6 +1762,165 @@ const NotificationManager = () => {
                                     )}
                                 </>
                             )}
+                        </div>
+                    )}
+
+                    {/* Custom Message Tab */}
+                    {activeTab === 'custom' && (
+                        <div className="space-y-6">
+                            <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                                <div className="flex items-start gap-3">
+                                    <MessageSquare className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
+                                    <div>
+                                        <h3 className="font-semibold text-purple-900 mb-1">
+                                            💌 Pesan Custom
+                                        </h3>
+                                        <p className="text-sm text-purple-800">
+                                            Kirim pesan kustom untuk urusan personal. Pesan akan otomatis ditambahkan informasi pembayaran di akhir.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Form */}
+                            <div className="space-y-4">
+                                {/* Pilih Siswa (Opsional) */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Pilih Siswa (Opsional)
+                                    </label>
+                                    <select
+                                        value={selectedStudentForCustom}
+                                        onChange={(e) =>
+                                            handleStudentSelectForCustom(
+                                                e.target.value
+                                            )
+                                        }
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                                    >
+                                        <option value="">
+                                            Manual input nomor telepon
+                                        </option>
+                                        {students
+                                            .filter((s) => s.phoneNumber)
+                                            .map((student) => (
+                                                <option
+                                                    key={student._id}
+                                                    value={student._id}
+                                                >
+                                                    {student.absen} - {student.name} ({student.phoneNumber})
+                                                </option>
+                                            ))}
+                                    </select>
+                                    <p className="text-xs text-gray-500 mt-1">
+                                        Pilih siswa untuk auto-fill nomor telepon, atau input manual di bawah
+                                    </p>
+                                </div>
+
+                                {/* Nomor Telepon */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Nomor Telepon
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={customPhoneNumber}
+                                        onChange={(e) =>
+                                            setCustomPhoneNumber(e.target.value)
+                                        }
+                                        placeholder="0856467458xx atau 6285646745xxx"
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                                    />
+                                    <p className="text-xs text-gray-500 mt-1">
+                                        Format: 08xxx atau 628xxx
+                                    </p>
+                                </div>
+
+                                {/* Pesan */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Pesan Custom
+                                    </label>
+                                    <textarea
+                                        value={customMessage}
+                                        onChange={(e) =>
+                                            setCustomMessage(e.target.value)
+                                        }
+                                        placeholder="Ketik pesan Anda di sini...&#10;&#10;Contoh:&#10;Halo! Mau ngingetin nih untuk bayar kas minggu ini ya. Terima kasih! 😊"
+                                        rows={6}
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 resize-none"
+                                    />
+                                    <p className="text-xs text-gray-500 mt-1">
+                                        ℹ️ Informasi pembayaran akan otomatis ditambahkan di akhir pesan
+                                    </p>
+                                </div>
+
+                                {/* Action Buttons */}
+                                <div className="flex gap-3">
+                                    <button
+                                        onClick={handleCustomPreview}
+                                        disabled={!customMessage.trim()}
+                                        className="flex items-center justify-center gap-2 px-6 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        <Eye className="w-4 h-4" />
+                                        Preview
+                                    </button>
+                                    <button
+                                        onClick={handleSendCustomMessage}
+                                        disabled={
+                                            sendingCustom ||
+                                            !customPhoneNumber.trim() ||
+                                            !customMessage.trim()
+                                        }
+                                        className="flex-1 flex items-center justify-center gap-2 px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        {sendingCustom ? (
+                                            <>
+                                                <RefreshCw className="w-4 h-4 animate-spin" />
+                                                Mengirim...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Send className="w-4 h-4" />
+                                                Kirim Pesan
+                                            </>
+                                        )}
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Preview */}
+                            {customPreview && (
+                                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <Eye className="w-5 h-5 text-gray-600" />
+                                        <h4 className="font-semibold text-gray-800">
+                                            Preview Pesan (Dengan Info Pembayaran)
+                                        </h4>
+                                    </div>
+                                    <div className="bg-white p-4 rounded-lg border border-gray-300">
+                                        <pre className="text-sm whitespace-pre-wrap text-gray-800 font-sans">
+                                            {customPreview}
+                                        </pre>
+                                    </div>
+                                    <p className="text-xs text-gray-500 mt-2">
+                                        ✅ Pesan ini yang akan dikirim ke penerima
+                                    </p>
+                                </div>
+                            )}
+
+                            {/* Info */}
+                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                <h4 className="font-semibold text-blue-900 mb-2">
+                                    💡 Tips Penggunaan:
+                                </h4>
+                                <ul className="text-sm text-blue-800 space-y-1">
+                                    <li>• Pesan bisa untuk urusan personal/individual</li>
+                                    <li>• Info pembayaran otomatis ditambahkan</li>
+                                    <li>• Gunakan bahasa yang sopan dan jelas</li>
+                                    <li>• Preview dulu sebelum mengirim</li>
+                                </ul>
+                            </div>
                         </div>
                     )}
 
