@@ -381,7 +381,7 @@ const PublicDashboard = () => {
 
                                 return (
                                     <div
-                                        key={member.userId}
+                                        key={member.studentId}
                                         className="flex items-center justify-between p-3 sm:p-4 rounded-xl bg-gradient-to-r from-gray-50 to-white border border-gray-200 hover:shadow-md transition-shadow"
                                     >
                                         <div className="flex items-center gap-3 flex-1 min-w-0">
