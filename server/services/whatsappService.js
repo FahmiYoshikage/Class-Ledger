@@ -2,6 +2,29 @@ import axios from 'axios';
 import Notification from '../models/Notification.js';
 
 // ==============================================
+// 💳 INFORMASI PEMBAYARAN
+// ==============================================
+const PAYMENT_INFO = `
+
+━━━━━━━━━━━━━━━━━━━━
+💳 *INFORMASI PEMBAYARAN*
+Semua atas nama: *Fahmi Ilham Bagaskara*
+
+*E-Wallet:*
+💰 Dana: 085646745887
+💚 Gopay: 085646745887
+🛍️ ShopeePay: 085646745887
+
+*Mobile Banking:*
+🏦 SeaBank: 901006225290
+🏦 Neo Commerce: 5859456107432143
+🏦 BRI: 011001041959536
+🏦 Jago: 103560685633
+━━━━━━━━━━━━━━━━━━━━
+
+_Mohon konfirmasi setelah transfer ya!_ ✅`;
+
+// ==============================================
 // 🎨 TEMPLATE PESAN KREATIF & VARIATIF
 // ==============================================
 
@@ -14,7 +37,8 @@ const CREATIVE_TEMPLATES = {
             `Udah ${weeks} minggu nih belum bayar\n` +
             `Total: Rp ${amount.toLocaleString('id-ID')}\n\n` +
             `Yuk buruan bayar biar adem hatinya 🥰\n` +
-            `Ditunggu ya bestie! 💙`,
+            `Ditunggu ya bestie! 💙` +
+            PAYMENT_INFO,
 
         (name, weeks, amount) =>
             `Hai ${name}! 🌟\n\n` +
@@ -22,13 +46,15 @@ const CREATIVE_TEMPLATES = {
             `Kas kelas lagi kangen kontribusimu 💰\n\n` +
             `Tunggakan: ${weeks} minggu\n` +
             `Total: Rp ${amount.toLocaleString('id-ID')}\n\n` +
-            `Gas bayar sekarang yuk! 🚀`,
+            `Gas bayar sekarang yuk! 🚀` +
+            PAYMENT_INFO,
 
         (name, weeks, amount) =>
             `${name}, denger denger ada yang belum bayar kas? 🤔\n\n` +
             `Oh ternyata kamu toh! 😆\n` +
             `${weeks} minggu = Rp ${amount.toLocaleString('id-ID')}\n\n` +
-            `Yuk dibayar, jangan lupa ya! 💪`,
+            `Yuk dibayar, jangan lupa ya! 💪` +
+            PAYMENT_INFO,
     ],
 
     // Template motivasi
@@ -39,7 +65,8 @@ const CREATIVE_TEMPLATES = {
             `membangun kelas yang lebih baik 🏆\n\n` +
             `Tunggakan: ${weeks} minggu\n` +
             `Nominal: Rp ${amount.toLocaleString('id-ID')}\n\n` +
-            `Mari jadi teladan! ⭐`,
+            `Mari jadi teladan! ⭐` +
+            PAYMENT_INFO,
 
         (name, weeks, amount) =>
             `Hai ${name}! 🌈\n\n` +
@@ -48,7 +75,8 @@ const CREATIVE_TEMPLATES = {
             `Tunggakan: ${weeks} minggu (Rp ${amount.toLocaleString(
                 'id-ID'
             )})\n\n` +
-            `Yuk jadi yang terdepan! 🎯`,
+            `Yuk jadi yang terdepan! 🎯` +
+            PAYMENT_INFO,
     ],
 
     // Template formal tapi tetap ramah
@@ -60,7 +88,8 @@ const CREATIVE_TEMPLATES = {
             `• Periode: ${weeks} minggu\n` +
             `• Nominal: Rp ${amount.toLocaleString('id-ID')}\n\n` +
             `Mohon dapat segera dilunasi.\n` +
-            `Terima kasih atas perhatiannya! 🙏`,
+            `Terima kasih atas perhatiannya! 🙏` +
+            PAYMENT_INFO,
 
         (name, weeks, amount) =>
             `Reminder Pembayaran Kas 📋\n\n` +
@@ -69,7 +98,8 @@ const CREATIVE_TEMPLATES = {
             `Tunggakan: ${weeks} minggu\n` +
             `Total: Rp ${amount.toLocaleString('id-ID')}\n\n` +
             `Dimohon untuk segera melakukan pembayaran.\n` +
-            `Salam hormat, Bendahara Kelas 🙏`,
+            `Salam hormat, Bendahara Kelas 🙏` +
+            PAYMENT_INFO,
     ],
 
     // Template dengan emoji & energi tinggi
@@ -81,7 +111,8 @@ const CREATIVE_TEMPLATES = {
             `⏰ ${weeks} minggu belum bayar\n` +
             `💰 Total: Rp ${amount.toLocaleString('id-ID')}\n\n` +
             `Yuk gas ke bendahara! 🏃‍♂️💨\n` +
-            `Let's gooo! 🚀`,
+            `Let's gooo! 🚀` +
+            PAYMENT_INFO,
 
         (name, weeks, amount) =>
             `⚡ FLASH REMINDER ⚡\n\n` +
@@ -89,7 +120,8 @@ const CREATIVE_TEMPLATES = {
             `Time to shine! ✨\n\n` +
             `📌 Tunggakan: ${weeks} minggu\n` +
             `💵 Amount: Rp ${amount.toLocaleString('id-ID')}\n\n` +
-            `Bayar sekarang = Auto sultan! 👑`,
+            `Bayar sekarang = Auto sultan! 👑` +
+            PAYMENT_INFO,
     ],
 
     // Template dengan puns & humor
@@ -101,7 +133,8 @@ const CREATIVE_TEMPLATES = {
             `Hadiah: Lunasin ${weeks} minggu\n` +
             `Bonus: Hati adem, dompet ringan 💸\n` +
             `Total: Rp ${amount.toLocaleString('id-ID')}\n\n` +
-            `Klaim hadiahnya ke bendahara ya! 🏆`,
+            `Klaim hadiahnya ke bendahara ya! 🏆` +
+            PAYMENT_INFO,
 
         (name, weeks, amount) =>
             `Breaking News! 📰\n\n` +
@@ -111,7 +144,8 @@ const CREATIVE_TEMPLATES = {
             `Cara turun trending: Bayar Rp ${amount.toLocaleString(
                 'id-ID'
             )}\n\n` +
-            `Gaskeun biar viral positif! 📈`,
+            `Gaskeun biar viral positif! 📈` +
+            PAYMENT_INFO,
     ],
 
     // Template gentle reminder
@@ -123,7 +157,8 @@ const CREATIVE_TEMPLATES = {
             `Periode: ${weeks} minggu\n` +
             `Jumlah: Rp ${amount.toLocaleString('id-ID')}\n\n` +
             `No pressure, tapi jangan lupa ya! 🥺\n` +
-            `Makasih banyak! ✨`,
+            `Makasih banyak! ✨` +
+            PAYMENT_INFO,
 
         (name, weeks, amount) =>
             `Dear ${name} 💌\n\n` +
@@ -133,7 +168,8 @@ const CREATIVE_TEMPLATES = {
                 'id-ID'
             )}\n\n` +
             `Whenever you're ready ya!\n` +
-            `Thank you! 🙏💖`,
+            `Thank you! 🙏💖` +
+            PAYMENT_INFO,
     ],
 };
 
@@ -931,6 +967,105 @@ class WhatsAppService {
                     failureReason:
                         error.response?.data?.reason || error.message,
                     templateUsed: 'event_group_' + category,
+                });
+            } catch (dbError) {
+                console.error('Error saving failed notification:', dbError);
+            }
+
+            return {
+                success: false,
+                status: 'failed',
+                error: error.message,
+                detail: error.response?.data || null,
+            };
+        }
+    }
+
+    // ==============================================
+    // 📝 CUSTOM MESSAGE - Kirim pesan kustom
+    // ==============================================
+    async sendCustomMessage(phoneNumber, customMessage, studentData = null) {
+        try {
+            // Format nomor telepon
+            let formattedNumber = phoneNumber.replace(/[^0-9]/g, '');
+
+            // Tambahkan 62 jika belum ada
+            if (!formattedNumber.startsWith('62')) {
+                if (formattedNumber.startsWith('0')) {
+                    formattedNumber = '62' + formattedNumber.substring(1);
+                } else {
+                    formattedNumber = '62' + formattedNumber;
+                }
+            }
+
+            // Tambahkan payment info di akhir pesan
+            const fullMessage = customMessage + PAYMENT_INFO;
+
+            // Mode test
+            if (process.env.WA_TEST_MODE === 'true') {
+                console.log('📱 TEST MODE - Custom message:');
+                console.log(`To: ${formattedNumber}`);
+                console.log(`Message:\n${fullMessage}`);
+                return {
+                    success: true,
+                    status: 'sent',
+                    messageId: 'test_custom_' + Date.now(),
+                    testMode: true,
+                };
+            }
+
+            // Kirim via Fonnte
+            const response = await axios.post(
+                this.apiUrl,
+                {
+                    target: formattedNumber,
+                    message: fullMessage,
+                    countryCode: '62',
+                },
+                {
+                    headers: {
+                        Authorization: this.apiToken,
+                    },
+                }
+            );
+
+            console.log('Fonnte API Response (Custom):', response.data);
+
+            // Save notification
+            await Notification.create({
+                studentId: studentData?._id || null,
+                phoneNumber: formattedNumber,
+                message: fullMessage,
+                type: 'custom',
+                status: response.data.status ? 'sent' : 'failed',
+                sentAt: response.data.status ? new Date() : null,
+                failureReason: response.data.status
+                    ? null
+                    : response.data.reason || 'Unknown error',
+                templateUsed: 'custom_message',
+            });
+
+            return {
+                success: response.data.status === true,
+                status: response.data.status ? 'sent' : 'failed',
+                messageId: response.data.id || null,
+                detail: response.data.detail || response.data.reason || null,
+            };
+        } catch (error) {
+            console.error('Error sending custom message:', error.message);
+            console.error('Full error:', error.response?.data || error);
+
+            // Save failed notification
+            try {
+                await Notification.create({
+                    studentId: studentData?._id || null,
+                    phoneNumber: phoneNumber,
+                    message: customMessage,
+                    type: 'custom',
+                    status: 'failed',
+                    failureReason:
+                        error.response?.data?.reason || error.message,
+                    templateUsed: 'custom_message',
                 });
             } catch (dbError) {
                 console.error('Error saving failed notification:', dbError);

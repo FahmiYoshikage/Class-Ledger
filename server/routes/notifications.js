@@ -908,4 +908,97 @@ router.post('/preview-event-reminder-group/:eventId', async (req, res) => {
     }
 });
 
+// ==============================================
+// 📝 CUSTOM MESSAGE - Kirim pesan kustom
+// ==============================================
+router.post('/send-custom-message', async (req, res) => {
+    try {
+        const { phoneNumber, message, studentId } = req.body;
+
+        // Validasi input
+        if (!phoneNumber || !message) {
+            return res.status(400).json({
+                error: 'Nomor telepon dan pesan harus diisi',
+            });
+        }
+
+        // Get student data jika ada
+        let studentData = null;
+        if (studentId) {
+            studentData = await Student.findById(studentId);
+        }
+
+        // Kirim pesan
+        const result = await whatsappService.sendCustomMessage(
+            phoneNumber,
+            message,
+            studentData
+        );
+
+        if (result.success) {
+            res.json({
+                success: true,
+                message: 'Pesan berhasil dikirim',
+                detail: result,
+            });
+        } else {
+            res.status(400).json({
+                success: false,
+                message: 'Gagal mengirim pesan',
+                error: result.error || result.detail,
+            });
+        }
+    } catch (error) {
+        console.error('Error in send custom message endpoint:', error);
+        res.status(500).json({
+            success: false,
+            error: error.message,
+        });
+    }
+});
+
+// Preview custom message (dengan payment info)
+router.post('/preview-custom-message', async (req, res) => {
+    try {
+        const { message } = req.body;
+
+        if (!message) {
+            return res.status(400).json({
+                error: 'Pesan harus diisi',
+            });
+        }
+
+        // Import payment info dari whatsappService
+        const PAYMENT_INFO = `
+
+═══════════════════
+💳 *INFORMASI PEMBAYARAN*
+Semua atas nama: *Fahmi Ilham Bagaskara*
+
+*E-Wallet:*
+💰 Dana: 085646745887
+💚 Gopay: 085646745887
+🛍️ ShopeePay: 085646745887
+
+*Mobile Banking:*
+🏦 SeaBank: 901006225290
+🏦 Neo Commerce: 5859456107432143
+🏦 BRI: 011001041959536
+🏦 Jago: 103560685633
+═══════════════════
+
+_Mohon konfirmasi setelah transfer ya!_ ✅`;
+
+        const fullMessage = message + PAYMENT_INFO;
+
+        res.json({
+            preview: fullMessage,
+            originalMessage: message,
+            hasPaymentInfo: true,
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 export default router;
