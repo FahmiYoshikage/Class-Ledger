@@ -12,11 +12,12 @@ class NotificationScheduler {
     // Hitung current week (respects semester pause)
     async getCurrentWeek() {
         try {
-            const [semesterStatusSetting, pausedWeekSetting, startDateSetting] = await Promise.all([
-                Setting.findOne({ key: 'semester_status' }),
-                Setting.findOne({ key: 'paused_week' }),
-                Setting.findOne({ key: 'start_date' }),
-            ]);
+            const [semesterStatusSetting, pausedWeekSetting, startDateSetting] =
+                await Promise.all([
+                    Setting.findOne({ key: 'semester_status' }),
+                    Setting.findOne({ key: 'paused_week' }),
+                    Setting.findOne({ key: 'start_date' }),
+                ]);
 
             const semesterStatus = semesterStatusSetting?.value || 'active';
             const pausedWeek = pausedWeekSetting?.value;
@@ -28,10 +29,10 @@ class NotificationScheduler {
             }
 
             // Calculate normally if active
-            const startDate = startDateSetting?.value 
-                ? new Date(startDateSetting.value) 
+            const startDate = startDateSetting?.value
+                ? new Date(startDateSetting.value)
                 : new Date(process.env.START_DATE || '2025-10-27');
-            
+
             const now = new Date();
             const days = Math.floor((now - startDate) / (24 * 60 * 60 * 1000));
             return Math.max(0, Math.ceil(days / 7) + 1);
@@ -48,7 +49,9 @@ class NotificationScheduler {
     // Check if semester is paused
     async isSemesterPaused() {
         try {
-            const semesterStatusSetting = await Setting.findOne({ key: 'semester_status' });
+            const semesterStatusSetting = await Setting.findOne({
+                key: 'semester_status',
+            });
             return semesterStatusSetting?.value === 'paused';
         } catch (error) {
             return false;

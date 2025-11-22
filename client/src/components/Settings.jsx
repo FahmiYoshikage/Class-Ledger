@@ -45,16 +45,23 @@ const Settings = ({ onStartDateChange, currentStartDate }) => {
         setLoading(true);
         try {
             // Load all settings
-            const [startDateRes, amountRes, thresholdRes, classNameRes, semesterStatusRes, semesterNameRes, pausedWeekRes] =
-                await Promise.all([
-                    settingsAPI.get('start_date').catch(() => null),
-                    settingsAPI.get('weekly_amount').catch(() => null),
-                    settingsAPI.get('late_threshold').catch(() => null),
-                    settingsAPI.get('class_name').catch(() => null),
-                    settingsAPI.get('semester_status').catch(() => null),
-                    settingsAPI.get('semester_name').catch(() => null),
-                    settingsAPI.get('paused_week').catch(() => null),
-                ]);
+            const [
+                startDateRes,
+                amountRes,
+                thresholdRes,
+                classNameRes,
+                semesterStatusRes,
+                semesterNameRes,
+                pausedWeekRes,
+            ] = await Promise.all([
+                settingsAPI.get('start_date').catch(() => null),
+                settingsAPI.get('weekly_amount').catch(() => null),
+                settingsAPI.get('late_threshold').catch(() => null),
+                settingsAPI.get('class_name').catch(() => null),
+                settingsAPI.get('semester_status').catch(() => null),
+                settingsAPI.get('semester_name').catch(() => null),
+                settingsAPI.get('paused_week').catch(() => null),
+            ]);
 
             if (startDateRes?.data?.value) {
                 setStartDate(formatDateForInput(startDateRes.data.value));
@@ -117,14 +124,22 @@ const Settings = ({ onStartDateChange, currentStartDate }) => {
     };
 
     const handlePauseSemester = async () => {
-        if (!confirm('⏸️ Pause semester?\n\nSistem akan berhenti menghitung tunggakan dan mengirim reminder otomatis.\n\nWeek counter akan di-freeze untuk dilanjutkan nanti.')) {
+        if (
+            !confirm(
+                '⏸️ Pause semester?\n\nSistem akan berhenti menghitung tunggakan dan mengirim reminder otomatis.\n\nWeek counter akan di-freeze untuk dilanjutkan nanti.'
+            )
+        ) {
             return;
         }
 
         setLoading(true);
         try {
             // Calculate current week before pausing
-            const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/settings/current-week`);
+            const response = await fetch(
+                `${
+                    import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+                }/settings/current-week`
+            );
             const data = await response.json();
             const currentWeek = data.currentWeek || 1;
 
@@ -136,7 +151,10 @@ const Settings = ({ onStartDateChange, currentStartDate }) => {
 
             setSemesterStatus('paused');
             setPausedWeek(currentWeek);
-            setSuccess('⏸️ Semester berhasil di-pause! System freeze di Week ' + currentWeek);
+            setSuccess(
+                '⏸️ Semester berhasil di-pause! System freeze di Week ' +
+                    currentWeek
+            );
             setTimeout(() => setSuccess(''), 5000);
 
             // Reload to refresh all data
@@ -149,13 +167,20 @@ const Settings = ({ onStartDateChange, currentStartDate }) => {
     };
 
     const handleResumeSemester = async () => {
-        const newSemesterName = prompt('📚 Mulai Semester Baru\n\nMasukkan nama semester:', semesterName || 'Semester 1 2024/2025');
-        
+        const newSemesterName = prompt(
+            '📚 Mulai Semester Baru\n\nMasukkan nama semester:',
+            semesterName || 'Semester 1 2024/2025'
+        );
+
         if (!newSemesterName) {
             return;
         }
 
-        if (!confirm(`▶️ Resume dengan semester baru: "${newSemesterName}"?\n\n✅ Week counter akan reset ke Week 1\n✅ Tunggakan siswa tetap dipertahankan (carry over)\n✅ Payment history tetap tersimpan\n✅ Leaderboard akumulasi sepanjang tahun\n✅ Auto-reminder akan aktif kembali`)) {
+        if (
+            !confirm(
+                `▶️ Resume dengan semester baru: "${newSemesterName}"?\n\n✅ Week counter akan reset ke Week 1\n✅ Tunggakan siswa tetap dipertahankan (carry over)\n✅ Payment history tetap tersimpan\n✅ Leaderboard akumulasi sepanjang tahun\n✅ Auto-reminder akan aktif kembali`
+            )
+        ) {
             return;
         }
 
@@ -176,7 +201,9 @@ const Settings = ({ onStartDateChange, currentStartDate }) => {
             setSemesterName(newSemesterName);
             setStartDate(today);
             setPausedWeek(null);
-            setSuccess(`▶️ Semester "${newSemesterName}" dimulai! Week counter reset ke Week 1`);
+            setSuccess(
+                `▶️ Semester "${newSemesterName}" dimulai! Week counter reset ke Week 1`
+            );
             setTimeout(() => setSuccess(''), 5000);
 
             // Notify parent and reload
@@ -268,7 +295,9 @@ const Settings = ({ onStartDateChange, currentStartDate }) => {
                             <input
                                 type="text"
                                 value={semesterName}
-                                onChange={(e) => setSemesterName(e.target.value)}
+                                onChange={(e) =>
+                                    setSemesterName(e.target.value)
+                                }
                                 placeholder="Contoh: Semester 1 2024/2025"
                                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                             />
@@ -278,11 +307,13 @@ const Settings = ({ onStartDateChange, currentStartDate }) => {
                         </div>
 
                         {/* Status Indicator */}
-                        <div className={`p-4 rounded-lg mb-4 ${
-                            semesterStatus === 'active' 
-                                ? 'bg-green-50 border border-green-200' 
-                                : 'bg-yellow-50 border border-yellow-200'
-                        }`}>
+                        <div
+                            className={`p-4 rounded-lg mb-4 ${
+                                semesterStatus === 'active'
+                                    ? 'bg-green-50 border border-green-200'
+                                    : 'bg-yellow-50 border border-yellow-200'
+                            }`}
+                        >
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
                                     {semesterStatus === 'active' ? (
@@ -293,7 +324,8 @@ const Settings = ({ onStartDateChange, currentStartDate }) => {
                                                     Semester Aktif
                                                 </p>
                                                 <p className="text-sm text-green-700">
-                                                    Sistem berjalan normal, week counter aktif
+                                                    Sistem berjalan normal, week
+                                                    counter aktif
                                                 </p>
                                             </div>
                                         </>
@@ -305,7 +337,9 @@ const Settings = ({ onStartDateChange, currentStartDate }) => {
                                                     Semester Di-Pause (LIBUR)
                                                 </p>
                                                 <p className="text-sm text-yellow-700">
-                                                    Week counter freeze di Week {pausedWeek}, auto-reminder off
+                                                    Week counter freeze di Week{' '}
+                                                    {pausedWeek}, auto-reminder
+                                                    off
                                                 </p>
                                             </div>
                                         </>
@@ -345,9 +379,20 @@ const Settings = ({ onStartDateChange, currentStartDate }) => {
                                 ℹ️ Cara Kerja Semester Control:
                             </p>
                             <ul className="text-xs text-blue-700 space-y-1 list-disc list-inside">
-                                <li><strong>Pause:</strong> Freeze week counter, disable auto-reminder, siswa tidak dapat tunggakan baru</li>
-                                <li><strong>Resume:</strong> Week reset ke 1, tunggakan lama tetap ada, payment history tersimpan</li>
-                                <li><strong>Leaderboard:</strong> Tetap akumulasi sepanjang tahun (tidak reset)</li>
+                                <li>
+                                    <strong>Pause:</strong> Freeze week counter,
+                                    disable auto-reminder, siswa tidak dapat
+                                    tunggakan baru
+                                </li>
+                                <li>
+                                    <strong>Resume:</strong> Week reset ke 1,
+                                    tunggakan lama tetap ada, payment history
+                                    tersimpan
+                                </li>
+                                <li>
+                                    <strong>Leaderboard:</strong> Tetap
+                                    akumulasi sepanjang tahun (tidak reset)
+                                </li>
                             </ul>
                         </div>
                     </div>

@@ -65,15 +65,18 @@ router.delete('/:key', async (req, res) => {
 // Get current week (respects semester pause)
 router.get('/current-week', async (req, res) => {
     try {
-        const [semesterStatusSetting, pausedWeekSetting, startDateSetting] = await Promise.all([
-            Setting.findOne({ key: 'semester_status' }),
-            Setting.findOne({ key: 'paused_week' }),
-            Setting.findOne({ key: 'start_date' }),
-        ]);
+        const [semesterStatusSetting, pausedWeekSetting, startDateSetting] =
+            await Promise.all([
+                Setting.findOne({ key: 'semester_status' }),
+                Setting.findOne({ key: 'paused_week' }),
+                Setting.findOne({ key: 'start_date' }),
+            ]);
 
         const semesterStatus = semesterStatusSetting?.value || 'active';
         const pausedWeek = pausedWeekSetting?.value;
-        const startDate = startDateSetting?.value ? new Date(startDateSetting.value) : new Date(process.env.START_DATE || '2025-10-27');
+        const startDate = startDateSetting?.value
+            ? new Date(startDateSetting.value)
+            : new Date(process.env.START_DATE || '2025-10-27');
 
         // If paused, return the paused week
         if (semesterStatus === 'paused' && pausedWeek) {
