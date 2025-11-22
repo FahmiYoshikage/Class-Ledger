@@ -5,6 +5,9 @@ import {
     Calendar,
     DollarSign,
     RefreshCw,
+    Pause,
+    Play,
+    BookOpen,
 } from 'lucide-react';
 import { settingsAPI } from '../services/api';
 
@@ -13,6 +16,9 @@ const Settings = ({ onStartDateChange, currentStartDate }) => {
     const [weeklyAmount, setWeeklyAmount] = useState(2000);
     const [lateThreshold, setLateThreshold] = useState(4);
     const [className, setClassName] = useState('');
+    const [semesterStatus, setSemesterStatus] = useState('active');
+    const [semesterName, setSemesterName] = useState('');
+    const [pausedWeek, setPausedWeek] = useState(null);
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState('');
     const [error, setError] = useState('');
@@ -39,12 +45,15 @@ const Settings = ({ onStartDateChange, currentStartDate }) => {
         setLoading(true);
         try {
             // Load all settings
-            const [startDateRes, amountRes, thresholdRes, classNameRes] =
+            const [startDateRes, amountRes, thresholdRes, classNameRes, semesterStatusRes, semesterNameRes, pausedWeekRes] =
                 await Promise.all([
                     settingsAPI.get('start_date').catch(() => null),
                     settingsAPI.get('weekly_amount').catch(() => null),
                     settingsAPI.get('late_threshold').catch(() => null),
                     settingsAPI.get('class_name').catch(() => null),
+                    settingsAPI.get('semester_status').catch(() => null),
+                    settingsAPI.get('semester_name').catch(() => null),
+                    settingsAPI.get('paused_week').catch(() => null),
                 ]);
 
             if (startDateRes?.data?.value) {
@@ -58,6 +67,15 @@ const Settings = ({ onStartDateChange, currentStartDate }) => {
             }
             if (classNameRes?.data?.value) {
                 setClassName(classNameRes.data.value);
+            }
+            if (semesterStatusRes?.data?.value) {
+                setSemesterStatus(semesterStatusRes.data.value);
+            }
+            if (semesterNameRes?.data?.value) {
+                setSemesterName(semesterNameRes.data.value);
+            }
+            if (pausedWeekRes?.data?.value) {
+                setPausedWeek(pausedWeekRes.data.value);
             }
         } catch (err) {
             console.log('Using default settings');
@@ -79,6 +97,7 @@ const Settings = ({ onStartDateChange, currentStartDate }) => {
                 settingsAPI.set('weekly_amount', weeklyAmount),
                 settingsAPI.set('late_threshold', lateThreshold),
                 settingsAPI.set('class_name', className),
+                settingsAPI.set('semester_name', semesterName),
             ]);
 
             // Notify parent component about start date change
@@ -92,6 +111,82 @@ const Settings = ({ onStartDateChange, currentStartDate }) => {
             setTimeout(() => setSuccess(''), 3000);
         } catch (err) {
             setError('❌ Gagal menyimpan pengaturan: ' + err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handlePauseSemester = async () => {
+        if (!confirm('⏸️ Pause semester?\n\nSistem akan berhenti menghitung tunggakan dan mengirim reminder otomatis.\n\nWeek counter akan di-freeze untuk dilanjutkan nanti.')) {
+            return;
+        }
+
+        setLoading(true);
+        try {
+            // Calculate current week before pausing
+            const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/settings/current-week`);
+            const data = await response.json();
+            const currentWeek = data.currentWeek || 1;
+
+            await Promise.all([
+                settingsAPI.set('semester_status', 'paused'),
+                settingsAPI.set('paused_week', currentWeek),
+                settingsAPI.set('paused_at', new Date().toISOString()),
+            ]);
+
+            setSemesterStatus('paused');
+            setPausedWeek(currentWeek);
+            setSuccess('⏸️ Semester berhasil di-pause! System freeze di Week ' + currentWeek);
+            setTimeout(() => setSuccess(''), 5000);
+
+            // Reload to refresh all data
+            setTimeout(() => window.location.reload(), 2000);
+        } catch (err) {
+            setError('❌ Gagal pause semester: ' + err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleResumeSemester = async () => {
+        const newSemesterName = prompt('📚 Mulai Semester Baru\n\nMasukkan nama semester:', semesterName || 'Semester 1 2024/2025');
+        
+        if (!newSemesterName) {
+            return;
+        }
+
+        if (!confirm(`▶️ Resume dengan semester baru: "${newSemesterName}"?\n\n✅ Week counter akan reset ke Week 1\n✅ Tunggakan siswa tetap dipertahankan (carry over)\n✅ Payment history tetap tersimpan\n✅ Leaderboard akumulasi sepanjang tahun\n✅ Auto-reminder akan aktif kembali`)) {
+            return;
+        }
+
+        setLoading(true);
+        try {
+            // Set new start date to today (new semester starts now)
+            const today = formatDateForInput(new Date());
+
+            await Promise.all([
+                settingsAPI.set('semester_status', 'active'),
+                settingsAPI.set('semester_name', newSemesterName),
+                settingsAPI.set('start_date', today), // Reset week calculation
+                settingsAPI.set('resumed_at', new Date().toISOString()),
+                settingsAPI.set('paused_week', null), // Clear paused week
+            ]);
+
+            setSemesterStatus('active');
+            setSemesterName(newSemesterName);
+            setStartDate(today);
+            setPausedWeek(null);
+            setSuccess(`▶️ Semester "${newSemesterName}" dimulai! Week counter reset ke Week 1`);
+            setTimeout(() => setSuccess(''), 5000);
+
+            // Notify parent and reload
+            if (onStartDateChange) {
+                onStartDateChange(new Date(today));
+            }
+
+            setTimeout(() => window.location.reload(), 2000);
+        } catch (err) {
+            setError('❌ Gagal resume semester: ' + err.message);
         } finally {
             setLoading(false);
         }
@@ -156,6 +251,105 @@ const Settings = ({ onStartDateChange, currentStartDate }) => {
                         <p className="text-xs text-gray-500 mt-1">
                             Akan ditampilkan di header aplikasi
                         </p>
+                    </div>
+
+                    {/* Semester Control Section */}
+                    <div className="border-t border-gray-200 pt-6">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                            <BookOpen className="w-5 h-5" />
+                            Kontrol Semester
+                        </h3>
+
+                        {/* Semester Name */}
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Nama Semester
+                            </label>
+                            <input
+                                type="text"
+                                value={semesterName}
+                                onChange={(e) => setSemesterName(e.target.value)}
+                                placeholder="Contoh: Semester 1 2024/2025"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            />
+                            <p className="text-xs text-gray-500 mt-1">
+                                Nama semester yang sedang berjalan
+                            </p>
+                        </div>
+
+                        {/* Status Indicator */}
+                        <div className={`p-4 rounded-lg mb-4 ${
+                            semesterStatus === 'active' 
+                                ? 'bg-green-50 border border-green-200' 
+                                : 'bg-yellow-50 border border-yellow-200'
+                        }`}>
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    {semesterStatus === 'active' ? (
+                                        <>
+                                            <Play className="w-6 h-6 text-green-600" />
+                                            <div>
+                                                <p className="font-semibold text-green-900">
+                                                    Semester Aktif
+                                                </p>
+                                                <p className="text-sm text-green-700">
+                                                    Sistem berjalan normal, week counter aktif
+                                                </p>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Pause className="w-6 h-6 text-yellow-600" />
+                                            <div>
+                                                <p className="font-semibold text-yellow-900">
+                                                    Semester Di-Pause (LIBUR)
+                                                </p>
+                                                <p className="text-sm text-yellow-700">
+                                                    Week counter freeze di Week {pausedWeek}, auto-reminder off
+                                                </p>
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="flex gap-3">
+                            {semesterStatus === 'active' ? (
+                                <button
+                                    type="button"
+                                    onClick={handlePauseSemester}
+                                    disabled={loading}
+                                    className="flex-1 px-4 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition flex items-center justify-center gap-2 font-medium disabled:opacity-50"
+                                >
+                                    <Pause className="w-5 h-5" />
+                                    Pause Semester (Mulai Libur)
+                                </button>
+                            ) : (
+                                <button
+                                    type="button"
+                                    onClick={handleResumeSemester}
+                                    disabled={loading}
+                                    className="flex-1 px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition flex items-center justify-center gap-2 font-medium disabled:opacity-50"
+                                >
+                                    <Play className="w-5 h-5" />
+                                    Resume Semester Baru
+                                </button>
+                            )}
+                        </div>
+
+                        {/* Info Box for Semester */}
+                        <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-3">
+                            <p className="text-xs text-blue-800 font-medium mb-2">
+                                ℹ️ Cara Kerja Semester Control:
+                            </p>
+                            <ul className="text-xs text-blue-700 space-y-1 list-disc list-inside">
+                                <li><strong>Pause:</strong> Freeze week counter, disable auto-reminder, siswa tidak dapat tunggakan baru</li>
+                                <li><strong>Resume:</strong> Week reset ke 1, tunggakan lama tetap ada, payment history tersimpan</li>
+                                <li><strong>Leaderboard:</strong> Tetap akumulasi sepanjang tahun (tidak reset)</li>
+                            </ul>
+                        </div>
                     </div>
 
                     {/* Start Date */}

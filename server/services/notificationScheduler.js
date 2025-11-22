@@ -1,6 +1,7 @@
 import cron from 'node-cron';
 import Student from '../models/Student.js';
 import Payment from '../models/Payment.js';
+import Setting from '../models/Setting.js';
 import whatsappService from './whatsappService.js';
 
 class NotificationScheduler {
@@ -8,17 +9,62 @@ class NotificationScheduler {
         this.jobs = [];
     }
 
-    // Hitung current week
-    getCurrentWeek() {
-        const startDate = new Date(process.env.START_DATE || '2025-10-27');
-        const now = new Date();
-        const days = Math.floor((now - startDate) / (24 * 60 * 60 * 1000));
-        return Math.max(0, Math.ceil(days / 7) + 1);
+    // Hitung current week (respects semester pause)
+    async getCurrentWeek() {
+        try {
+            const [semesterStatusSetting, pausedWeekSetting, startDateSetting] = await Promise.all([
+                Setting.findOne({ key: 'semester_status' }),
+                Setting.findOne({ key: 'paused_week' }),
+                Setting.findOne({ key: 'start_date' }),
+            ]);
+
+            const semesterStatus = semesterStatusSetting?.value || 'active';
+            const pausedWeek = pausedWeekSetting?.value;
+
+            // If paused, return the paused week (frozen)
+            if (semesterStatus === 'paused' && pausedWeek) {
+                console.log(`⏸️ Semester PAUSED at Week ${pausedWeek}`);
+                return pausedWeek;
+            }
+
+            // Calculate normally if active
+            const startDate = startDateSetting?.value 
+                ? new Date(startDateSetting.value) 
+                : new Date(process.env.START_DATE || '2025-10-27');
+            
+            const now = new Date();
+            const days = Math.floor((now - startDate) / (24 * 60 * 60 * 1000));
+            return Math.max(0, Math.ceil(days / 7) + 1);
+        } catch (error) {
+            console.error('Error getting current week:', error);
+            // Fallback to env
+            const startDate = new Date(process.env.START_DATE || '2025-10-27');
+            const now = new Date();
+            const days = Math.floor((now - startDate) / (24 * 60 * 60 * 1000));
+            return Math.max(0, Math.ceil(days / 7) + 1);
+        }
+    }
+
+    // Check if semester is paused
+    async isSemesterPaused() {
+        try {
+            const semesterStatusSetting = await Setting.findOne({ key: 'semester_status' });
+            return semesterStatusSetting?.value === 'paused';
+        } catch (error) {
+            return false;
+        }
     }
 
     // Get students yang perlu diingatkan
     async getStudentsNeedingReminder(minWeeks = 1) {
         try {
+            // Check if semester is paused
+            const isPaused = await this.isSemesterPaused();
+            if (isPaused) {
+                console.log('⏸️ Semester paused - skipping reminder check');
+                return [];
+            }
+
             const students = await Student.find({
                 status: 'Aktif',
                 phoneNumber: { $exists: true, $ne: '' },
@@ -26,7 +72,7 @@ class NotificationScheduler {
             });
 
             const payments = await Payment.find();
-            const currentWeek = this.getCurrentWeek();
+            const currentWeek = await this.getCurrentWeek();
             const needsReminder = [];
 
             for (const student of students) {

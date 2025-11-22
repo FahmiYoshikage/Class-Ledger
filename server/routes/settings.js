@@ -62,4 +62,42 @@ router.delete('/:key', async (req, res) => {
     }
 });
 
+// Get current week (respects semester pause)
+router.get('/current-week', async (req, res) => {
+    try {
+        const [semesterStatusSetting, pausedWeekSetting, startDateSetting] = await Promise.all([
+            Setting.findOne({ key: 'semester_status' }),
+            Setting.findOne({ key: 'paused_week' }),
+            Setting.findOne({ key: 'start_date' }),
+        ]);
+
+        const semesterStatus = semesterStatusSetting?.value || 'active';
+        const pausedWeek = pausedWeekSetting?.value;
+        const startDate = startDateSetting?.value ? new Date(startDateSetting.value) : new Date(process.env.START_DATE || '2025-10-27');
+
+        // If paused, return the paused week
+        if (semesterStatus === 'paused' && pausedWeek) {
+            return res.json({
+                currentWeek: pausedWeek,
+                status: 'paused',
+                message: `System paused at Week ${pausedWeek}`,
+            });
+        }
+
+        // Calculate current week normally
+        const now = new Date();
+        const diffTime = Math.abs(now - startDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const currentWeek = Math.max(1, Math.ceil(diffDays / 7));
+
+        res.json({
+            currentWeek,
+            status: 'active',
+            startDate: startDate,
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 export default router;
