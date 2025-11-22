@@ -18,12 +18,16 @@ router.get('/', async (req, res) => {
         // Get all payments (filter out null studentId)
         const payments = await Payment.find({ studentId: { $ne: null } });
 
-        console.log(`📊 Found ${students.length} students, ${payments.length} payments`);
+        console.log(
+            `📊 Found ${students.length} students, ${payments.length} payments`
+        );
 
         // Calculate total donation & earliest payment for each student
         const leaderboardData = students.map((student) => {
             const studentPayments = payments.filter(
-                (p) => p.studentId && p.studentId.toString() === student._id.toString()
+                (p) =>
+                    p.studentId &&
+                    p.studentId.toString() === student._id.toString()
             );
 
             const totalDonation = studentPayments.reduce(
@@ -81,14 +85,19 @@ router.get('/', async (req, res) => {
         // Take top 10
         const top10 = sortedLeaderboard.slice(0, 10);
 
-        console.log(`✅ Leaderboard calculated: ${top10.length} donors from ${eligibleDonors.length} total`);
+        console.log(
+            `✅ Leaderboard calculated: ${top10.length} donors from ${eligibleDonors.length} total`
+        );
 
         res.json({
             success: true,
             leaderboard: top10,
             totalDonors: eligibleDonors.length,
             lastUpdated: new Date(),
-            message: top10.length === 0 ? 'Belum ada data pembayaran' : 'Leaderboard berhasil dimuat',
+            message:
+                top10.length === 0
+                    ? 'Belum ada data pembayaran'
+                    : 'Leaderboard berhasil dimuat',
         });
     } catch (error) {
         console.error('❌ Error fetching leaderboard:', error);
