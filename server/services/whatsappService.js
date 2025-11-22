@@ -22,7 +22,11 @@ Semua atas nama: *Fahmi Ilham Bagaskara*
 🏦 Jago: 103560685633
 ━━━━━━━━━━━━━━━━━━━━
 
-_Mohon konfirmasi setelah transfer ya!_ ✅`;
+_Mohon konfirmasi setelah transfer ya!_ ✅
+
+🏆 *Cek Leaderboard Donatur Kelas:*
+https://triforce.fahmi.app/leaderboard
+_Raih posisi teratas dan jadi donatur terbaik!_ 🚀`;
 
 // ==============================================
 // 🎨 TEMPLATE PESAN KREATIF & VARIATIF
