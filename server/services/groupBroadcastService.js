@@ -50,7 +50,10 @@ class GroupBroadcastService {
 
             console.log('  Total Students (Aktif):', students.length);
             console.log('  Student Payments Only:', payments.length);
-            console.log('  All Payments (incl custom):', allPayments.filter(p => new Date(p.date) >= startDate).length);
+            console.log(
+                '  All Payments (incl custom):',
+                allPayments.filter((p) => new Date(p.date) >= startDate).length
+            );
             console.log('  Total Payments (semester):', payments.length);
             console.log('  Total Expenses (semester):', expenses.length);
 

@@ -1114,13 +1114,13 @@ router.get('/broadcast-preview', async (req, res) => {
         const groupBroadcastService = (
             await import('../services/groupBroadcastService.js')
         ).default;
-        
+
         const message = await groupBroadcastService.generateSummaryReport();
 
         res.json({
             success: true,
             message: message,
-            note: 'Preview only - not sent to group'
+            note: 'Preview only - not sent to group',
         });
     } catch (error) {
         console.error('Error generating preview:', error);
