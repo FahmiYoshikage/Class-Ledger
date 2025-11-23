@@ -68,7 +68,9 @@ class GroupBroadcastService {
                 (e) => new Date(e.date) >= startDate
             );
 
+            console.log('  Total Students (All):', allStudents.length);
             console.log('  Total Students (Aktif):', students.length);
+            console.log('  Inactive Students:', allStudents.length - students.length);
             console.log('  Student Payments Only:', payments.length);
             console.log(
                 '  All Payments (incl custom):',
@@ -115,11 +117,33 @@ class GroupBroadcastService {
 
             // Helper function: getTotalPaid (match dashboard)
             const getTotalPaid = (studentId) => {
+                const studentIdStr = studentId.toString();
                 const studentPayments = payments.filter((p) => {
+                    // Handle populated studentId (p.studentId is full object)
                     const pStudentId = p.studentId?._id || p.studentId;
-                    return pStudentId?.toString() === studentId.toString();
+                    const pStudentIdStr = pStudentId?.toString();
+                    
+                    // Debug first match
+                    if (studentIdStr === students[0]?._id.toString() && payments.indexOf(p) === 0) {
+                        console.log('  DEBUG getTotalPaid:', {
+                            studentId: studentIdStr,
+                            pStudentId: pStudentIdStr,
+                            match: pStudentIdStr === studentIdStr,
+                            amount: p.amount
+                        });
+                    }
+                    
+                    return pStudentIdStr === studentIdStr;
                 });
-                return studentPayments.reduce((sum, p) => sum + p.amount, 0);
+                
+                const total = studentPayments.reduce((sum, p) => sum + p.amount, 0);
+                
+                // Debug first student result
+                if (studentIdStr === students[0]?._id.toString()) {
+                    console.log('  First student total paid:', total, 'from', studentPayments.length, 'payments');
+                }
+                
+                return total;
             };
 
             // Helper function: getTunggakan (match dashboard)
@@ -353,16 +377,15 @@ _Terima kasih atas partisipasinya!_ 🙏
 
             if (result.success) {
                 console.log('✅ Bi-weekly report broadcast completed!');
+                return result;
             } else {
-                console.error(
-                    '❌ Bi-weekly report broadcast failed:',
-                    result.error
-                );
+                const errorMsg = result.error || result.detail || JSON.stringify(result);
+                console.error('❌ Bi-weekly report broadcast failed:', errorMsg);
+                return result;
             }
-
-            return result;
         } catch (error) {
-            console.error('❌ Error in bi-weekly report broadcast:', error);
+            console.error('❌ Error in bi-weekly report broadcast:', error.message);
+            console.error('Stack:', error.stack);
             return { success: false, error: error.message };
         }
     }
