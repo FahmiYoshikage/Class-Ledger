@@ -23,12 +23,16 @@ RUN apk add --no-cache curl
 # Copy from builder
 COPY --from=builder /app .
 
+# Create reports directory and uploads directory with proper permissions
+RUN mkdir -p /app/public/reports /app/uploads && \
+    addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001 && \
+    chown -R nodejs:nodejs /app/public /app/uploads
+
 # Expose port
 EXPOSE 5000
 
 # Run as non-root user
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nodejs -u 1001
 USER nodejs
 
 # Start application

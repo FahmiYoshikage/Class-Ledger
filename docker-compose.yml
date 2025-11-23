@@ -13,6 +13,9 @@ services:
             - '5001:5000'
         env_file:
             - ./server/.env.production
+        volumes:
+            - ./server/public/reports:/app/public/reports
+            - ./server/uploads:/app/uploads
         networks:
             - kas-kelas-network
         healthcheck:

@@ -12,10 +12,26 @@ const __dirname = path.dirname(__filename);
 
 class PDFReportService {
     constructor() {
-        // Create reports directory if not exists
+        // Set reports directory path (create on-demand)
         this.reportsDir = path.join(__dirname, '../public/reports');
-        if (!fs.existsSync(this.reportsDir)) {
-            fs.mkdirSync(this.reportsDir, { recursive: true });
+    }
+
+    // Ensure reports directory exists (with error handling)
+    ensureReportsDir() {
+        try {
+            if (!fs.existsSync(this.reportsDir)) {
+                fs.mkdirSync(this.reportsDir, { recursive: true });
+            }
+        } catch (error) {
+            console.warn(
+                '⚠️ Cannot create reports dir, using /tmp:',
+                error.message
+            );
+            // Fallback to /tmp if permission denied
+            this.reportsDir = '/tmp/reports';
+            if (!fs.existsSync(this.reportsDir)) {
+                fs.mkdirSync(this.reportsDir, { recursive: true });
+            }
         }
     }
 
@@ -54,6 +70,9 @@ class PDFReportService {
     // Generate financial report PDF
     async generateFinancialReport() {
         try {
+            // Ensure directory exists
+            this.ensureReportsDir();
+
             console.log('📄 Generating PDF Report...');
 
             // Get settings
