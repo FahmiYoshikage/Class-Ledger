@@ -14,10 +14,21 @@ class GroupBroadcastService {
     // Generate bi-weekly summary report text
     async generateSummaryReport() {
         try {
+            // Get start date for filtering semester data
+            const startDateSetting = await Setting.findOne({
+                key: 'start_date',
+            });
+            const startDate = startDateSetting?.value
+                ? new Date(startDateSetting.value)
+                : new Date(process.env.START_DATE || '2025-10-27');
+
+            console.log('📊 Broadcast Report Generation:');
+            console.log('  Start Date:', startDate.toISOString().split('T')[0]);
+
             const [
                 students,
-                payments,
-                expenses,
+                allPayments,
+                allExpenses,
                 semesterNameSetting,
                 classNameSetting,
             ] = await Promise.all([
@@ -28,11 +39,23 @@ class GroupBroadcastService {
                 Setting.findOne({ key: 'class_name' }),
             ]);
 
+            // Filter payments and expenses for current semester only
+            const payments = allPayments.filter(
+                (p) => new Date(p.date) >= startDate
+            );
+            const expenses = allExpenses.filter(
+                (e) => new Date(e.date) >= startDate
+            );
+
+            console.log('  Total Students (Aktif):', students.length);
+            console.log('  Total Payments (semester):', payments.length);
+            console.log('  Total Expenses (semester):', expenses.length);
+
             const semesterName =
                 semesterNameSetting?.value || 'Semester 2024/2025';
             const className = classNameSetting?.value || 'Kelas';
 
-            // Calculate statistics
+            // Calculate statistics (semester only)
             const totalIncome = payments.reduce(
                 (sum, p) => sum + (p.amount || 0),
                 0
@@ -42,6 +65,10 @@ class GroupBroadcastService {
                 0
             );
             const balance = totalIncome - totalExpenses;
+
+            console.log('  Total Income:', totalIncome);
+            console.log('  Total Expenses:', totalExpenses);
+            console.log('  Balance:', balance);
 
             // Get recent 2 weeks payments
             const twoWeeksAgo = new Date();
@@ -82,6 +109,14 @@ class GroupBroadcastService {
             ).length;
             const belumLunasCount = students.length - lunasCount;
 
+            console.log('  Current Week:', currentWeek);
+            console.log(
+                '  Lunas:',
+                lunasCount,
+                '| Belum Lunas:',
+                belumLunasCount
+            );
+
             // Top 3 contributors (last 2 weeks)
             const contributorMap = {};
             recentPayments.forEach((p) => {
@@ -105,6 +140,8 @@ class GroupBroadcastService {
                     )}`;
                 });
 
+            console.log('  Top 3 Contributors:', topContributors);
+
             // Students with highest tunggakan
             const topDebtors = studentsWithStatus
                 .filter((s) => s.tunggakan > 0)
@@ -116,6 +153,8 @@ class GroupBroadcastService {
                             'id-ID'
                         )}`
                 );
+
+            console.log('  Top 5 Debtors:', topDebtors);
 
             // Build message
             const message = `
