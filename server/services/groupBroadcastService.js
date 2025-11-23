@@ -3,6 +3,7 @@ import Setting from '../models/Setting.js';
 import Student from '../models/Student.js';
 import Payment from '../models/Payment.js';
 import Expense from '../models/Expense.js';
+import pdfReportService from './pdfReportService.js';
 
 class GroupBroadcastService {
     constructor() {
@@ -14,7 +15,11 @@ class GroupBroadcastService {
     // Generate bi-weekly summary report text
     async generateSummaryReport() {
         try {
-            // Get start date for filtering semester data
+            // ============================================================
+            // EXACT DASHBOARD LOGIC - DO NOT MODIFY WITHOUT UPDATING BOTH
+            // ============================================================
+
+            // Get settings
             const startDateSetting = await Setting.findOne({
                 key: 'start_date',
             });
@@ -26,24 +31,39 @@ class GroupBroadcastService {
             console.log('  Start Date:', startDate.toISOString().split('T')[0]);
 
             const [
-                students,
+                allStudents,
                 allPayments,
                 allExpenses,
                 semesterNameSetting,
                 classNameSetting,
             ] = await Promise.all([
-                Student.find({ status: 'Aktif' }),
-                Payment.find(),
+                Student.find(),
+                Payment.find().populate('studentId'),
                 Expense.find(),
                 Setting.findOne({ key: 'semester_name' }),
                 Setting.findOne({ key: 'class_name' }),
             ]);
 
-            // Filter payments and expenses for current semester only
-            // IMPORTANT: Only count payments WITH studentId (exclude custom payments)
-            const payments = allPayments.filter(
-                (p) => new Date(p.date) >= startDate && p.studentId != null
-            );
+            // ============================================================
+            // FILTER LOGIC - MATCH DASHBOARD EXACTLY
+            // ============================================================
+
+            // 1. Filter ACTIVE students only
+            const students = allStudents.filter((s) => s.status === 'Aktif');
+
+            // 2. Filter payments: semester only + has studentId + student is ACTIVE
+            const payments = allPayments.filter((p) => {
+                if (!p.date || new Date(p.date) < startDate) return false;
+                if (!p.studentId || !p.studentId._id) return false;
+
+                // Check if student is active
+                const student = students.find(
+                    (s) => s._id.toString() === p.studentId._id.toString()
+                );
+                return student != null;
+            });
+
+            // 3. Filter expenses for semester
             const expenses = allExpenses.filter(
                 (e) => new Date(e.date) >= startDate
             );
@@ -87,26 +107,34 @@ class GroupBroadcastService {
                 0
             );
 
-            // Calculate tunggakan (SAME LOGIC AS DASHBOARD)
+            // ============================================================
+            // TUNGGAKAN CALCULATION - EXACT DASHBOARD FORMULA
+            // ============================================================
             const currentWeek = await this.getCurrentWeek();
             const weeklyAmount = 2000;
 
-            const studentsWithStatus = students.map((student) => {
-                const studentPayments = payments.filter(
-                    (p) => p.studentId?.toString() === student._id.toString()
-                );
-                const totalPaid = studentPayments.reduce(
-                    (sum, p) => sum + p.amount,
-                    0
-                );
-                // Use same formula as dashboard: shouldPay - totalPaid
-                const shouldPay = currentWeek * weeklyAmount;
-                const tunggakan = Math.max(0, shouldPay - totalPaid);
+            // Helper function: getTotalPaid (match dashboard)
+            const getTotalPaid = (studentId) => {
+                const studentPayments = payments.filter((p) => {
+                    const pStudentId = p.studentId?._id || p.studentId;
+                    return pStudentId?.toString() === studentId.toString();
+                });
+                return studentPayments.reduce((sum, p) => sum + p.amount, 0);
+            };
 
+            // Helper function: getTunggakan (match dashboard)
+            const getTunggakan = (studentId) => {
+                const totalPaid = getTotalPaid(studentId);
+                const shouldPay = currentWeek * weeklyAmount;
+                return shouldPay - totalPaid;
+            };
+
+            const studentsWithStatus = students.map((student) => {
+                const tunggakan = getTunggakan(student._id);
                 return {
                     name: student.nickname || student.name,
                     tunggakan,
-                    isLunas: tunggakan === 0,
+                    isLunas: tunggakan <= 0,
                 };
             });
 
@@ -123,25 +151,21 @@ class GroupBroadcastService {
                 belumLunasCount
             );
 
-            // Top 3 contributors (ALL TIME - match leaderboard)
-            const contributorMap = {};
-            payments.forEach((p) => {
-                const student = students.find(
-                    (s) => s._id.toString() === p.studentId?.toString()
-                );
-                if (student) {
-                    const name = student.nickname || student.name;
-                    contributorMap[name] =
-                        (contributorMap[name] || 0) + p.amount;
-                }
-            });
+            // ============================================================
+            // TOP CONTRIBUTORS - Use getTotalPaid for consistency
+            // ============================================================
+            const contributorMap = students.map((student) => ({
+                name: student.nickname || student.name,
+                total: getTotalPaid(student._id),
+            }));
 
-            const topContributors = Object.entries(contributorMap)
-                .sort((a, b) => b[1] - a[1])
+            const topContributors = contributorMap
+                .filter((c) => c.total > 0)
+                .sort((a, b) => b.total - a.total)
                 .slice(0, 3)
-                .map(([name, amount], idx) => {
+                .map(({ name, total }, idx) => {
                     const medal = ['🥇', '🥈', '🥉'][idx];
-                    return `${medal} ${name}: Rp ${amount.toLocaleString(
+                    return `${medal} ${name}: Rp ${total.toLocaleString(
                         'id-ID'
                     )}`;
                 });
@@ -305,14 +329,27 @@ _Terima kasih atas partisipasinya!_ 🙏
         }
     }
 
-    // Main broadcast function
+    // Main broadcast function (AUTO-GENERATE PDF)
     async sendBiWeeklyReport(pdfUrl = null) {
         try {
             console.log('📊 Generating bi-weekly report...');
             const message = await this.generateSummaryReport();
 
+            // Auto-generate PDF if no URL provided
+            let attachmentUrl = pdfUrl;
+            if (!attachmentUrl) {
+                console.log('📄 Auto-generating PDF report...');
+                const pdfResult =
+                    await pdfReportService.generateFinancialReport();
+
+                // Construct public URL (adjust based on your deployment)
+                const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
+                attachmentUrl = `${baseUrl}${pdfResult.url}`;
+                console.log('✅ PDF Generated:', attachmentUrl);
+            }
+
             console.log('📤 Sending to WhatsApp group...');
-            const result = await this.sendToGroup(message, pdfUrl);
+            const result = await this.sendToGroup(message, attachmentUrl);
 
             if (result.success) {
                 console.log('✅ Bi-weekly report broadcast completed!');

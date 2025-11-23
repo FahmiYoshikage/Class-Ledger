@@ -72,6 +72,9 @@ app.use('/api/qr-payment', qrPaymentRoutes);
 // Serve uploaded files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Serve PDF reports
+app.use('/reports', express.static(path.join(__dirname, 'public/reports')));
+
 // Health check
 app.get('/api/health', (req, res) => {
     res.json({ status: 'OK', message: 'Server is running' });
