@@ -123,9 +123,9 @@ class GroupBroadcastService {
                 belumLunasCount
             );
 
-            // Top 3 contributors (last 2 weeks)
+            // Top 3 contributors (ALL TIME - match leaderboard)
             const contributorMap = {};
-            recentPayments.forEach((p) => {
+            payments.forEach((p) => {
                 const student = students.find(
                     (s) => s._id.toString() === p.studentId?.toString()
                 );
@@ -188,7 +188,7 @@ ${className} - ${semesterName}
 
 ${
     topContributors.length > 0
-        ? `🏆 *TOP CONTRIBUTORS (2 Minggu):*
+        ? `🏆 *TOP CONTRIBUTORS:*
 ${topContributors.join('\n')}`
         : ''
 }
@@ -244,7 +244,11 @@ _Terima kasih atas partisipasinya!_ 🙏
 
             const now = new Date();
             const days = Math.floor((now - startDate) / (24 * 60 * 60 * 1000));
-            return Math.max(1, Math.ceil(days / 7));
+            const weeks = Math.ceil(days / 7);
+
+            // MATCH DASHBOARD FORMULA: weeks + 1
+            if (weeks < 0) return 0;
+            return weeks + 1;
         } catch (error) {
             return 1;
         }
