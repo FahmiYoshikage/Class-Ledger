@@ -70,7 +70,10 @@ class GroupBroadcastService {
 
             console.log('  Total Students (All):', allStudents.length);
             console.log('  Total Students (Aktif):', students.length);
-            console.log('  Inactive Students:', allStudents.length - students.length);
+            console.log(
+                '  Inactive Students:',
+                allStudents.length - students.length
+            );
             console.log('  Student Payments Only:', payments.length);
             console.log(
                 '  All Payments (incl custom):',
@@ -122,27 +125,39 @@ class GroupBroadcastService {
                     // Handle populated studentId (p.studentId is full object)
                     const pStudentId = p.studentId?._id || p.studentId;
                     const pStudentIdStr = pStudentId?.toString();
-                    
+
                     // Debug first match
-                    if (studentIdStr === students[0]?._id.toString() && payments.indexOf(p) === 0) {
+                    if (
+                        studentIdStr === students[0]?._id.toString() &&
+                        payments.indexOf(p) === 0
+                    ) {
                         console.log('  DEBUG getTotalPaid:', {
                             studentId: studentIdStr,
                             pStudentId: pStudentIdStr,
                             match: pStudentIdStr === studentIdStr,
-                            amount: p.amount
+                            amount: p.amount,
                         });
                     }
-                    
+
                     return pStudentIdStr === studentIdStr;
                 });
-                
-                const total = studentPayments.reduce((sum, p) => sum + p.amount, 0);
-                
+
+                const total = studentPayments.reduce(
+                    (sum, p) => sum + p.amount,
+                    0
+                );
+
                 // Debug first student result
                 if (studentIdStr === students[0]?._id.toString()) {
-                    console.log('  First student total paid:', total, 'from', studentPayments.length, 'payments');
+                    console.log(
+                        '  First student total paid:',
+                        total,
+                        'from',
+                        studentPayments.length,
+                        'payments'
+                    );
                 }
-                
+
                 return total;
             };
 
@@ -150,7 +165,26 @@ class GroupBroadcastService {
             const getTunggakan = (studentId) => {
                 const totalPaid = getTotalPaid(studentId);
                 const shouldPay = currentWeek * weeklyAmount;
-                return shouldPay - totalPaid;
+                const tunggakan = shouldPay - totalPaid;
+                
+                // SOLUSI BUG MINGGU: Jika sudah bayar sebelum 4 minggu dari sekarang, anggap LUNAS
+                // Check apakah ada pembayaran sebelum cutoff date (4 minggu yang lalu)
+                const fourWeeksAgo = new Date();
+                fourWeeksAgo.setDate(fourWeeksAgo.getDate() - 28); // 4 minggu = 28 hari
+                
+                const studentPayments = payments.filter((p) => {
+                    const pStudentId = p.studentId?._id || p.studentId;
+                    return pStudentId?.toString() === studentId.toString();
+                });
+                
+                const hasOldPayment = studentPayments.some(p => new Date(p.date) < fourWeeksAgo);
+                
+                // Jika punya payment lama DAN total bayar >= 4 minggu (Rp 8k), anggap lunas
+                if (hasOldPayment && totalPaid >= 4 * weeklyAmount) {
+                    return 0; // LUNAS
+                }
+                
+                return tunggakan;
             };
 
             const studentsWithStatus = students.map((student) => {
@@ -379,12 +413,19 @@ _Terima kasih atas partisipasinya!_ 🙏
                 console.log('✅ Bi-weekly report broadcast completed!');
                 return result;
             } else {
-                const errorMsg = result.error || result.detail || JSON.stringify(result);
-                console.error('❌ Bi-weekly report broadcast failed:', errorMsg);
+                const errorMsg =
+                    result.error || result.detail || JSON.stringify(result);
+                console.error(
+                    '❌ Bi-weekly report broadcast failed:',
+                    errorMsg
+                );
                 return result;
             }
         } catch (error) {
-            console.error('❌ Error in bi-weekly report broadcast:', error.message);
+            console.error(
+                '❌ Error in bi-weekly report broadcast:',
+                error.message
+            );
             console.error('Stack:', error.stack);
             return { success: false, error: error.message };
         }
