@@ -166,24 +166,26 @@ class GroupBroadcastService {
                 const totalPaid = getTotalPaid(studentId);
                 const shouldPay = currentWeek * weeklyAmount;
                 const tunggakan = shouldPay - totalPaid;
-                
+
                 // SOLUSI BUG MINGGU: Jika sudah bayar sebelum 4 minggu dari sekarang, anggap LUNAS
                 // Check apakah ada pembayaran sebelum cutoff date (4 minggu yang lalu)
                 const fourWeeksAgo = new Date();
                 fourWeeksAgo.setDate(fourWeeksAgo.getDate() - 28); // 4 minggu = 28 hari
-                
+
                 const studentPayments = payments.filter((p) => {
                     const pStudentId = p.studentId?._id || p.studentId;
                     return pStudentId?.toString() === studentId.toString();
                 });
-                
-                const hasOldPayment = studentPayments.some(p => new Date(p.date) < fourWeeksAgo);
-                
+
+                const hasOldPayment = studentPayments.some(
+                    (p) => new Date(p.date) < fourWeeksAgo
+                );
+
                 // Jika punya payment lama DAN total bayar >= 4 minggu (Rp 8k), anggap lunas
                 if (hasOldPayment && totalPaid >= 4 * weeklyAmount) {
                     return 0; // LUNAS
                 }
-                
+
                 return tunggakan;
             };
 
