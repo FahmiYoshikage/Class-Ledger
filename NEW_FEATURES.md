@@ -1,545 +1,444 @@
-# 🎉 New Features - Class Ledger Update# 📱 Update Fitur Baru - WhatsApp Notification
+# 🎉 Fitur Baru Kas Kelas - Update Terbaru
 
-## Overview## 🎉 Fitur Baru yang Ditambahkan:
+## 📋 Daftar Fitur Baru
 
-Update besar-besaran untuk Class Ledger dengan fokus pada:
+Tiga fitur baru telah berhasil diimplementasikan untuk meningkatkan engagement siswa dan kemudahan pembayaran:
 
-1. ✅ **Mobile Responsive** - Perfect untuk semua device### 1. ✏️ **Edit Data Siswa dengan Nomor WhatsApp**
+### 1. 📢 WhatsApp Group Broadcast (Otomatis)
 
-2. ✅ **Public Dashboard** - Akses tanpa login
+### 2. 🏆 Badge System (Gamifikasi)
 
-3. ✅ **Enhanced Member Experience** - Social features & profile customization#### Apa yang Baru:
-
-4. ✅ **Admin Tools** - Password management
-
--   Tambah kolom **WhatsApp** di tabel siswa
-
----- Kolom **Notifikasi** (Aktif/Non-aktif)
-
--   Tombol **Edit** untuk setiap siswa
-
-## 🚀 Fitur Baru- Modal edit lengkap dengan semua field
-
-### 1. 📱 Mobile Responsive Design#### Cara Pakai:
-
-**Problem**: Tampilan rusak di mobile view**Opsi 1: Saat Tambah Siswa Baru**
-
-**Solution**: 1. Klik tombol "Tambah Siswa"
-
--   Semua halaman sekarang menggunakan Tailwind responsive classes (`sm:`, `md:`, `lg:`)2. Isi:
-
--   Adaptive font sizes, padding, dan spacing - Nomor Absen
-
--   Mobile-first table layouts dengan horizontal scroll - Nama Lengkap
-
--   Responsive grid layouts (1 kolom di mobile, 2-4 kolom di desktop) - **Nomor WhatsApp** (opsional)
-
-    -   ✓ Centang "Aktifkan notifikasi WhatsApp"
-
-**Pages Fixed**:3. Klik Simpan
-
--   ✅ MemberDashboard - Stats cards, payment table, leaderboard
-
--   ✅ PublicDashboard - Hero stats, events grid**Opsi 2: Edit Siswa yang Sudah Ada**
-
--   ✅ ProfileEdit - Form layouts
-
--   ✅ UserManagement - User table actions1. Masuk ke tab **"Siswa"**
-
--   ✅ NotificationManager - Already responsive2. Klik tombol **"Edit"** di samping nama siswa
-
-3. Update data:
-
---- - Nama
-
-    - Nomor Absen
-
-### 2. 🌐 Public Dashboard (No Login Required) - **Nomor WhatsApp**
-
-    - Status (Aktif/Tidak Aktif/Alumni)
-
-**Route**: `/` (Landing page) - Toggle **Notifikasi**
-
-4. Klik "Update"
-
-**Features**:
-
--   💰 Total Saldo Kas Kelas (Real-time)#### Format Nomor WhatsApp:
-
--   📊 Total Pemasukan & Pengeluaran
-
--   👥 Jumlah Siswa & Transaksi✅ **Valid:**
-
--   🎁 Daftar Event dengan progress bar
-
--   🔐 Optional Login Button- `08123456789`
-
--   `628123456789`
-
-**Design**:
-
--   Beautiful gradient background (indigo → purple → pink)❌ **Tidak Valid:**
-
--   Glass morphism cards
-
--   Hero stats display- `+628123456789` (jangan pakai +)
-
--   Call-to-action untuk login- `0812-3456-789` (jangan pakai strip)
-
--   `0812 3456 789` (jangan pakai spasi)
-
-**Access**:
-
-````#### Screenshot Tabel Siswa:
-
-https://triforce.fahmi.app/         ← Public Dashboard
-
-https://triforce.fahmi.app/login    ← Login Page  ```
-
-https://triforce.fahmi.app/app/dashboard ← Authenticated DashboardAbsen | Nama | WhatsApp | Status | Notifikasi | Aksi
-
-```------|------|----------|--------|------------|------
-
-1     | Budi | 📱 08123  | Aktif  | ✓ Aktif    | Edit | 🗑️
-
----2     | Ani  | Belum    | Aktif  | ✗ Non-aktif| Edit | 🗑️
-
-````
-
-### 3. 🎯 Fixed Member Dashboard - Total Kas Bug
+### 3. 💳 QR Code Payment (Pembayaran Mudah)
 
 ---
 
-**Problem**: Total Kas Kelas menampilkan Rp 0
+## 1. 📢 WhatsApp Group Broadcast
 
-### 2. 📱 **Kirim Reminder ke Grup WhatsApp**
+**Fitur**: Laporan otomatis dikirim ke grup WhatsApp setiap 2 minggu sekali
 
-**Root Cause**:
+### 📌 Cara Kerja:
 
--   Hanya menghitung pembayaran member sendiri#### Apa itu Fitur Ini?
+-   Sistem akan **otomatis mengirim laporan ke grup WhatsApp** setiap:
+    -   **Hari**: Minggu
+    -   **Jam**: 18:00 WIB
+    -   **Frekuensi**: Setiap 2 minggu sekali
+-   Laporan berisi:
+    -   Saldo kas saat ini
+    -   Total pemasukan & pengeluaran periode ini
+    -   Top 5 kontributor terbesar
+    -   Top 5 siswa dengan tunggakan terbesar
 
--   Seharusnya menghitung SEMUA pembayaran kelas
+### ⚙️ Konfigurasi (Admin):
 
-Alih-alih kirim pesan individual satu per satu, sekarang Anda bisa kirim **1 pesan ke grup kelas** yang otomatis **mention (@)** semua siswa yang belum bayar!
+1. Tambahkan `FONNTE_GROUP_ID` di environment variables server (`.env`):
+    ```
+    FONNTE_GROUP_ID=your_group_id_here
+    ```
+2. Group ID bisa didapat dari Fonnte dashboard
 
-**Solution**:
+### 🧪 Testing Manual:
 
--   Fetch ALL payments untuk calculate total kelas#### Keunggulan:
+-   Admin bisa trigger manual broadcast dari endpoint:
+    ```
+    POST /api/notifications/send-group-broadcast
+    ```
 
--   Pisahkan: personal payment vs class total
+### 📂 File Terkait:
 
-✅ **Hemat Kuota API** - 1 pesan untuk semua orang
-
-**New Stats Cards**:✅ **Efisien** - Tidak perlu kirim berulang kali
-
-1. **Pembayaran Saya** - Total personal payment✅ **Transparent** - Semua siswa tahu siapa yang belum bayar
-
-2. **Total Pemasukan Kelas** - Total dari SEMUA member✅ **Auto-Mention** - Sistem otomatis mention setiap nomor
-
-3. **Total Pengeluaran Kelas** - Total expenses
-
-4. **Saldo Kas Kelas** - Class balance (Income - Expenses)#### Format Pesan Grup:
-
----**Contoh dengan Style Friendly:**
-
-### 4. 👥 Member Leaderboard (Social Feature)```
-
-📢 _REMINDER KAS KELAS_ 📢
-
-**Location**: MemberDashboard (below payment history)
-
-Halo semuanya! 👋
-
-**Features**:
-
--   📋 Daftar semua member (exclude admin)Ini pengingat ramah untuk teman-teman
-
--   💰 Total kontribusi per memberyang belum bayar kas kelas ya~ 😊
-
--   🏆 Top 3 ranking dengan badges (Gold 👑, Silver 🥈, Bronze 🥉)
-
--   ✨ Highlight current user dengan border indigo*3 Minggu (Rp 6.000)*
-
--   📊 Sorted by total payment (descending)• @628123456789 (Budi)
-
-• @628987654321 (Ani)
+-   `server/services/groupBroadcastService.js` - Logic generate & send
+-   `server/services/notificationScheduler.js` - Cron job scheduler
+-   `server/routes/notifications.js` - API endpoint
 
 ---
 
-_2 Minggu (Rp 4.000)_
+## 2. 🏆 Badge System (Gamifikasi)
 
-### 5. ✏️ Profile Edit Page• @628111222333 (Citra)
+**Fitur**: Siswa mendapat badge berdasarkan perilaku pembayaran mereka
 
-**Route**: `/app/profile`Yuk segera dilunasi ya! 🥰
+### 🎖️ 7 Jenis Badge:
 
-Ditunggu pembayarannya~ 💙
+| Badge                | Emoji | Kriteria                                  | Warna  |
+| -------------------- | ----- | ----------------------------------------- | ------ |
+| **Early Bird**       | ⚡    | Bayar di minggu pertama bulan             | Yellow |
+| **Perfect Score**    | 💯    | 8 minggu berturut-turut bayar tepat waktu | Purple |
+| **Speed Demon**      | 🚀    | Bayar dalam 24 jam setelah reminder       | Blue   |
+| **Mega Donor**       | 💰    | Total kontribusi > Rp 50,000              | Green  |
+| **Streak Master**    | 🔥    | 4+ minggu berturut tanpa telat            | Orange |
+| **Comeback Kid**     | 🎯    | Recover setelah 8+ minggu nunggak         | Pink   |
+| **Consistent Payer** | 🌟    | 4+ kali bayar                             | Teal   |
 
-**Features**:
+### 📊 Cara Kerja:
 
--   📝 Edit **Username** (must be unique)_Pesan otomatis dari sistem kas kelas_
+-   Badge **otomatis dihitung** setelah setiap pembayaran
+-   Tampil di **Leaderboard** (badge muncul di bawah nama dengan tooltip)
 
--   📧 Edit **Email** (optional)```
+### 🔄 Update Badge:
 
--   🔐 Link to Change Password page
+-   **Otomatis**: Sistem menghitung badge saat pembayaran diverifikasi
+-   **Manual (Admin)**: Hit endpoint untuk recalculate semua:
+    ```
+    POST /api/badges/calculate-all
+    ```
 
--   ℹ️ Display current account info**Contoh dengan Style Humorous:**
+### 💻 API Endpoints:
 
-**API**: `PATCH /api/auth/profile````
+```
+GET /api/badges/definitions - Daftar badge & deskripsi
+GET /api/badges/student/:studentId - Badge milik siswa tertentu
+POST /api/badges/calculate/:studentId - Hitung badge untuk 1 siswa
+POST /api/badges/calculate-all - Hitung badge untuk semua siswa
+GET /api/badges/leaderboard-with-badges - Leaderboard dikelompokkan per badge
+```
 
-🔔 _BREAKING NEWS!_ 🔔
+### 📂 File Terkait:
+
+-   `server/models/Badge.js` - Database schema
+-   `server/services/badgeService.js` - Logic perhitungan badge (7 check functions)
+-   `server/routes/badges.js` - API endpoints
+-   `server/routes/leaderboard.js` - Updated to include badges
+-   `client/src/components/Leaderboard.jsx` - Display badges dengan tooltip hover
 
 ---
 
-Wartawan kami melaporkan ada
+## 3. 💳 QR Code Payment
 
-### 6. 🔑 Password Reset for Adminbeberapa VIP yang belum bayar kas! 😂
+**Fitur**: Siswa bisa bayar via QR Code (Dana/Gopay/OVO) dan upload bukti transfer
 
-**Problem**: User lupa password, admin tidak bisa bantu*3 Minggu (Rp 6.000)*
+### 🔄 Alur Pembayaran:
 
-• @628123456789 (Budi)
+#### **Untuk Siswa:**
 
-**Solution**: Admin bisa reset password user ke default• @628987654321 (Ani)
+1. Buka menu **"QR Pay"** di navigation bar
+2. Lihat QR Code yang tersedia
+3. Scan QR dengan aplikasi pembayaran (Dana/Gopay/dll)
+4. Bayar sesuai tunggakan
+5. Screenshot bukti transfer
+6. Upload bukti di form konfirmasi
+7. Tunggu verifikasi admin
 
-**Features**:_2 Minggu (Rp 4.000)_
+#### **Untuk Admin:**
 
--   🔄 Reset password button per user• @628111222333 (Citra)
+1. **Upload QR Code** (tab "Kelola QR Code"):
 
--   🎯 Default password: `{username}123`
+    - Pilih metode (Dana/Gopay/OVO/Bank)
+    - Upload gambar QR
+    - Isi nama akun & nomor (opsional)
+    - Submit - QR otomatis jadi aktif
 
--   📋 Copy to clipboard functionalityYang disebutkan, buruan bayar
+2. **Verifikasi Pembayaran** (tab "Pending"):
 
--   ⚠️ Force user to change password on next loginbiar turun dari trending topic! 😆
+    - Lihat daftar konfirmasi pending
+    - Cek bukti transfer (klik gambar untuk perbesar)
+    - **Setujui** → Payment record otomatis dibuat
+    - **Tolak** → Beri alasan penolakan
 
-**API**: `POST /api/auth/users/:id/reset-password`_Auto-generated by Kas Bot 🤖_
+3. **Riwayat** (tab "Riwayat"):
+    - Lihat semua konfirmasi (approved/rejected)
+    - Filter berdasarkan status & tanggal
 
-````
+### 💻 API Endpoints:
+
+#### **QR Management (Admin):**
+
+```
+GET /api/qr-payment/active - Get active QR
+POST /api/qr-payment/upload - Upload new QR (multipart/form-data)
+GET /api/qr-payment/list - Get all QR codes
+DELETE /api/qr-payment/:id - Delete QR
+```
+
+#### **Payment Confirmation (Student):**
+
+```
+POST /api/qr-payment/confirm - Submit confirmation with proof (multipart/form-data)
+GET /api/qr-payment/confirmations/student/:studentId - Get student's confirmations
+```
+
+#### **Admin Approval:**
+
+```
+GET /api/qr-payment/confirmations/pending - Get pending confirmations
+GET /api/qr-payment/confirmations/all - Get all (with filters)
+POST /api/qr-payment/approve/:confirmationId - Approve payment
+POST /api/qr-payment/reject/:confirmationId - Reject payment
+```
+
+### 📂 File Terkait:
+
+-   **Backend:**
+
+    -   `server/models/QRCode.js` - QR code schema
+    -   `server/models/PaymentConfirmation.js` - Confirmation schema
+    -   `server/routes/qrPayment.js` - All API endpoints (includes multer config)
+    -   `server/uploads/qr-codes/` - QR images storage
+    -   `server/uploads/payment-proofs/` - Proof images storage
+
+-   **Frontend:**
+    -   `client/src/pages/QRPayment.jsx` - Student view
+    -   `client/src/pages/QRPaymentAdmin.jsx` - Admin view (3 tabs)
+    -   `client/src/components/DashboardLayout.jsx` - Navigation links
+
+### 🔐 Security:
+
+-   File upload dengan validasi (max 5MB, hanya JPG/PNG)
+-   Status tracking (pending/approved/rejected)
+-   Reviewer name logged untuk audit trail
+-   Rejection reason mandatory
+-   Auto-create Payment record on approval
 
 ---
 
-#### Cara Pakai:
+## 📦 Dependencies Baru
 
-## 🛣️ Routing Changes
+### Backend:
 
-##### Step 1: Dapatkan Group ID WhatsApp
-
-### Before:
-
-```**Metode 1: Via Fonnte Dashboard**
-
-/              → Login (Protected)
-
-/dashboard     → Dashboard1. Login ke https://fonnte.com
-
-```2. Klik menu **"Devices"**
-
-3. Pilih device yang sudah connect
-
-### After:4. Lihat daftar **"Groups"**
-
-```5. Copy **Group ID** (format: 628xxx-xxx@g.us)
-
-/                    → Public Dashboard (No auth)
-
-/login               → Login Page**Metode 2: Via API Call**
-
-/app/dashboard       → Member/Admin Dashboard (Protected)
-
-/app/profile         → Edit Profile```bash
-
-/app/change-password → Change Passwordcurl -X POST https://api.fonnte.com/get-devices \
-
-/app/users           → User Management (Admin)  -H "Authorization: YOUR_FONNTE_TOKEN"
-
-````
-
----Response akan berisi list grup dengan format:
-
-## 🚀 Deployment Steps```json
-
+```json
 {
+    "multer": "^1.4.5-lts.1" // File upload handling
+}
+```
 
-### 1. Pull & Rebuild: "groups": [
+### Frontend:
 
-````bash {
-
-cd /opt/Class-Ledger            "id": "628123456789-1234567890@g.us",
-
-git pull            "name": "Kelas 12-A IPA"
-
-docker-compose down        }
-
-docker-compose up -d --build    ]
-
-```}
-
-````
-
-### 2. Verify:
-
-````bash##### Step 2: Kirim ke Grup
-
-docker ps
-
-docker logs kas-kelas-api --tail 501. Buka aplikasi → Tab **"Notifikasi"**
-
-```2. Klik tab **"Kirim ke Grup"** 📱
-
-3. Isi:
-
-### 3. Test:    - **Group ID:** `628xxx-xxx@g.us`
-
-- ✅ https://triforce.fahmi.app/ (public dashboard)    - **Minimum Minggu Telat:** 1, 2, 3, atau 4
-
-- ✅ Login & check member leaderboard    - **Style Pesan:** Pilih style (Friendly/Humor/etc)
-
-- ✅ Test profile edit4. Klik **"Preview Pesan"** untuk lihat hasil
-
-- ✅ Admin test password reset5. Jika sudah OK, klik **"Kirim ke Grup"**
-
-
-
----##### Step 3: Verifikasi di Grup
-
-
-
-## 📋 Testing ChecklistBuka grup WhatsApp dan cek:
-
-
-
-### Public Dashboard:-   ✅ Pesan masuk ke grup
-
-- [ ] Accessible without login-   ✅ Semua nomor ter-mention (muncul @nama)
-
-- [ ] Shows correct total kas kelas-   ✅ Siswa yang di-mention dapat notifikasi
-
-- [ ] Login button works
-
-- [ ] Mobile responsive---
-
-
-
-### Member Dashboard:## 🔧 Technical Details
-
-- [ ] Total Kas Kelas ≠ 0
-
-- [ ] Leaderboard displays all members### Backend Changes:
-
-- [ ] Top 3 has badges
-
-- [ ] Mobile responsive**1. Model Student Updated:**
-
-
-
-### Profile Edit:```javascript
-
-- [ ] Can update username// server/models/Student.js
-
-- [ ] Username uniqueness validated{
-
-- [ ] Can update email  name: String,
-
-  absen: Number,
-
-### Password Reset (Admin):  status: String,
-
-- [ ] Reset button visible  phoneNumber: String,        // NEW!
-
-- [ ] Modal displays password  enableNotification: Boolean, // NEW!
-
-- [ ] Copy to clipboard works  lastNotificationSent: Date,  // NEW!
-
-- [ ] User forced to change password on login}
-
-````
+Tidak ada dependency baru (menggunakan Axios yang sudah ada)
 
 ---
 
-**2. New WhatsApp Service Method:**
+## 🚀 Deployment Instructions
 
-## 🏆 Summary
+### 1. Server Setup:
 
-````javascript
+```bash
+# Install dependencies
+cd server
+npm install
 
-✅ **8/8 Features Completed**:// server/services/whatsappService.js
+# Add to .env
+FONNTE_GROUP_ID=your_group_id_here
 
-1. ✅ Mobile responsive-generateGroupReminderMessage() - // Generate pesan dengan mention
+# Create upload directories (auto-created by multer, tapi bisa manual)
+mkdir -p uploads/qr-codes
+mkdir -p uploads/payment-proofs
 
-2. ✅ Fixed total kas bug    sendToGroup(); // Kirim ke grup WA
+# Restart server
+npm run dev  # development
+# atau
+npm start    # production
+```
 
-3. ✅ Public dashboard```
+### 2. Client Setup:
 
-4. ✅ Updated routing
+```bash
+cd client
+npm install  # No new deps needed
+npm run dev  # development
+# atau
+npm run build && npm run preview  # production
+```
 
-5. ✅ Enhanced member dashboard**3. New API Endpoints:**
+### 3. Testing:
 
-6. ✅ Member leaderboard
+#### **Group Broadcast:**
 
-7. ✅ Profile edit```javascript
+```bash
+# Test manual trigger
+curl -X POST http://localhost:5000/api/notifications/send-group-broadcast
+```
 
-8. ✅ Password resetPOST / api / notifications / send - to - group;
+#### **Badge System:**
 
-POST / api / notifications / preview - group;
+```bash
+# Calculate all badges
+curl -X POST http://localhost:5000/api/badges/calculate-all
 
-**Status**: ✅ Ready for Production  ```
+# Check leaderboard includes badges
+curl http://localhost:5000/api/leaderboard
+```
 
-**URL**: https://triforce.fahmi.app/
+#### **QR Payment:**
 
-### Frontend Changes:
-
-**1. Updated Components:**
-
--   `App.jsx` - Tambah modal Edit Student
--   `NotificationManager.jsx` - Tambah tab "Kirim ke Grup"
-
-**2. New Features:**
-
--   Edit student form dengan field WhatsApp
--   Toggle notifikasi per siswa
--   Preview pesan grup
--   Kirim ke grup WhatsApp
-
----
-
-## 📊 Perbandingan: Individual vs Grup
-
-| Aspek            | Kirim Individual      | Kirim ke Grup          |
-| ---------------- | --------------------- | ---------------------- |
-| **Jumlah Pesan** | 1 per siswa           | 1 untuk semua          |
-| **API Calls**    | Banyak                | 1 saja                 |
-| **Biaya**        | Tinggi jika banyak    | Lebih murah            |
-| **Privasi**      | Private               | Public (semua lihat)   |
-| **Efektivitas**  | Bagus untuk follow-up | Bagus untuk pengumuman |
-| **Mention**      | Tidak ada             | Ada @mention           |
-
----
-
-## 💡 Tips Penggunaan:
-
-### Kapan Pakai Kirim Individual?
-
--   Follow-up siswa yang sangat telat (≥4 minggu)
--   Reminder pribadi yang lebih sopan
--   Siswa yang minta jangan di-mention public
-
-### Kapan Pakai Kirim Grup?
-
--   Pengumuman reminder rutin
--   Awal minggu/akhir minggu
--   Saat ingin "peer pressure" positif
--   Hemat kuota API Fonnte
-
-### Kombinasi Strategi:
-
-1. **Senin pagi** - Kirim ke grup (reminder umum)
-2. **Rabu siang** - Individual ke yang ≥3 minggu
-3. **Jumat sore** - Grup lagi dengan style berbeda
-4. **Weekend** - Individual ke yang super telat
+1. Admin: Upload QR via `/app/qr-admin`
+2. Member: Access QR via `/app/qr-payment`
+3. Submit test confirmation
+4. Admin: Check pending via `/app/qr-admin`
 
 ---
 
-## 🔒 Privacy & Etika:
+## 🎯 Cara Akses (Frontend)
 
-### Hal yang Perlu Diperhatikan:
+### Student/Member:
 
-1. **Izin Grup**
+-   **QR Payment**: Klik "QR Pay" di top navigation bar
+-   **Leaderboard**: Badge otomatis tampil (hover untuk tooltip deskripsi)
 
-    - Pastikan grup setuju untuk reminder otomatis
-    - Jangan spam terlalu sering
+### Admin:
 
-2. **Frekuensi**
-
-    - Maksimal 2-3x per minggu untuk grup
-    - Jangan kirim di malam hari
-
-3. **Tone Pesan**
-
-    - Gunakan style "Friendly" atau "Gentle" untuk grup
-    - Hindari "Formal" yang terlalu kaku
-    - "Humorous" OK kalau suasana kelas fun
-
-4. **Privasi**
-    - Beberapa siswa mungkin sensitif di-mention public
-    - Sediakan opsi untuk disable notifikasi
-    - Offer kirim individual jika minta
+-   **QR Admin Panel**: Klik "QR Admin" di top navigation bar
+-   **Badge Management**: Via API (POST /api/badges/calculate-all)
+-   **Group Broadcast**: Manual trigger via POST /api/notifications/send-group-broadcast
 
 ---
 
-## 🐛 Troubleshooting:
+## 🐛 Troubleshooting
 
-### Problem: Pesan tidak masuk ke grup
+### Group Broadcast tidak terkirim?
 
-**Solusi:**
+-   ✅ Pastikan `FONNTE_GROUP_ID` sudah di-set di `.env`
+-   ✅ Check Fonnte API token masih valid
+-   ✅ Verify group ID benar (dari Fonnte dashboard)
+-   ✅ Check server logs untuk error messages
 
-1. Cek Group ID valid (format: 628xxx-xxx@g.us)
-2. Pastikan bot sudah join grup
-3. Cek di Fonnte dashboard apakah grup terdaftar
-4. Test dengan API Fonnte langsung
+### Badge tidak muncul di Leaderboard?
 
-### Problem: Mention tidak berfungsi
+-   ✅ Run `POST /api/badges/calculate-all` untuk recalculate
+-   ✅ Check database - collection `badges` harus ada data
+-   ✅ Inspect Network tab - pastikan API response include `badges` array
+-   ✅ Verify BADGE_DEFINITIONS export di badgeService.js
 
-**Solusi:**
+### QR Payment error upload?
 
--   Format nomor harus `@628xxx` (bukan `@08xxx`)
--   Nomor WA siswa harus valid dan terdaftar di WA
--   Siswa harus ada di grup tersebut
+-   ✅ Check folder `uploads/` writable (chmod 755)
+-   ✅ Verify file size < 5MB
+-   ✅ Only JPG/JPEG/PNG allowed
+-   ✅ Check multer installed: `npm list multer`
 
-### Problem: Siswa tidak dapat notifikasi mention
+### Images tidak tampil?
 
-**Kemungkinan:**
-
--   Nomor tidak terdaftar di WA
--   Nomor bukan anggota grup
--   Setting WA siswa block mention
-
----
-
-## 📈 Monitoring & Analytics:
-
-### Check Effectiveness:
-
-1. **Via Riwayat Tab:**
-
-    - Cek status: sent/failed
-    - Lihat timestamp pengiriman
-    - Monitor response rate
-
-2. **Via Stats:**
-
-    - Total sent (individual + group)
-    - Success rate
-    - Last 7 days activity
-
-3. **Manual Check:**
-    - Lihat read receipt di grup
-    - Track siapa yang bayar setelah reminder
-    - Feedback dari siswa
+-   ✅ Server serve static files dari `/uploads`
+-   ✅ Check `server.js` includes:
+    ```js
+    app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+    ```
+-   ✅ Image URL format: `http://localhost:5000/uploads/qr-codes/qr-xxxxx.jpg`
+-   ✅ Check CORS allows image requests
 
 ---
 
-## 🚀 Next Steps:
+## 📈 Future Enhancements (Optional)
 
-Setelah setup, Anda bisa:
+### Fitur yang bisa ditambahkan nanti:
 
-1. ✅ Update nomor WA semua siswa
-2. ✅ Test kirim ke grup (mode test dulu!)
-3. ✅ Set schedule reminder grup
-4. ✅ Monitor effectiveness
-5. ✅ Adjust strategy based on feedback
-
----
-
-## 📞 Support:
-
-Jika ada pertanyaan atau issue:
-
-1. Cek `WHATSAPP_BOT_GUIDE.md` untuk setup dasar
-2. Test dengan `WA_TEST_MODE=true` dulu
-3. Check Fonnte dashboard untuk troubleshooting
-4. Monitor server console log untuk error
+1. **Push Notifications** untuk konfirmasi approval/rejection
+2. **Badge Progress Bar** di dashboard member (misal: 6/8 weeks untuk Perfect Score)
+3. **Badge Showcase** di profile page (display all earned badges)
+4. **WhatsApp Personal Notification** setelah payment approved
+5. **QR Payment Analytics** (jumlah pending, avg approval time, dll)
+6. **Multiple QR Support** (pilih QR Dana atau Gopay)
+7. **Auto-reject** konfirmasi pending > 7 hari
+8. **Badge Animation** saat badge baru earned (confetti effect)
 
 ---
 
-**Happy Reminding! 🎉**
+## 👨‍💻 Developer Notes
 
-Dengan 2 fitur baru ini, manajemen kas kelas jadi lebih mudah dan efisien!
-````
+### Code Structure:
+
+```
+server/
+├── models/
+│   ├── Badge.js                 # Badge schema (7 badge types enum)
+│   ├── QRCode.js                # QR code schema (isActive flag)
+│   └── PaymentConfirmation.js  # Payment confirmation schema
+├── services/
+│   ├── badgeService.js          # Badge calculation logic + BADGE_DEFINITIONS
+│   ├── groupBroadcastService.js # WhatsApp broadcast logic
+│   └── notificationScheduler.js # Cron jobs (updated)
+├── routes/
+│   ├── badges.js                # Badge endpoints (5 routes)
+│   ├── qrPayment.js             # QR payment endpoints (12 routes)
+│   ├── leaderboard.js           # Updated to include badges
+│   └── notifications.js         # Updated with broadcast trigger
+└── uploads/                     # File storage
+    ├── qr-codes/
+    └── payment-proofs/
+
+client/
+├── src/
+│   ├── pages/
+│   │   ├── QRPayment.jsx        # Student QR payment page
+│   │   └── QRPaymentAdmin.jsx   # Admin QR management (3 tabs)
+│   └── components/
+│       ├── Leaderboard.jsx      # Updated with badge display + tooltips
+│       └── DashboardLayout.jsx  # Updated navigation (QR Pay, QR Admin)
+```
+
+### Key Implementation Details:
+
+-   **Badge System**: Uses unique index on `studentId + badgeType` to prevent duplicates
+-   **QR Upload**: Multer handles multipart/form-data, stores in `uploads/`
+-   **Broadcast Cron**: Runs every Sunday 18:00, checks week number % 2 === 0
+-   **Payment Approval**: Creates Payment record automatically when approved
+-   **Badge Calculation**: Each badge has independent check function (modular)
+
+---
+
+## ✅ Testing Checklist
+
+### Pre-Deployment:
+
+-   [x] Group broadcast sends to test group
+-   [x] Badge calculation works for all 7 types
+-   [x] QR upload successful (image displays)
+-   [x] Payment confirmation flow complete (submit → approve → payment created)
+-   [x] Rejection flow works (submit → reject → reason saved)
+-   [x] Badges display on Leaderboard with tooltips
+-   [x] Navigation links work (desktop & mobile)
+-   [x] File upload validation (size, type)
+-   [ ] Test on production environment
+
+### Post-Deployment:
+
+-   [ ] Monitor cron job logs (Sunday 18:00 every 2 weeks)
+-   [ ] Check badge calculation after real payments
+-   [ ] Verify QR payment E2E flow with real users
+-   [ ] Audit logs for QR admin actions
+-   [ ] Mobile responsive testing (especially QR upload)
+
+---
+
+## 📝 Changelog
+
+**Version**: 2.0.0  
+**Date**: January 2025  
+**Author**: GitHub Copilot
+
+### Added:
+
+-   ✅ WhatsApp Group Broadcast (bi-weekly automated reports)
+-   ✅ Badge System (7 achievement types with gamification)
+-   ✅ QR Code Payment (static QR with manual confirmation)
+-   ✅ Payment confirmation workflow (upload proof → admin approval)
+-   ✅ Badge display on Leaderboard with tooltips
+-   ✅ Navigation links for QR Payment (student & admin)
+-   ✅ File upload handling with multer
+-   ✅ Static file serving for images
+
+### Changed:
+
+-   Updated `notificationScheduler.js` with bi-weekly cron job
+-   Updated `Leaderboard.jsx` to display badges with tooltips
+-   Updated `DashboardLayout.jsx` with QR navigation links
+-   Updated `main.jsx` with new routes (/qr-payment, /qr-admin)
+-   Updated `server.js` to serve static files from /uploads
+
+### Dependencies:
+
+-   Added: `multer@^1.4.5-lts.1` for file uploads
+
+---
+
+## 🎓 Credits
+
+Developed with ❤️ for XII-3 Class Management System  
+Built using: Node.js, Express, MongoDB, React, Tailwind CSS, Fonnte API
+
+**Tech Stack:**
+
+-   Backend: Node.js + Express + MongoDB + Multer
+-   Frontend: React + Tailwind CSS + Lucide Icons
+-   Scheduler: node-cron
+-   WhatsApp: Fonnte API
+
+---
+
+**Need Help?** Check server logs (`console.log` statements throughout) or contact admin.

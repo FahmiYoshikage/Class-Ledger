@@ -13,6 +13,7 @@ import {
     Edit,
     Menu,
     X,
+    QrCode,
 } from 'lucide-react';
 
 const DashboardLayout = () => {
@@ -66,8 +67,25 @@ const DashboardLayout = () => {
                                 </button>
                             )}
 
+                            <button
+                                onClick={() => navigate('/app/qr-payment')}
+                                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-green-700 hover:bg-green-50 rounded-lg transition"
+                            >
+                                <QrCode className="w-4 h-4" />
+                                <span>QR Pay</span>
+                            </button>
+
                             {user?.role === 'admin' && (
                                 <>
+                                    <button
+                                        onClick={() =>
+                                            navigate('/app/qr-admin')
+                                        }
+                                        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition"
+                                    >
+                                        <QrCode className="w-4 h-4" />
+                                        <span>QR Admin</span>
+                                    </button>
                                     <button
                                         onClick={() => navigate('/app/users')}
                                         className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition"
@@ -133,8 +151,29 @@ const DashboardLayout = () => {
                                 </button>
                             )}
 
+                            <button
+                                onClick={() => {
+                                    navigate('/app/qr-payment');
+                                    setMobileMenuOpen(false);
+                                }}
+                                className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-green-700 hover:bg-green-50 rounded-lg transition"
+                            >
+                                <QrCode className="w-4 h-4" />
+                                <span>QR Payment</span>
+                            </button>
+
                             {user?.role === 'admin' && (
                                 <>
+                                    <button
+                                        onClick={() => {
+                                            navigate('/app/qr-admin');
+                                            setMobileMenuOpen(false);
+                                        }}
+                                        className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition"
+                                    >
+                                        <QrCode className="w-4 h-4" />
+                                        <span>QR Admin</span>
+                                    </button>
                                     <button
                                         onClick={() => {
                                             navigate('/app/users');

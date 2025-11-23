@@ -12,6 +12,8 @@ import MemberDashboard from './pages/MemberDashboard.jsx';
 import PublicDashboard from './pages/PublicDashboard.jsx';
 import Leaderboard from './components/Leaderboard.jsx';
 import ProfileEdit from './pages/ProfileEdit.jsx';
+import QRPayment from './pages/QRPayment.jsx';
+import QRPaymentAdmin from './pages/QRPaymentAdmin.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import DashboardLayout from './components/DashboardLayout.jsx';
 import { useAuth } from './context/AuthContext.jsx';
@@ -133,6 +135,16 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                             path="sessions"
                             element={<SessionManagement />}
                         />
+                        <Route
+                            path="qr-payment"
+                            element={
+                                <ProtectedRoute
+                                    requiredRole={['admin', 'member']}
+                                >
+                                    <QRPayment />
+                                </ProtectedRoute>
+                            }
+                        />
 
                         {/* Admin Only Routes */}
                         <Route
@@ -148,6 +160,14 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                             element={
                                 <ProtectedRoute requiredRole="admin">
                                     <AuditLogs />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="qr-admin"
+                            element={
+                                <ProtectedRoute requiredRole="admin">
+                                    <QRPaymentAdmin />
                                 </ProtectedRoute>
                             }
                         />

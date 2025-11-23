@@ -243,6 +243,50 @@ const Leaderboard = () => {
                                                 </span>
                                             </div>
 
+                                            {/* Badges */}
+                                            {donor.badges &&
+                                                donor.badges.length > 0 && (
+                                                    <div className="flex flex-wrap gap-1 mt-2 mb-2">
+                                                        {donor.badges.map(
+                                                            (badge, idx) => (
+                                                                <div
+                                                                    key={idx}
+                                                                    className="group relative inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold transition-all hover:scale-105"
+                                                                    style={{
+                                                                        backgroundColor:
+                                                                            badge.bgColor,
+                                                                        color: badge.textColor,
+                                                                    }}
+                                                                    title={
+                                                                        badge.description
+                                                                    }
+                                                                >
+                                                                    <span>
+                                                                        {
+                                                                            badge.emoji
+                                                                        }
+                                                                    </span>
+                                                                    <span className="hidden sm:inline">
+                                                                        {
+                                                                            badge.name
+                                                                        }
+                                                                    </span>
+
+                                                                    {/* Tooltip */}
+                                                                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10 shadow-lg">
+                                                                        {
+                                                                            badge.description
+                                                                        }
+                                                                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1">
+                                                                            <div className="border-4 border-transparent border-t-gray-900"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            )
+                                                        )}
+                                                    </div>
+                                                )}
+
                                             {/* Earliest Payment Badge */}
                                             {donor.earliestPayment && (
                                                 <div className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 rounded-full text-xs font-medium text-blue-700">
