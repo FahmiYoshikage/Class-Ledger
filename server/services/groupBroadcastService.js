@@ -40,14 +40,17 @@ class GroupBroadcastService {
             ]);
 
             // Filter payments and expenses for current semester only
+            // IMPORTANT: Only count payments WITH studentId (exclude custom payments)
             const payments = allPayments.filter(
-                (p) => new Date(p.date) >= startDate
+                (p) => new Date(p.date) >= startDate && p.studentId != null
             );
             const expenses = allExpenses.filter(
                 (e) => new Date(e.date) >= startDate
             );
 
             console.log('  Total Students (Aktif):', students.length);
+            console.log('  Student Payments Only:', payments.length);
+            console.log('  All Payments (incl custom):', allPayments.filter(p => new Date(p.date) >= startDate).length);
             console.log('  Total Payments (semester):', payments.length);
             console.log('  Total Expenses (semester):', expenses.length);
 
@@ -167,6 +170,11 @@ ${className} - ${semesterName}
 • Total Pengeluaran: Rp ${totalExpenses.toLocaleString('id-ID')}
 • Saldo Kas: *Rp ${balance.toLocaleString('id-ID')}*
 
+📅 *PERIODE:*
+• Minggu Ke-${currentWeek}
+• Kas per minggu: Rp 2.000
+• Status Telat: Tunggakan ≥ Rp 8.000
+
 📈 *2 MINGGU TERAKHIR:*
 • Pemasukan: Rp ${recentIncome.toLocaleString('id-ID')}
 • Transaksi: ${recentPayments.length}x pembayaran
@@ -194,6 +202,10 @@ _Segera lunasi ya teman-teman!_ 💪`
 ━━━━━━━━━━━━━━━━━━━━
 🏆 Cek Leaderboard Lengkap:
 https://triforce.fahmi.app/leaderboard
+
+💡 _Keterangan:_
+_• Data hanya menghitung pembayaran siswa_
+_• Tunggakan dihitung per minggu (Rp 2.000/minggu)_
 
 _Laporan ini dikirim otomatis setiap 2 minggu_
 _Terima kasih atas partisipasinya!_ 🙏

@@ -1104,4 +1104,31 @@ router.post('/send-group-broadcast', async (req, res) => {
     }
 });
 
+// ==============================================
+// 🔍 DEBUG: Get broadcast message preview (WITHOUT sending)
+// ==============================================
+router.get('/broadcast-preview', async (req, res) => {
+    try {
+        console.log('🔍 Preview mode: Generating broadcast message...');
+
+        const groupBroadcastService = (
+            await import('../services/groupBroadcastService.js')
+        ).default;
+        
+        const message = await groupBroadcastService.generateSummaryReport();
+
+        res.json({
+            success: true,
+            message: message,
+            note: 'Preview only - not sent to group'
+        });
+    } catch (error) {
+        console.error('Error generating preview:', error);
+        res.status(500).json({
+            success: false,
+            error: error.message,
+        });
+    }
+});
+
 export default router;
