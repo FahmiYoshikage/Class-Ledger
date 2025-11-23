@@ -1071,15 +1071,21 @@ router.post('/send-group-broadcast', async (req, res) => {
     try {
         console.log('📊 Manual trigger: Bi-weekly group broadcast');
 
+        const { pdfUrl } = req.body; // Accept PDF URL from request body
+
         const groupBroadcastService = (
             await import('../services/groupBroadcastService.js')
         ).default;
-        const result = await groupBroadcastService.sendBiWeeklyReport();
+
+        // Pass PDF URL if provided
+        const result = await groupBroadcastService.sendBiWeeklyReport(pdfUrl);
 
         if (result.success) {
             res.json({
                 success: true,
-                message: 'Broadcast berhasil dikirim ke group!',
+                message: pdfUrl
+                    ? 'Broadcast dengan lampiran PDF berhasil dikirim!'
+                    : 'Broadcast berhasil dikirim ke group!',
                 detail: result,
             });
         } else {

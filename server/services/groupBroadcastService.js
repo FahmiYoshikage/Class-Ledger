@@ -54,7 +54,7 @@ class GroupBroadcastService {
                 0
             );
 
-            // Calculate tunggakan
+            // Calculate tunggakan (SAME LOGIC AS DASHBOARD)
             const currentWeek = await this.getCurrentWeek();
             const weeklyAmount = 2000;
 
@@ -66,9 +66,9 @@ class GroupBroadcastService {
                     (sum, p) => sum + p.amount,
                     0
                 );
-                const weeksPaid = Math.floor(totalPaid / weeklyAmount);
-                const weeksLate = currentWeek - weeksPaid;
-                const tunggakan = Math.max(0, weeksLate * weeklyAmount);
+                // Use same formula as dashboard: shouldPay - totalPaid
+                const shouldPay = currentWeek * weeklyAmount;
+                const tunggakan = Math.max(0, shouldPay - totalPaid);
 
                 return {
                     name: student.nickname || student.name,
@@ -196,8 +196,8 @@ _Terima kasih atas partisipasinya!_ 🙏
         }
     }
 
-    // Send message to group
-    async sendToGroup(message) {
+    // Send message to group (with optional PDF attachment)
+    async sendToGroup(message, pdfUrl = null) {
         try {
             if (!this.groupId) {
                 console.log(
@@ -213,19 +213,23 @@ _Terima kasih atas partisipasinya!_ 🙏
 
             console.log(`📤 Sending broadcast to group: ${this.groupId}`);
 
-            const response = await axios.post(
-                this.apiUrl,
-                {
-                    target: this.groupId,
-                    message: message,
-                    countryCode: '62',
+            const payload = {
+                target: this.groupId,
+                message: message,
+                countryCode: '62',
+            };
+
+            // Add PDF URL if provided
+            if (pdfUrl) {
+                payload.url = pdfUrl; // Fonnte uses 'url' parameter for file attachments
+                console.log(`📎 Attaching PDF: ${pdfUrl}`);
+            }
+
+            const response = await axios.post(this.apiUrl, payload, {
+                headers: {
+                    Authorization: this.apiToken,
                 },
-                {
-                    headers: {
-                        Authorization: this.apiToken,
-                    },
-                }
-            );
+            });
 
             console.log('✅ Group broadcast sent successfully');
 
@@ -244,13 +248,13 @@ _Terima kasih atas partisipasinya!_ 🙏
     }
 
     // Main broadcast function
-    async sendBiWeeklyReport() {
+    async sendBiWeeklyReport(pdfUrl = null) {
         try {
             console.log('📊 Generating bi-weekly report...');
             const message = await this.generateSummaryReport();
 
             console.log('📤 Sending to WhatsApp group...');
-            const result = await this.sendToGroup(message);
+            const result = await this.sendToGroup(message, pdfUrl);
 
             if (result.success) {
                 console.log('✅ Bi-weekly report broadcast completed!');

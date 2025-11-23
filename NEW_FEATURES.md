@@ -39,15 +39,35 @@ Tiga fitur baru telah berhasil diimplementasikan untuk meningkatkan engagement s
 ### 🧪 Testing Manual:
 
 -   Admin bisa trigger manual broadcast dari endpoint:
-    ```
+
+    ```bash
+    # Without PDF attachment
     POST /api/notifications/send-group-broadcast
+
+    # With PDF attachment
+    POST /api/notifications/send-group-broadcast
+    Body: { "pdfUrl": "https://triforce.fahmi.app/uploads/reports/laporan.pdf" }
     ```
+
+### 📎 Lampiran PDF (NEW):
+
+-   **Support**: Bisa attach PDF ke broadcast message
+-   **Format**: Berikan `pdfUrl` di request body
+-   **Requirement**: PDF harus publicly accessible (HTTPS)
+-   **Lihat**: `BROADCAST_PDF_GUIDE.md` untuk tutorial lengkap
+
+### 🔧 Bug Fix:
+
+-   ✅ **Fixed**: Formula tunggakan sekarang sama dengan dashboard
+-   **Before**: `(currentWeek - weeksPaid) * 2000`
+-   **After**: `(currentWeek * 2000) - totalPaid` ← Match dashboard logic
 
 ### 📂 File Terkait:
 
--   `server/services/groupBroadcastService.js` - Logic generate & send
+-   `server/services/groupBroadcastService.js` - Logic generate & send (UPDATED)
 -   `server/services/notificationScheduler.js` - Cron job scheduler
--   `server/routes/notifications.js` - API endpoint
+-   `server/routes/notifications.js` - API endpoint (UPDATED)
+-   `BROADCAST_PDF_GUIDE.md` - PDF attachment tutorial
 
 ---
 
