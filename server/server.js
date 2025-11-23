@@ -11,6 +11,8 @@ import settingRoutes from './routes/settings.js';
 import eventRoutes from './routes/events.js';
 import notificationRoutes from './routes/notifications.js';
 import leaderboardRoutes from './routes/leaderboard.js';
+import badgeRoutes from './routes/badges.js';
+import qrPaymentRoutes from './routes/qrPayment.js';
 import authRoutes from './routes/auth.js';
 import auditLogRoutes from './routes/auditLogs.js';
 import sessionRoutes from './routes/sessions.js';
@@ -64,6 +66,11 @@ app.use('/api/settings', settingRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
+app.use('/api/badges', badgeRoutes);
+app.use('/api/qr-payment', qrPaymentRoutes);
+
+// Serve uploaded files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Health check
 app.get('/api/health', (req, res) => {

@@ -1,6 +1,8 @@
 import express from 'express';
 import Student from '../models/Student.js';
 import Payment from '../models/Payment.js';
+import Badge from '../models/Badge.js';
+import { BADGE_DEFINITIONS } from '../services/badgeService.js';
 
 const router = express.Router();
 
@@ -85,13 +87,36 @@ router.get('/', async (req, res) => {
         // Take top 10
         const top10 = sortedLeaderboard.slice(0, 10);
 
+        // Get badges for top 10
+        const studentIds = top10.map((d) => d.studentId);
+        const badges = await Badge.find({ studentId: { $in: studentIds } });
+
+        // Map badges to students
+        const top10WithBadges = top10.map((donor) => {
+            const studentBadges = badges
+                .filter(
+                    (b) => b.studentId.toString() === donor.studentId.toString()
+                )
+                .map((b) => ({
+                    type: b.badgeType,
+                    ...BADGE_DEFINITIONS[b.badgeType],
+                    earnedAt: b.earnedAt,
+                }));
+
+            return {
+                ...donor,
+                badges: studentBadges,
+                badgeCount: studentBadges.length,
+            };
+        });
+
         console.log(
             `✅ Leaderboard calculated: ${top10.length} donors from ${eligibleDonors.length} total`
         );
 
         res.json({
             success: true,
-            leaderboard: top10,
+            leaderboard: top10WithBadges,
             totalDonors: eligibleDonors.length,
             lastUpdated: new Date(),
             message:

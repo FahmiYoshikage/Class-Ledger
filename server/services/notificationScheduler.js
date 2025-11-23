@@ -3,6 +3,7 @@ import Student from '../models/Student.js';
 import Payment from '../models/Payment.js';
 import Setting from '../models/Setting.js';
 import whatsappService from './whatsappService.js';
+import groupBroadcastService from './groupBroadcastService.js';
 
 class NotificationScheduler {
     constructor() {
@@ -266,6 +267,29 @@ class NotificationScheduler {
             }
         );
 
+        // ========================================
+        // 📅 SCHEDULE 4: Bi-Weekly Group Broadcast (Every 2 weeks, Sunday 18:00)
+        // ========================================
+        const biWeeklyBroadcast = cron.schedule(
+            '0 18 * * 0',
+            async () => {
+                const weekNumber = Math.floor(
+                    Date.now() / (1000 * 60 * 60 * 24 * 7)
+                );
+                // Only run every 2 weeks
+                if (weekNumber % 2 === 0) {
+                    console.log(
+                        '\n📊 [BI-WEEKLY BROADCAST] Sending group summary report...'
+                    );
+                    await groupBroadcastService.sendBiWeeklyReport();
+                }
+            },
+            {
+                scheduled: false,
+                timezone: 'Asia/Jakarta',
+            }
+        );
+
         this.jobs = [
             {
                 name: 'Monday Morning',
@@ -276,6 +300,11 @@ class NotificationScheduler {
                 name: 'Friday Afternoon',
                 job: fridayAfternoon,
                 schedule: 'Every Friday 15:00',
+            },
+            {
+                name: 'Bi-Weekly Group Broadcast',
+                job: biWeeklyBroadcast,
+                schedule: 'Every 2 weeks, Sunday 18:00',
             },
             {
                 name: 'Daily Urgent',

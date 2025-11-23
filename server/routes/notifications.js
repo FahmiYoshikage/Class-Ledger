@@ -1064,4 +1064,38 @@ router.get('/test-fonnte', async (req, res) => {
     }
 });
 
+// ==============================================
+// 📊 SEND BI-WEEKLY GROUP BROADCAST (Manual Trigger)
+// ==============================================
+router.post('/send-group-broadcast', async (req, res) => {
+    try {
+        console.log('📊 Manual trigger: Bi-weekly group broadcast');
+
+        const groupBroadcastService = (
+            await import('../services/groupBroadcastService.js')
+        ).default;
+        const result = await groupBroadcastService.sendBiWeeklyReport();
+
+        if (result.success) {
+            res.json({
+                success: true,
+                message: 'Broadcast berhasil dikirim ke group!',
+                detail: result,
+            });
+        } else {
+            res.json({
+                success: false,
+                message: 'Broadcast gagal dikirim',
+                error: result.error,
+            });
+        }
+    } catch (error) {
+        console.error('Error sending group broadcast:', error);
+        res.status(500).json({
+            success: false,
+            error: error.message,
+        });
+    }
+});
+
 export default router;
