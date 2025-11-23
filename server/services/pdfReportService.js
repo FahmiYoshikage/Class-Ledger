@@ -22,9 +22,14 @@ class PDFReportService {
             if (!fs.existsSync(this.reportsDir)) {
                 fs.mkdirSync(this.reportsDir, { recursive: true });
             }
+            // Test write permission by creating a test file
+            const testFile = path.join(this.reportsDir, '.write-test');
+            fs.writeFileSync(testFile, 'test');
+            fs.unlinkSync(testFile);
+            console.log('✅ Reports directory writable:', this.reportsDir);
         } catch (error) {
             console.warn(
-                '⚠️ Cannot create reports dir, using /tmp:',
+                '⚠️ Cannot write to reports dir, using /tmp:',
                 error.message
             );
             // Fallback to /tmp if permission denied
@@ -32,6 +37,7 @@ class PDFReportService {
             if (!fs.existsSync(this.reportsDir)) {
                 fs.mkdirSync(this.reportsDir, { recursive: true });
             }
+            console.log('📁 Using fallback directory:', this.reportsDir);
         }
     }
 
