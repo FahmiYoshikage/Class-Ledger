@@ -1,5 +1,6 @@
 import express from 'express';
 import Payment from '../models/Payment.js';
+import badgeService from '../services/badgeService.js';
 
 const router = express.Router();
 
@@ -43,6 +44,26 @@ router.post('/', async (req, res) => {
         const populatedPayment = await Payment.findById(
             newPayment._id
         ).populate('studentId', 'name absen');
+
+        // 🎖️ AUTO-CALCULATE BADGES after payment
+        if (req.body.studentId) {
+            try {
+                await badgeService.calculateBadgesForStudent(
+                    req.body.studentId
+                );
+                console.log(
+                    '✅ Badges updated for student:',
+                    req.body.studentId
+                );
+            } catch (badgeError) {
+                console.error(
+                    '⚠️ Failed to calculate badges:',
+                    badgeError.message
+                );
+                // Don't fail the payment if badge calculation fails
+            }
+        }
+
         res.status(201).json(populatedPayment);
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -56,7 +77,26 @@ router.delete('/:id', async (req, res) => {
         if (!payment) {
             return res.status(404).json({ message: 'Payment not found' });
         }
+
+        const studentId = payment.studentId; // Save before delete
         await payment.deleteOne();
+
+        // 🎖️ AUTO-RECALCULATE BADGES after payment deletion
+        if (studentId) {
+            try {
+                await badgeService.calculateBadgesForStudent(studentId);
+                console.log(
+                    '✅ Badges recalculated after deletion for student:',
+                    studentId
+                );
+            } catch (badgeError) {
+                console.error(
+                    '⚠️ Failed to recalculate badges:',
+                    badgeError.message
+                );
+            }
+        }
+
         res.json({ message: 'Payment deleted' });
     } catch (error) {
         res.status(500).json({ message: error.message });
