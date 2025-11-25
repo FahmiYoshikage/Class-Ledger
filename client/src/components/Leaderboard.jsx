@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Trophy, Medal, TrendingUp, Clock, Users } from 'lucide-react';
+import {
+    Trophy,
+    Medal,
+    TrendingUp,
+    Clock,
+    Users,
+    RefreshCw,
+} from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
@@ -8,6 +15,7 @@ const Leaderboard = () => {
     const [leaderboard, setLeaderboard] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [refreshingBadges, setRefreshingBadges] = useState(false);
     const [stats, setStats] = useState({
         totalDonors: 0,
         lastUpdated: null,
@@ -38,6 +46,28 @@ const Leaderboard = () => {
             setError('Gagal memuat leaderboard. Silakan refresh halaman.');
         } finally {
             setLoading(false);
+        }
+    };
+
+    const refreshAllBadges = async () => {
+        try {
+            setRefreshingBadges(true);
+            const response = await axios.post(
+                `${API_URL}/badges/calculate-all`
+            );
+
+            if (response.data.success) {
+                // Refresh leaderboard after badges calculated
+                await fetchLeaderboard();
+                alert(
+                    `✅ Badge berhasil di-refresh!\n\nTotal: ${response.data.totalStudents} siswa\nBadge: ${response.data.totalBadges} badge`
+                );
+            }
+        } catch (err) {
+            console.error('Error refreshing badges:', err);
+            alert('❌ Gagal refresh badge. Silakan coba lagi.');
+        } finally {
+            setRefreshingBadges(false);
         }
     };
 
@@ -126,6 +156,28 @@ const Leaderboard = () => {
                     <p className="text-gray-600 text-sm sm:text-base">
                         Top 10 siswa dengan kontribusi kas terbesar & tercepat
                     </p>
+                </div>
+
+                {/* Refresh Badge Button */}
+                <div className="flex justify-end mb-4">
+                    <button
+                        onClick={refreshAllBadges}
+                        disabled={refreshingBadges}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
+                            refreshingBadges
+                                ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                                : 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 shadow-lg hover:shadow-xl'
+                        }`}
+                    >
+                        <RefreshCw
+                            className={`w-4 h-4 ${
+                                refreshingBadges ? 'animate-spin' : ''
+                            }`}
+                        />
+                        {refreshingBadges
+                            ? 'Refreshing Badge...'
+                            : '🎖️ Refresh Badge'}
+                    </button>
                 </div>
 
                 {/* Stats Cards */}
