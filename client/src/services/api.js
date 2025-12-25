@@ -151,4 +151,5 @@ export const notificationsAPI = {
     getStats: () => api.get('/notifications/stats'),
 };
 
+export { api };
 export default api;

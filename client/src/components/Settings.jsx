@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import { settingsAPI } from '../services/api';
 
-const Settings = ({ onStartDateChange, currentStartDate }) => {
+const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
     const [startDate, setStartDate] = useState('');
     const [weeklyAmount, setWeeklyAmount] = useState(2000);
     const [lateThreshold, setLateThreshold] = useState(4);
@@ -157,6 +157,11 @@ const Settings = ({ onStartDateChange, currentStartDate }) => {
             );
             setTimeout(() => setSuccess(''), 5000);
 
+            // Notify parent to refresh current week
+            if (onWeekChange) {
+                onWeekChange();
+            }
+
             // Reload to refresh all data
             setTimeout(() => window.location.reload(), 2000);
         } catch (err) {
@@ -205,6 +210,11 @@ const Settings = ({ onStartDateChange, currentStartDate }) => {
                 `▶️ Semester "${newSemesterName}" dimulai! Week counter reset ke Week 1`
             );
             setTimeout(() => setSuccess(''), 5000);
+
+            // Notify parent to refresh current week
+            if (onWeekChange) {
+                onWeekChange();
+            }
 
             // Notify parent and reload
             if (onStartDateChange) {

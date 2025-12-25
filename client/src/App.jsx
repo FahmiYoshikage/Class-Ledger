@@ -25,6 +25,7 @@ import {
     paymentsAPI,
     expensesAPI,
     settingsAPI,
+    api,
 } from './services/api';
 import EventManagement from './components/EventManagement';
 import CustomPayment from './components/CustomPayment';
@@ -37,6 +38,8 @@ const App = () => {
     const [payments, setPayments] = useState([]);
     const [expenses, setExpenses] = useState([]);
     const [startDate, setStartDate] = useState(new Date('2025-10-27'));
+    const [currentWeek, setCurrentWeek] = useState(1);
+    const [semesterStatus, setSemesterStatus] = useState('active');
     // Load activeTab from localStorage or default to 'dashboard'
     const [activeTab, setActiveTab] = useState(() => {
         const savedTab = localStorage.getItem('activeTab');
@@ -66,6 +69,7 @@ const App = () => {
     // Load data from backend
     useEffect(() => {
         loadAllData();
+        loadCurrentWeek();
     }, []);
 
     const loadAllData = async () => {
@@ -104,16 +108,27 @@ const App = () => {
         }
     };
 
-    const getCurrentWeek = () => {
-        const now = new Date();
-        const days = Math.floor((now - startDate) / (24 * 60 * 60 * 1000));
-        const weeks = Math.ceil(days / 7);
-
-        if (weeks < 0) return 0;
-        return weeks + 1;
+    // Load current week from server (respects pause)
+    const loadCurrentWeek = async () => {
+        try {
+            const response = await api.get('/settings/current-week');
+            console.log('📊 Current Week Response:', response.data);
+            if (response.data?.currentWeek) {
+                setCurrentWeek(response.data.currentWeek);
+                setSemesterStatus(response.data.status || 'active');
+                console.log(`✅ Set currentWeek to: ${response.data.currentWeek}, status: ${response.data.status}`);
+            }
+        } catch (err) {
+            console.error('Error loading current week:', err);
+            // Fallback to calculation if API fails
+            const now = new Date();
+            const days = Math.floor((now - startDate) / (24 * 60 * 60 * 1000));
+            const weeks = Math.ceil(days / 7);
+            const fallbackWeek = Math.max(1, weeks + 1);
+            setCurrentWeek(fallbackWeek);
+            console.log(`⚠️ Using fallback week: ${fallbackWeek}`);
+        }
     };
-
-    const currentWeek = getCurrentWeek();
 
     const handleStartDateChange = (newStartDate) => {
         setStartDate(newStartDate);
@@ -2020,6 +2035,7 @@ const App = () => {
                     <Settings
                         onStartDateChange={handleStartDateChange}
                         currentStartDate={startDate}
+                        onWeekChange={loadCurrentWeek}
                     />
                 )}
 
