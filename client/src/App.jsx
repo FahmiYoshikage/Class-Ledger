@@ -112,11 +112,9 @@ const App = () => {
     const loadCurrentWeek = async () => {
         try {
             const response = await api.get('/settings/current-week');
-            console.log('📊 Current Week Response:', response.data);
             if (response.data?.currentWeek) {
                 setCurrentWeek(response.data.currentWeek);
                 setSemesterStatus(response.data.status || 'active');
-                console.log(`✅ Set currentWeek to: ${response.data.currentWeek}, status: ${response.data.status}`);
             }
         } catch (err) {
             console.error('Error loading current week:', err);
@@ -124,9 +122,7 @@ const App = () => {
             const now = new Date();
             const days = Math.floor((now - startDate) / (24 * 60 * 60 * 1000));
             const weeks = Math.ceil(days / 7);
-            const fallbackWeek = Math.max(1, weeks + 1);
-            setCurrentWeek(fallbackWeek);
-            console.log(`⚠️ Using fallback week: ${fallbackWeek}`);
+            setCurrentWeek(Math.max(1, weeks + 1));
         }
     };
 

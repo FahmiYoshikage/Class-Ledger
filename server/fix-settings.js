@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import Setting from './models/Setting.js';
+import Setting from './server/models/Setting.js';
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/kas-kelas';
 

@@ -19,15 +19,8 @@ router.get('/current-week', async (req, res) => {
             ? new Date(startDateSetting.value)
             : new Date(process.env.START_DATE || '2025-10-27');
 
-        console.log('📊 Current Week Calculation:', {
-            semesterStatus,
-            pausedWeek,
-            startDate: startDate.toISOString().split('T')[0],
-        });
-
         // If paused, return the paused week
         if (semesterStatus === 'paused' && pausedWeek) {
-            console.log(`⏸️ Returning paused week: ${pausedWeek}`);
             return res.json({
                 currentWeek: pausedWeek,
                 status: 'paused',
@@ -35,12 +28,11 @@ router.get('/current-week', async (req, res) => {
             });
         }
 
-        // Calculate current week normally (match dashboard formula)
+        // Calculate current week normally
         const now = new Date();
-        const days = Math.floor((now - startDate) / (24 * 60 * 60 * 1000));
-        const currentWeek = Math.max(1, Math.ceil(days / 7) + 1);
-
-        console.log(`✅ Returning current week: ${currentWeek} (days: ${days})`);
+        const diffTime = Math.abs(now - startDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const currentWeek = Math.max(1, Math.ceil(diffDays / 7));
 
         res.json({
             currentWeek,
