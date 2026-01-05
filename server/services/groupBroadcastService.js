@@ -287,6 +287,19 @@ _Segera lunasi ya teman-teman!_ 💪`
 }
 
 ━━━━━━━━━━━━━━━━━━━━
+💳 *INFORMASI PEMBAYARAN*
+Semua atas nama: *Fahmi Ilham Bagaskara*
+
+*E-Wallet:*
+💚 Gopay: 085646745887
+💰 Dana: 085646745887
+🛍️ ShopeePay: 085646745887
+
+*Mobile Banking:*
+🏦 SeaBank: 901006225290
+🏦 BRI: 011001041959536
+━━━━━━━━━━━━━━━━━━━━
+
 🏆 Cek Leaderboard Lengkap:
 https://triforce.fahmi.app/leaderboard
 
