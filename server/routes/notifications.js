@@ -2,9 +2,49 @@ import express from 'express';
 import Student from '../models/Student.js';
 import Payment from '../models/Payment.js';
 import Notification from '../models/Notification.js';
+import Setting from '../models/Setting.js';
 import whatsappService from '../services/whatsappService.js';
 
 const router = express.Router();
+
+// ==============================================
+// 🔧 HELPER: Get Current Week (respects semester pause)
+// ==============================================
+async function getCurrentWeek() {
+    try {
+        const [semesterStatusSetting, pausedWeekSetting, startDateSetting] =
+            await Promise.all([
+                Setting.findOne({ key: 'semester_status' }),
+                Setting.findOne({ key: 'paused_week' }),
+                Setting.findOne({ key: 'start_date' }),
+            ]);
+
+        const semesterStatus = semesterStatusSetting?.value || 'active';
+        const pausedWeek = pausedWeekSetting?.value;
+        const startDate = startDateSetting?.value
+            ? new Date(startDateSetting.value)
+            : new Date(process.env.START_DATE || '2025-10-27');
+
+        // If paused, return the paused week
+        if (semesterStatus === 'paused' && pausedWeek) {
+            return pausedWeek;
+        }
+
+        // Calculate current week normally
+        const now = new Date();
+        const days = Math.floor((now - startDate) / (24 * 60 * 60 * 1000));
+        const currentWeek = Math.max(0, Math.ceil(days / 7) + 1);
+
+        return currentWeek;
+    } catch (error) {
+        console.error('Error getting current week:', error);
+        // Fallback to normal calculation
+        const startDate = new Date(process.env.START_DATE || '2025-10-27');
+        const now = new Date();
+        const days = Math.floor((now - startDate) / (24 * 60 * 60 * 1000));
+        return Math.max(0, Math.ceil(days / 7) + 1);
+    }
+}
 
 // ==============================================
 // 📊 GET ALL NOTIFICATIONS
@@ -52,6 +92,9 @@ router.get('/needs-reminder', async (req, res) => {
         // Get all payments
         const payments = await Payment.find();
 
+        // Get current week ONCE (respects semester pause)
+        const currentWeek = await getCurrentWeek();
+
         // Calculate students who need reminder
         const needsReminder = [];
 
@@ -71,12 +114,6 @@ router.get('/needs-reminder', async (req, res) => {
                 0
             );
             const weeksPaid = Math.floor(totalPaid / 2000);
-
-            // Calculate current week
-            const startDate = new Date(process.env.START_DATE || '2025-10-27');
-            const now = new Date();
-            const days = Math.floor((now - startDate) / (24 * 60 * 60 * 1000));
-            const currentWeek = Math.max(0, Math.ceil(days / 7) + 1);
 
             const weeksLate = currentWeek - weeksPaid;
             const amountOwed = weeksLate * 2000;
@@ -190,11 +227,8 @@ router.post('/send-bulk-reminder', async (req, res) => {
         // Get all payments for calculation
         const payments = await Payment.find();
 
-        // Calculate current week
-        const startDate = new Date(process.env.START_DATE || '2025-10-27');
-        const now = new Date();
-        const days = Math.floor((now - startDate) / (24 * 60 * 60 * 1000));
-        const currentWeek = Math.max(0, Math.ceil(days / 7) + 1);
+        // Get current week (respects semester pause)
+        const currentWeek = await getCurrentWeek();
 
         // Send to each student
         for (const student of students) {
@@ -442,11 +476,8 @@ router.post('/send-to-group', async (req, res) => {
 
         const payments = await Payment.find();
 
-        // Calculate current week
-        const startDate = new Date(process.env.START_DATE || '2025-10-27');
-        const now = new Date();
-        const days = Math.floor((now - startDate) / (24 * 60 * 60 * 1000));
-        const currentWeek = Math.max(0, Math.ceil(days / 7) + 1);
+        // Get current week (respects semester pause)
+        const currentWeek = await getCurrentWeek();
 
         // Filter students with late payments
         const studentsData = [];
@@ -523,11 +554,8 @@ router.post('/preview-group', async (req, res) => {
 
         const payments = await Payment.find();
 
-        // Calculate current week
-        const startDate = new Date(process.env.START_DATE || '2025-10-27');
-        const now = new Date();
-        const days = Math.floor((now - startDate) / (24 * 60 * 60 * 1000));
-        const currentWeek = Math.max(0, Math.ceil(days / 7) + 1);
+        // Get current week (respects semester pause)
+        const currentWeek = await getCurrentWeek();
 
         // Create sample data
         const studentsData = [];
