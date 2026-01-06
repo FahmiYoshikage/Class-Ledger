@@ -1967,7 +1967,9 @@ const App = () => {
                                             .sort((a, b) => a.absen - b.absen)
                                             .map((student) => {
                                                 // Use correct getTunggakan function
-                                                const tunggakan = getTunggakan(student._id);
+                                                const tunggakan = getTunggakan(
+                                                    student._id
+                                                );
                                                 return (
                                                     <tr key={student._id}>
                                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -1982,7 +1984,9 @@ const App = () => {
                                                             </span>
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600 font-semibold">
-                                                            {formatRp(tunggakan)}
+                                                            {formatRp(
+                                                                tunggakan
+                                                            )}
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap text-sm">
                                                             <button
