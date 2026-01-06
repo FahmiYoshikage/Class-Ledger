@@ -1966,19 +1966,8 @@ const App = () => {
                                         {getUnpaidStudents()
                                             .sort((a, b) => a.absen - b.absen)
                                             .map((student) => {
-                                                const unpaidWeeks =
-                                                    currentWeek -
-                                                    payments
-                                                        .filter(
-                                                            (p) =>
-                                                                p.studentId ===
-                                                                student._id
-                                                        )
-                                                        .filter(
-                                                            (p) =>
-                                                                p.week <=
-                                                                currentWeek
-                                                        ).length;
+                                                // Use correct getTunggakan function
+                                                const tunggakan = getTunggakan(student._id);
                                                 return (
                                                     <tr key={student._id}>
                                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -1993,10 +1982,7 @@ const App = () => {
                                                             </span>
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600 font-semibold">
-                                                            {formatRp(
-                                                                unpaidWeeks *
-                                                                    2000
-                                                            )}
+                                                            {formatRp(tunggakan)}
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap text-sm">
                                                             <button
