@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const NEW_PASSWORD = 'admin123456';
+const NEW_PASSWORD = 'adminAseli_0129';
 
 async function resetAdmin() {
     await mongoose.connect(process.env.MONGODB_URI);
