@@ -66,14 +66,14 @@ const ExpenseCategoryPieChart = ({ expenses, timeRange }) => {
         if (active && payload && payload.length) {
             const data = payload[0].payload;
             return (
-                <div className="bg-white p-4 rounded-lg shadow-lg border border-gray-200">
-                    <p className="font-semibold text-gray-800 mb-2">
+                <div className="bg-slate-900/95 backdrop-blur-xl p-4 rounded-lg shadow-lg border border-slate-700/50 bg-slate-800/60 text-slate-50">
+                    <p className="font-semibold text-slate-100 mb-2">
                         {data.name}
                     </p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-slate-200">
                         {formatCurrency(data.value)}
                     </p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-slate-300">
                         {data.percentage}% dari total
                     </p>
                 </div>
@@ -113,7 +113,7 @@ const ExpenseCategoryPieChart = ({ expenses, timeRange }) => {
 
     if (chartData.length === 0) {
         return (
-            <div className="h-64 flex items-center justify-center text-gray-500">
+            <div className="h-64 flex items-center justify-center text-slate-300">
                 <p>Tidak ada data pengeluaran</p>
             </div>
         );
@@ -154,7 +154,7 @@ const ExpenseCategoryPieChart = ({ expenses, timeRange }) => {
                 {chartData.map((item) => (
                     <div
                         key={item.name}
-                        className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                        className="flex items-center justify-between p-2 bg-slate-800/60 rounded"
                     >
                         <div className="flex items-center gap-2">
                             <div
@@ -164,15 +164,15 @@ const ExpenseCategoryPieChart = ({ expenses, timeRange }) => {
                                         COLORS[item.name] || '#9ca3af',
                                 }}
                             />
-                            <span className="text-sm font-medium text-gray-700">
+                            <span className="text-sm font-medium text-slate-200">
                                 {item.name}
                             </span>
                         </div>
                         <div className="text-right">
-                            <p className="text-sm font-semibold text-gray-800">
+                            <p className="text-sm font-semibold text-slate-100">
                                 {formatCurrency(item.value)}
                             </p>
-                            <p className="text-xs text-gray-500">
+                            <p className="text-xs text-slate-300">
                                 {item.percentage}%
                             </p>
                         </div>

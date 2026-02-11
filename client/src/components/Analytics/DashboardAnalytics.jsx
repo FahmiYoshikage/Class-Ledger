@@ -192,8 +192,8 @@ const DashboardAnalytics = () => {
         return (
             <div className="flex items-center justify-center min-h-screen">
                 <div className="text-center">
-                    <RefreshCw className="w-12 h-12 text-indigo-600 animate-spin mx-auto mb-4" />
-                    <p className="text-gray-600">Memuat analytics...</p>
+                    <RefreshCw className="w-12 h-12 text-cyan-400 animate-spin mx-auto mb-4" />
+                    <p className="text-slate-200">Memuat analytics...</p>
                 </div>
             </div>
         );
@@ -202,7 +202,7 @@ const DashboardAnalytics = () => {
     return (
         <div className="space-y-4 sm:space-y-6">
             {/* Header */}
-            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-lg p-4 sm:p-6 text-white">
+            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-lg p-4 sm:p-6 text-slate-50">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mb-3 sm:mb-4">
                     <div>
                         <h1 className="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2">
@@ -248,7 +248,7 @@ const DashboardAnalytics = () => {
                             onClick={() => setTimeRange(range.value)}
                             className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition whitespace-nowrap text-sm sm:text-base ${
                                 timeRange === range.value
-                                    ? 'bg-white text-indigo-600 font-semibold'
+                                    ? 'bg-white text-cyan-400 font-semibold'
                                     : 'bg-white/20 hover:bg-white/30'
                             }`}
                         >
@@ -262,106 +262,106 @@ const DashboardAnalytics = () => {
             {analytics && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {/* Total Income */}
-                    <div className="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
+                    <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow p-6 border-l-4 border-green-500">
                         <div className="flex items-center justify-between mb-2">
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-slate-200">
                                 Total Pemasukan
                             </p>
                             <TrendingUp className="w-5 h-5 text-green-500" />
                         </div>
-                        <p className="text-2xl font-bold text-gray-800 mb-1">
+                        <p className="text-2xl font-bold text-slate-100 mb-1">
                             {formatRp(analytics.totalIncome)}
                         </p>
                         <div className="flex items-center gap-1 text-sm">
                             {analytics.incomeChange >= 0 ? (
                                 <>
                                     <TrendingUp className="w-4 h-4 text-green-500" />
-                                    <span className="text-green-600 font-medium">
+                                    <span className="text-cyan-400 font-medium">
                                         +{analytics.incomeChange.toFixed(1)}%
                                     </span>
                                 </>
                             ) : (
                                 <>
                                     <TrendingDown className="w-4 h-4 text-red-500" />
-                                    <span className="text-red-600 font-medium">
+                                    <span className="text-rose-300 font-medium">
                                         {analytics.incomeChange.toFixed(1)}%
                                     </span>
                                 </>
                             )}
-                            <span className="text-gray-500">
+                            <span className="text-slate-300">
                                 vs periode sebelumnya
                             </span>
                         </div>
                     </div>
 
                     {/* Total Expense */}
-                    <div className="bg-white rounded-lg shadow p-6 border-l-4 border-red-500">
+                    <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow p-6 border-l-4 border-red-500">
                         <div className="flex items-center justify-between mb-2">
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-slate-200">
                                 Total Pengeluaran
                             </p>
                             <TrendingDown className="w-5 h-5 text-red-500" />
                         </div>
-                        <p className="text-2xl font-bold text-gray-800 mb-1">
+                        <p className="text-2xl font-bold text-slate-100 mb-1">
                             {formatRp(analytics.totalExpense)}
                         </p>
                         <div className="flex items-center gap-1 text-sm">
                             {analytics.expenseChange >= 0 ? (
                                 <>
                                     <TrendingUp className="w-4 h-4 text-red-500" />
-                                    <span className="text-red-600 font-medium">
+                                    <span className="text-rose-300 font-medium">
                                         +{analytics.expenseChange.toFixed(1)}%
                                     </span>
                                 </>
                             ) : (
                                 <>
                                     <TrendingDown className="w-4 h-4 text-green-500" />
-                                    <span className="text-green-600 font-medium">
+                                    <span className="text-cyan-400 font-medium">
                                         {analytics.expenseChange.toFixed(1)}%
                                     </span>
                                 </>
                             )}
-                            <span className="text-gray-500">
+                            <span className="text-slate-300">
                                 vs periode sebelumnya
                             </span>
                         </div>
                     </div>
 
                     {/* Net Balance */}
-                    <div className="bg-white rounded-lg shadow p-6 border-l-4 border-indigo-500">
+                    <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow p-6 border-l-4 border-indigo-500">
                         <div className="flex items-center justify-between mb-2">
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-slate-200">
                                 Saldo Bersih
                             </p>
-                            <DollarSign className="w-5 h-5 text-indigo-500" />
+                            <DollarSign className="w-5 h-5 text-cyan-400" />
                         </div>
                         <p
                             className={`text-2xl font-bold mb-1 ${
                                 analytics.netBalance >= 0
-                                    ? 'text-green-600'
-                                    : 'text-red-600'
+                                    ? 'text-cyan-400'
+                                    : 'text-rose-300'
                             }`}
                         >
                             {formatRp(analytics.netBalance)}
                         </p>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-slate-300">
                             {analytics.paymentCount} pembayaran •{' '}
                             {analytics.expenseCount} pengeluaran
                         </p>
                     </div>
 
                     {/* Active Students */}
-                    <div className="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
+                    <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow p-6 border-l-4 border-blue-500">
                         <div className="flex items-center justify-between mb-2">
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-slate-200">
                                 Siswa Aktif Bayar
                             </p>
-                            <Users className="w-5 h-5 text-blue-500" />
+                            <Users className="w-5 h-5 text-sky-300" />
                         </div>
-                        <p className="text-2xl font-bold text-gray-800 mb-1">
+                        <p className="text-2xl font-bold text-slate-100 mb-1">
                             {analytics.uniquePayingStudents}
                         </p>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-slate-300">
                             Rata-rata: {formatRp(analytics.avgPaymentAmount)}
                         </p>
                     </div>
@@ -370,14 +370,14 @@ const DashboardAnalytics = () => {
 
             {/* Debt Alert */}
             {analytics && analytics.totalDebt > 0 && (
-                <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-lg">
+                <div className="bg-amber-500/20 border-l-4 border-yellow-400 p-4 rounded-lg">
                     <div className="flex items-start gap-3">
                         <AlertCircle className="w-5 h-5 text-yellow-600 mt-0.5" />
                         <div>
                             <p className="font-semibold text-yellow-900">
                                 Total Tunggakan: {formatRp(analytics.totalDebt)}
                             </p>
-                            <p className="text-sm text-yellow-700">
+                            <p className="text-sm text-amber-300">
                                 {analytics.studentsWithDebt} siswa memiliki
                                 tunggakan yang perlu ditagih
                             </p>
@@ -389,10 +389,10 @@ const DashboardAnalytics = () => {
             {/* Charts Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Income vs Expense Line Chart */}
-                <div className="bg-white rounded-lg shadow p-6">
+                <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow p-6">
                     <div className="flex items-center gap-2 mb-4">
-                        <Activity className="w-5 h-5 text-indigo-600" />
-                        <h3 className="text-lg font-bold text-gray-800">
+                        <Activity className="w-5 h-5 text-cyan-400" />
+                        <h3 className="text-lg font-bold text-slate-100">
                             Pemasukan vs Pengeluaran
                         </h3>
                     </div>
@@ -404,10 +404,10 @@ const DashboardAnalytics = () => {
                 </div>
 
                 {/* Expense Category Pie Chart */}
-                <div className="bg-white rounded-lg shadow p-6">
+                <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow p-6">
                     <div className="flex items-center gap-2 mb-4">
                         <PieChart className="w-5 h-5 text-purple-600" />
-                        <h3 className="text-lg font-bold text-gray-800">
+                        <h3 className="text-lg font-bold text-slate-100">
                             Kategori Pengeluaran
                         </h3>
                     </div>
@@ -419,10 +419,10 @@ const DashboardAnalytics = () => {
             </div>
 
             {/* Weekly Payment Bar Chart */}
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow p-6">
                 <div className="flex items-center gap-2 mb-4">
-                    <BarChart3 className="w-5 h-5 text-green-600" />
-                    <h3 className="text-lg font-bold text-gray-800">
+                    <BarChart3 className="w-5 h-5 text-cyan-400" />
+                    <h3 className="text-lg font-bold text-slate-100">
                         Pembayaran Per Minggu
                     </h3>
                 </div>
@@ -430,10 +430,10 @@ const DashboardAnalytics = () => {
             </div>
 
             {/* Payment Heatmap */}
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow p-6">
                 <div className="flex items-center gap-2 mb-4">
                     <Calendar className="w-5 h-5 text-orange-600" />
-                    <h3 className="text-lg font-bold text-gray-800">
+                    <h3 className="text-lg font-bold text-slate-100">
                         Heatmap Kehadiran Pembayaran
                     </h3>
                 </div>
@@ -441,10 +441,10 @@ const DashboardAnalytics = () => {
             </div>
 
             {/* Debt Trend Chart */}
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow p-6">
                 <div className="flex items-center gap-2 mb-4">
-                    <TrendingUp className="w-5 h-5 text-red-600" />
-                    <h3 className="text-lg font-bold text-gray-800">
+                    <TrendingUp className="w-5 h-5 text-rose-300" />
+                    <h3 className="text-lg font-bold text-slate-100">
                         Trend Tunggakan
                     </h3>
                 </div>

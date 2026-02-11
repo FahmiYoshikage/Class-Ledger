@@ -55,22 +55,22 @@ const ChangePassword = () => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
             <div className="max-w-md w-full">
-                <div className="bg-white rounded-2xl shadow-xl p-8">
+                <div className="bg-slate-800/90 border border-slate-700/50 rounded-2xl shadow-xl p-8">
                     {/* Header */}
                     <div className="text-center mb-6">
                         <div className="bg-indigo-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <Lock className="w-8 h-8 text-indigo-600" />
+                            <Lock className="w-8 h-8 text-cyan-400" />
                         </div>
-                        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                        <h2 className="text-2xl font-bold text-slate-50 mb-2">
                             {isFirstLogin
                                 ? 'Set Password Baru'
                                 : 'Ubah Password'}
                         </h2>
                         {isFirstLogin && (
-                            <div className="bg-yellow-50 border-l-4 border-yellow-400 p-3 rounded text-left">
+                            <div className="bg-amber-500/20 border-l-4 border-yellow-400 p-3 rounded text-left">
                                 <div className="flex items-start">
                                     <AlertCircle className="w-5 h-5 text-yellow-400 mr-2 mt-0.5" />
-                                    <p className="text-sm text-yellow-800">
+                                    <p className="text-sm text-amber-300">
                                         Untuk keamanan, silakan ubah password
                                         default Anda.
                                     </p>
@@ -81,10 +81,10 @@ const ChangePassword = () => {
 
                     {/* Error Alert */}
                     {error && (
-                        <div className="mb-4 bg-red-50 border-l-4 border-red-400 p-4 rounded">
+                        <div className="mb-4 bg-rose-500/20 border-l-4 border-red-400 p-4 rounded">
                             <div className="flex items-center">
                                 <AlertCircle className="w-5 h-5 text-red-400 mr-2" />
-                                <p className="text-red-800 text-sm">{error}</p>
+                                <p className="text-rose-300 text-sm">{error}</p>
                             </div>
                         </div>
                     )}
@@ -92,7 +92,7 @@ const ChangePassword = () => {
                     <form onSubmit={handleSubmit} className="space-y-5">
                         {/* Current Password */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-slate-200 mb-2">
                                 Password Saat Ini
                             </label>
                             <div className="relative">
@@ -102,14 +102,14 @@ const ChangePassword = () => {
                                     onChange={(e) =>
                                         setCurrentPassword(e.target.value)
                                     }
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent pr-12"
+                                    className="w-full px-4 py-3 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent pr-12"
                                     placeholder="Masukkan password saat ini"
                                     required
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowCurrent(!showCurrent)}
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-300 hover:text-slate-200"
                                 >
                                     {showCurrent ? (
                                         <EyeOff className="w-5 h-5" />
@@ -122,7 +122,7 @@ const ChangePassword = () => {
 
                         {/* New Password */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-slate-200 mb-2">
                                 Password Baru
                             </label>
                             <div className="relative">
@@ -132,14 +132,14 @@ const ChangePassword = () => {
                                     onChange={(e) =>
                                         setNewPassword(e.target.value)
                                     }
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent pr-12"
+                                    className="w-full px-4 py-3 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent pr-12"
                                     placeholder="Minimal 6 karakter"
                                     required
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowNew(!showNew)}
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-300 hover:text-slate-200"
                                 >
                                     {showNew ? (
                                         <EyeOff className="w-5 h-5" />
@@ -148,14 +148,14 @@ const ChangePassword = () => {
                                     )}
                                 </button>
                             </div>
-                            <p className="text-xs text-gray-500 mt-1">
+                            <p className="text-xs text-slate-300 mt-1">
                                 Minimal 6 karakter
                             </p>
                         </div>
 
                         {/* Confirm Password */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-slate-200 mb-2">
                                 Konfirmasi Password Baru
                             </label>
                             <div className="relative">
@@ -165,14 +165,14 @@ const ChangePassword = () => {
                                     onChange={(e) =>
                                         setConfirmPassword(e.target.value)
                                     }
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent pr-12"
+                                    className="w-full px-4 py-3 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent pr-12"
                                     placeholder="Ketik ulang password baru"
                                     required
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowConfirm(!showConfirm)}
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-300 hover:text-slate-200"
                                 >
                                     {showConfirm ? (
                                         <EyeOff className="w-5 h-5" />
@@ -188,8 +188,8 @@ const ChangePassword = () => {
                             <div
                                 className={`flex items-center gap-2 text-sm ${
                                     newPassword === confirmPassword
-                                        ? 'text-green-600'
-                                        : 'text-red-600'
+                                        ? 'text-cyan-400'
+                                        : 'text-rose-300'
                                 }`}
                             >
                                 {newPassword === confirmPassword ? (
@@ -210,7 +210,7 @@ const ChangePassword = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full bg-cyan-600 text-slate-50 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {loading ? (
                                 <div className="flex items-center justify-center gap-2">
@@ -226,7 +226,7 @@ const ChangePassword = () => {
                             <button
                                 type="button"
                                 onClick={() => navigate('/dashboard')}
-                                className="w-full bg-gray-100 text-gray-700 py-3 rounded-lg hover:bg-gray-200 transition font-medium"
+                                className="w-full bg-slate-700/50 text-slate-200 py-3 rounded-lg hover:bg-gray-200 transition font-medium"
                             >
                                 Batal
                             </button>

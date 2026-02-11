@@ -179,16 +179,16 @@ const MemberDashboard = () => {
 
     if (!user?.studentId) {
         return (
-            <div className="min-h-screen bg-gray-50 p-6">
+            <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-6">
                 <div className="max-w-4xl mx-auto">
-                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+                    <div className="bg-amber-500/20 border border-yellow-200 rounded-lg p-6">
                         <div className="flex items-center gap-3">
                             <AlertCircle className="w-6 h-6 text-yellow-600" />
                             <div>
                                 <h3 className="font-semibold text-yellow-900">
                                     Akun Belum Terhubung
                                 </h3>
-                                <p className="text-sm text-yellow-800 mt-1">
+                                <p className="text-sm text-amber-300 mt-1">
                                     Akun Anda belum terhubung dengan data siswa.
                                     Silakan hubungi administrator untuk
                                     menghubungkan akun Anda.
@@ -202,20 +202,20 @@ const MemberDashboard = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 p-3 sm:p-6">
+        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-3 sm:p-6">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="mb-6 sm:mb-8">
-                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                    <h1 className="text-2xl sm:text-3xl font-bold text-slate-50">
                         Dashboard Member
                     </h1>
-                    <p className="text-sm sm:text-base text-gray-600 mt-2">
+                    <p className="text-sm sm:text-base text-slate-200 mt-2">
                         Selamat datang, {user.fullName}!
                     </p>
                 </div>
 
                 {/* Student Info Card */}
-                <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg shadow-lg p-4 sm:p-6 mb-4 sm:mb-6 text-white">
+                <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg shadow-lg p-4 sm:p-6 mb-4 sm:mb-6 text-slate-50">
                     <div className="flex items-center gap-3 sm:gap-4">
                         <div className="bg-white/20 p-3 sm:p-4 rounded-full">
                             <User className="w-6 h-6 sm:w-8 sm:h-8" />
@@ -235,118 +235,118 @@ const MemberDashboard = () => {
                 {/* Statistics */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-4 sm:mb-6">
                     {/* Personal Payment */}
-                    <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+                    <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow p-4 sm:p-6">
                         <div className="flex items-center justify-between mb-3 sm:mb-4">
                             <div className="bg-green-100 p-2 sm:p-3 rounded-lg">
-                                <DollarSign className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
+                                <DollarSign className="w-5 h-5 sm:w-6 sm:h-6 text-cyan-400" />
                             </div>
                         </div>
-                        <h3 className="text-xs sm:text-sm font-medium text-gray-500">
+                        <h3 className="text-xs sm:text-sm font-medium text-slate-300">
                             Pembayaran Saya
                         </h3>
-                        <p className="text-lg sm:text-2xl font-bold text-gray-900 mt-1 sm:mt-2">
+                        <p className="text-lg sm:text-2xl font-bold text-slate-50 mt-1 sm:mt-2">
                             {formatCurrency(stats.totalPaid)}
                         </p>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-slate-300 mt-1">
                             {stats.paymentCount} transaksi
                         </p>
                     </div>
 
                     {/* Total Class Income */}
-                    <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+                    <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow p-4 sm:p-6">
                         <div className="flex items-center justify-between mb-3 sm:mb-4">
                             <div className="bg-blue-100 p-2 sm:p-3 rounded-lg">
-                                <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
+                                <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-sky-300" />
                             </div>
                         </div>
-                        <h3 className="text-xs sm:text-sm font-medium text-gray-500">
+                        <h3 className="text-xs sm:text-sm font-medium text-slate-300">
                             Total Pemasukan Kelas
                         </h3>
-                        <p className="text-lg sm:text-2xl font-bold text-gray-900 mt-1 sm:mt-2">
+                        <p className="text-lg sm:text-2xl font-bold text-slate-50 mt-1 sm:mt-2">
                             {formatCurrency(stats.totalClassIncome)}
                         </p>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-slate-300 mt-1">
                             {allPayments.length} transaksi total
                         </p>
                     </div>
 
                     {/* Total Expenses */}
-                    <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+                    <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow p-4 sm:p-6">
                         <div className="flex items-center justify-between mb-3 sm:mb-4">
                             <div className="bg-red-100 p-2 sm:p-3 rounded-lg">
-                                <TrendingDown className="w-5 h-5 sm:w-6 sm:h-6 text-red-600" />
+                                <TrendingDown className="w-5 h-5 sm:w-6 sm:h-6 text-rose-300" />
                             </div>
                         </div>
-                        <h3 className="text-xs sm:text-sm font-medium text-gray-500">
+                        <h3 className="text-xs sm:text-sm font-medium text-slate-300">
                             Total Pengeluaran Kelas
                         </h3>
-                        <p className="text-lg sm:text-2xl font-bold text-gray-900 mt-1 sm:mt-2">
+                        <p className="text-lg sm:text-2xl font-bold text-slate-50 mt-1 sm:mt-2">
                             {formatCurrency(stats.totalExpenses)}
                         </p>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-slate-300 mt-1">
                             {expenses.length} transaksi
                         </p>
                     </div>
 
                     {/* Class Balance */}
-                    <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+                    <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow p-4 sm:p-6">
                         <div className="flex items-center justify-between mb-3 sm:mb-4">
                             <div className="bg-yellow-100 p-2 sm:p-3 rounded-lg">
                                 <Wallet className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-600" />
                             </div>
                         </div>
-                        <h3 className="text-xs sm:text-sm font-medium text-gray-500">
+                        <h3 className="text-xs sm:text-sm font-medium text-slate-300">
                             Saldo Kas Kelas
                         </h3>
-                        <p className="text-lg sm:text-2xl font-bold text-gray-900 mt-1 sm:mt-2">
+                        <p className="text-lg sm:text-2xl font-bold text-slate-50 mt-1 sm:mt-2">
                             {formatCurrency(stats.totalClassBalance)}
                         </p>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-slate-300 mt-1">
                             Sisa kas kelas
                         </p>
                     </div>
                 </div>
 
                 {/* Payment History */}
-                <div className="bg-white rounded-lg shadow mb-4 sm:mb-6">
-                    <div className="p-4 sm:p-6 border-b border-gray-200">
-                        <h2 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center gap-2">
-                            <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-600" />
+                <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow mb-4 sm:mb-6">
+                    <div className="p-4 sm:p-6 border-b border-slate-700/50">
+                        <h2 className="text-lg sm:text-xl font-bold text-slate-50 flex items-center gap-2">
+                            <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-400" />
                             Riwayat Pembayaran Saya
                         </h2>
                     </div>
                     <div className="p-4 sm:p-6">
                         {loading ? (
-                            <div className="text-center py-8 text-gray-500">
+                            <div className="text-center py-8 text-slate-300">
                                 Loading...
                             </div>
                         ) : payments.length === 0 ? (
-                            <div className="text-center py-8 text-gray-500">
+                            <div className="text-center py-8 text-slate-300">
                                 Belum ada pembayaran
                             </div>
                         ) : (
                             <div className="overflow-x-auto -mx-4 sm:mx-0">
                                 <table className="min-w-full">
-                                    <thead className="bg-gray-50">
+                                    <thead className="bg-slate-800/60">
                                         <tr>
-                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase">
                                                 Tanggal
                                             </th>
-                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase">
                                                 Minggu
                                             </th>
-                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase">
                                                 Jumlah
                                             </th>
-                                            <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase">
                                                 Status
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody className="bg-white divide-y divide-gray-200">
+                                    <tbody className="bg-white divide-y divide-slate-700/50">
                                         {payments.map((payment) => (
                                             <tr key={payment._id}>
-                                                <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                                                <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-slate-50">
                                                     {new Date(
                                                         payment.date
                                                     ).toLocaleDateString(
@@ -357,16 +357,16 @@ const MemberDashboard = () => {
                                                         }
                                                     )}
                                                 </td>
-                                                <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                                                <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-slate-50">
                                                     {payment.week}
                                                 </td>
-                                                <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm font-semibold text-green-600">
+                                                <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm font-semibold text-cyan-400">
                                                     {formatCurrency(
                                                         payment.amount
                                                     )}
                                                 </td>
                                                 <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
-                                                    <span className="flex items-center gap-1 text-green-600">
+                                                    <span className="flex items-center gap-1 text-cyan-400">
                                                         <CheckCircle className="w-4 h-4" />
                                                         <span className="text-sm">
                                                             Lunas
@@ -383,23 +383,23 @@ const MemberDashboard = () => {
                 </div>
 
                 {/* Member Leaderboard */}
-                <div className="bg-white rounded-lg shadow mb-4 sm:mb-6">
-                    <div className="p-4 sm:p-6 border-b border-gray-200">
-                        <h2 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center gap-2">
+                <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow mb-4 sm:mb-6">
+                    <div className="p-4 sm:p-6 border-b border-slate-700/50">
+                        <h2 className="text-lg sm:text-xl font-bold text-slate-50 flex items-center gap-2">
                             <Users className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
                             Leaderboard Member
                         </h2>
-                        <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                        <p className="text-xs sm:text-sm text-slate-300 mt-1">
                             Total kontribusi pembayaran kas dari semua member
                         </p>
                     </div>
                     <div className="p-4 sm:p-6">
                         {loading ? (
-                            <div className="text-center py-8 text-gray-500">
+                            <div className="text-center py-8 text-slate-300">
                                 Loading...
                             </div>
                         ) : memberStats.length === 0 ? (
-                            <div className="text-center py-8 text-gray-500">
+                            <div className="text-center py-8 text-slate-300">
                                 Belum ada data member
                             </div>
                         ) : (
@@ -431,7 +431,7 @@ const MemberDashboard = () => {
                                             className={`flex items-center justify-between p-3 sm:p-4 rounded-lg ${
                                                 isCurrentUser
                                                     ? 'bg-gradient-to-r from-indigo-50 to-purple-50 border-2 border-indigo-300'
-                                                    : 'bg-gray-50'
+                                                    : 'bg-slate-800/60'
                                             }`}
                                         >
                                             <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -439,8 +439,8 @@ const MemberDashboard = () => {
                                                 <div
                                                     className={`flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center ${
                                                         index < 3
-                                                            ? `bg-gradient-to-br ${rankColor} text-white`
-                                                            : 'bg-gray-200 text-gray-600'
+                                                            ? `bg-gradient-to-br ${rankColor} text-slate-50`
+                                                            : 'bg-gray-200 text-slate-200'
                                                     }`}
                                                 >
                                                     {RankIcon ? (
@@ -455,16 +455,16 @@ const MemberDashboard = () => {
                                                 {/* Member Info */}
                                                 <div className="flex-1 min-w-0">
                                                     <div className="flex items-center gap-2">
-                                                        <h3 className="font-semibold text-sm sm:text-base text-gray-900 truncate">
+                                                        <h3 className="font-semibold text-sm sm:text-base text-slate-50 truncate">
                                                             {member.studentName}
                                                         </h3>
                                                         {isCurrentUser && (
-                                                            <span className="text-xs bg-indigo-600 text-white px-2 py-0.5 rounded-full">
+                                                            <span className="text-xs bg-cyan-600 text-slate-50 px-2 py-0.5 rounded-full">
                                                                 Anda
                                                             </span>
                                                         )}
                                                     </div>
-                                                    <p className="text-xs sm:text-sm text-gray-500">
+                                                    <p className="text-xs sm:text-sm text-slate-300">
                                                         {member.paymentCount}{' '}
                                                         transaksi
                                                     </p>
@@ -476,8 +476,8 @@ const MemberDashboard = () => {
                                                 <p
                                                     className={`font-bold text-sm sm:text-base ${
                                                         isCurrentUser
-                                                            ? 'text-indigo-600'
-                                                            : 'text-gray-900'
+                                                            ? 'text-cyan-400'
+                                                            : 'text-slate-50'
                                                     }`}
                                                 >
                                                     {formatCurrency(
@@ -485,7 +485,7 @@ const MemberDashboard = () => {
                                                     )}
                                                 </p>
                                                 {index < 3 && (
-                                                    <p className="text-xs text-gray-500">
+                                                    <p className="text-xs text-slate-300">
                                                         {index === 0
                                                             ? '👑 Top 1'
                                                             : index === 1
@@ -503,20 +503,20 @@ const MemberDashboard = () => {
                 </div>
 
                 {/* Recent Expenses */}
-                <div className="bg-white rounded-lg shadow">
-                    <div className="p-4 sm:p-6 border-b border-gray-200">
-                        <h2 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center gap-2">
-                            <TrendingDown className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
+                <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow">
+                    <div className="p-4 sm:p-6 border-b border-slate-700/50">
+                        <h2 className="text-lg sm:text-xl font-bold text-slate-50 flex items-center gap-2">
+                            <TrendingDown className="w-4 h-4 sm:w-5 sm:h-5 text-rose-300" />
                             Pengeluaran Kelas Terbaru ```
                         </h2>
                     </div>
                     <div className="p-4 sm:p-6">
                         {loading ? (
-                            <div className="text-center py-8 text-gray-500">
+                            <div className="text-center py-8 text-slate-300">
                                 Loading...
                             </div>
                         ) : expenses.length === 0 ? (
-                            <div className="text-center py-8 text-gray-500">
+                            <div className="text-center py-8 text-slate-300">
                                 Belum ada pengeluaran
                             </div>
                         ) : (
@@ -524,13 +524,13 @@ const MemberDashboard = () => {
                                 {expenses.slice(0, 5).map((expense) => (
                                     <div
                                         key={expense._id}
-                                        className="flex items-center justify-between p-3 sm:p-4 bg-gray-50 rounded-lg gap-3"
+                                        className="flex items-center justify-between p-3 sm:p-4 bg-slate-800/60 rounded-lg gap-3"
                                     >
                                         <div className="flex-1 min-w-0">
-                                            <h3 className="font-semibold text-sm sm:text-base text-gray-900 truncate">
+                                            <h3 className="font-semibold text-sm sm:text-base text-slate-50 truncate">
                                                 {expense.description}
                                             </h3>
-                                            <p className="text-xs sm:text-sm text-gray-500">
+                                            <p className="text-xs sm:text-sm text-slate-300">
                                                 {new Date(
                                                     expense.date
                                                 ).toLocaleDateString('id-ID', {
@@ -541,7 +541,7 @@ const MemberDashboard = () => {
                                             </p>
                                         </div>
                                         <div className="text-right flex-shrink-0">
-                                            <p className="font-bold text-sm sm:text-base text-red-600">
+                                            <p className="font-bold text-sm sm:text-base text-rose-300">
                                                 {formatCurrency(expense.amount)}
                                             </p>
                                         </div>

@@ -60,8 +60,8 @@ export default defineConfig({
                 short_name: 'Kas Kelas',
                 description:
                     'Sistem Pencatatan Kas Kelas TRIFORCE Rp 2.000/minggu',
-                theme_color: '#4F46E5',
-                background_color: '#ffffff',
+                theme_color: '#D97706',
+                background_color: '#0a0a0a',
                 display: 'standalone',
                 scope: '/',
                 start_url: '/',

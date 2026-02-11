@@ -66,18 +66,18 @@ const WeeklyPaymentBarChart = ({ payments }) => {
         if (active && payload && payload.length) {
             const data = payload[0].payload;
             return (
-                <div className="bg-white p-4 rounded-lg shadow-lg border border-gray-200">
-                    <p className="font-semibold text-gray-800 mb-2">
+                <div className="bg-slate-900/95 backdrop-blur-xl p-4 rounded-lg shadow-lg border border-slate-700/50 bg-slate-800/60 text-slate-50">
+                    <p className="font-semibold text-slate-100 mb-2">
                         {data.week}
                     </p>
                     <div className="space-y-1">
-                        <p className="text-sm text-indigo-600">
+                        <p className="text-sm text-cyan-400">
                             Total: {formatCurrency(data.amount)}
                         </p>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-slate-200">
                             Transaksi: {data.count}
                         </p>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-slate-300">
                             Rata-rata:{' '}
                             {formatCurrency(
                                 data.count > 0 ? data.amount / data.count : 0
@@ -100,7 +100,7 @@ const WeeklyPaymentBarChart = ({ payments }) => {
 
     if (chartData.length === 0) {
         return (
-            <div className="h-64 flex items-center justify-center text-gray-500">
+            <div className="h-64 flex items-center justify-center text-slate-300">
                 <p>Tidak ada data pembayaran</p>
             </div>
         );
@@ -147,19 +147,19 @@ const WeeklyPaymentBarChart = ({ payments }) => {
             <div className="flex items-center justify-center gap-4 mt-4 text-sm">
                 <div className="flex items-center gap-2">
                     <div className="w-4 h-4 rounded bg-gray-300" />
-                    <span className="text-gray-600">Tidak ada</span>
+                    <span className="text-slate-200">Tidak ada</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <div className="w-4 h-4 rounded bg-yellow-400" />
-                    <span className="text-gray-600">&lt; 30k</span>
+                    <span className="text-slate-200">&lt; 30k</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <div className="w-4 h-4 rounded bg-blue-400" />
-                    <span className="text-gray-600">30k - 50k</span>
+                    <span className="text-slate-200">30k - 50k</span>
                 </div>
                 <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 rounded bg-green-500" />
-                    <span className="text-gray-600">&gt; 50k</span>
+                    <div className="w-4 h-4 rounded bg-cyan-500/100" />
+                    <span className="text-slate-200">&gt; 50k</span>
                 </div>
             </div>
         </div>

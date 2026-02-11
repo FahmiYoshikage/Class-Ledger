@@ -209,7 +209,7 @@ function QRPaymentAdmin() {
 
     return (
         <div className="max-w-7xl mx-auto p-6">
-            <h1 className="text-3xl font-bold mb-6 text-gray-800">
+            <h1 className="text-3xl font-bold mb-6 text-slate-100">
                 ⚙️ Kelola QR Payment
             </h1>
 
@@ -219,8 +219,8 @@ function QRPaymentAdmin() {
                     onClick={() => setActiveTab('pending')}
                     className={`px-4 py-2 font-semibold transition ${
                         activeTab === 'pending'
-                            ? 'border-b-2 border-blue-600 text-blue-600'
-                            : 'text-gray-600 hover:text-gray-800'
+                            ? 'border-b-2 border-blue-600 text-sky-300'
+                            : 'text-slate-200 hover:text-slate-100'
                     }`}
                 >
                     🔔 Pending ({pendingConfirmations.length})
@@ -229,8 +229,8 @@ function QRPaymentAdmin() {
                     onClick={() => setActiveTab('history')}
                     className={`px-4 py-2 font-semibold transition ${
                         activeTab === 'history'
-                            ? 'border-b-2 border-blue-600 text-blue-600'
-                            : 'text-gray-600 hover:text-gray-800'
+                            ? 'border-b-2 border-blue-600 text-sky-300'
+                            : 'text-slate-200 hover:text-slate-100'
                     }`}
                 >
                     📜 Riwayat
@@ -239,8 +239,8 @@ function QRPaymentAdmin() {
                     onClick={() => setActiveTab('manage')}
                     className={`px-4 py-2 font-semibold transition ${
                         activeTab === 'manage'
-                            ? 'border-b-2 border-blue-600 text-blue-600'
-                            : 'text-gray-600 hover:text-gray-800'
+                            ? 'border-b-2 border-blue-600 text-sky-300'
+                            : 'text-slate-200 hover:text-slate-100'
                     }`}
                 >
                     📷 Kelola QR Code
@@ -251,10 +251,10 @@ function QRPaymentAdmin() {
                 <div
                     className={`mb-4 p-3 rounded-lg ${
                         message.startsWith('✅')
-                            ? 'bg-green-50 text-green-800'
+                            ? 'bg-cyan-500/10 text-cyan-300'
                             : message.startsWith('⚠️')
-                            ? 'bg-yellow-50 text-yellow-800'
-                            : 'bg-red-50 text-red-800'
+                            ? 'bg-amber-500/20 text-amber-300'
+                            : 'bg-rose-500/20 text-rose-300'
                     }`}
                 >
                     {message}
@@ -267,8 +267,8 @@ function QRPaymentAdmin() {
                     {loading ? (
                         <div className="text-center py-8">Loading...</div>
                     ) : pendingConfirmations.length === 0 ? (
-                        <div className="bg-gray-50 rounded-lg p-8 text-center">
-                            <p className="text-gray-600">
+                        <div className="bg-slate-800/60 rounded-lg p-8 text-center">
+                            <p className="text-slate-200">
                                 Tidak ada konfirmasi pending
                             </p>
                         </div>
@@ -277,30 +277,30 @@ function QRPaymentAdmin() {
                             {pendingConfirmations.map((conf) => (
                                 <div
                                     key={conf._id}
-                                    className="bg-white rounded-lg shadow-md p-6"
+                                    className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow-md p-6"
                                 >
                                     <div className="flex justify-between items-start mb-4">
                                         <div>
-                                            <h3 className="text-lg font-semibold text-gray-800">
+                                            <h3 className="text-lg font-semibold text-slate-100">
                                                 {conf.studentId.name}
                                             </h3>
-                                            <p className="text-sm text-gray-600">
+                                            <p className="text-sm text-slate-200">
                                                 {conf.studentId.phone}
                                             </p>
                                         </div>
-                                        <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-semibold">
+                                        <span className="bg-amber-500/30 text-amber-200 px-3 py-1 rounded-full text-xs font-semibold">
                                             Pending
                                         </span>
                                     </div>
 
                                     <div className="mb-4">
-                                        <p className="text-2xl font-bold text-green-600">
+                                        <p className="text-2xl font-bold text-cyan-400">
                                             Rp
                                             {conf.amount.toLocaleString(
                                                 'id-ID'
                                             )}
                                         </p>
-                                        <p className="text-xs text-gray-500">
+                                        <p className="text-xs text-slate-300">
                                             Submitted:{' '}
                                             {new Date(
                                                 conf.submittedAt
@@ -309,7 +309,7 @@ function QRPaymentAdmin() {
                                     </div>
 
                                     {conf.notes && (
-                                        <div className="mb-4 p-2 bg-blue-50 rounded text-sm text-blue-800">
+                                        <div className="mb-4 p-2 bg-sky-500/20 rounded text-sm text-sky-300">
                                             💬 {conf.notes}
                                         </div>
                                     )}
@@ -339,7 +339,7 @@ function QRPaymentAdmin() {
                                             onClick={() =>
                                                 handleApprove(conf._id)
                                             }
-                                            className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition font-semibold"
+                                            className="flex-1 bg-green-600 text-slate-50 py-2 px-4 rounded-lg hover:bg-green-700 transition font-semibold"
                                         >
                                             ✓ Setujui
                                         </button>
@@ -347,7 +347,7 @@ function QRPaymentAdmin() {
                                             onClick={() =>
                                                 handleReject(conf._id)
                                             }
-                                            className="flex-1 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition font-semibold"
+                                            className="flex-1 bg-red-600 text-slate-50 py-2 px-4 rounded-lg hover:bg-red-700 transition font-semibold"
                                         >
                                             ✗ Tolak
                                         </button>
@@ -365,37 +365,37 @@ function QRPaymentAdmin() {
                     {loading ? (
                         <div className="text-center py-8">Loading...</div>
                     ) : (
-                        <div className="bg-white rounded-lg shadow-md overflow-hidden">
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gray-50">
+                        <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow-md overflow-hidden">
+                            <table className="min-w-full divide-y divide-slate-700/50">
+                                <thead className="bg-slate-800/60">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase">
                                             Siswa
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase">
                                             Jumlah
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase">
                                             Status
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase">
                                             Tanggal
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase">
                                             Reviewer
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
+                                <tbody className="bg-white divide-y divide-slate-700/50">
                                     {allConfirmations.map((conf) => (
                                         <tr key={conf._id}>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-sm font-medium text-gray-900">
+                                                <div className="text-sm font-medium text-slate-50">
                                                     {conf.studentId.name}
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-sm text-gray-900">
+                                                <div className="text-sm text-slate-50">
                                                     Rp
                                                     {conf.amount.toLocaleString(
                                                         'id-ID'
@@ -407,22 +407,22 @@ function QRPaymentAdmin() {
                                                     className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                                                         conf.status ===
                                                         'approved'
-                                                            ? 'bg-green-100 text-green-800'
+                                                            ? 'bg-cyan-500/30 text-cyan-200'
                                                             : conf.status ===
                                                               'rejected'
-                                                            ? 'bg-red-100 text-red-800'
-                                                            : 'bg-yellow-100 text-yellow-800'
+                                                            ? 'bg-rose-500/30 text-rose-200'
+                                                            : 'bg-amber-500/30 text-amber-200'
                                                     }`}
                                                 >
                                                     {conf.status}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
                                                 {new Date(
                                                     conf.submittedAt
                                                 ).toLocaleDateString('id-ID')}
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
                                                 {conf.reviewedBy || '-'}
                                             </td>
                                         </tr>
@@ -438,13 +438,13 @@ function QRPaymentAdmin() {
             {activeTab === 'manage' && (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Upload Form */}
-                    <div className="bg-white rounded-lg shadow-md p-6">
-                        <h2 className="text-xl font-semibold mb-4 text-gray-800">
+                    <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow-md p-6">
+                        <h2 className="text-xl font-semibold mb-4 text-slate-100">
                             Upload QR Code Baru
                         </h2>
                         <form onSubmit={handleUploadQR} className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-slate-200 mb-1">
                                     Metode Pembayaran
                                 </label>
                                 <select
@@ -455,7 +455,7 @@ function QRPaymentAdmin() {
                                             paymentMethod: e.target.value,
                                         })
                                     }
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                                    className="w-full px-3 py-2 border border-slate-700/50 rounded-lg"
                                 >
                                     <option value="dana">DANA</option>
                                     <option value="gopay">GoPay</option>
@@ -466,7 +466,7 @@ function QRPaymentAdmin() {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-slate-200 mb-1">
                                     Nama Akun *
                                 </label>
                                 <input
@@ -478,13 +478,13 @@ function QRPaymentAdmin() {
                                             accountName: e.target.value,
                                         })
                                     }
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                                    className="w-full px-3 py-2 border border-slate-700/50 rounded-lg"
                                     required
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-slate-200 mb-1">
                                     Nomor Akun
                                 </label>
                                 <input
@@ -496,12 +496,12 @@ function QRPaymentAdmin() {
                                             accountNumber: e.target.value,
                                         })
                                     }
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                                    className="w-full px-3 py-2 border border-slate-700/50 rounded-lg"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-slate-200 mb-1">
                                     Gambar QR Code *
                                 </label>
                                 <input
@@ -522,7 +522,7 @@ function QRPaymentAdmin() {
                             )}
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-slate-200 mb-1">
                                     Catatan
                                 </label>
                                 <textarea
@@ -533,7 +533,7 @@ function QRPaymentAdmin() {
                                             notes: e.target.value,
                                         })
                                     }
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                                    className="w-full px-3 py-2 border border-slate-700/50 rounded-lg"
                                     rows="2"
                                 />
                             </div>
@@ -541,7 +541,7 @@ function QRPaymentAdmin() {
                             <button
                                 type="submit"
                                 disabled={uploadForm.uploading}
-                                className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition font-semibold"
+                                className="w-full bg-blue-600 text-slate-50 py-2 px-4 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition font-semibold"
                             >
                                 {uploadForm.uploading
                                     ? 'Uploading...'
@@ -552,7 +552,7 @@ function QRPaymentAdmin() {
 
                     {/* QR List */}
                     <div>
-                        <h2 className="text-xl font-semibold mb-4 text-gray-800">
+                        <h2 className="text-xl font-semibold mb-4 text-slate-100">
                             Daftar QR Code
                         </h2>
                         {loading ? (
@@ -562,7 +562,7 @@ function QRPaymentAdmin() {
                                 {qrCodes.map((qr) => (
                                     <div
                                         key={qr._id}
-                                        className={`bg-white rounded-lg shadow-md p-4 ${
+                                        className={`bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow-md p-4 ${
                                             qr.isActive
                                                 ? 'border-2 border-green-500'
                                                 : ''
@@ -580,14 +580,14 @@ function QRPaymentAdmin() {
                                             <div className="flex-1">
                                                 <div className="flex justify-between items-start">
                                                     <div>
-                                                        <p className="font-semibold text-gray-800">
+                                                        <p className="font-semibold text-slate-100">
                                                             {qr.accountName}
                                                         </p>
-                                                        <p className="text-sm text-gray-600 uppercase">
+                                                        <p className="text-sm text-slate-200 uppercase">
                                                             {qr.paymentMethod}
                                                         </p>
                                                         {qr.accountNumber && (
-                                                            <p className="text-xs text-gray-500">
+                                                            <p className="text-xs text-slate-300">
                                                                 {
                                                                     qr.accountNumber
                                                                 }
@@ -595,12 +595,12 @@ function QRPaymentAdmin() {
                                                         )}
                                                     </div>
                                                     {qr.isActive && (
-                                                        <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-semibold">
+                                                        <span className="bg-cyan-500/30 text-cyan-200 px-2 py-1 rounded text-xs font-semibold">
                                                             Active
                                                         </span>
                                                     )}
                                                 </div>
-                                                <p className="text-xs text-gray-500 mt-2">
+                                                <p className="text-xs text-slate-300 mt-2">
                                                     Uploaded:{' '}
                                                     {new Date(
                                                         qr.uploadedAt
@@ -612,7 +612,7 @@ function QRPaymentAdmin() {
                                                     onClick={() =>
                                                         handleDeleteQR(qr._id)
                                                     }
-                                                    className="mt-2 text-red-600 hover:text-red-800 text-sm font-semibold"
+                                                    className="mt-2 text-rose-300 hover:text-rose-300 text-sm font-semibold"
                                                 >
                                                     🗑️ Hapus
                                                 </button>

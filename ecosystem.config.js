@@ -18,5 +18,21 @@ module.exports = {
             out_file: '~/.pm2/logs/api-server-out.log',
             log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
         },
+        {
+            name: 'client-dev',
+            script: 'npm',
+            args: 'run dev',
+            cwd: './client',
+            instances: 1,
+            exec_mode: 'fork',
+            watch: false,
+            autorestart: false,
+            env: {
+                NODE_ENV: 'development',
+            },
+            error_file: '~/.pm2/logs/client-dev-error.log',
+            out_file: '~/.pm2/logs/client-dev-out.log',
+            log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
+        },
     ],
 };

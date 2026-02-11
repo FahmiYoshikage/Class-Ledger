@@ -54,42 +54,42 @@ const ProfileEdit = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 p-3 sm:p-6">
+        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-3 sm:p-6">
             <div className="max-w-2xl mx-auto">
                 {/* Header */}
                 <div className="mb-6">
                     <button
                         onClick={() => navigate('/app/dashboard')}
-                        className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 text-sm sm:text-base"
+                        className="flex items-center gap-2 text-slate-200 hover:text-slate-50 mb-4 text-sm sm:text-base"
                     >
                         <ArrowLeft className="w-4 h-4" />
                         <span>Kembali ke Dashboard</span>
                     </button>
-                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                    <h1 className="text-2xl sm:text-3xl font-bold text-slate-50">
                         Edit Profile
                     </h1>
-                    <p className="text-sm sm:text-base text-gray-600 mt-2">
+                    <p className="text-sm sm:text-base text-slate-200 mt-2">
                         Update informasi profile Anda
                     </p>
                 </div>
 
                 {/* Form Card */}
-                <div className="bg-white rounded-lg shadow-lg p-6 sm:p-8">
+                <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow-lg p-6 sm:p-8">
                     {/* Alert Messages */}
                     {error && (
-                        <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
+                        <div className="mb-6 bg-rose-500/20 border border-red-200 rounded-lg p-4">
                             <div className="flex items-center gap-3">
-                                <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
-                                <p className="text-sm text-red-800">{error}</p>
+                                <AlertCircle className="w-5 h-5 text-rose-300 flex-shrink-0" />
+                                <p className="text-sm text-rose-300">{error}</p>
                             </div>
                         </div>
                     )}
 
                     {success && (
-                        <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4">
+                        <div className="mb-6 bg-cyan-500/10 border border-green-200 rounded-lg p-4">
                             <div className="flex items-center gap-3">
-                                <AlertCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
-                                <p className="text-sm text-green-800">
+                                <AlertCircle className="w-5 h-5 text-cyan-400 flex-shrink-0" />
+                                <p className="text-sm text-cyan-300">
                                     {success}
                                 </p>
                             </div>
@@ -101,13 +101,13 @@ const ProfileEdit = () => {
                         <div>
                             <label
                                 htmlFor="username"
-                                className="block text-sm font-medium text-gray-700 mb-2"
+                                className="block text-sm font-medium text-slate-200 mb-2"
                             >
                                 Username
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <User className="w-5 h-5 text-gray-400" />
+                                    <User className="w-5 h-5 text-slate-400" />
                                 </div>
                                 <input
                                     type="text"
@@ -115,12 +115,12 @@ const ProfileEdit = () => {
                                     name="username"
                                     value={formData.username}
                                     onChange={handleChange}
-                                    className="block w-full pl-10 pr-3 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm sm:text-base"
+                                    className="block w-full pl-10 pr-3 py-2 sm:py-3 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-sm sm:text-base"
                                     placeholder="username"
                                     required
                                 />
                             </div>
-                            <p className="mt-1 text-xs text-gray-500">
+                            <p className="mt-1 text-xs text-slate-300">
                                 Username akan digunakan untuk login
                             </p>
                         </div>
@@ -129,13 +129,13 @@ const ProfileEdit = () => {
                         <div>
                             <label
                                 htmlFor="email"
-                                className="block text-sm font-medium text-gray-700 mb-2"
+                                className="block text-sm font-medium text-slate-200 mb-2"
                             >
                                 Email (Optional)
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Mail className="w-5 h-5 text-gray-400" />
+                                    <Mail className="w-5 h-5 text-slate-400" />
                                 </div>
                                 <input
                                     type="email"
@@ -143,41 +143,41 @@ const ProfileEdit = () => {
                                     name="email"
                                     value={formData.email}
                                     onChange={handleChange}
-                                    className="block w-full pl-10 pr-3 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm sm:text-base"
+                                    className="block w-full pl-10 pr-3 py-2 sm:py-3 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-sm sm:text-base"
                                     placeholder="email@example.com"
                                 />
                             </div>
-                            <p className="mt-1 text-xs text-gray-500">
+                            <p className="mt-1 text-xs text-slate-300">
                                 Email untuk notifikasi (optional)
                             </p>
                         </div>
 
                         {/* Current Info Display */}
-                        <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                            <h3 className="text-sm font-semibold text-gray-700 mb-3">
+                        <div className="bg-slate-800/60 rounded-lg p-4 border border-slate-700/50 bg-slate-800/60 text-slate-50">
+                            <h3 className="text-sm font-semibold text-slate-200 mb-3">
                                 Informasi Akun Saat Ini
                             </h3>
                             <div className="space-y-2 text-sm">
                                 <div className="flex justify-between">
-                                    <span className="text-gray-600">Role:</span>
-                                    <span className="font-medium text-gray-900 capitalize">
+                                    <span className="text-slate-200">Role:</span>
+                                    <span className="font-medium text-slate-50 capitalize">
                                         {user?.role}
                                     </span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-gray-600">
+                                    <span className="text-slate-200">
                                         Full Name:
                                     </span>
-                                    <span className="font-medium text-gray-900">
+                                    <span className="font-medium text-slate-50">
                                         {user?.fullName}
                                     </span>
                                 </div>
                                 {user?.studentId && (
                                     <div className="flex justify-between">
-                                        <span className="text-gray-600">
+                                        <span className="text-slate-200">
                                             Student Name:
                                         </span>
-                                        <span className="font-medium text-gray-900">
+                                        <span className="font-medium text-slate-50">
                                             {user.studentId?.nama || 'N/A'}
                                         </span>
                                     </div>
@@ -190,14 +190,14 @@ const ProfileEdit = () => {
                             <button
                                 type="button"
                                 onClick={() => navigate('/app/dashboard')}
-                                className="flex-1 px-4 py-2 sm:py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm sm:text-base font-medium"
+                                className="flex-1 px-4 py-2 sm:py-3 border border-slate-700/50 text-slate-200 rounded-lg hover:bg-slate-800/60 transition-colors text-sm sm:text-base font-medium"
                                 disabled={loading}
                             >
                                 Cancel
                             </button>
                             <button
                                 type="submit"
-                                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 sm:py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-sm sm:text-base font-medium"
+                                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 sm:py-3 bg-cyan-600 text-slate-50 rounded-lg hover:bg-indigo-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-sm sm:text-base font-medium"
                                 disabled={loading}
                             >
                                 {loading ? (
@@ -217,10 +217,10 @@ const ProfileEdit = () => {
                 </div>
 
                 {/* Info Note */}
-                <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="mt-6 bg-sky-500/20 border border-blue-200 rounded-lg p-4">
                     <div className="flex gap-3">
-                        <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                        <div className="text-sm text-blue-800">
+                        <AlertCircle className="w-5 h-5 text-sky-300 flex-shrink-0 mt-0.5" />
+                        <div className="text-sm text-sky-300">
                             <p className="font-semibold mb-1">Catatan:</p>
                             <ul className="list-disc list-inside space-y-1">
                                 <li>
