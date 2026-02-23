@@ -20,8 +20,8 @@ const getClientIp = (req) => {
     return req.ip;
 };
 
-// Disable ipKeyGenerator validation since we use custom header-based IP extraction
-const commonValidate = { ipKeyGenerator: false };
+// Disable keyGeneratorIpFallback validation since we use custom header-based IP extraction
+const commonValidate = { keyGeneratorIpFallback: false };
 
 // General API rate limiter (500 requests per 15 minutes)
 export const apiLimiter = rateLimit({

@@ -32,7 +32,7 @@ const Login = () => {
 
             // Check if need to change password
             if (response.mustChangePassword) {
-                navigate('/change-password', {
+                navigate('/app/change-password', {
                     state: { firstLogin: true },
                 });
             } else {
