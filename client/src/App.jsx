@@ -912,52 +912,27 @@ const App = () => {
         );
     };
 
-    // Calculate totals
-    const getTotalPaid = (studentId) => {
-        // Debug ALL payments structure for first student
-        if (students[0]?._id === studentId) {
-            console.log('🔍 DEBUG Payment Structure:');
-            console.log('  Total payments in system:', payments.length);
-            console.log('  Sample payment:', payments[0]);
-            console.log('  Looking for student ID:', studentId);
-            console.log('  Sample payment.studentId:', payments[0]?.studentId);
-            console.log('  Sample payment.student:', payments[0]?.student);
-        }
+    // Calculate totals - only count payments from current semester for tunggakan
+    const getSemesterPayments = () => {
+        // Filter payments to only include those from current semester (on or after startDate)
+        const semesterStart = new Date(startDate);
+        semesterStart.setHours(0, 0, 0, 0);
+        return payments.filter((p) => {
+            const paymentDate = new Date(p.date);
+            return paymentDate >= semesterStart;
+        });
+    };
 
-        const studentPayments = payments.filter((p) => {
-            // Try multiple possible formats
+    const getTotalPaid = (studentId) => {
+        const semesterPayments = getSemesterPayments();
+
+        const studentPayments = semesterPayments.filter((p) => {
             const pStudentId =
                 p.studentId?._id || p.studentId || p.student?._id || p.student;
-            const match = pStudentId === studentId;
-
-            // Debug first student matching attempt
-            if (students[0]?._id === studentId && payments.indexOf(p) < 3) {
-                console.log(`  Payment ${payments.indexOf(p)}:`, {
-                    pStudentId,
-                    studentId,
-                    match,
-                    paymentData: p,
-                });
-            }
-
-            return match;
+            return pStudentId === studentId;
         });
 
-        const total = studentPayments.reduce((sum, p) => sum + p.amount, 0);
-
-        // Debug first student only
-        if (students[0]?._id === studentId) {
-            console.log('🔍 getTotalPaid Result:');
-            console.log('  Student ID:', studentId);
-            console.log('  Matched Payments:', studentPayments.length);
-            console.log('  Student Payments:', studentPayments);
-            console.log('  Total Paid:', total);
-            console.log('  Current Week:', currentWeek);
-            console.log('  Should Pay:', currentWeek * 2000);
-            console.log('  Tunggakan:', currentWeek * 2000 - total);
-        }
-
-        return total;
+        return studentPayments.reduce((sum, p) => sum + p.amount, 0);
     };
 
     const getTunggakan = (studentId) => {
@@ -971,6 +946,7 @@ const App = () => {
         return tunggakan >= 8000;
     };
 
+    // Total kas masuk/keluar tetap dari SEMUA data (bukan per semester)
     const totalKasMasuk = payments.reduce((sum, p) => sum + p.amount, 0);
     const totalKasKeluar = expenses.reduce((sum, e) => sum + e.amount, 0);
     const saldoKas = totalKasMasuk - totalKasKeluar;

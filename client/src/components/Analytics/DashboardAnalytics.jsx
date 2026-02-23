@@ -17,7 +17,7 @@ import ExpenseCategoryPieChart from './ExpenseCategoryPieChart';
 import WeeklyPaymentBarChart from './WeeklyPaymentBarChart';
 import PaymentHeatmap from './PaymentHeatmap';
 import DebtTrendChart from './DebtTrendChart';
-import { studentsAPI, paymentsAPI, expensesAPI } from '../../services/api';
+import { studentsAPI, paymentsAPI, expensesAPI, settingsAPI } from '../../services/api';
 
 const DashboardAnalytics = () => {
     const [students, setStudents] = useState([]);
@@ -34,35 +34,41 @@ const DashboardAnalytics = () => {
     const loadData = async () => {
         setLoading(true);
         try {
-            const [studentsRes, paymentsRes, expensesRes] = await Promise.all([
+            const [studentsRes, paymentsRes, expensesRes, startDateRes, currentWeekRes] = await Promise.all([
                 studentsAPI.getAll(),
                 paymentsAPI.getAll(),
                 expensesAPI.getAll(),
+                settingsAPI.get('start_date').catch(() => null),
+                settingsAPI.get('current-week').catch(() => null),
             ]);
 
             const studentsData = studentsRes.data || [];
             const paymentsData = paymentsRes.data || [];
             const expensesData = expensesRes.data || [];
+            const semesterStartDate = startDateRes?.data?.value
+                ? new Date(startDateRes.data.value)
+                : new Date('2025-10-27');
+            const serverCurrentWeek = currentWeekRes?.data?.currentWeek || null;
 
             setStudents(studentsData);
             setPayments(paymentsData);
             setExpenses(expensesData);
 
             // Calculate analytics
-            calculateAnalytics(studentsData, paymentsData, expensesData);
+            calculateAnalytics(studentsData, paymentsData, expensesData, semesterStartDate, serverCurrentWeek);
         } catch (error) {
             console.error('Error loading data:', error);
             // Set empty data to prevent white screen
             setStudents([]);
             setPayments([]);
             setExpenses([]);
-            calculateAnalytics([], [], []);
+            calculateAnalytics([], [], [], new Date('2025-10-27'), null);
         } finally {
             setLoading(false);
         }
     };
 
-    const calculateAnalytics = (studentsData, paymentsData, expensesData) => {
+    const calculateAnalytics = (studentsData, paymentsData, expensesData, semesterStartDate, serverCurrentWeek) => {
         // Ensure data is arrays
         const students = Array.isArray(studentsData) ? studentsData : [];
         const allPayments = Array.isArray(paymentsData) ? paymentsData : [];
@@ -135,16 +141,28 @@ const DashboardAnalytics = () => {
                 ? totalIncome / filteredPayments.length
                 : 0;
 
-        // Debt analysis
-        const startDate = new Date('2025-10-27');
-        const days = Math.floor((now - startDate) / (24 * 60 * 60 * 1000));
-        const currentWeek = Math.max(0, Math.ceil(days / 7) + 1);
+        // Debt analysis - use semester start date and filter payments by semester
+        const semStart = new Date(semesterStartDate);
+        semStart.setHours(0, 0, 0, 0);
+
+        let currentWeek;
+        if (serverCurrentWeek) {
+            currentWeek = serverCurrentWeek;
+        } else {
+            const days = Math.floor((now - semStart) / (24 * 60 * 60 * 1000));
+            currentWeek = Math.max(1, Math.ceil(days / 7));
+        }
+
+        // Only count payments from current semester for debt calculation
+        const semesterPayments = allPayments.filter(
+            (p) => new Date(p.date) >= semStart
+        );
 
         let totalDebt = 0;
         let studentsWithDebt = 0;
 
         students.forEach((student) => {
-            const studentPayments = allPayments.filter(
+            const studentPayments = semesterPayments.filter(
                 (p) => (p.studentId?._id || p.studentId) === student._id
             );
             const totalPaid = studentPayments.reduce(
