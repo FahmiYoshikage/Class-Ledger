@@ -1,7 +1,17 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
-dotenv.config();
+import { existsSync } from 'fs';
+
+// Load .env or .env.production (whichever exists)
+if (existsSync('.env')) {
+    dotenv.config();
+} else if (existsSync('.env.production')) {
+    dotenv.config({ path: '.env.production' });
+} else {
+    console.error('❌ No .env or .env.production file found!');
+    process.exit(1);
+}
 
 const NEW_PASSWORD = 'adminAseli_0129';
 

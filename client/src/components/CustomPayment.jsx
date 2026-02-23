@@ -68,7 +68,7 @@ const CustomPayment = ({ onPaymentAdded }) => {
             {/* Trigger Button */}
             <button
                 onClick={() => setShowModal(true)}
-                className="w-full bg-gradient-to-r from-emerald-600 to-green-600 text-slate-50 px-6 py-4 rounded-lg hover:from-emerald-700 hover:to-green-700 transition flex items-center justify-center gap-3 shadow-lg"
+                className="w-full bg-emerald-600 text-white px-6 py-4 rounded-xl hover:bg-emerald-700 transition flex items-center justify-center gap-3 shadow-apple"
             >
                 <Gift className="w-5 h-5" />
                 <span className="font-semibold">Tambah Pemasukan Custom</span>
@@ -79,20 +79,20 @@ const CustomPayment = ({ onPaymentAdded }) => {
 
             {/* Modal */}
             {showModal && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-                    <div className="bg-slate-800/90 border border-slate-700/50 rounded-lg max-w-md w-full">
+                <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
+                    <div className="bg-white border border-gray-200 shadow-apple rounded-lg max-w-md w-full">
                         {/* Header */}
                         <div className="p-6 border-b">
                             <div className="flex items-start justify-between">
                                 <div className="flex items-center gap-3">
-                                    <div className="bg-cyan-600 p-2 rounded-lg">
-                                        <Gift className="w-5 h-5 text-slate-50" />
+                                    <div className="bg-[#0071e3] p-2 rounded-lg">
+                                        <Gift className="w-5 h-5 text-gray-900" />
                                     </div>
                                     <div>
-                                        <h3 className="text-xl font-bold text-slate-100">
+                                        <h3 className="text-xl font-bold text-gray-900">
                                             Pemasukan Custom
                                         </h3>
-                                        <p className="text-sm text-slate-300">
+                                        <p className="text-sm text-gray-500">
                                             Sumber pemasukan lain untuk kas
                                             kelas
                                         </p>
@@ -100,7 +100,7 @@ const CustomPayment = ({ onPaymentAdded }) => {
                                 </div>
                                 <button
                                     onClick={() => setShowModal(false)}
-                                    className="p-1 hover:bg-slate-700/70 rounded"
+                                    className="p-1 hover:bg-gray-100 rounded"
                                 >
                                     <X className="w-5 h-5" />
                                 </button>
@@ -111,7 +111,7 @@ const CustomPayment = ({ onPaymentAdded }) => {
                         <form onSubmit={handleSubmit} className="p-6 space-y-4">
                             {/* Source Name */}
                             <div>
-                                <label className="block text-sm font-medium text-slate-200 mb-1">
+                                <label className="block text-sm font-medium text-gray-600 mb-1">
                                     Sumber Pemasukan{' '}
                                     <span className="text-red-500">*</span>
                                 </label>
@@ -121,26 +121,26 @@ const CustomPayment = ({ onPaymentAdded }) => {
                                     required
                                     placeholder="Contoh: Sumbangan Dosen Wali"
                                     list="sourceExamples"
-                                    className="w-full px-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                    className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                 />
                                 <datalist id="sourceExamples">
                                     {sourceExamples.map((example, idx) => (
                                         <option key={idx} value={example} />
                                     ))}
                                 </datalist>
-                                <p className="text-xs text-slate-300 mt-1">
+                                <p className="text-xs text-gray-500 mt-1">
                                     Nama/deskripsi sumber pemasukan
                                 </p>
                             </div>
 
                             {/* Amount */}
                             <div>
-                                <label className="block text-sm font-medium text-slate-200 mb-1">
+                                <label className="block text-sm font-medium text-gray-600 mb-1">
                                     Jumlah{' '}
                                     <span className="text-red-500">*</span>
                                 </label>
                                 <div className="relative">
-                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300">
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
                                         Rp
                                     </span>
                                     <input
@@ -150,17 +150,17 @@ const CustomPayment = ({ onPaymentAdded }) => {
                                         min="1000"
                                         step="500"
                                         placeholder="50000"
-                                        className="w-full pl-10 pr-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                        className="w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#0071e3] focus:border-transparent"
                                     />
                                 </div>
-                                <p className="text-xs text-slate-300 mt-1">
+                                <p className="text-xs text-gray-500 mt-1">
                                     Jumlah uang yang masuk ke kas
                                 </p>
                             </div>
 
                             {/* Date */}
                             <div>
-                                <label className="block text-sm font-medium text-slate-200 mb-1">
+                                <label className="block text-sm font-medium text-gray-600 mb-1">
                                     Tanggal{' '}
                                     <span className="text-red-500">*</span>
                                 </label>
@@ -171,19 +171,19 @@ const CustomPayment = ({ onPaymentAdded }) => {
                                     defaultValue={
                                         new Date().toISOString().split('T')[0]
                                     }
-                                    className="w-full px-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                    className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                 />
                             </div>
 
                             {/* Method */}
                             <div>
-                                <label className="block text-sm font-medium text-slate-200 mb-1">
+                                <label className="block text-sm font-medium text-gray-600 mb-1">
                                     Metode Pembayaran{' '}
                                     <span className="text-red-500">*</span>
                                 </label>
                                 <select
                                     name="method"
-                                    className="w-full px-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                    className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                 >
                                     <option value="Tunai">Tunai</option>
                                     <option value="Transfer">Transfer</option>
@@ -192,20 +192,20 @@ const CustomPayment = ({ onPaymentAdded }) => {
 
                             {/* Note */}
                             <div>
-                                <label className="block text-sm font-medium text-slate-200 mb-1">
+                                <label className="block text-sm font-medium text-gray-600 mb-1">
                                     Catatan (Opsional)
                                 </label>
                                 <textarea
                                     name="note"
                                     rows="3"
                                     placeholder="Keterangan tambahan..."
-                                    className="w-full px-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                    className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                 />
                             </div>
 
                             {/* Info Box */}
-                            <div className="bg-sky-500/20 border border-blue-200 rounded-lg p-3">
-                                <p className="text-xs text-sky-300">
+                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                                <p className="text-xs text-blue-500">
                                     <strong>ℹ️ Catatan:</strong> Pemasukan ini
                                     akan langsung masuk ke kas kelas dan
                                     ditampilkan di tab Pembayaran dengan label
@@ -219,14 +219,14 @@ const CustomPayment = ({ onPaymentAdded }) => {
                                     type="button"
                                     onClick={() => setShowModal(false)}
                                     disabled={loading}
-                                    className="flex-1 px-4 py-2 border border-slate-700/50 rounded-lg hover:bg-slate-800/60 transition disabled:opacity-50"
+                                    className="flex-1 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition disabled:opacity-50"
                                 >
                                     Batal
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={loading}
-                                    className="flex-1 px-4 py-2 bg-cyan-600 text-slate-50 rounded-lg hover:bg-cyan-700 transition flex items-center justify-center gap-2 disabled:opacity-50"
+                                    className="flex-1 px-4 py-2 bg-[#0071e3] text-white rounded-lg hover:bg-cyan-700 transition flex items-center justify-center gap-2 disabled:opacity-50"
                                 >
                                     {loading ? (
                                         <>

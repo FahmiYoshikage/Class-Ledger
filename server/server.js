@@ -37,8 +37,10 @@ app.use(
         origin: [
             'http://localhost:3000',
             'http://localhost:3001',
+            'http://localhost:8767',
             'http://127.0.0.1:3000',
             'http://127.0.0.1:3001',
+            'http://127.0.0.1:8767',
             'http://10.252.146.203:3000',
             'http://10.252.146.203:3001',
             process.env.CORS_ORIGIN || 'https://triforce.fahmi.app',
@@ -77,7 +79,12 @@ app.use('/reports', express.static(path.join(__dirname, 'public/reports')));
 
 // Health check
 app.get('/api/health', (req, res) => {
-    res.json({ status: 'OK', message: 'Server is running' });
+    res.json({
+        status: 'OK',
+        message: 'Server is running',
+        clientIp: req.headers['cf-connecting-ip'] || req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.ip,
+        timestamp: new Date().toISOString(),
+    });
 });
 
 // Serve static files in production (disabled for separate frontend container)

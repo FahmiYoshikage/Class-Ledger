@@ -1,9 +1,30 @@
 import rateLimit from 'express-rate-limit';
 
+// Extract real client IP from behind Cloudflare/Nginx/Docker proxy chain
+const getClientIp = (req) => {
+    // Cloudflare's CF-Connecting-IP header is the most reliable
+    const cfIp = req.headers['cf-connecting-ip'];
+    if (cfIp) return cfIp;
+
+    // X-Real-IP set by Nginx
+    const realIp = req.headers['x-real-ip'];
+    if (realIp) return realIp;
+
+    // Fallback to first IP in X-Forwarded-For
+    const forwardedFor = req.headers['x-forwarded-for'];
+    if (forwardedFor) {
+        return forwardedFor.split(',')[0].trim();
+    }
+
+    // Last resort: req.ip (Express trust proxy)
+    return req.ip;
+};
+
 // General API rate limiter (500 requests per 15 minutes)
 export const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 500, // Limit each IP to 500 requests per windowMs
+    keyGenerator: getClientIp,
     message: {
         success: false,
         message: 'Too many requests from this IP, please try again later.',
@@ -14,7 +35,7 @@ export const apiLimiter = rateLimit({
     skip: (req) => req.path.startsWith('/notifications/'),
     handler: (req, res) => {
         console.log(
-            `⚠️ Rate limit exceeded for IP: ${req.ip}, Path: ${req.path}`
+            `⚠️ Rate limit exceeded for IP: ${getClientIp(req)}, Path: ${req.path}`
         );
         res.status(429).json({
             success: false,
@@ -23,10 +44,12 @@ export const apiLimiter = rateLimit({
     },
 });
 
-// Strict rate limiter for authentication endpoints (5 requests per 15 minutes)
+// Rate limiter for authentication endpoints (20 requests per 15 minutes)
+// Increased from 5 to 20 to accommodate proxy/Docker environments
 export const authLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 5, // Limit each IP to 5 login requests per windowMs
+    max: 20, // Limit each IP to 20 login requests per windowMs
+    keyGenerator: getClientIp,
     message: {
         success: false,
         message:
@@ -34,13 +57,24 @@ export const authLimiter = rateLimit({
     },
     standardHeaders: true,
     legacyHeaders: false,
-    skipSuccessfulRequests: false, // Count successful attempts
+    skipSuccessfulRequests: true, // Don't count successful logins
+    handler: (req, res) => {
+        console.log(
+            `⚠️ Auth rate limit exceeded for IP: ${getClientIp(req)}, User-Agent: ${req.get('user-agent')}`
+        );
+        res.status(429).json({
+            success: false,
+            message:
+                'Too many login attempts from this IP, please try again after 15 minutes.',
+        });
+    },
 });
 
 // Create user rate limiter (prevent mass user creation)
 export const createUserLimiter = rateLimit({
     windowMs: 60 * 60 * 1000, // 1 hour
     max: 10, // Max 10 users per hour
+    keyGenerator: getClientIp,
     message: {
         success: false,
         message: 'Too many users created from this IP, please try again later.',
@@ -53,6 +87,7 @@ export const createUserLimiter = rateLimit({
 export const passwordChangeLimiter = rateLimit({
     windowMs: 60 * 60 * 1000, // 1 hour
     max: 3, // Max 3 password changes per hour
+    keyGenerator: getClientIp,
     message: {
         success: false,
         message:
@@ -66,6 +101,7 @@ export const passwordChangeLimiter = rateLimit({
 export const forgotPasswordLimiter = rateLimit({
     windowMs: 60 * 60 * 1000, // 1 hour
     max: 3, // Max 3 forgot password requests per hour
+    keyGenerator: getClientIp,
     message: {
         success: false,
         message:

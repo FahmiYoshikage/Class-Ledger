@@ -124,7 +124,7 @@ const UserManagement = () => {
             <div className="flex items-center justify-center min-h-screen">
                 <div className="text-center">
                     <div className="w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-slate-200">Loading users...</p>
+                    <p className="text-gray-600">Loading users...</p>
                 </div>
             </div>
         );
@@ -133,20 +133,20 @@ const UserManagement = () => {
     return (
         <div className="max-w-7xl mx-auto p-3 sm:p-6">
             {/* Header */}
-            <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6">
+            <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl shadow-apple p-4 sm:p-6 mb-4 sm:mb-6">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
-                        <h1 className="text-2xl sm:text-3xl font-bold text-slate-100 flex items-center gap-2 sm:gap-3">
-                            <Users className="w-6 h-6 sm:w-8 sm:h-8 text-cyan-400" />
+                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
+                            <Users className="w-6 h-6 sm:w-8 sm:h-8 text-[#0071e3]" />
                             User Management
                         </h1>
-                        <p className="text-sm sm:text-base text-slate-300 mt-1 sm:mt-2">
+                        <p className="text-sm sm:text-base text-gray-500 mt-1 sm:mt-2">
                             Kelola akun pengguna sistem
                         </p>
                     </div>
                     <button
                         onClick={() => setShowAddUser(true)}
-                        className="w-full sm:w-auto bg-cyan-600 text-slate-50 px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-indigo-700 transition flex items-center justify-center gap-2 font-semibold text-sm sm:text-base"
+                        className="w-full sm:w-auto bg-[#0071e3] text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-[#0077ED] transition flex items-center justify-center gap-2 font-semibold text-sm sm:text-base"
                     >
                         <Plus className="w-5 h-5" />
                         Tambah User
@@ -155,53 +155,53 @@ const UserManagement = () => {
             </div>
 
             {error && (
-                <div className="bg-rose-500/20 border-l-4 border-red-400 p-4 rounded mb-6">
+                <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded mb-6">
                     <div className="flex items-center">
                         <AlertCircle className="w-5 h-5 text-red-400 mr-2" />
-                        <p className="text-rose-300">{error}</p>
+                        <p className="text-red-600">{error}</p>
                     </div>
                 </div>
             )}
 
             {/* Users Table */}
-            <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-lg overflow-hidden">
+            <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl shadow-apple overflow-hidden">
                 <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-slate-700/50">
+                    <table className="min-w-full divide-y divide-gray-100">
                         <thead className="bg-gradient-to-r from-indigo-50 to-purple-50">
                             <tr>
-                                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase whitespace-nowrap">
+                                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
                                     User
                                 </th>
-                                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase whitespace-nowrap">
+                                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
                                     Role
                                 </th>
-                                <th className="hidden md:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase whitespace-nowrap">
+                                <th className="hidden md:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
                                     Linked Student
                                 </th>
-                                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase whitespace-nowrap">
+                                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
                                     Status
                                 </th>
-                                <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase whitespace-nowrap">
+                                <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
                                     Last Login
                                 </th>
-                                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase whitespace-nowrap">
+                                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
                                     Actions
                                 </th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-700/50">
+                        <tbody className="divide-y divide-gray-100">
                             {users.map((user) => (
-                                <tr key={user._id} className="hover:bg-slate-800/60">
+                                <tr key={user._id} className="hover:bg-gray-50">
                                     <td className="px-3 sm:px-6 py-3 sm:py-4">
                                         <div>
-                                            <p className="font-semibold text-slate-50 text-sm sm:text-base">
+                                            <p className="font-semibold text-gray-900 text-sm sm:text-base">
                                                 {user.fullName}
                                             </p>
-                                            <p className="text-xs sm:text-sm text-slate-300">
+                                            <p className="text-xs sm:text-sm text-gray-500">
                                                 @{user.username}
                                             </p>
                                             {user.email && (
-                                                <p className="text-xs text-slate-400">
+                                                <p className="text-xs text-gray-400">
                                                     {user.email}
                                                 </p>
                                             )}
@@ -213,8 +213,8 @@ const UserManagement = () => {
                                                 user.role === 'admin'
                                                     ? 'bg-violet-500/30 text-violet-200'
                                                     : user.role === 'member'
-                                                    ? 'bg-sky-500/30 text-sky-200'
-                                                    : 'bg-slate-700/50 text-slate-100'
+                                                    ? 'bg-blue-100 text-blue-700'
+                                                    : 'bg-gray-100 text-gray-900'
                                             }`}
                                         >
                                             {user.role === 'admin' ? (
@@ -225,7 +225,7 @@ const UserManagement = () => {
                                             {user.role}
                                         </span>
                                     </td>
-                                    <td className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-slate-200">
+                                    <td className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-gray-600">
                                         {user.studentId
                                             ? `${user.studentId.absen} - ${user.studentId.name}`
                                             : '-'}
@@ -237,8 +237,8 @@ const UserManagement = () => {
                                             }
                                             className={`inline-flex items-center gap-1 px-2 sm:px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap ${
                                                 user.isActive
-                                                    ? 'bg-cyan-500/30 text-cyan-200'
-                                                    : 'bg-rose-500/30 text-rose-200'
+                                                    ? 'bg-blue-100 text-blue-700'
+                                                    : 'bg-red-100 text-red-700'
                                             }`}
                                         >
                                             {user.isActive ? (
@@ -258,7 +258,7 @@ const UserManagement = () => {
                                             )}
                                         </button>
                                     </td>
-                                    <td className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-slate-200 whitespace-nowrap">
+                                    <td className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-gray-600 whitespace-nowrap">
                                         {user.lastLogin
                                             ? new Date(
                                                   user.lastLogin
@@ -271,7 +271,7 @@ const UserManagement = () => {
                                                 onClick={() =>
                                                     handleResetPassword(user)
                                                 }
-                                                className="text-sky-300 hover:text-sky-300"
+                                                className="text-blue-500 hover:text-blue-500"
                                                 title="Reset Password"
                                             >
                                                 <Key className="w-4 h-4" />
@@ -280,7 +280,7 @@ const UserManagement = () => {
                                                 onClick={() =>
                                                     handleDeleteUser(user._id)
                                                 }
-                                                className="text-rose-300 hover:text-rose-300"
+                                                className="text-red-600 hover:text-red-600"
                                                 title="Delete user"
                                             >
                                                 <Trash2 className="w-4 h-4" />
@@ -296,46 +296,46 @@ const UserManagement = () => {
 
             {/* Add User Modal */}
             {showAddUser && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-                    <div className="bg-slate-900/95 backdrop-blur-xl border border-slate-700/50 rounded-xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
+                <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
+                    <div className="bg-white/95 backdrop-blur-xl border border-gray-200 shadow-apple rounded-xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
                         <h3 className="text-xl font-bold mb-4">
                             Tambah User Baru
                         </h3>
                         <form onSubmit={handleAddUser} className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-slate-200 mb-1">
+                                <label className="block text-sm font-medium text-gray-600 mb-1">
                                     Full Name *
                                 </label>
                                 <input
                                     type="text"
                                     name="fullName"
                                     required
-                                    className="w-full px-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                    className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-slate-200 mb-1">
+                                <label className="block text-sm font-medium text-gray-600 mb-1">
                                     Username *
                                 </label>
                                 <input
                                     type="text"
                                     name="username"
                                     required
-                                    className="w-full px-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                    className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-slate-200 mb-1">
+                                <label className="block text-sm font-medium text-gray-600 mb-1">
                                     Email (Optional)
                                 </label>
                                 <input
                                     type="email"
                                     name="email"
-                                    className="w-full px-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                    className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-slate-200 mb-1">
+                                <label className="block text-sm font-medium text-gray-600 mb-1">
                                     Password *
                                 </label>
                                 <input
@@ -343,32 +343,32 @@ const UserManagement = () => {
                                     name="password"
                                     required
                                     minLength={6}
-                                    className="w-full px-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                    className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                 />
-                                <p className="text-xs text-slate-300 mt-1">
+                                <p className="text-xs text-gray-500 mt-1">
                                     Minimal 6 karakter
                                 </p>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-slate-200 mb-1">
+                                <label className="block text-sm font-medium text-gray-600 mb-1">
                                     Role *
                                 </label>
                                 <select
                                     name="role"
                                     required
-                                    className="w-full px-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                    className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                 >
                                     <option value="member">Member</option>
                                     <option value="admin">Admin</option>
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-slate-200 mb-1">
+                                <label className="block text-sm font-medium text-gray-600 mb-1">
                                     Link to Student (Optional)
                                 </label>
                                 <select
                                     name="studentId"
-                                    className="w-full px-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                    className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                 >
                                     <option value="">None</option>
                                     {students.map((student) => (
@@ -385,13 +385,13 @@ const UserManagement = () => {
                                 <button
                                     type="button"
                                     onClick={() => setShowAddUser(false)}
-                                    className="flex-1 px-4 py-2 border border-slate-700/50 rounded-lg hover:bg-slate-800/60 transition"
+                                    className="flex-1 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
                                 >
                                     Batal
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex-1 px-4 py-2 bg-cyan-600 text-slate-50 rounded-lg hover:bg-indigo-700 transition"
+                                    className="flex-1 px-4 py-2 bg-[#0071e3] text-white rounded-lg hover:bg-[#0077ED] transition"
                                 >
                                     Simpan
                                 </button>
@@ -403,23 +403,23 @@ const UserManagement = () => {
 
             {/* Password Reset Modal */}
             {showPasswordModal && resetPasswordData && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-                    <div className="bg-slate-900/95 backdrop-blur-xl border border-slate-700/50 rounded-xl max-w-md w-full p-6">
+                <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
+                    <div className="bg-white/95 backdrop-blur-xl border border-gray-200 shadow-apple rounded-xl max-w-md w-full p-6">
                         <div className="text-center mb-6">
                             <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <CheckCircle className="w-8 h-8 text-cyan-400" />
+                                <CheckCircle className="w-8 h-8 text-[#0071e3]" />
                             </div>
-                            <h3 className="text-xl font-bold text-slate-50 mb-2">
+                            <h3 className="text-xl font-bold text-gray-900 mb-2">
                                 Password Berhasil Direset!
                             </h3>
-                            <p className="text-sm text-slate-200">
+                            <p className="text-sm text-gray-600">
                                 Berikan informasi ini kepada user
                             </p>
                         </div>
 
-                        <div className="space-y-4 bg-slate-800/60 rounded-lg p-4 mb-6">
+                        <div className="space-y-4 bg-gray-50 rounded-lg p-4 mb-6">
                             <div>
-                                <label className="text-xs font-semibold text-slate-300 uppercase block mb-2">
+                                <label className="text-xs font-semibold text-gray-500 uppercase block mb-2">
                                     Username
                                 </label>
                                 <div className="flex items-center gap-2">
@@ -427,7 +427,7 @@ const UserManagement = () => {
                                         type="text"
                                         value={resetPasswordData.username}
                                         readOnly
-                                        className="flex-1 px-3 py-2 bg-white border border-slate-700/50 rounded-lg font-mono text-sm"
+                                        className="flex-1 px-3 py-2 bg-white border border-gray-200 rounded-lg font-mono text-sm"
                                     />
                                     <button
                                         onClick={() =>
@@ -435,7 +435,7 @@ const UserManagement = () => {
                                                 resetPasswordData.username
                                             )
                                         }
-                                        className="p-2 text-slate-200 hover:text-slate-50 hover:bg-gray-200 rounded-lg transition"
+                                        className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition"
                                         title="Copy username"
                                     >
                                         <Copy className="w-4 h-4" />
@@ -444,7 +444,7 @@ const UserManagement = () => {
                             </div>
 
                             <div>
-                                <label className="text-xs font-semibold text-slate-300 uppercase block mb-2">
+                                <label className="text-xs font-semibold text-gray-500 uppercase block mb-2">
                                     Password Baru
                                 </label>
                                 <div className="flex items-center gap-2">
@@ -452,7 +452,7 @@ const UserManagement = () => {
                                         type="text"
                                         value={resetPasswordData.password}
                                         readOnly
-                                        className="flex-1 px-3 py-2 bg-white border border-slate-700/50 rounded-lg font-mono text-sm font-bold text-cyan-400"
+                                        className="flex-1 px-3 py-2 bg-white border border-gray-200 rounded-lg font-mono text-sm font-bold text-[#0071e3]"
                                     />
                                     <button
                                         onClick={() =>
@@ -460,7 +460,7 @@ const UserManagement = () => {
                                                 resetPasswordData.password
                                             )
                                         }
-                                        className="p-2 text-cyan-400 hover:text-indigo-800 hover:bg-indigo-50 rounded-lg transition"
+                                        className="p-2 text-[#0071e3] hover:text-indigo-800 hover:bg-blue-50 rounded-lg transition"
                                         title="Copy password"
                                     >
                                         <Copy className="w-4 h-4" />
@@ -469,10 +469,10 @@ const UserManagement = () => {
                             </div>
                         </div>
 
-                        <div className="bg-amber-500/20 border border-yellow-200 rounded-lg p-4 mb-6">
+                        <div className="bg-amber-50 border border-yellow-200 rounded-lg p-4 mb-6">
                             <div className="flex gap-3">
                                 <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-                                <div className="text-sm text-amber-300">
+                                <div className="text-sm text-amber-600">
                                     <p className="font-semibold mb-1">
                                         Penting:
                                     </p>
@@ -498,7 +498,7 @@ const UserManagement = () => {
                                 setShowPasswordModal(false);
                                 setResetPasswordData(null);
                             }}
-                            className="w-full px-4 py-3 bg-cyan-600 text-slate-50 rounded-lg hover:bg-indigo-700 transition font-semibold"
+                            className="w-full px-4 py-3 bg-[#0071e3] text-white rounded-lg hover:bg-[#0077ED] transition font-semibold"
                         >
                             Tutup
                         </button>

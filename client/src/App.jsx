@@ -988,30 +988,30 @@ const App = () => {
 
     if (loading && students.length === 0) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+            <div className="min-h-screen bg-[#f5f5f7] flex items-center justify-center">
                 <div className="text-center">
-                    <RefreshCw className="w-12 h-12 text-cyan-400 animate-spin mx-auto mb-4" />
-                    <p className="text-slate-200">Memuat data...</p>
+                    <RefreshCw className="w-12 h-12 text-[#0071e3] animate-spin mx-auto mb-4" />
+                    <p className="text-gray-600">Memuat data...</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="min-h-screen bg-[#f5f5f7]">
             <div className="max-w-7xl mx-auto p-4 md:p-6">
                 {/* Header */}
-                <div className="bg-slate-900/95 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-lg p-6 mb-6">
+                <div className="bg-white/95 backdrop-blur-xl border border-gray-200 shadow-apple rounded-xl p-6 mb-6">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <div className="bg-indigo-600 p-3 rounded-lg">
-                                <Wallet className="w-8 h-8 text-slate-50" />
+                            <div className="bg-[#0071e3] p-3 rounded-xl">
+                                <Wallet className="w-8 h-8 text-white" />
                             </div>
                             <div>
-                                <h1 className="text-3xl font-bold text-slate-100">
+                                <h1 className="text-3xl font-bold text-gray-900">
                                     Kas Kelas
                                 </h1>
-                                <p className="text-slate-300">
+                                <p className="text-gray-500">
                                     Sistem Pencatatan Kas TRIFORCE Rp
                                     2.000/minggu
                                 </p>
@@ -1019,20 +1019,20 @@ const App = () => {
                         </div>
                         <div className="flex items-center gap-3">
                             <div className="text-right">
-                                <p className="text-sm text-slate-300">
+                                <p className="text-sm text-gray-500">
                                     Minggu ke-
                                 </p>
-                                <p className="text-2xl font-bold text-cyan-400">
+                                <p className="text-2xl font-bold text-[#0071e3]">
                                     {currentWeek}
                                 </p>
                             </div>
                             <button
                                 onClick={loadAllData}
-                                className="p-2 hover:bg-slate-700/70 rounded-lg transition"
+                                className="p-2 hover:bg-gray-100 rounded-lg transition"
                                 title="Refresh data"
                             >
                                 <RefreshCw
-                                    className={`w-5 h-5 text-slate-200 ${
+                                    className={`w-5 h-5 text-gray-600 ${
                                         loading ? 'animate-spin' : ''
                                     }`}
                                 />
@@ -1043,66 +1043,66 @@ const App = () => {
 
                 {/* Error Alert */}
                 {error && (
-                    <div className="bg-rose-500/20 border-l-4 border-red-400 p-4 rounded mb-6">
+                    <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded mb-6">
                         <div className="flex items-center">
                             <AlertCircle className="w-5 h-5 text-red-400 mr-2" />
-                            <p className="text-rose-300">{error}</p>
+                            <p className="text-red-600">{error}</p>
                         </div>
                     </div>
                 )}
 
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                    <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow p-5">
+                    <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl p-5">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-slate-300">
+                                <p className="text-sm text-gray-500">
                                     Total Siswa
                                 </p>
-                                <p className="text-2xl font-bold text-slate-100">
+                                <p className="text-2xl font-bold text-gray-900">
                                     {students.length}
                                 </p>
                             </div>
-                            <Users className="w-10 h-10 text-sky-300" />
+                            <Users className="w-10 h-10 text-blue-500" />
                         </div>
                     </div>
-                    <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow p-5">
+                    <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl p-5">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-slate-300">
+                                <p className="text-sm text-gray-500">
                                     Kas Masuk
                                 </p>
-                                <p className="text-xl font-bold text-cyan-400">
+                                <p className="text-xl font-bold text-[#0071e3]">
                                     {formatRp(totalKasMasuk)}
                                 </p>
                             </div>
                             <TrendingUp className="w-10 h-10 text-green-500" />
                         </div>
                     </div>
-                    <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow p-5">
+                    <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl p-5">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-slate-300">
+                                <p className="text-sm text-gray-500">
                                     Kas Keluar
                                 </p>
-                                <p className="text-xl font-bold text-rose-300">
+                                <p className="text-xl font-bold text-red-600">
                                     {formatRp(totalKasKeluar)}
                                 </p>
                             </div>
                             <TrendingDown className="w-10 h-10 text-red-500" />
                         </div>
                     </div>
-                    <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow p-5">
+                    <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl p-5">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-slate-300">
+                                <p className="text-sm text-gray-500">
                                     Saldo Kas
                                 </p>
-                                <p className="text-xl font-bold text-cyan-400">
+                                <p className="text-xl font-bold text-[#0071e3]">
                                     {formatRp(saldoKas)}
                                 </p>
                             </div>
-                            <Wallet className="w-10 h-10 text-cyan-400" />
+                            <Wallet className="w-10 h-10 text-[#0071e3]" />
                         </div>
                     </div>
                 </div>
@@ -1111,14 +1111,14 @@ const App = () => {
                 <div className="mb-6 grid grid-cols-2 gap-4">
                     <button
                         onClick={exportCompleteReport}
-                        className="bg-gradient-to-r from-green-600 to-emerald-600 text-slate-50 px-6 py-4 rounded-lg hover:from-green-700 hover:to-emerald-700 transition flex items-center justify-center gap-3 shadow-lg"
+                        className="bg-emerald-600 text-white px-6 py-4 rounded-lg hover:bg-emerald-700 transition flex items-center justify-center gap-3 shadow-apple"
                     >
                         <FileText className="w-5 h-5" />
                         <span className="font-semibold">Excel</span>
                     </button>
                     <button
                         onClick={exportCompleteReportPDF}
-                        className="bg-gradient-to-r from-red-600 to-rose-600 text-slate-50 px-6 py-4 rounded-lg hover:from-red-700 hover:to-rose-700 transition flex items-center justify-center gap-3 shadow-lg"
+                        className="bg-red-600 text-white px-6 py-4 rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-3 shadow-apple"
                     >
                         <FileText className="w-5 h-5" />
                         <span className="font-semibold">PDF</span>
@@ -1131,7 +1131,7 @@ const App = () => {
                 </div>
 
                 {/* Tabs */}
-                <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow mb-6">
+                <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl mb-6">
                     <div className="flex border-b overflow-x-auto">
                         {[
                             'dashboard',
@@ -1150,8 +1150,8 @@ const App = () => {
                                 className={
                                     'px-6 py-3 font-medium capitalize whitespace-nowrap flex items-center gap-2 ' +
                                     (activeTab === tab
-                                        ? 'border-b-2 border-indigo-600 text-cyan-400'
-                                        : 'text-slate-300 hover:text-slate-200')
+                                        ? 'border-b-2 border-[#0071e3] text-[#0071e3]'
+                                        : 'text-gray-500 hover:text-gray-600')
                                 }
                             >
                                 {tab === 'notifikasi' && (
@@ -1168,11 +1168,11 @@ const App = () => {
                     activeTab === 'pembayaran' ||
                     activeTab === 'pengeluaran' ||
                     activeTab === 'tunggakan') && (
-                    <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow p-4 mb-6">
+                    <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl p-4 mb-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                             {/* Search Bar */}
                             <div className="relative">
-                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                                 <input
                                     type="text"
                                     placeholder="Cari nama atau absen..."
@@ -1180,7 +1180,7 @@ const App = () => {
                                     onChange={(e) =>
                                         setSearchQuery(e.target.value)
                                     }
-                                    className="w-full pl-10 pr-4 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                    className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#0071e3] focus:border-transparent"
                                 />
                             </div>
 
@@ -1191,7 +1191,7 @@ const App = () => {
                                     onChange={(e) =>
                                         setFilterStatus(e.target.value)
                                     }
-                                    className="px-4 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                    className="px-4 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                 >
                                     <option value="Semua">Semua Status</option>
                                     <option value="Aktif">Aktif</option>
@@ -1209,7 +1209,7 @@ const App = () => {
                                     onChange={(e) =>
                                         setFilterMethod(e.target.value)
                                     }
-                                    className="px-4 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                    className="px-4 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                 >
                                     <option value="Semua">Semua Metode</option>
                                     <option value="Tunai">Tunai</option>
@@ -1224,7 +1224,7 @@ const App = () => {
                                     onChange={(e) =>
                                         setFilterCategory(e.target.value)
                                     }
-                                    className="px-4 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                    className="px-4 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                 >
                                     <option value="Semua">
                                         Semua Kategori
@@ -1250,7 +1250,7 @@ const App = () => {
                                         setDateFrom(e.target.value)
                                     }
                                     placeholder="Dari tanggal"
-                                    className="px-4 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                    className="px-4 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                 />
                             )}
 
@@ -1262,7 +1262,7 @@ const App = () => {
                                     value={dateTo}
                                     onChange={(e) => setDateTo(e.target.value)}
                                     placeholder="Sampai tanggal"
-                                    className="px-4 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                    className="px-4 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                 />
                             )}
 
@@ -1276,7 +1276,7 @@ const App = () => {
                                     setDateFrom('');
                                     setDateTo('');
                                 }}
-                                className="px-4 py-2 bg-slate-700/50 hover:bg-gray-200 text-slate-200 rounded-lg transition flex items-center justify-center gap-2"
+                                className="px-4 py-2 bg-gray-100 hover:bg-gray-100 text-gray-600 rounded-lg transition flex items-center justify-center gap-2"
                             >
                                 <RefreshCw className="w-4 h-4" />
                                 Reset Filter
@@ -1289,10 +1289,10 @@ const App = () => {
                 {activeTab === 'dashboard' && (
                     <div className="space-y-6">
                         {studentsWithTunggakan > 0 && (
-                            <div className="bg-amber-500/20 border-l-4 border-yellow-400 p-4 rounded">
+                            <div className="bg-amber-50 border-l-4 border-yellow-400 p-4 rounded">
                                 <div className="flex items-center">
                                     <AlertCircle className="w-5 h-5 text-yellow-400 mr-2" />
-                                    <p className="text-amber-300">
+                                    <p className="text-amber-600">
                                         <strong>{studentsWithTunggakan}</strong>{' '}
                                         siswa memiliki tunggakan
                                     </p>
@@ -1300,37 +1300,37 @@ const App = () => {
                             </div>
                         )}
 
-                        <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow overflow-hidden">
+                        <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl overflow-hidden">
                             <div className="p-4 sm:p-6 border-b">
-                                <h2 className="text-lg sm:text-xl font-bold text-slate-100">
+                                <h2 className="text-lg sm:text-xl font-bold text-gray-900">
                                     Status Pembayaran Siswa
                                 </h2>
                             </div>
                             <div className="overflow-x-auto">
-                                <table className="min-w-full divide-y divide-slate-700/50">
-                                    <thead className="bg-slate-800/60">
+                                <table className="min-w-full divide-y divide-gray-100">
+                                    <thead className="bg-gray-50">
                                         <tr>
-                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Absen
                                             </th>
-                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Nama
                                             </th>
-                                            <th className="hidden md:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                            <th className="hidden md:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Total Bayar
                                             </th>
-                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Tunggakan
                                             </th>
-                                            <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                            <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Status
                                             </th>
-                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Aksi
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-slate-700/50">
+                                    <tbody className="divide-y divide-gray-100">
                                         {students
                                             .sort((a, b) => a.absen - b.absen)
                                             .map((student) => {
@@ -1345,19 +1345,19 @@ const App = () => {
                                                         key={student._id}
                                                         className={
                                                             late
-                                                                ? 'bg-rose-500/20 hover:bg-red-100'
-                                                                : 'hover:bg-slate-800/60'
+                                                                ? 'bg-red-50 hover:bg-red-100'
+                                                                : 'hover:bg-gray-50'
                                                         }
                                                     >
-                                                        <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-slate-50 font-medium">
+                                                        <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 font-medium">
                                                             {student.absen}
                                                         </td>
-                                                        <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium text-slate-50">
+                                                        <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium text-gray-900">
                                                             <div className="max-w-[120px] sm:max-w-none truncate">
                                                                 {student.name}
                                                             </div>
                                                         </td>
-                                                        <td className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-slate-50">
+                                                        <td className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
                                                             {formatRp(
                                                                 getTotalPaid(
                                                                     student._id
@@ -1369,8 +1369,8 @@ const App = () => {
                                                                 className={
                                                                     tunggakan >
                                                                     0
-                                                                        ? 'text-rose-300 font-semibold'
-                                                                        : 'text-cyan-400 font-semibold'
+                                                                        ? 'text-red-600 font-semibold'
+                                                                        : 'text-[#0071e3] font-semibold'
                                                                 }
                                                             >
                                                                 {formatRp(
@@ -1380,18 +1380,18 @@ const App = () => {
                                                         </td>
                                                         <td className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                             {late ? (
-                                                                <span className="px-2 py-1 text-xs font-semibold rounded-full bg-rose-500/30 text-rose-200 inline-flex items-center gap-1">
+                                                                <span className="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-700 inline-flex items-center gap-1">
                                                                     <AlertCircle className="w-3 h-3" />{' '}
                                                                     Telat
                                                                 </span>
                                                             ) : tunggakan <=
                                                               0 ? (
-                                                                <span className="px-2 py-1 text-xs font-semibold rounded-full bg-cyan-500/30 text-cyan-200 inline-flex items-center gap-1">
+                                                                <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-700 inline-flex items-center gap-1">
                                                                     <CheckCircle className="w-3 h-3" />{' '}
                                                                     Lunas
                                                                 </span>
                                                             ) : (
-                                                                <span className="px-2 py-1 text-xs font-semibold rounded-full bg-amber-500/30 text-amber-200">
+                                                                <span className="px-2 py-1 text-xs font-semibold rounded-full bg-amber-100 text-amber-700">
                                                                     Aktif
                                                                 </span>
                                                             )}
@@ -1403,7 +1403,7 @@ const App = () => {
                                                                         student._id
                                                                     )
                                                                 }
-                                                                className="bg-cyan-600 text-slate-50 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-indigo-700 transition text-xs sm:text-sm font-medium w-full sm:w-auto"
+                                                                className="bg-[#0071e3] text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-[#0077ED] transition text-xs sm:text-sm font-medium w-full sm:w-auto"
                                                             >
                                                                 💰 Bayar
                                                             </button>
@@ -1423,16 +1423,16 @@ const App = () => {
 
                 {/* Siswa Tab */}
                 {activeTab === 'siswa' && (
-                    <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow">
+                    <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl shadow">
                         <div className="p-4 sm:p-6 border-b">
                             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
-                                <h2 className="text-lg sm:text-xl font-bold text-slate-100">
+                                <h2 className="text-lg sm:text-xl font-bold text-gray-900">
                                     Data Siswa
                                 </h2>
                                 <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                                     <button
                                         onClick={exportStudentsToExcel}
-                                        className="flex-1 sm:flex-none bg-green-600 text-slate-50 px-3 sm:px-4 py-2 rounded-lg hover:bg-green-700 transition flex items-center justify-center gap-2 text-sm"
+                                        className="flex-1 sm:flex-none bg-green-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-green-700 transition flex items-center justify-center gap-2 text-sm"
                                     >
                                         <Download className="w-4 h-4" />
                                         <span className="hidden sm:inline">
@@ -1441,7 +1441,7 @@ const App = () => {
                                     </button>
                                     <button
                                         onClick={exportStudentsToPDF}
-                                        className="flex-1 sm:flex-none bg-red-600 text-slate-50 px-3 sm:px-4 py-2 rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-2 text-sm"
+                                        className="flex-1 sm:flex-none bg-red-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-2 text-sm"
                                     >
                                         <FileText className="w-4 h-4" />
                                         <span className="hidden sm:inline">
@@ -1450,7 +1450,7 @@ const App = () => {
                                     </button>
                                     <button
                                         onClick={() => setShowAddStudent(true)}
-                                        className="w-full sm:w-auto bg-cyan-600 text-slate-50 px-3 sm:px-4 py-2 rounded-lg hover:bg-indigo-700 transition flex items-center justify-center gap-2 text-sm font-medium"
+                                        className="w-full sm:w-auto bg-[#0071e3] text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-[#0077ED] transition flex items-center justify-center gap-2 text-sm font-medium"
                                     >
                                         <Plus className="w-4 h-4" />
                                         <span className="hidden sm:inline">
@@ -1464,35 +1464,35 @@ const App = () => {
                             </div>
                         </div>
                         <div className="overflow-x-auto">
-                            <table className="min-w-full divide-y divide-slate-700/50">
-                                <thead className="bg-slate-800/60">
+                            <table className="min-w-full divide-y divide-gray-100">
+                                <thead className="bg-gray-50">
                                     <tr>
-                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Absen
                                         </th>
-                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Nama
                                         </th>
-                                        <th className="hidden md:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                        <th className="hidden md:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             WhatsApp
                                         </th>
-                                        <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                        <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Status
                                         </th>
-                                        <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                        <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Notifikasi
                                         </th>
-                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Aksi
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-slate-700/50">
+                                <tbody className="divide-y divide-gray-100">
                                     {filteredStudents.length === 0 ? (
                                         <tr>
                                             <td
                                                 colSpan="6"
-                                                className="px-3 sm:px-6 py-8 text-center text-slate-300 text-xs sm:text-sm"
+                                                className="px-3 sm:px-6 py-8 text-center text-gray-500 text-xs sm:text-sm"
                                             >
                                                 Tidak ada data siswa yang sesuai
                                             </td>
@@ -1503,17 +1503,17 @@ const App = () => {
                                             .map((student) => (
                                                 <tr
                                                     key={student._id}
-                                                    className="hover:bg-slate-800/60"
+                                                    className="hover:bg-gray-50"
                                                 >
-                                                    <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-slate-50 font-medium">
+                                                    <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 font-medium">
                                                         {student.absen}
                                                     </td>
-                                                    <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium text-slate-50">
+                                                    <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium text-gray-900">
                                                         <div className="max-w-[120px] sm:max-w-none truncate">
                                                             {student.name}
                                                         </div>
                                                     </td>
-                                                    <td className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-slate-200">
+                                                    <td className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-600">
                                                         {student.phoneNumber ? (
                                                             <span className="flex items-center gap-1">
                                                                 📱{' '}
@@ -1522,7 +1522,7 @@ const App = () => {
                                                                 }
                                                             </span>
                                                         ) : (
-                                                            <span className="text-slate-400 italic">
+                                                            <span className="text-gray-400 italic">
                                                                 Belum diset
                                                             </span>
                                                         )}
@@ -1532,11 +1532,11 @@ const App = () => {
                                                             className={`px-2 py-1 text-xs font-semibold rounded-full ${
                                                                 student.status ===
                                                                 'Aktif'
-                                                                    ? 'bg-cyan-500/30 text-cyan-200'
+                                                                    ? 'bg-blue-100 text-blue-700'
                                                                     : student.status ===
                                                                       'Alumni'
-                                                                    ? 'bg-sky-500/30 text-sky-200'
-                                                                    : 'bg-slate-700/50 text-slate-100'
+                                                                    ? 'bg-blue-100 text-blue-700'
+                                                                    : 'bg-gray-100 text-gray-900'
                                                             }`}
                                                         >
                                                             {student.status}
@@ -1545,11 +1545,11 @@ const App = () => {
                                                     <td className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                         {student.enableNotification !==
                                                         false ? (
-                                                            <span className="px-2 py-1 text-xs font-semibold rounded-full bg-cyan-500/30 text-cyan-200">
+                                                            <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-700">
                                                                 ✓ Aktif
                                                             </span>
                                                         ) : (
-                                                            <span className="px-2 py-1 text-xs font-semibold rounded-full bg-slate-700/50 text-slate-100">
+                                                            <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-900">
                                                                 ✗ Non-aktif
                                                             </span>
                                                         )}
@@ -1562,7 +1562,7 @@ const App = () => {
                                                                         student
                                                                     )
                                                                 }
-                                                                className="bg-blue-600 text-slate-50 px-3 py-1.5 rounded-lg hover:bg-blue-700 transition font-medium text-xs sm:text-sm"
+                                                                className="bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700 transition font-medium text-xs sm:text-sm"
                                                             >
                                                                 ✏️ Edit
                                                             </button>
@@ -1572,7 +1572,7 @@ const App = () => {
                                                                         student._id
                                                                     )
                                                                 }
-                                                                className="text-rose-300 hover:text-rose-300 p-1"
+                                                                className="text-red-600 hover:text-red-600 p-1"
                                                                 title="Hapus"
                                                             >
                                                                 <Trash2 className="w-4 h-4" />
@@ -1590,14 +1590,14 @@ const App = () => {
 
                 {/* Pembayaran Tab */}
                 {activeTab === 'pembayaran' && (
-                    <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow">
+                    <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl shadow">
                         <div className="p-4 sm:p-6 border-b">
                             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
                                 <div>
-                                    <h2 className="text-lg sm:text-xl font-bold text-slate-100">
+                                    <h2 className="text-lg sm:text-xl font-bold text-gray-900">
                                         Riwayat Pembayaran
                                     </h2>
-                                    <p className="text-xs sm:text-sm text-slate-300 mt-1">
+                                    <p className="text-xs sm:text-sm text-gray-500 mt-1">
                                         Total: {filteredPayments.length}{' '}
                                         pembayaran
                                     </p>
@@ -1605,7 +1605,7 @@ const App = () => {
                                 <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                                     <button
                                         onClick={exportPaymentsToExcel}
-                                        className="flex-1 sm:flex-none bg-green-600 text-slate-50 px-3 sm:px-4 py-2 rounded-lg hover:bg-green-700 transition flex items-center justify-center gap-2 text-sm"
+                                        className="flex-1 sm:flex-none bg-green-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-green-700 transition flex items-center justify-center gap-2 text-sm"
                                     >
                                         <Download className="w-4 h-4" />
                                         <span className="hidden sm:inline">
@@ -1614,7 +1614,7 @@ const App = () => {
                                     </button>
                                     <button
                                         onClick={exportPaymentsToPDF}
-                                        className="flex-1 sm:flex-none bg-red-600 text-slate-50 px-3 sm:px-4 py-2 rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-2 text-sm"
+                                        className="flex-1 sm:flex-none bg-red-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-2 text-sm"
                                     >
                                         <Download className="w-4 h-4" />
                                         <span className="hidden sm:inline">
@@ -1623,7 +1623,7 @@ const App = () => {
                                     </button>
                                     <button
                                         onClick={() => setShowPayment(true)}
-                                        className="w-full sm:w-auto bg-cyan-600 text-slate-50 px-3 sm:px-4 py-2 rounded-lg hover:bg-indigo-700 transition flex items-center justify-center gap-2 text-sm font-medium"
+                                        className="w-full sm:w-auto bg-[#0071e3] text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-[#0077ED] transition flex items-center justify-center gap-2 text-sm font-medium"
                                     >
                                         <Plus className="w-4 h-4" />
                                         <span className="hidden sm:inline">
@@ -1637,33 +1637,33 @@ const App = () => {
                             </div>
                         </div>
                         <div className="overflow-x-auto">
-                            <table className="min-w-full divide-y divide-slate-700/50">
-                                <thead className="bg-slate-800/60">
+                            <table className="min-w-full divide-y divide-gray-100">
+                                <thead className="bg-gray-50">
                                     <tr>
-                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Tanggal
                                         </th>
-                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Nama/Sumber
                                         </th>
-                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Jumlah
                                         </th>
-                                        <th className="hidden md:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                        <th className="hidden md:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Metode
                                         </th>
-                                        <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                        <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Tipe
                                         </th>
-                                        <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                        <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Catatan
                                         </th>
-                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Aksi
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody className="bg-white divide-y divide-slate-700/50">
+                                <tbody className="bg-white divide-y divide-gray-100">
                                     {filteredPayments.map((payment) => {
                                         const studentId =
                                             payment.studentId?._id ||
@@ -1674,7 +1674,7 @@ const App = () => {
 
                                         return (
                                             <tr key={payment._id}>
-                                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-slate-50">
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
                                                     {new Date(
                                                         payment.date
                                                     ).toLocaleDateString(
@@ -1686,7 +1686,7 @@ const App = () => {
                                                         }
                                                     )}
                                                 </td>
-                                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium text-slate-50">
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium text-gray-900">
                                                     <div className="max-w-[150px] sm:max-w-none truncate">
                                                         {payment.source ===
                                                             'custom' ||
@@ -1697,16 +1697,16 @@ const App = () => {
                                                               'Siswa tidak ditemukan'}
                                                     </div>
                                                 </td>
-                                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-semibold text-slate-50">
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-semibold text-gray-900">
                                                     {formatRp(payment.amount)}
                                                 </td>
-                                                <td className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-slate-50">
+                                                <td className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
                                                     <span
                                                         className={`px-2 py-1 text-xs font-semibold rounded-full ${
                                                             payment.method ===
                                                             'Tunai'
-                                                                ? 'bg-cyan-500/30 text-cyan-200'
-                                                                : 'bg-sky-500/30 text-sky-200'
+                                                                ? 'bg-blue-100 text-blue-700'
+                                                                : 'bg-blue-100 text-blue-700'
                                                         }`}
                                                     >
                                                         {payment.method}
@@ -1727,12 +1727,12 @@ const App = () => {
                                                     )}
                                                     {payment.source ===
                                                         'regular' && (
-                                                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-slate-700/50 text-slate-100">
+                                                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-900">
                                                             Kas Reguler
                                                         </span>
                                                     )}
                                                 </td>
-                                                <td className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-slate-300">
+                                                <td className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-gray-500">
                                                     <div className="max-w-[200px] truncate">
                                                         {payment.note || '-'}
                                                     </div>
@@ -1744,7 +1744,7 @@ const App = () => {
                                                                 payment._id
                                                             )
                                                         }
-                                                        className="text-rose-300 hover:text-rose-300 p-1"
+                                                        className="text-red-600 hover:text-red-600 p-1"
                                                         title="Hapus"
                                                     >
                                                         <Trash2 className="w-4 h-4" />
@@ -1761,16 +1761,16 @@ const App = () => {
 
                 {/* Pengeluaran Tab */}
                 {activeTab === 'pengeluaran' && (
-                    <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow">
+                    <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl shadow">
                         <div className="p-4 sm:p-6 border-b">
                             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
-                                <h2 className="text-lg sm:text-xl font-bold text-slate-100">
+                                <h2 className="text-lg sm:text-xl font-bold text-gray-900">
                                     Riwayat Pengeluaran
                                 </h2>
                                 <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                                     <button
                                         onClick={exportExpensesToExcel}
-                                        className="flex-1 sm:flex-none bg-green-600 text-slate-50 px-3 sm:px-4 py-2 rounded-lg hover:bg-green-700 transition flex items-center justify-center gap-2 text-sm"
+                                        className="flex-1 sm:flex-none bg-green-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-green-700 transition flex items-center justify-center gap-2 text-sm"
                                     >
                                         <Download className="w-4 h-4" />
                                         <span className="hidden sm:inline">
@@ -1779,7 +1779,7 @@ const App = () => {
                                     </button>
                                     <button
                                         onClick={exportExpensesToPDF}
-                                        className="flex-1 sm:flex-none bg-red-600 text-slate-50 px-3 sm:px-4 py-2 rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-2 text-sm"
+                                        className="flex-1 sm:flex-none bg-red-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-2 text-sm"
                                     >
                                         <Download className="w-4 h-4" />
                                         <span className="hidden sm:inline">
@@ -1788,7 +1788,7 @@ const App = () => {
                                     </button>
                                     <button
                                         onClick={() => setShowExpense(true)}
-                                        className="w-full sm:w-auto bg-cyan-600 text-slate-50 px-3 sm:px-4 py-2 rounded-lg hover:bg-indigo-700 transition flex items-center justify-center gap-2 text-sm font-medium"
+                                        className="w-full sm:w-auto bg-[#0071e3] text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-[#0077ED] transition flex items-center justify-center gap-2 text-sm font-medium"
                                     >
                                         <Plus className="w-4 h-4" />
                                         <span className="hidden sm:inline">
@@ -1802,35 +1802,35 @@ const App = () => {
                             </div>
                         </div>
                         <div className="overflow-x-auto">
-                            <table className="min-w-full divide-y divide-slate-700/50">
-                                <thead className="bg-slate-800/60">
+                            <table className="min-w-full divide-y divide-gray-100">
+                                <thead className="bg-gray-50">
                                     <tr>
-                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Tanggal
                                         </th>
-                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Keperluan
                                         </th>
-                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Jumlah
                                         </th>
-                                        <th className="hidden md:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                        <th className="hidden md:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Kategori
                                         </th>
-                                        <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                        <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Disetujui
                                         </th>
-                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Aksi
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-slate-700/50">
+                                <tbody className="divide-y divide-gray-100">
                                     {filteredExpenses.length === 0 ? (
                                         <tr>
                                             <td
                                                 colSpan="6"
-                                                className="px-3 sm:px-6 py-8 text-center text-slate-300 text-xs sm:text-sm"
+                                                className="px-3 sm:px-6 py-8 text-center text-gray-500 text-xs sm:text-sm"
                                             >
                                                 Tidak ada data pengeluaran yang
                                                 sesuai
@@ -1840,9 +1840,9 @@ const App = () => {
                                         filteredExpenses.map((expense) => (
                                             <tr
                                                 key={expense._id}
-                                                className="hover:bg-slate-800/60"
+                                                className="hover:bg-gray-50"
                                             >
-                                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-slate-50">
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
                                                     {new Date(
                                                         expense.date
                                                     ).toLocaleDateString(
@@ -1854,12 +1854,12 @@ const App = () => {
                                                         }
                                                     )}
                                                 </td>
-                                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium text-slate-50">
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium text-gray-900">
                                                     <div className="max-w-[150px] sm:max-w-none truncate">
                                                         {expense.purpose}
                                                     </div>
                                                 </td>
-                                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-semibold text-rose-300">
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-semibold text-red-600">
                                                     {formatRp(expense.amount)}
                                                 </td>
                                                 <td className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm">
@@ -1867,20 +1867,20 @@ const App = () => {
                                                         className={`px-2 py-1 text-xs font-semibold rounded-full ${
                                                             expense.category ===
                                                             'Kebersihan'
-                                                                ? 'bg-cyan-500/30 text-cyan-200'
+                                                                ? 'bg-blue-100 text-blue-700'
                                                                 : expense.category ===
                                                                   'Acara'
                                                                 ? 'bg-violet-500/30 text-violet-200'
                                                                 : expense.category ===
                                                                   'Perlengkapan'
-                                                                ? 'bg-sky-500/30 text-sky-200'
-                                                                : 'bg-slate-700/50 text-slate-100'
+                                                                ? 'bg-blue-100 text-blue-700'
+                                                                : 'bg-gray-100 text-gray-900'
                                                         }`}
                                                     >
                                                         {expense.category}
                                                     </span>
                                                 </td>
-                                                <td className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-slate-300">
+                                                <td className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500">
                                                     {expense.approvedBy}
                                                 </td>
                                                 <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm">
@@ -1890,7 +1890,7 @@ const App = () => {
                                                                 expense._id
                                                             )
                                                         }
-                                                        className="text-rose-300 hover:text-rose-300 p-1"
+                                                        className="text-red-600 hover:text-red-600 p-1"
                                                         title="Hapus"
                                                     >
                                                         <Trash2 className="w-4 h-4" />
@@ -1907,23 +1907,23 @@ const App = () => {
 
                 {/* Tunggakan Tab - NEW FEATURE */}
                 {activeTab === 'tunggakan' && (
-                    <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg shadow">
+                    <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl shadow">
                         <div className="p-6 border-b">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <h2 className="text-xl font-bold text-slate-100">
+                                    <h2 className="text-xl font-bold text-gray-900">
                                         Daftar Tunggakan
                                     </h2>
-                                    <p className="text-sm text-slate-300 mt-1">
+                                    <p className="text-sm text-gray-500 mt-1">
                                         Siswa yang belum bayar minggu ke-{' '}
                                         {currentWeek}
                                     </p>
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-sm text-slate-300">
+                                    <p className="text-sm text-gray-500">
                                         Total Tunggakan
                                     </p>
-                                    <p className="text-2xl font-bold text-rose-300">
+                                    <p className="text-2xl font-bold text-red-600">
                                         {getUnpaidStudents().length} Siswa
                                     </p>
                                 </div>
@@ -1933,36 +1933,36 @@ const App = () => {
                             {getUnpaidStudents().length === 0 ? (
                                 <div className="p-12 text-center">
                                     <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-                                    <h3 className="text-xl font-semibold text-slate-100 mb-2">
+                                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
                                         Semua Sudah Bayar! 🎉
                                     </h3>
-                                    <p className="text-slate-300">
+                                    <p className="text-gray-500">
                                         Tidak ada siswa yang memiliki tunggakan
                                         minggu ini
                                     </p>
                                 </div>
                             ) : (
                                 <table className="w-full">
-                                    <thead className="bg-slate-800/60">
+                                    <thead className="bg-gray-50">
                                         <tr>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase">
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                                                 Absen
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase">
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                                                 Nama
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase">
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                                                 Status
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase">
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                                                 Tunggakan
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase">
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                                                 Aksi
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-slate-700/50">
+                                    <tbody className="divide-y divide-gray-100">
                                         {getUnpaidStudents()
                                             .sort((a, b) => a.absen - b.absen)
                                             .map((student) => {
@@ -1972,18 +1972,18 @@ const App = () => {
                                                 );
                                                 return (
                                                     <tr key={student._id}>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-50">
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                             {student.absen}
                                                         </td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-50">
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                                             {student.name}
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap">
-                                                            <span className="px-2 py-1 text-xs font-semibold rounded-full bg-rose-500/30 text-rose-200">
+                                                            <span className="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-700">
                                                                 Belum Bayar
                                                             </span>
                                                         </td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-rose-300 font-semibold">
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600 font-semibold">
                                                             {formatRp(
                                                                 tunggakan
                                                             )}
@@ -1995,7 +1995,7 @@ const App = () => {
                                                                         student._id
                                                                     )
                                                                 }
-                                                                className="bg-green-600 text-slate-50 px-3 py-1 rounded hover:bg-green-700 transition text-xs"
+                                                                className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition text-xs"
                                                             >
                                                                 Bayar Sekarang
                                                             </button>
@@ -2027,60 +2027,60 @@ const App = () => {
 
                 {/* Modal Add Student */}
                 {showAddStudent && (
-                    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-                        <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
+                    <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
+                        <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
                             <h3 className="text-xl font-bold mb-4">
                                 Tambah Siswa Baru
                             </h3>
                             <form onSubmit={addStudent} className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-200 mb-1">
+                                    <label className="block text-sm font-medium text-gray-600 mb-1">
                                         Nomor Absen
                                     </label>
                                     <input
                                         type="number"
                                         name="absen"
                                         required
-                                        className="w-full px-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-200 mb-1">
+                                    <label className="block text-sm font-medium text-gray-600 mb-1">
                                         Nama Lengkap
                                     </label>
                                     <input
                                         type="text"
                                         name="name"
                                         required
-                                        className="w-full px-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-200 mb-1">
+                                    <label className="block text-sm font-medium text-gray-600 mb-1">
                                         Nama Panggilan (Opsional)
                                     </label>
                                     <input
                                         type="text"
                                         name="nickname"
                                         placeholder="Contoh: Budi, Andi, Siti"
-                                        className="w-full px-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                     />
-                                    <p className="text-xs text-slate-300 mt-1">
+                                    <p className="text-xs text-gray-500 mt-1">
                                         Nama panggilan untuk ditampilkan di
                                         leaderboard
                                     </p>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-200 mb-1">
+                                    <label className="block text-sm font-medium text-gray-600 mb-1">
                                         Nomor WhatsApp (Opsional)
                                     </label>
                                     <input
                                         type="text"
                                         name="phoneNumber"
                                         placeholder="08xxxxxxxxxx atau 628xxxxxxxxxx"
-                                        className="w-full px-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                     />
-                                    <p className="text-xs text-slate-300 mt-1">
+                                    <p className="text-xs text-gray-500 mt-1">
                                         Format: 08xxx atau 628xxx (tanpa
                                         spasi/strip)
                                     </p>
@@ -2091,11 +2091,11 @@ const App = () => {
                                         name="enableNotification"
                                         id="enableNotification"
                                         defaultChecked
-                                        className="w-4 h-4 text-cyan-400 rounded"
+                                        className="w-4 h-4 text-[#0071e3] rounded"
                                     />
                                     <label
                                         htmlFor="enableNotification"
-                                        className="text-sm text-slate-200"
+                                        className="text-sm text-gray-600"
                                     >
                                         Aktifkan notifikasi WhatsApp
                                     </label>
@@ -2104,13 +2104,13 @@ const App = () => {
                                     <button
                                         type="button"
                                         onClick={() => setShowAddStudent(false)}
-                                        className="flex-1 px-4 py-2 border border-slate-700/50 rounded-lg hover:bg-slate-800/60 transition"
+                                        className="flex-1 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
                                     >
                                         Batal
                                     </button>
                                     <button
                                         type="submit"
-                                        className="flex-1 px-4 py-2 bg-cyan-600 text-slate-50 rounded-lg hover:bg-indigo-700 transition"
+                                        className="flex-1 px-4 py-2 bg-[#0071e3] text-white rounded-lg hover:bg-[#0077ED] transition"
                                     >
                                         Simpan
                                     </button>
@@ -2122,8 +2122,8 @@ const App = () => {
 
                 {/* Modal Edit Student */}
                 {showEditStudent && editingStudent && (
-                    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-                        <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
+                    <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
+                        <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
                             <h3 className="text-xl font-bold mb-4">
                                 Edit Data Siswa
                             </h3>
@@ -2132,7 +2132,7 @@ const App = () => {
                                 className="space-y-4"
                             >
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-200 mb-1">
+                                    <label className="block text-sm font-medium text-gray-600 mb-1">
                                         Nomor Absen
                                     </label>
                                     <input
@@ -2140,11 +2140,11 @@ const App = () => {
                                         name="absen"
                                         defaultValue={editingStudent.absen}
                                         required
-                                        className="w-full px-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-200 mb-1">
+                                    <label className="block text-sm font-medium text-gray-600 mb-1">
                                         Nama Lengkap
                                     </label>
                                     <input
@@ -2152,11 +2152,11 @@ const App = () => {
                                         name="name"
                                         defaultValue={editingStudent.name}
                                         required
-                                        className="w-full px-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-200 mb-1">
+                                    <label className="block text-sm font-medium text-gray-600 mb-1">
                                         Nama Panggilan (Opsional)
                                     </label>
                                     <input
@@ -2166,15 +2166,15 @@ const App = () => {
                                             editingStudent.nickname || ''
                                         }
                                         placeholder="Contoh: Budi, Andi, Siti"
-                                        className="w-full px-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                     />
-                                    <p className="text-xs text-slate-300 mt-1">
+                                    <p className="text-xs text-gray-500 mt-1">
                                         Nama panggilan untuk ditampilkan di
                                         leaderboard
                                     </p>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-200 mb-1">
+                                    <label className="block text-sm font-medium text-gray-600 mb-1">
                                         Nomor WhatsApp
                                     </label>
                                     <input
@@ -2184,21 +2184,21 @@ const App = () => {
                                             editingStudent.phoneNumber || ''
                                         }
                                         placeholder="08xxxxxxxxxx atau 628xxxxxxxxxx"
-                                        className="w-full px-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                     />
-                                    <p className="text-xs text-slate-300 mt-1">
+                                    <p className="text-xs text-gray-500 mt-1">
                                         Format: 08xxx atau 628xxx (tanpa
                                         spasi/strip)
                                     </p>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-200 mb-1">
+                                    <label className="block text-sm font-medium text-gray-600 mb-1">
                                         Status
                                     </label>
                                     <select
                                         name="status"
                                         defaultValue={editingStudent.status}
-                                        className="w-full px-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                     >
                                         <option value="Aktif">Aktif</option>
                                         <option value="Tidak Aktif">
@@ -2216,17 +2216,17 @@ const App = () => {
                                             editingStudent.enableNotification !==
                                             false
                                         }
-                                        className="w-4 h-4 text-cyan-400 rounded"
+                                        className="w-4 h-4 text-[#0071e3] rounded"
                                     />
                                     <label
                                         htmlFor="enableNotificationEdit"
-                                        className="text-sm text-slate-200"
+                                        className="text-sm text-gray-600"
                                     >
                                         Aktifkan notifikasi WhatsApp
                                     </label>
                                 </div>
-                                <div className="bg-sky-500/20 border border-blue-200 rounded-lg p-3">
-                                    <p className="text-xs text-sky-300">
+                                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                                    <p className="text-xs text-blue-500">
                                         💡 <strong>Tips:</strong> Pastikan nomor
                                         WhatsApp valid agar siswa bisa menerima
                                         reminder pembayaran kas.
@@ -2239,13 +2239,13 @@ const App = () => {
                                             setShowEditStudent(false);
                                             setEditingStudent(null);
                                         }}
-                                        className="flex-1 px-4 py-2 border border-slate-700/50 rounded-lg hover:bg-slate-800/60 transition"
+                                        className="flex-1 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
                                     >
                                         Batal
                                     </button>
                                     <button
                                         type="submit"
-                                        className="flex-1 px-4 py-2 bg-cyan-600 text-slate-50 rounded-lg hover:bg-indigo-700 transition"
+                                        className="flex-1 px-4 py-2 bg-[#0071e3] text-white rounded-lg hover:bg-[#0077ED] transition"
                                     >
                                         Update
                                     </button>
@@ -2257,20 +2257,20 @@ const App = () => {
 
                 {/* Modal Add Payment */}
                 {showPayment && (
-                    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-                        <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg max-w-md w-full p-6">
+                    <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
+                        <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl max-w-md w-full p-6">
                             <h3 className="text-xl font-bold mb-4">
                                 Tambah Pembayaran
                             </h3>
                             <form onSubmit={addPayment} className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-200 mb-1">
+                                    <label className="block text-sm font-medium text-gray-600 mb-1">
                                         Siswa
                                     </label>
                                     <select
                                         name="student"
                                         required
-                                        className="w-full px-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                     >
                                         <option value="">Pilih Siswa</option>
                                         {students
@@ -2287,7 +2287,7 @@ const App = () => {
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-200 mb-1">
+                                    <label className="block text-sm font-medium text-gray-600 mb-1">
                                         Jumlah
                                     </label>
                                     <input
@@ -2295,11 +2295,11 @@ const App = () => {
                                         name="amount"
                                         defaultValue="2000"
                                         required
-                                        className="w-full px-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-200 mb-1">
+                                    <label className="block text-sm font-medium text-gray-600 mb-1">
                                         Tanggal
                                     </label>
                                     <input
@@ -2311,42 +2311,42 @@ const App = () => {
                                                 .split('T')[0]
                                         }
                                         required
-                                        className="w-full px-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-200 mb-1">
+                                    <label className="block text-sm font-medium text-gray-600 mb-1">
                                         Metode
                                     </label>
                                     <select
                                         name="method"
-                                        className="w-full px-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                     >
                                         <option>Tunai</option>
                                         <option>Transfer</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-200 mb-1">
+                                    <label className="block text-sm font-medium text-gray-600 mb-1">
                                         Catatan (opsional)
                                     </label>
                                     <input
                                         type="text"
                                         name="note"
-                                        className="w-full px-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                     />
                                 </div>
                                 <div className="flex gap-3">
                                     <button
                                         type="button"
                                         onClick={() => setShowPayment(false)}
-                                        className="flex-1 px-4 py-2 border border-slate-700/50 rounded-lg hover:bg-slate-800/60 transition"
+                                        className="flex-1 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
                                     >
                                         Batal
                                     </button>
                                     <button
                                         type="submit"
-                                        className="flex-1 px-4 py-2 bg-cyan-600 text-slate-50 rounded-lg hover:bg-indigo-700 transition"
+                                        className="flex-1 px-4 py-2 bg-[#0071e3] text-white rounded-lg hover:bg-[#0077ED] transition"
                                     >
                                         Simpan
                                     </button>
@@ -2358,36 +2358,36 @@ const App = () => {
 
                 {/* Modal Add Expense */}
                 {showExpense && (
-                    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-                        <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-lg max-w-md w-full p-6">
+                    <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
+                        <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl max-w-md w-full p-6">
                             <h3 className="text-xl font-bold mb-4">
                                 Tambah Pengeluaran
                             </h3>
                             <form onSubmit={addExpense} className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-200 mb-1">
+                                    <label className="block text-sm font-medium text-gray-600 mb-1">
                                         Keperluan
                                     </label>
                                     <input
                                         type="text"
                                         name="purpose"
                                         required
-                                        className="w-full px-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-200 mb-1">
+                                    <label className="block text-sm font-medium text-gray-600 mb-1">
                                         Jumlah
                                     </label>
                                     <input
                                         type="number"
                                         name="amount"
                                         required
-                                        className="w-full px-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-200 mb-1">
+                                    <label className="block text-sm font-medium text-gray-600 mb-1">
                                         Tanggal
                                     </label>
                                     <input
@@ -2399,16 +2399,16 @@ const App = () => {
                                                 .split('T')[0]
                                         }
                                         required
-                                        className="w-full px-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-200 mb-1">
+                                    <label className="block text-sm font-medium text-gray-600 mb-1">
                                         Kategori
                                     </label>
                                     <select
                                         name="category"
-                                        className="w-full px-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                     >
                                         <option>Kebersihan</option>
                                         <option>Acara</option>
@@ -2417,27 +2417,27 @@ const App = () => {
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-200 mb-1">
+                                    <label className="block text-sm font-medium text-gray-600 mb-1">
                                         Disetujui Oleh
                                     </label>
                                     <input
                                         type="text"
                                         name="approvedBy"
                                         required
-                                        className="w-full px-3 py-2 border border-slate-700/50 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
                                     />
                                 </div>
                                 <div className="flex gap-3">
                                     <button
                                         type="button"
                                         onClick={() => setShowExpense(false)}
-                                        className="flex-1 px-4 py-2 border border-slate-700/50 rounded-lg hover:bg-slate-800/60 transition"
+                                        className="flex-1 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
                                     >
                                         Batal
                                     </button>
                                     <button
                                         type="submit"
-                                        className="flex-1 px-4 py-2 bg-cyan-600 text-slate-50 rounded-lg hover:bg-indigo-700 transition"
+                                        className="flex-1 px-4 py-2 bg-[#0071e3] text-white rounded-lg hover:bg-[#0077ED] transition"
                                     >
                                         Simpan
                                     </button>

@@ -86,18 +86,18 @@ const IncomeVsExpenseChart = ({ payments, expenses, timeRange }) => {
     const CustomTooltip = ({ active, payload }) => {
         if (active && payload && payload.length) {
             return (
-                <div className="bg-slate-900/95 backdrop-blur-xl p-4 rounded-lg shadow-lg border border-slate-700/50 bg-slate-800/60 text-slate-50">
-                    <p className="font-semibold text-slate-100 mb-2">
+                <div className="bg-white/95 backdrop-blur-xl p-4 rounded-lg shadow-apple border border-gray-200 bg-gray-50 text-gray-900">
+                    <p className="font-semibold text-gray-900 mb-2">
                         {payload[0].payload.date}
                     </p>
                     <div className="space-y-1">
-                        <p className="text-sm text-cyan-400">
+                        <p className="text-sm text-[#0071e3]">
                             Pemasukan: {formatCurrency(payload[0].value)}
                         </p>
-                        <p className="text-sm text-rose-300">
+                        <p className="text-sm text-red-600">
                             Pengeluaran: {formatCurrency(payload[1].value)}
                         </p>
-                        <p className="text-sm font-semibold text-slate-200 border-t pt-1">
+                        <p className="text-sm font-semibold text-gray-600 border-t pt-1">
                             Selisih:{' '}
                             {formatCurrency(
                                 payload[0].value - payload[1].value
@@ -112,7 +112,7 @@ const IncomeVsExpenseChart = ({ payments, expenses, timeRange }) => {
 
     if (chartData.length === 0) {
         return (
-            <div className="h-64 flex items-center justify-center text-slate-300">
+            <div className="h-64 flex items-center justify-center text-gray-500">
                 <p>Tidak ada data untuk ditampilkan</p>
             </div>
         );

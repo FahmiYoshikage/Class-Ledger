@@ -101,6 +101,8 @@ router.post('/login', authLimiter, async (req, res) => {
     try {
         const { username, password } = req.body;
 
+        console.log(`🔐 Login attempt for user: ${username} from IP: ${req.headers['cf-connecting-ip'] || req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.ip}`);
+
         // Validation
         if (!username || !password) {
             return res.status(400).json({
