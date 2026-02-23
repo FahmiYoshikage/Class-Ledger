@@ -12,22 +12,25 @@ const router = express.Router();
 // ==============================================
 async function getCurrentWeek() {
     try {
-        const [semesterStatusSetting, pausedWeekSetting, startDateSetting] =
+        const [semesterStatusSetting, pausedWeekSetting, startDateSetting, accumulatedWeeksSetting] =
             await Promise.all([
                 Setting.findOne({ key: 'semester_status' }),
                 Setting.findOne({ key: 'paused_week' }),
                 Setting.findOne({ key: 'start_date' }),
+                Setting.findOne({ key: 'accumulated_weeks' }),
             ]);
 
         const semesterStatus = semesterStatusSetting?.value || 'active';
         const pausedWeek = pausedWeekSetting?.value;
+        // Default 7 = semester 1 had 7 weeks (hardcoded initial carry-over)
+        const accumulatedWeeks = accumulatedWeeksSetting ? parseInt(accumulatedWeeksSetting.value) : 7;
         const startDate = startDateSetting?.value
             ? new Date(startDateSetting.value)
             : new Date(process.env.START_DATE || '2025-10-27');
 
-        // If paused, return the paused week
+        // If paused, return total weeks (accumulated + paused week)
         if (semesterStatus === 'paused' && pausedWeek) {
-            return pausedWeek;
+            return accumulatedWeeks + pausedWeek;
         }
 
         // Calculate current week normally
@@ -35,14 +38,15 @@ async function getCurrentWeek() {
         const days = Math.floor((now - startDate) / (24 * 60 * 60 * 1000));
         const currentWeek = Math.max(0, Math.ceil(days / 7) + 1);
 
-        return currentWeek;
+        // Return total weeks across all semesters
+        return accumulatedWeeks + currentWeek;
     } catch (error) {
         console.error('Error getting current week:', error);
-        // Fallback to normal calculation
+        // Fallback: 7 (semester 1) + current semester calculation
         const startDate = new Date(process.env.START_DATE || '2025-10-27');
         const now = new Date();
         const days = Math.floor((now - startDate) / (24 * 60 * 60 * 1000));
-        return Math.max(0, Math.ceil(days / 7) + 1);
+        return 7 + Math.max(0, Math.ceil(days / 7) + 1);
     }
 }
 
