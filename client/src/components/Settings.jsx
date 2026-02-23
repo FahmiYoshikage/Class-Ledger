@@ -196,12 +196,15 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
 
             // Calculate accumulated weeks: previous accumulated + paused week (from current semester)
             // This carries over the total weeks from all previous semesters
-            let prevAccumulated = 0;
+            // Default to 7 = semester 1 had 7 weeks (hardcoded initial carry-over)
+            let prevAccumulated = 7;
             try {
                 const accRes = await settingsAPI.get('accumulated_weeks');
-                prevAccumulated = parseInt(accRes?.data?.value) || 0;
+                if (accRes?.data?.value != null) {
+                    prevAccumulated = parseInt(accRes.data.value);
+                }
             } catch (e) {
-                // No accumulated_weeks yet
+                // No accumulated_weeks in DB yet, use hardcoded default
             }
             const newAccumulatedWeeks = prevAccumulated + (pausedWeek || 0);
 

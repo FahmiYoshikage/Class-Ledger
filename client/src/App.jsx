@@ -39,7 +39,8 @@ const App = () => {
     const [expenses, setExpenses] = useState([]);
     const [startDate, setStartDate] = useState(new Date('2025-10-27'));
     const [currentWeek, setCurrentWeek] = useState(1);
-    const [accumulatedWeeks, setAccumulatedWeeks] = useState(0);
+    // Default 7 = semester 1 had 7 weeks (hardcoded initial carry-over)
+    const [accumulatedWeeks, setAccumulatedWeeks] = useState(7);
     const [semesterStatus, setSemesterStatus] = useState('active');
     // Load activeTab from localStorage or default to 'dashboard'
     const [activeTab, setActiveTab] = useState(() => {
@@ -115,7 +116,7 @@ const App = () => {
             const response = await api.get('/settings/current-week');
             if (response.data?.currentWeek) {
                 setCurrentWeek(response.data.currentWeek);
-                setAccumulatedWeeks(response.data.accumulatedWeeks || 0);
+                setAccumulatedWeeks(response.data.accumulatedWeeks ?? 7);
                 setSemesterStatus(response.data.status || 'active');
             }
         } catch (err) {

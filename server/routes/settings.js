@@ -16,7 +16,9 @@ router.get('/current-week', async (req, res) => {
 
         const semesterStatus = semesterStatusSetting?.value || 'active';
         const pausedWeek = pausedWeekSetting?.value;
-        const accumulatedWeeks = parseInt(accumulatedWeeksSetting?.value) || 0;
+        // Default to 7 = semester 1 had 7 weeks (hardcoded initial carry-over)
+        // Once pause/resume saves a new value to DB, this fallback is ignored
+        const accumulatedWeeks = accumulatedWeeksSetting ? parseInt(accumulatedWeeksSetting.value) : 7;
         const startDate = startDateSetting?.value
             ? new Date(startDateSetting.value)
             : new Date(process.env.START_DATE || '2025-10-27');

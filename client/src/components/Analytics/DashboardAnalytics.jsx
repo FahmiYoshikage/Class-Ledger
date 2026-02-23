@@ -49,7 +49,8 @@ const DashboardAnalytics = () => {
                 ? new Date(startDateRes.data.value)
                 : new Date('2025-10-27');
             const serverCurrentWeek = currentWeekRes?.data?.currentWeek || null;
-            const serverAccumulatedWeeks = currentWeekRes?.data?.accumulatedWeeks || 0;
+            // Default 7 = semester 1 had 7 weeks (hardcoded initial carry-over)
+            const serverAccumulatedWeeks = currentWeekRes?.data?.accumulatedWeeks ?? 7;
 
             setStudents(studentsData);
             setPayments(paymentsData);
