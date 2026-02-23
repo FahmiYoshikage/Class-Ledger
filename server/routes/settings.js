@@ -6,15 +6,17 @@ const router = express.Router();
 // Get current week (respects semester pause) - MUST BE BEFORE /:key route
 router.get('/current-week', async (req, res) => {
     try {
-        const [semesterStatusSetting, pausedWeekSetting, startDateSetting] =
+        const [semesterStatusSetting, pausedWeekSetting, startDateSetting, accumulatedWeeksSetting] =
             await Promise.all([
                 Setting.findOne({ key: 'semester_status' }),
                 Setting.findOne({ key: 'paused_week' }),
                 Setting.findOne({ key: 'start_date' }),
+                Setting.findOne({ key: 'accumulated_weeks' }),
             ]);
 
         const semesterStatus = semesterStatusSetting?.value || 'active';
         const pausedWeek = pausedWeekSetting?.value;
+        const accumulatedWeeks = parseInt(accumulatedWeeksSetting?.value) || 0;
         const startDate = startDateSetting?.value
             ? new Date(startDateSetting.value)
             : new Date(process.env.START_DATE || '2025-10-27');
@@ -23,6 +25,8 @@ router.get('/current-week', async (req, res) => {
         if (semesterStatus === 'paused' && pausedWeek) {
             return res.json({
                 currentWeek: pausedWeek,
+                accumulatedWeeks,
+                totalWeeks: accumulatedWeeks + pausedWeek,
                 status: 'paused',
                 message: `System paused at Week ${pausedWeek}`,
             });
@@ -36,6 +40,8 @@ router.get('/current-week', async (req, res) => {
 
         res.json({
             currentWeek,
+            accumulatedWeeks,
+            totalWeeks: accumulatedWeeks + currentWeek,
             status: 'active',
             startDate: startDate,
         });

@@ -194,11 +194,23 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
             // Set new start date to today (new semester starts now)
             const today = formatDateForInput(new Date());
 
+            // Calculate accumulated weeks: previous accumulated + paused week (from current semester)
+            // This carries over the total weeks from all previous semesters
+            let prevAccumulated = 0;
+            try {
+                const accRes = await settingsAPI.get('accumulated_weeks');
+                prevAccumulated = parseInt(accRes?.data?.value) || 0;
+            } catch (e) {
+                // No accumulated_weeks yet
+            }
+            const newAccumulatedWeeks = prevAccumulated + (pausedWeek || 0);
+
             await Promise.all([
                 settingsAPI.set('semester_status', 'active'),
                 settingsAPI.set('semester_name', newSemesterName),
                 settingsAPI.set('start_date', today), // Reset week calculation
                 settingsAPI.set('resumed_at', new Date().toISOString()),
+                settingsAPI.set('accumulated_weeks', newAccumulatedWeeks), // Carry over total weeks
                 settingsAPI.set('paused_week', null), // Clear paused week
             ]);
 

@@ -49,26 +49,27 @@ const DashboardAnalytics = () => {
                 ? new Date(startDateRes.data.value)
                 : new Date('2025-10-27');
             const serverCurrentWeek = currentWeekRes?.data?.currentWeek || null;
+            const serverAccumulatedWeeks = currentWeekRes?.data?.accumulatedWeeks || 0;
 
             setStudents(studentsData);
             setPayments(paymentsData);
             setExpenses(expensesData);
 
             // Calculate analytics
-            calculateAnalytics(studentsData, paymentsData, expensesData, semesterStartDate, serverCurrentWeek);
+            calculateAnalytics(studentsData, paymentsData, expensesData, semesterStartDate, serverCurrentWeek, serverAccumulatedWeeks);
         } catch (error) {
             console.error('Error loading data:', error);
             // Set empty data to prevent white screen
             setStudents([]);
             setPayments([]);
             setExpenses([]);
-            calculateAnalytics([], [], [], new Date('2025-10-27'), null);
+            calculateAnalytics([], [], [], new Date('2025-10-27'), null, 0);
         } finally {
             setLoading(false);
         }
     };
 
-    const calculateAnalytics = (studentsData, paymentsData, expensesData, semesterStartDate, serverCurrentWeek) => {
+    const calculateAnalytics = (studentsData, paymentsData, expensesData, semesterStartDate, serverCurrentWeek, serverAccumulatedWeeks) => {
         // Ensure data is arrays
         const students = Array.isArray(studentsData) ? studentsData : [];
         const allPayments = Array.isArray(paymentsData) ? paymentsData : [];
@@ -141,7 +142,7 @@ const DashboardAnalytics = () => {
                 ? totalIncome / filteredPayments.length
                 : 0;
 
-        // Debt analysis - use semester start date and filter payments by semester
+        // Debt analysis - cumulative across all semesters
         const semStart = new Date(semesterStartDate);
         semStart.setHours(0, 0, 0, 0);
 
@@ -153,23 +154,22 @@ const DashboardAnalytics = () => {
             currentWeek = Math.max(1, Math.ceil(days / 7));
         }
 
-        // Only count payments from current semester for debt calculation
-        const semesterPayments = allPayments.filter(
-            (p) => new Date(p.date) >= semStart
-        );
+        // Total weeks = accumulated from previous semesters + current semester weeks
+        const totalWeeks = (serverAccumulatedWeeks || 0) + currentWeek;
 
+        // Count ALL payments (not filtered by semester) for cumulative debt calculation
         let totalDebt = 0;
         let studentsWithDebt = 0;
 
         students.forEach((student) => {
-            const studentPayments = semesterPayments.filter(
+            const studentPayments = allPayments.filter(
                 (p) => (p.studentId?._id || p.studentId) === student._id
             );
             const totalPaid = studentPayments.reduce(
                 (sum, p) => sum + (p.amount || 0),
                 0
             );
-            const shouldPay = currentWeek * 2000;
+            const shouldPay = totalWeeks * 2000;
             const debt = shouldPay - totalPaid;
 
             if (debt > 0) {

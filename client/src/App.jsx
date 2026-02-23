@@ -39,6 +39,7 @@ const App = () => {
     const [expenses, setExpenses] = useState([]);
     const [startDate, setStartDate] = useState(new Date('2025-10-27'));
     const [currentWeek, setCurrentWeek] = useState(1);
+    const [accumulatedWeeks, setAccumulatedWeeks] = useState(0);
     const [semesterStatus, setSemesterStatus] = useState('active');
     // Load activeTab from localStorage or default to 'dashboard'
     const [activeTab, setActiveTab] = useState(() => {
@@ -114,6 +115,7 @@ const App = () => {
             const response = await api.get('/settings/current-week');
             if (response.data?.currentWeek) {
                 setCurrentWeek(response.data.currentWeek);
+                setAccumulatedWeeks(response.data.accumulatedWeeks || 0);
                 setSemesterStatus(response.data.status || 'active');
             }
         } catch (err) {
@@ -912,21 +914,13 @@ const App = () => {
         );
     };
 
-    // Calculate totals - only count payments from current semester for tunggakan
-    const getSemesterPayments = () => {
-        // Filter payments to only include those from current semester (on or after startDate)
-        const semesterStart = new Date(startDate);
-        semesterStart.setHours(0, 0, 0, 0);
-        return payments.filter((p) => {
-            const paymentDate = new Date(p.date);
-            return paymentDate >= semesterStart;
-        });
-    };
-
+    // Calculate totals
+    // Tunggakan is cumulative across semesters:
+    //   shouldPay = (accumulatedWeeks from prev semesters + currentWeek) * weeklyAmount
+    //   totalPaid = ALL payments ever made by the student
+    //   tunggakan = shouldPay - totalPaid
     const getTotalPaid = (studentId) => {
-        const semesterPayments = getSemesterPayments();
-
-        const studentPayments = semesterPayments.filter((p) => {
+        const studentPayments = payments.filter((p) => {
             const pStudentId =
                 p.studentId?._id || p.studentId || p.student?._id || p.student;
             return pStudentId === studentId;
@@ -937,7 +931,8 @@ const App = () => {
 
     const getTunggakan = (studentId) => {
         const totalPaid = getTotalPaid(studentId);
-        const shouldPay = currentWeek * 2000;
+        const totalWeeks = accumulatedWeeks + currentWeek;
+        const shouldPay = totalWeeks * 2000;
         return shouldPay - totalPaid;
     };
 
@@ -946,7 +941,7 @@ const App = () => {
         return tunggakan >= 8000;
     };
 
-    // Total kas masuk/keluar tetap dari SEMUA data (bukan per semester)
+    // Total kas masuk/keluar dari SEMUA data
     const totalKasMasuk = payments.reduce((sum, p) => sum + p.amount, 0);
     const totalKasKeluar = expenses.reduce((sum, e) => sum + e.amount, 0);
     const saldoKas = totalKasMasuk - totalKasKeluar;
