@@ -78,6 +78,12 @@ router.post('/', async (req, res) => {
                 .json({ message: 'Key and value are required' });
         }
 
+        // If value is null, delete the setting instead of saving null
+        if (value === null || value === '') {
+            await Setting.findOneAndDelete({ key });
+            return res.json({ key, value: null, message: 'Setting cleared' });
+        }
+
         const setting = await Setting.findOneAndUpdate(
             { key },
             { value },
