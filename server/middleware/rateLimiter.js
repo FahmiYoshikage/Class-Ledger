@@ -1,14 +1,14 @@
 import rateLimit from 'express-rate-limit';
 
-// Extract real client IP from behind Cloudflare/Nginx/Docker proxy chain
+// Extract real client IP from behind Nginx Proxy Manager/Docker proxy chain
 const getClientIp = (req) => {
-    // Cloudflare's CF-Connecting-IP header is the most reliable
-    const cfIp = req.headers['cf-connecting-ip'];
-    if (cfIp) return cfIp;
-
-    // X-Real-IP set by Nginx
+    // X-Real-IP set by Nginx Proxy Manager
     const realIp = req.headers['x-real-ip'];
     if (realIp) return realIp;
+
+    // Cloudflare's CF-Connecting-IP header
+    const cfIp = req.headers['cf-connecting-ip'];
+    if (cfIp) return cfIp;
 
     // Fallback to first IP in X-Forwarded-For
     const forwardedFor = req.headers['x-forwarded-for'];
@@ -20,11 +20,15 @@ const getClientIp = (req) => {
     return req.ip;
 };
 
+// Disable ipKeyGenerator validation since we use custom header-based IP extraction
+const commonValidate = { ipKeyGenerator: false };
+
 // General API rate limiter (500 requests per 15 minutes)
 export const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 500, // Limit each IP to 500 requests per windowMs
     keyGenerator: getClientIp,
+    validate: commonValidate,
     message: {
         success: false,
         message: 'Too many requests from this IP, please try again later.',
@@ -50,6 +54,7 @@ export const authLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 20, // Limit each IP to 20 login requests per windowMs
     keyGenerator: getClientIp,
+    validate: commonValidate,
     message: {
         success: false,
         message:
@@ -75,6 +80,7 @@ export const createUserLimiter = rateLimit({
     windowMs: 60 * 60 * 1000, // 1 hour
     max: 10, // Max 10 users per hour
     keyGenerator: getClientIp,
+    validate: commonValidate,
     message: {
         success: false,
         message: 'Too many users created from this IP, please try again later.',
@@ -88,6 +94,7 @@ export const passwordChangeLimiter = rateLimit({
     windowMs: 60 * 60 * 1000, // 1 hour
     max: 3, // Max 3 password changes per hour
     keyGenerator: getClientIp,
+    validate: commonValidate,
     message: {
         success: false,
         message:
@@ -102,6 +109,7 @@ export const forgotPasswordLimiter = rateLimit({
     windowMs: 60 * 60 * 1000, // 1 hour
     max: 3, // Max 3 forgot password requests per hour
     keyGenerator: getClientIp,
+    validate: commonValidate,
     message: {
         success: false,
         message:
