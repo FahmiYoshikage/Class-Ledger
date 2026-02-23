@@ -64,7 +64,7 @@ async function resetAdmin() {
                 $set: {
                     password: hashedPassword,
                     isActive: true,
-                    mustChangePassword: true,
+                    mustChangePassword: false,
                     updatedAt: new Date(),
                 },
             }
