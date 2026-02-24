@@ -8,42 +8,50 @@ import groupBroadcastService from './groupBroadcastService.js';
 class NotificationScheduler {
     constructor() {
         this.jobs = [];
+        this.startedAt = null; // Track when scheduler started
     }
 
-    // Hitung current week (respects semester pause)
+    // Hitung current week (respects semester pause) — includes accumulated weeks
     async getCurrentWeek() {
         try {
-            const [semesterStatusSetting, pausedWeekSetting, startDateSetting] =
+            const [semesterStatusSetting, pausedWeekSetting, startDateSetting, accumulatedWeeksSetting] =
                 await Promise.all([
                     Setting.findOne({ key: 'semester_status' }),
                     Setting.findOne({ key: 'paused_week' }),
                     Setting.findOne({ key: 'start_date' }),
+                    Setting.findOne({ key: 'accumulated_weeks' }),
                 ]);
 
             const semesterStatus = semesterStatusSetting?.value || 'active';
             const pausedWeek = pausedWeekSetting?.value;
+            // Default 7 = semester 1 had 7 weeks (hardcoded initial carry-over)
+            const accumulatedWeeks = accumulatedWeeksSetting ? parseInt(accumulatedWeeksSetting.value) : 7;
 
-            // If paused, return the paused week (frozen)
+            // If paused, return total weeks (accumulated + paused week)
             if (semesterStatus === 'paused' && pausedWeek) {
-                console.log(`⏸️ Semester PAUSED at Week ${pausedWeek}`);
-                return pausedWeek;
+                console.log(`⏸️ Semester PAUSED at Week ${pausedWeek} (total: ${accumulatedWeeks + pausedWeek})`);
+                return accumulatedWeeks + pausedWeek;
             }
 
-            // Calculate normally if active
+            // Calculate normally if active — must match settings.js formula
             const startDate = startDateSetting?.value
                 ? new Date(startDateSetting.value)
                 : new Date(process.env.START_DATE || '2025-10-27');
 
             const now = new Date();
-            const days = Math.floor((now - startDate) / (24 * 60 * 60 * 1000));
-            return Math.max(0, Math.ceil(days / 7) + 1);
+            const diffTime = Math.abs(now - startDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const currentWeek = Math.max(1, Math.ceil(diffDays / 7));
+
+            return accumulatedWeeks + currentWeek;
         } catch (error) {
             console.error('Error getting current week:', error);
-            // Fallback to env
+            // Fallback: 7 (semester 1) + current semester calculation
             const startDate = new Date(process.env.START_DATE || '2025-10-27');
             const now = new Date();
-            const days = Math.floor((now - startDate) / (24 * 60 * 60 * 1000));
-            return Math.max(0, Math.ceil(days / 7) + 1);
+            const diffTime = Math.abs(now - startDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return 7 + Math.max(1, Math.ceil(diffDays / 7));
         }
     }
 
@@ -216,12 +224,26 @@ class NotificationScheduler {
 
     // Setup cron jobs
     setupSchedules() {
+        // Grace period: skip cron triggers within 5 minutes of startup
+        // to prevent sending messages immediately on container restart
+        const STARTUP_GRACE_MINUTES = 5;
+
+        const isWithinGracePeriod = () => {
+            if (!this.startedAt) return true;
+            const minutesSinceStart = (Date.now() - this.startedAt) / (1000 * 60);
+            return minutesSinceStart < STARTUP_GRACE_MINUTES;
+        };
+
         // ========================================
         // 📅 SCHEDULE 1: Senin pagi jam 07:00
         // ========================================
         const mondayMorning = cron.schedule(
             '0 7 * * 1',
             async () => {
+                if (isWithinGracePeriod()) {
+                    console.log('⏳ [MONDAY REMINDER] Skipped — container just started');
+                    return;
+                }
                 console.log(
                     '\n⏰ [MONDAY REMINDER] Running Monday morning reminder...'
                 );
@@ -239,6 +261,10 @@ class NotificationScheduler {
         const fridayAfternoon = cron.schedule(
             '0 15 * * 5',
             async () => {
+                if (isWithinGracePeriod()) {
+                    console.log('⏳ [FRIDAY REMINDER] Skipped — container just started');
+                    return;
+                }
                 console.log(
                     '\n⏰ [FRIDAY REMINDER] Running Friday afternoon reminder...'
                 );
@@ -256,6 +282,10 @@ class NotificationScheduler {
         const dailyReminder = cron.schedule(
             '0 10 * * *',
             async () => {
+                if (isWithinGracePeriod()) {
+                    console.log('⏳ [DAILY CHECK] Skipped — container just started');
+                    return;
+                }
                 console.log(
                     '\n⏰ [DAILY CHECK] Checking for urgent reminders...'
                 );
@@ -273,6 +303,10 @@ class NotificationScheduler {
         const biWeeklyBroadcast = cron.schedule(
             '0 18 * * 0',
             async () => {
+                if (isWithinGracePeriod()) {
+                    console.log('⏳ [BI-WEEKLY BROADCAST] Skipped — container just started');
+                    return;
+                }
                 const weekNumber = Math.floor(
                     Date.now() / (1000 * 60 * 60 * 24 * 7)
                 );
@@ -322,6 +356,7 @@ class NotificationScheduler {
 
     // Start semua scheduled jobs
     start() {
+        this.startedAt = Date.now();
         this.setupSchedules();
 
         // Enable berdasarkan environment variable
