@@ -33,10 +33,11 @@ async function getCurrentWeek() {
             return accumulatedWeeks + pausedWeek;
         }
 
-        // Calculate current week normally
+        // Calculate current week normally — must match settings.js formula exactly
         const now = new Date();
-        const days = Math.floor((now - startDate) / (24 * 60 * 60 * 1000));
-        const currentWeek = Math.max(0, Math.ceil(days / 7) + 1);
+        const diffTime = Math.abs(now - startDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const currentWeek = Math.max(1, Math.ceil(diffDays / 7));
 
         // Return total weeks across all semesters
         return accumulatedWeeks + currentWeek;
@@ -45,8 +46,9 @@ async function getCurrentWeek() {
         // Fallback: 7 (semester 1) + current semester calculation
         const startDate = new Date(process.env.START_DATE || '2025-10-27');
         const now = new Date();
-        const days = Math.floor((now - startDate) / (24 * 60 * 60 * 1000));
-        return 7 + Math.max(0, Math.ceil(days / 7) + 1);
+        const diffTime = Math.abs(now - startDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return 7 + Math.max(1, Math.ceil(diffDays / 7));
     }
 }
 
