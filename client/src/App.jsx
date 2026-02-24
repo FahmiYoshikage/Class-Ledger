@@ -18,6 +18,13 @@ import {
     Download,
     FileText,
     Bell,
+    BarChart3,
+    LayoutDashboard,
+    CreditCard,
+    Receipt,
+    AlertTriangle,
+    CalendarDays,
+    Settings as SettingsIcon,
 } from 'lucide-react';
 import Settings from './components/Settings';
 import {
@@ -31,7 +38,6 @@ import EventManagement from './components/EventManagement';
 import CustomPayment from './components/CustomPayment';
 import NotificationManager from './components/NotificationManager';
 import DashboardAnalytics from './components/Analytics/DashboardAnalytics';
-import { BarChart3 } from 'lucide-react';
 
 const App = () => {
     const [students, setStudents] = useState([]);
@@ -1109,34 +1115,39 @@ const App = () => {
 
                 {/* Tabs */}
                 <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] mb-6 animate-slide-up stagger-6">
-                    <div className="flex border-b border-white/[0.1] overflow-x-auto">
+                    <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 border-b border-white/[0.1]">
                         {[
-                            'dashboard',
-                            'analytics',
-                            'siswa',
-                            'pembayaran',
-                            'pengeluaran',
-                            'tunggakan',
-                            'event',
-                            'notifikasi',
-                            'pengaturan',
-                        ].map((tab) => (
-                            <button
-                                key={tab}
-                                onClick={() => setActiveTab(tab)}
-                                className={
-                                    'px-5 py-3 text-[13px] font-medium capitalize whitespace-nowrap flex items-center gap-2 transition-colors ' +
-                                    (activeTab === tab
-                                        ? 'text-indigo-400 border-b-2 border-indigo-400 tab-active'
-                                        : 'text-white/60 hover:text-white/60')
-                                }
-                            >
-                                {tab === 'notifikasi' && (
-                                    <Bell className="w-4 h-4" />
-                                )}
-                                {tab}
-                            </button>
-                        ))}
+                            { key: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+                            { key: 'analytics', label: 'Analytics', icon: BarChart3 },
+                            { key: 'siswa', label: 'Siswa', icon: Users },
+                            { key: 'pembayaran', label: 'Bayar', icon: CreditCard },
+                            { key: 'pengeluaran', label: 'Keluar', icon: Receipt },
+                            { key: 'tunggakan', label: 'Tunggakan', icon: AlertTriangle },
+                            { key: 'event', label: 'Event', icon: CalendarDays },
+                            { key: 'notifikasi', label: 'Notifikasi', icon: Bell },
+                            { key: 'pengaturan', label: 'Setting', icon: SettingsIcon },
+                        ].map((tab) => {
+                            const Icon = tab.icon;
+                            const isActive = activeTab === tab.key;
+                            return (
+                                <button
+                                    key={tab.key}
+                                    onClick={() => setActiveTab(tab.key)}
+                                    className={
+                                        'relative flex flex-col items-center justify-center gap-1 py-3 sm:py-3.5 text-[11px] sm:text-[12px] font-medium whitespace-nowrap transition-all duration-200 ' +
+                                        (isActive
+                                            ? 'text-indigo-400'
+                                            : 'text-white/40 hover:text-white/65 hover:bg-white/[0.03]')
+                                    }
+                                >
+                                    <Icon className={`w-4 h-4 sm:w-[18px] sm:h-[18px] transition-colors duration-200 ${isActive ? 'text-indigo-400' : ''}`} />
+                                    <span>{tab.label}</span>
+                                    {isActive && (
+                                        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-[2px] rounded-full bg-gradient-to-r from-indigo-500 to-violet-500" />
+                                    )}
+                                </button>
+                            );
+                        })}
                     </div>
                 </div>
 
