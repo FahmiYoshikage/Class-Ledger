@@ -58,8 +58,8 @@ const ChangePassword = () => {
                 <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl p-8">
                     {/* Header */}
                     <div className="text-center mb-6">
-                        <div className="bg-blue-500/[0.06]0/[0.06] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <Lock className="w-8 h-8 text-blue-400" />
+                        <div className="bg-indigo-500/[0.05]0/[0.06] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <Lock className="w-8 h-8 text-indigo-400" />
                         </div>
                         <h2 className="text-2xl font-bold text-white mb-2">
                             {isFirstLogin
@@ -67,10 +67,10 @@ const ChangePassword = () => {
                                 : 'Ubah Password'}
                         </h2>
                         {isFirstLogin && (
-                            <div className="bg-amber-500/[0.06]0/[0.06] border-l-4 border-yellow-400 p-3 rounded text-left">
+                            <div className="bg-amber-500/[0.06] border-l-2 border-amber-300/40 p-3 rounded text-left">
                                 <div className="flex items-start">
                                     <AlertCircle className="w-5 h-5 text-yellow-400 mr-2 mt-0.5" />
-                                    <p className="text-sm text-amber-400">
+                                    <p className="text-sm text-amber-300">
                                         Untuk keamanan, silakan ubah password
                                         default Anda.
                                     </p>
@@ -81,10 +81,10 @@ const ChangePassword = () => {
 
                     {/* Error Alert */}
                     {error && (
-                        <div className="mb-4 bg-rose-500/[0.06] border-l-4 border-red-400 p-4 rounded">
+                        <div className="mb-4 bg-rose-500/[0.05] border-l-2 border-rose-400/50 p-4 rounded">
                             <div className="flex items-center">
                                 <AlertCircle className="w-5 h-5 text-red-400 mr-2" />
-                                <p className="text-rose-400 text-sm">{error}</p>
+                                <p className="text-rose-300 text-sm">{error}</p>
                             </div>
                         </div>
                     )}
@@ -102,7 +102,7 @@ const ChangePassword = () => {
                                     onChange={(e) =>
                                         setCurrentPassword(e.target.value)
                                     }
-                                    className="w-full px-4 py-3 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-blue-500/40 focus:border-transparent pr-12"
+                                    className="w-full px-4 py-3 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent pr-12"
                                     placeholder="Masukkan password saat ini"
                                     required
                                 />
@@ -132,7 +132,7 @@ const ChangePassword = () => {
                                     onChange={(e) =>
                                         setNewPassword(e.target.value)
                                     }
-                                    className="w-full px-4 py-3 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-blue-500/40 focus:border-transparent pr-12"
+                                    className="w-full px-4 py-3 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent pr-12"
                                     placeholder="Minimal 6 karakter"
                                     required
                                 />
@@ -165,7 +165,7 @@ const ChangePassword = () => {
                                     onChange={(e) =>
                                         setConfirmPassword(e.target.value)
                                     }
-                                    className="w-full px-4 py-3 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-blue-500/40 focus:border-transparent pr-12"
+                                    className="w-full px-4 py-3 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent pr-12"
                                     placeholder="Ketik ulang password baru"
                                     required
                                 />
@@ -188,8 +188,8 @@ const ChangePassword = () => {
                             <div
                                 className={`flex items-center gap-2 text-sm ${
                                     newPassword === confirmPassword
-                                        ? 'text-blue-400'
-                                        : 'text-red-600'
+                                        ? 'text-indigo-400'
+                                        : 'text-rose-300'
                                 }`}
                             >
                                 {newPassword === confirmPassword ? (
@@ -210,7 +210,7 @@ const ChangePassword = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-blue-500/[0.06]0 text-white py-3 rounded-lg hover:bg-blue-600 transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full bg-indigo-500/[0.05]0 text-white py-3 rounded-lg hover:bg-blue-600 transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {loading ? (
                                 <div className="flex items-center justify-center gap-2">

@@ -33,7 +33,7 @@ const DashboardLayout = () => {
     const NavButton = ({ onClick, icon: Icon, label, variant = 'default', active = false }) => {
         const base = 'flex items-center gap-2 px-3 py-1.5 text-[13px] font-medium rounded-lg transition-all duration-200';
         const variants = {
-            primary: 'text-blue-400 hover:bg-blue-500/10',
+            primary: 'text-indigo-400 hover:bg-indigo-500/8',
             danger: 'text-red-400 hover:bg-red-500/10',
             default: active
                 ? 'text-white bg-white/[0.06]'
@@ -50,7 +50,7 @@ const DashboardLayout = () => {
     const MobileNavButton = ({ onClick, icon: Icon, label, variant = 'default' }) => {
         const base = 'w-full flex items-center gap-3 px-4 py-2.5 text-[13px] font-medium rounded-lg transition-all duration-200';
         const variants = {
-            primary: 'text-blue-400 hover:bg-blue-500/10',
+            primary: 'text-indigo-400 hover:bg-indigo-500/8',
             danger: 'text-red-400 hover:bg-red-500/10',
             default: 'text-white/60 hover:text-white/90 hover:bg-white/[0.07]',
         };
@@ -76,7 +76,7 @@ const DashboardLayout = () => {
                     <div className="flex items-center justify-between h-14">
                         {/* User Info */}
                         <div className="flex items-center gap-2.5">
-                            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center shadow-lg shadow-blue-500/10">
+                            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-500/10">
                                 {user?.role === 'admin' ? (
                                     <Shield className="w-4 h-4 text-white" />
                                 ) : (

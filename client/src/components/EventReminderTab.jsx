@@ -107,7 +107,7 @@ const EventReminderTab = ({
                                 <p className="text-sm text-white/60">
                                     Sudah Bayar
                                 </p>
-                                <p className="text-xl font-bold text-blue-400">
+                                <p className="text-xl font-bold text-indigo-400">
                                     {selectedEvent.studentsPaid.length} siswa
                                 </p>
                             </div>
@@ -163,7 +163,7 @@ const EventReminderTab = ({
                                     onClick={() => setEventCategory(cat.value)}
                                     className={`p-3 rounded-lg border-2 text-center transition-all ${
                                         eventCategory === cat.value
-                                            ? 'border-blue-500 bg-blue-500/[0.06]0/[0.06]'
+                                            ? 'border-blue-500 bg-indigo-500/[0.05]0/[0.06]'
                                             : 'border-white/[0.1] hover:border-white/[0.1]'
                                     }`}
                                 >
@@ -186,8 +186,8 @@ const EventReminderTab = ({
                         <div className="p-4">
                             {eventUnpaidStudents.length === 0 ? (
                                 <div className="text-center py-8 text-white/60">
-                                    <CheckCircle className="w-12 h-12 mx-auto mb-2 text-emerald-400" />
-                                    <p className="font-medium text-blue-400">
+                                    <CheckCircle className="w-12 h-12 mx-auto mb-2 text-teal-300" />
+                                    <p className="font-medium text-indigo-400">
                                         Semua siswa sudah bayar! 🎉
                                     </p>
                                     <p className="text-sm mt-1">
@@ -196,8 +196,8 @@ const EventReminderTab = ({
                                 </div>
                             ) : (
                                 <div>
-                                    <div className="bg-amber-500/[0.06]0/[0.06] border border-yellow-200 rounded-lg p-3 mb-3">
-                                        <p className="text-sm text-amber-400">
+                                    <div className="bg-amber-500/[0.06] border border-yellow-200 rounded-lg p-3 mb-3">
+                                        <p className="text-sm text-amber-300">
                                             <strong>Info:</strong>{' '}
                                             {eventUnpaidStudents.length} siswa
                                             belum melakukan pembayaran. Pesan
@@ -211,7 +211,7 @@ const EventReminderTab = ({
                                                 key={student._id}
                                                 className="flex items-center gap-2 p-2 bg-white/[0.04] rounded"
                                             >
-                                                <div className="w-2 h-2 bg-rose-500/[0.06]0 rounded-full"></div>
+                                                <div className="w-2 h-2 bg-rose-500/[0.05]0 rounded-full"></div>
                                                 <div className="flex-1">
                                                     <p className="font-medium text-sm text-white">
                                                         {student.name}

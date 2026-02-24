@@ -68,19 +68,19 @@ const CustomPayment = ({ onPaymentAdded }) => {
             {/* Trigger Button */}
             <button
                 onClick={() => setShowModal(true)}
-                className="w-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/20 px-6 py-4 rounded-xl hover:bg-emerald-500/25 transition flex items-center justify-center gap-3 "
+                className="w-full bg-teal-500/10 text-teal-300 border border-teal-500/15 px-6 py-4 rounded-xl hover:bg-teal-500/18 transition flex items-center justify-center gap-3 "
             >
                 <Gift className="w-5 h-5" />
                 <span className="font-semibold">Tambah Pemasukan Custom</span>
-                <span className="text-xs bg-white/20 px-2 py-1 rounded">
+                <span className="text-xs bg-white/[0.06] px-2 py-1 rounded-md text-white/40">
                     Sumbangan, Donasi, dll
                 </span>
             </button>
 
             {/* Modal */}
             {showModal && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50">
-                    <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl max-w-md w-full">
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50 backdrop-animate">
+                    <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl max-w-md w-full modal-animate">
                         {/* Header */}
                         <div className="p-6 border-b">
                             <div className="flex items-start justify-between">
@@ -113,7 +113,7 @@ const CustomPayment = ({ onPaymentAdded }) => {
                             <div>
                                 <label className="block text-sm font-medium text-white/60 mb-1">
                                     Sumber Pemasukan{' '}
-                                    <span className="text-rose-400">*</span>
+                                    <span className="text-rose-300">*</span>
                                 </label>
                                 <input
                                     type="text"
@@ -121,7 +121,7 @@ const CustomPayment = ({ onPaymentAdded }) => {
                                     required
                                     placeholder="Contoh: Sumbangan Dosen Wali"
                                     list="sourceExamples"
-                                    className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                                    className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white"
                                 />
                                 <datalist id="sourceExamples">
                                     {sourceExamples.map((example, idx) => (
@@ -137,7 +137,7 @@ const CustomPayment = ({ onPaymentAdded }) => {
                             <div>
                                 <label className="block text-sm font-medium text-white/60 mb-1">
                                     Jumlah{' '}
-                                    <span className="text-rose-400">*</span>
+                                    <span className="text-rose-300">*</span>
                                 </label>
                                 <div className="relative">
                                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/60">
@@ -150,7 +150,7 @@ const CustomPayment = ({ onPaymentAdded }) => {
                                         min="1000"
                                         step="500"
                                         placeholder="50000"
-                                        className="w-full pl-10 pr-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-blue-500/40 focus:border-transparent"
+                                        className="w-full pl-10 pr-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent"
                                     />
                                 </div>
                                 <p className="text-xs text-white/60 mt-1">
@@ -162,7 +162,7 @@ const CustomPayment = ({ onPaymentAdded }) => {
                             <div>
                                 <label className="block text-sm font-medium text-white/60 mb-1">
                                     Tanggal{' '}
-                                    <span className="text-rose-400">*</span>
+                                    <span className="text-rose-300">*</span>
                                 </label>
                                 <input
                                     type="date"
@@ -171,7 +171,7 @@ const CustomPayment = ({ onPaymentAdded }) => {
                                     defaultValue={
                                         new Date().toISOString().split('T')[0]
                                     }
-                                    className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                                    className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white"
                                 />
                             </div>
 
@@ -179,11 +179,11 @@ const CustomPayment = ({ onPaymentAdded }) => {
                             <div>
                                 <label className="block text-sm font-medium text-white/60 mb-1">
                                     Metode Pembayaran{' '}
-                                    <span className="text-rose-400">*</span>
+                                    <span className="text-rose-300">*</span>
                                 </label>
                                 <select
                                     name="method"
-                                    className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                                    className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white"
                                 >
                                     <option value="Tunai">Tunai</option>
                                     <option value="Transfer">Transfer</option>
@@ -199,13 +199,13 @@ const CustomPayment = ({ onPaymentAdded }) => {
                                     name="note"
                                     rows="3"
                                     placeholder="Keterangan tambahan..."
-                                    className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                                    className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white"
                                 />
                             </div>
 
                             {/* Info Box */}
-                            <div className="bg-blue-500/[0.06]0/[0.06] border border-blue-200 rounded-lg p-3">
-                                <p className="text-xs text-blue-400">
+                            <div className="bg-indigo-500/[0.05]0/[0.06] border border-blue-200 rounded-lg p-3">
+                                <p className="text-xs text-indigo-400">
                                     <strong>ℹ️ Catatan:</strong> Pemasukan ini
                                     akan langsung masuk ke kas kelas dan
                                     ditampilkan di tab Pembayaran dengan label
@@ -226,7 +226,7 @@ const CustomPayment = ({ onPaymentAdded }) => {
                                 <button
                                     type="submit"
                                     disabled={loading}
-                                    className="flex-1 px-4 py-2 bg-blue-500/[0.06]0 text-white rounded-lg hover:bg-cyan-700 transition flex items-center justify-center gap-2 disabled:opacity-50"
+                                    className="flex-1 px-4 py-2 bg-indigo-500/[0.05]0 text-white rounded-lg hover:bg-cyan-700 transition flex items-center justify-center gap-2 disabled:opacity-50"
                                 >
                                     {loading ? (
                                         <>

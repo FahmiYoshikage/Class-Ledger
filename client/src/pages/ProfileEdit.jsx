@@ -77,19 +77,19 @@ const ProfileEdit = () => {
                 <div className="rounded-xl bg-white/[0.035] border border-white/[0.1]-apple p-6 sm:p-8">
                     {/* Alert Messages */}
                     {error && (
-                        <div className="mb-6 bg-rose-500/[0.06] border border-red-200 rounded-lg p-4">
+                        <div className="mb-6 bg-rose-500/[0.05] border border-red-200 rounded-lg p-4">
                             <div className="flex items-center gap-3">
-                                <AlertCircle className="w-5 h-5 text-rose-400 flex-shrink-0" />
-                                <p className="text-sm text-rose-400">{error}</p>
+                                <AlertCircle className="w-5 h-5 text-rose-300 flex-shrink-0" />
+                                <p className="text-sm text-rose-300">{error}</p>
                             </div>
                         </div>
                     )}
 
                     {success && (
-                        <div className="mb-6 bg-blue-500/[0.06]0/[0.06] border border-green-200 rounded-lg p-4">
+                        <div className="mb-6 bg-indigo-500/[0.05]0/[0.06] border border-green-200 rounded-lg p-4">
                             <div className="flex items-center gap-3">
-                                <AlertCircle className="w-5 h-5 text-blue-400 flex-shrink-0" />
-                                <p className="text-sm text-blue-400">
+                                <AlertCircle className="w-5 h-5 text-indigo-400 flex-shrink-0" />
+                                <p className="text-sm text-indigo-400">
                                     {success}
                                 </p>
                             </div>
@@ -115,7 +115,7 @@ const ProfileEdit = () => {
                                     name="username"
                                     value={formData.username}
                                     onChange={handleChange}
-                                    className="block w-full pl-10 pr-3 py-2 sm:py-3 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-blue-500/40 focus:border-transparent text-sm sm:text-base"
+                                    className="block w-full pl-10 pr-3 py-2 sm:py-3 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent text-sm sm:text-base"
                                     placeholder="username"
                                     required
                                 />
@@ -143,7 +143,7 @@ const ProfileEdit = () => {
                                     name="email"
                                     value={formData.email}
                                     onChange={handleChange}
-                                    className="block w-full pl-10 pr-3 py-2 sm:py-3 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-blue-500/40 focus:border-transparent text-sm sm:text-base"
+                                    className="block w-full pl-10 pr-3 py-2 sm:py-3 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent text-sm sm:text-base"
                                     placeholder="email@example.com"
                                 />
                             </div>
@@ -197,7 +197,7 @@ const ProfileEdit = () => {
                             </button>
                             <button
                                 type="submit"
-                                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 sm:py-3 bg-blue-500/[0.06]0 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:bg-white/[0.1] disabled:cursor-not-allowed text-sm sm:text-base font-medium"
+                                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 sm:py-3 bg-indigo-500/[0.05]0 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:bg-white/[0.1] disabled:cursor-not-allowed text-sm sm:text-base font-medium"
                                 disabled={loading}
                             >
                                 {loading ? (
@@ -217,10 +217,10 @@ const ProfileEdit = () => {
                 </div>
 
                 {/* Info Note */}
-                <div className="mt-6 bg-blue-500/[0.06]0/[0.06] border border-blue-200 rounded-lg p-4">
+                <div className="mt-6 bg-indigo-500/[0.05]0/[0.06] border border-blue-200 rounded-lg p-4">
                     <div className="flex gap-3">
                         <AlertCircle className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                        <div className="text-sm text-blue-400">
+                        <div className="text-sm text-indigo-400">
                             <p className="font-semibold mb-1">Catatan:</p>
                             <ul className="list-disc list-inside space-y-1">
                                 <li>

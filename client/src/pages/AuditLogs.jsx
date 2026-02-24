@@ -91,11 +91,11 @@ const AuditLogs = () => {
 
     const getActionBadge = (action) => {
         const colorMap = {
-            LOGIN: 'bg-blue-500/[0.06]0/15 text-blue-400',
+            LOGIN: 'bg-indigo-500/[0.05]0/15 text-indigo-400',
             LOGOUT: 'bg-white/[0.04] text-white',
-            CREATE: 'bg-blue-500/[0.06]0/15 text-blue-400',
-            UPDATE: 'bg-amber-500/[0.06]0/15 text-amber-400',
-            DELETE: 'bg-rose-500/15 text-rose-400',
+            CREATE: 'bg-indigo-500/[0.05]0/15 text-indigo-400',
+            UPDATE: 'bg-amber-500/[0.06]0/15 text-amber-300',
+            DELETE: 'bg-rose-500/10 text-rose-300',
         };
 
         const actionType = action.split('_')[1] || action;
@@ -126,7 +126,7 @@ const AuditLogs = () => {
                 {/* Header */}
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold text-white flex items-center gap-3">
-                        <Activity className="w-8 h-8 text-blue-400" />
+                        <Activity className="w-8 h-8 text-indigo-400" />
                         Audit Logs
                     </h1>
                     <p className="text-white/60 mt-2">
@@ -152,7 +152,7 @@ const AuditLogs = () => {
                             <h3 className="text-sm font-medium text-white/60">
                                 Success Rate
                             </h3>
-                            <p className="text-2xl font-bold text-blue-400 mt-2">
+                            <p className="text-2xl font-bold text-indigo-400 mt-2">
                                 {stats.actionStats.length > 0
                                     ? (
                                           (stats.actionStats.reduce(
@@ -175,7 +175,7 @@ const AuditLogs = () => {
                             <h3 className="text-sm font-medium text-white/60">
                                 Active Users
                             </h3>
-                            <p className="text-2xl font-bold text-blue-400 mt-2">
+                            <p className="text-2xl font-bold text-indigo-400 mt-2">
                                 {stats.topUsers.length}
                             </p>
                         </div>
@@ -198,7 +198,7 @@ const AuditLogs = () => {
                                 onChange={(e) =>
                                     handleFilterChange('action', e.target.value)
                                 }
-                                className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                                className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white"
                             >
                                 <option value="">All Actions</option>
                                 <option value="LOGIN">Login</option>
@@ -226,7 +226,7 @@ const AuditLogs = () => {
                                         e.target.value
                                     )
                                 }
-                                className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                                className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white"
                             >
                                 <option value="">All Resources</option>
                                 <option value="Auth">Auth</option>
@@ -249,7 +249,7 @@ const AuditLogs = () => {
                                         e.target.value
                                     )
                                 }
-                                className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                                className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white"
                             />
                         </div>
                         <div>
@@ -265,14 +265,14 @@ const AuditLogs = () => {
                                         e.target.value
                                     )
                                 }
-                                className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                                className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white"
                             />
                         </div>
                     </div>
                     <div className="mt-4">
                         <button
                             onClick={clearFilters}
-                            className="text-sm text-blue-400 hover:text-indigo-800"
+                            className="text-sm text-indigo-400 hover:text-indigo-800"
                         >
                             Clear Filters
                         </button>
@@ -362,14 +362,14 @@ const AuditLogs = () => {
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             {log.status === 'SUCCESS' ? (
-                                                <div className="flex items-center gap-1 text-blue-400">
+                                                <div className="flex items-center gap-1 text-indigo-400">
                                                     <CheckCircle className="w-4 h-4" />
                                                     <span className="text-sm">
                                                         Success
                                                     </span>
                                                 </div>
                                             ) : (
-                                                <div className="flex items-center gap-1 text-rose-400">
+                                                <div className="flex items-center gap-1 text-rose-300">
                                                     <XCircle className="w-4 h-4" />
                                                     <span className="text-sm">
                                                         Failed

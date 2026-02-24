@@ -251,10 +251,10 @@ function QRPaymentAdmin() {
                 <div
                     className={`mb-4 p-3 rounded-lg ${
                         message.startsWith('✅')
-                            ? 'bg-blue-500/[0.06]0/[0.06] text-blue-400'
+                            ? 'bg-indigo-500/[0.05]0/[0.06] text-indigo-400'
                             : message.startsWith('⚠️')
-                            ? 'bg-amber-500/[0.06]0/[0.06] text-amber-400'
-                            : 'bg-rose-500/[0.06] text-red-600'
+                            ? 'bg-amber-500/[0.06] text-amber-300'
+                            : 'bg-rose-500/[0.05] text-rose-300'
                     }`}
                 >
                     {message}
@@ -288,13 +288,13 @@ function QRPaymentAdmin() {
                                                 {conf.studentId.phone}
                                             </p>
                                         </div>
-                                        <span className="bg-amber-500/[0.06]0/15 text-amber-400 px-3 py-1 rounded-full text-xs font-semibold">
+                                        <span className="bg-amber-500/[0.06]0/15 text-amber-300 px-3 py-1 rounded-full text-xs font-semibold">
                                             Pending
                                         </span>
                                     </div>
 
                                     <div className="mb-4">
-                                        <p className="text-2xl font-bold text-blue-400">
+                                        <p className="text-2xl font-bold text-indigo-400">
                                             Rp
                                             {conf.amount.toLocaleString(
                                                 'id-ID'
@@ -309,7 +309,7 @@ function QRPaymentAdmin() {
                                     </div>
 
                                     {conf.notes && (
-                                        <div className="mb-4 p-2 bg-blue-500/[0.06]0/[0.06] rounded text-sm text-blue-400">
+                                        <div className="mb-4 p-2 bg-indigo-500/[0.05]0/[0.06] rounded text-sm text-indigo-400">
                                             💬 {conf.notes}
                                         </div>
                                     )}
@@ -339,7 +339,7 @@ function QRPaymentAdmin() {
                                             onClick={() =>
                                                 handleApprove(conf._id)
                                             }
-                                            className="flex-1 bg-emerald-500/15 text-emerald-400 border border-emerald-500/20 py-2 px-4 rounded-lg hover:bg-emerald-500/25 transition font-semibold"
+                                            className="flex-1 bg-teal-500/10 text-teal-300 border border-teal-500/15 py-2 px-4 rounded-lg hover:bg-teal-500/18 transition font-semibold"
                                         >
                                             ✓ Setujui
                                         </button>
@@ -347,7 +347,7 @@ function QRPaymentAdmin() {
                                             onClick={() =>
                                                 handleReject(conf._id)
                                             }
-                                            className="flex-1 bg-rose-500/15 text-rose-400 border border-rose-500/20 py-2 px-4 rounded-lg hover:bg-rose-500/25 transition font-semibold"
+                                            className="flex-1 bg-rose-500/10 text-rose-300 border border-rose-400/15 py-2 px-4 rounded-lg hover:bg-rose-500/18 transition font-semibold"
                                         >
                                             ✗ Tolak
                                         </button>
@@ -407,11 +407,11 @@ function QRPaymentAdmin() {
                                                     className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                                                         conf.status ===
                                                         'approved'
-                                                            ? 'bg-blue-500/[0.06]0/15 text-blue-400'
+                                                            ? 'bg-indigo-500/[0.05]0/15 text-indigo-400'
                                                             : conf.status ===
                                                               'rejected'
-                                                            ? 'bg-rose-500/15 text-rose-400'
-                                                            : 'bg-amber-500/[0.06]0/15 text-amber-400'
+                                                            ? 'bg-rose-500/10 text-rose-300'
+                                                            : 'bg-amber-500/[0.06]0/15 text-amber-300'
                                                     }`}
                                                 >
                                                     {conf.status}
@@ -541,7 +541,7 @@ function QRPaymentAdmin() {
                             <button
                                 type="submit"
                                 disabled={uploadForm.uploading}
-                                className="w-full bg-blue-500/[0.06]0/15 text-blue-400 border border-blue-500/20 py-2 px-4 rounded-lg hover:bg-blue-500/[0.06]0/25 disabled:bg-white/[0.1] transition font-semibold"
+                                className="w-full bg-indigo-500/[0.05]0/15 text-indigo-400 border border-indigo-500/15 py-2 px-4 rounded-lg hover:bg-indigo-500/[0.05]0/25 disabled:bg-white/[0.1] transition font-semibold"
                             >
                                 {uploadForm.uploading
                                     ? 'Uploading...'
@@ -595,7 +595,7 @@ function QRPaymentAdmin() {
                                                         )}
                                                     </div>
                                                     {qr.isActive && (
-                                                        <span className="bg-blue-500/[0.06]0/15 text-blue-400 px-2 py-1 rounded text-xs font-semibold">
+                                                        <span className="bg-indigo-500/[0.05]0/15 text-indigo-400 px-2 py-1 rounded text-xs font-semibold">
                                                             Active
                                                         </span>
                                                     )}
@@ -612,7 +612,7 @@ function QRPaymentAdmin() {
                                                     onClick={() =>
                                                         handleDeleteQR(qr._id)
                                                     }
-                                                    className="mt-2 text-rose-400 hover:text-rose-400 text-sm font-semibold"
+                                                    className="mt-2 text-rose-300 hover:text-rose-300 text-sm font-semibold"
                                                 >
                                                     🗑️ Hapus
                                                 </button>

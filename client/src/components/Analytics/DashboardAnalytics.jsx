@@ -211,7 +211,7 @@ const DashboardAnalytics = () => {
         return (
             <div className="flex items-center justify-center min-h-screen">
                 <div className="text-center">
-                    <RefreshCw className="w-12 h-12 text-blue-400 animate-spin mx-auto mb-4" />
+                    <RefreshCw className="w-12 h-12 text-indigo-400 animate-spin mx-auto mb-4" />
                     <p className="text-white/60">Memuat analytics...</p>
                 </div>
             </div>
@@ -221,13 +221,13 @@ const DashboardAnalytics = () => {
     return (
         <div className="space-y-4 sm:space-y-6">
             {/* Header */}
-            <div className="bg-blue-500 rounded-xl  p-4 sm:p-6 text-white">
+            <div className="rounded-xl bg-gradient-to-br from-indigo-500/15 to-violet-500/10 border border-indigo-500/15 p-4 sm:p-6 text-white">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mb-3 sm:mb-4">
                     <div>
                         <h1 className="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2">
                             📊 Dashboard Analytics
                         </h1>
-                        <p className="text-sm sm:text-base text-indigo-100">
+                        <p className="text-sm sm:text-base text-white/60">
                             Analisis mendalam keuangan kas kelas
                         </p>
                     </div>
@@ -235,7 +235,7 @@ const DashboardAnalytics = () => {
                         <button
                             onClick={loadData}
                             disabled={loading}
-                            className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition flex items-center justify-center gap-2 text-sm sm:text-base"
+                            className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-white/[0.05] hover:bg-white/[0.08] rounded-lg transition flex items-center justify-center gap-2 text-sm sm:text-base"
                         >
                             <RefreshCw
                                 className={`w-4 h-4 ${
@@ -246,7 +246,7 @@ const DashboardAnalytics = () => {
                         </button>
                         <button
                             onClick={exportAnalytics}
-                            className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition flex items-center justify-center gap-2 text-sm sm:text-base"
+                            className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-white/[0.05] hover:bg-white/[0.08] rounded-lg transition flex items-center justify-center gap-2 text-sm sm:text-base"
                         >
                             <Download className="w-4 h-4" />
                             <span className="hidden sm:inline">Export</span>
@@ -267,8 +267,8 @@ const DashboardAnalytics = () => {
                             onClick={() => setTimeRange(range.value)}
                             className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition whitespace-nowrap text-sm sm:text-base ${
                                 timeRange === range.value
-                                    ? 'bg-white/[0.06] text-blue-400 font-semibold'
-                                    : 'bg-white/20 hover:bg-white/30'
+                                    ? 'bg-white/[0.06] text-indigo-400 font-semibold'
+                                    : 'bg-white/[0.05] hover:bg-white/[0.08]'
                             }`}
                         >
                             {range.label}
@@ -281,12 +281,12 @@ const DashboardAnalytics = () => {
             {analytics && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {/* Total Income */}
-                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-6 border-l-4 border-green-500">
+                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-6 border-l-2 border-teal-400/50 card-hover glow-hover animate-slide-up stagger-1">
                         <div className="flex items-center justify-between mb-2">
                             <p className="text-sm text-white/60">
                                 Total Pemasukan
                             </p>
-                            <TrendingUp className="w-5 h-5 text-emerald-400" />
+                            <TrendingUp className="w-5 h-5 text-teal-300" />
                         </div>
                         <p className="text-2xl font-bold text-white mb-1">
                             {formatRp(analytics.totalIncome)}
@@ -294,15 +294,15 @@ const DashboardAnalytics = () => {
                         <div className="flex items-center gap-1 text-sm">
                             {analytics.incomeChange >= 0 ? (
                                 <>
-                                    <TrendingUp className="w-4 h-4 text-emerald-400" />
-                                    <span className="text-blue-400 font-medium">
+                                    <TrendingUp className="w-4 h-4 text-teal-300" />
+                                    <span className="text-indigo-400 font-medium">
                                         +{analytics.incomeChange.toFixed(1)}%
                                     </span>
                                 </>
                             ) : (
                                 <>
-                                    <TrendingDown className="w-4 h-4 text-rose-400" />
-                                    <span className="text-rose-400 font-medium">
+                                    <TrendingDown className="w-4 h-4 text-rose-300" />
+                                    <span className="text-rose-300 font-medium">
                                         {analytics.incomeChange.toFixed(1)}%
                                     </span>
                                 </>
@@ -314,12 +314,12 @@ const DashboardAnalytics = () => {
                     </div>
 
                     {/* Total Expense */}
-                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-6 border-l-4 border-red-500">
+                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-6 border-l-2 border-rose-400/50 card-hover glow-hover animate-slide-up stagger-2">
                         <div className="flex items-center justify-between mb-2">
                             <p className="text-sm text-white/60">
                                 Total Pengeluaran
                             </p>
-                            <TrendingDown className="w-5 h-5 text-rose-400" />
+                            <TrendingDown className="w-5 h-5 text-rose-300" />
                         </div>
                         <p className="text-2xl font-bold text-white mb-1">
                             {formatRp(analytics.totalExpense)}
@@ -327,15 +327,15 @@ const DashboardAnalytics = () => {
                         <div className="flex items-center gap-1 text-sm">
                             {analytics.expenseChange >= 0 ? (
                                 <>
-                                    <TrendingUp className="w-4 h-4 text-rose-400" />
-                                    <span className="text-rose-400 font-medium">
+                                    <TrendingUp className="w-4 h-4 text-rose-300" />
+                                    <span className="text-rose-300 font-medium">
                                         +{analytics.expenseChange.toFixed(1)}%
                                     </span>
                                 </>
                             ) : (
                                 <>
-                                    <TrendingDown className="w-4 h-4 text-emerald-400" />
-                                    <span className="text-blue-400 font-medium">
+                                    <TrendingDown className="w-4 h-4 text-teal-300" />
+                                    <span className="text-indigo-400 font-medium">
                                         {analytics.expenseChange.toFixed(1)}%
                                     </span>
                                 </>
@@ -347,18 +347,18 @@ const DashboardAnalytics = () => {
                     </div>
 
                     {/* Net Balance */}
-                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-6 border-l-4 border-indigo-500">
+                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-6 border-l-2 border-indigo-400/50 card-hover glow-hover animate-slide-up stagger-3">
                         <div className="flex items-center justify-between mb-2">
                             <p className="text-sm text-white/60">
                                 Saldo Bersih
                             </p>
-                            <DollarSign className="w-5 h-5 text-blue-400" />
+                            <DollarSign className="w-5 h-5 text-indigo-400" />
                         </div>
                         <p
                             className={`text-2xl font-bold mb-1 ${
                                 analytics.netBalance >= 0
-                                    ? 'text-blue-400'
-                                    : 'text-red-600'
+                                    ? 'text-indigo-400'
+                                    : 'text-rose-300'
                             }`}
                         >
                             {formatRp(analytics.netBalance)}
@@ -370,12 +370,12 @@ const DashboardAnalytics = () => {
                     </div>
 
                     {/* Active Students */}
-                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-6 border-l-4 border-blue-500">
+                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-6 border-l-2 border-indigo-400/50">
                         <div className="flex items-center justify-between mb-2">
                             <p className="text-sm text-white/60">
                                 Siswa Aktif Bayar
                             </p>
-                            <Users className="w-5 h-5 text-blue-400" />
+                            <Users className="w-5 h-5 text-indigo-400" />
                         </div>
                         <p className="text-2xl font-bold text-white mb-1">
                             {analytics.uniquePayingStudents}
@@ -389,14 +389,14 @@ const DashboardAnalytics = () => {
 
             {/* Debt Alert */}
             {analytics && analytics.totalDebt > 0 && (
-                <div className="bg-amber-500/[0.06]0/[0.06] border-l-4 border-yellow-400 p-4 rounded-lg">
+                <div className="bg-amber-500/[0.06] border-l-2 border-amber-300/40 p-4 rounded-lg">
                     <div className="flex items-start gap-3">
-                        <AlertCircle className="w-5 h-5 text-amber-400 mt-0.5" />
+                        <AlertCircle className="w-5 h-5 text-amber-300 mt-0.5" />
                         <div>
-                            <p className="font-semibold text-yellow-900">
+                            <p className="font-semibold text-amber-300">
                                 Total Tunggakan: {formatRp(analytics.totalDebt)}
                             </p>
-                            <p className="text-sm text-amber-400">
+                            <p className="text-sm text-amber-300">
                                 {analytics.studentsWithDebt} siswa memiliki
                                 tunggakan yang perlu ditagih
                             </p>
@@ -410,7 +410,7 @@ const DashboardAnalytics = () => {
                 {/* Income vs Expense Line Chart */}
                 <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-6">
                     <div className="flex items-center gap-2 mb-4">
-                        <Activity className="w-5 h-5 text-blue-400" />
+                        <Activity className="w-5 h-5 text-indigo-400" />
                         <h3 className="text-lg font-bold text-white">
                             Pemasukan vs Pengeluaran
                         </h3>
@@ -425,7 +425,7 @@ const DashboardAnalytics = () => {
                 {/* Expense Category Pie Chart */}
                 <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-6">
                     <div className="flex items-center gap-2 mb-4">
-                        <PieChart className="w-5 h-5 text-purple-600" />
+                        <PieChart className="w-5 h-5 text-violet-400" />
                         <h3 className="text-lg font-bold text-white">
                             Kategori Pengeluaran
                         </h3>
@@ -440,7 +440,7 @@ const DashboardAnalytics = () => {
             {/* Weekly Payment Bar Chart */}
             <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-6">
                 <div className="flex items-center gap-2 mb-4">
-                    <BarChart3 className="w-5 h-5 text-blue-400" />
+                    <BarChart3 className="w-5 h-5 text-indigo-400" />
                     <h3 className="text-lg font-bold text-white">
                         Pembayaran Per Minggu
                     </h3>
@@ -451,7 +451,7 @@ const DashboardAnalytics = () => {
             {/* Payment Heatmap */}
             <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-6">
                 <div className="flex items-center gap-2 mb-4">
-                    <Calendar className="w-5 h-5 text-orange-600" />
+                    <Calendar className="w-5 h-5 text-orange-400/80" />
                     <h3 className="text-lg font-bold text-white">
                         Heatmap Kehadiran Pembayaran
                     </h3>
@@ -462,7 +462,7 @@ const DashboardAnalytics = () => {
             {/* Debt Trend Chart */}
             <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-6">
                 <div className="flex items-center gap-2 mb-4">
-                    <TrendingUp className="w-5 h-5 text-rose-400" />
+                    <TrendingUp className="w-5 h-5 text-rose-300" />
                     <h3 className="text-lg font-bold text-white">
                         Trend Tunggakan
                     </h3>

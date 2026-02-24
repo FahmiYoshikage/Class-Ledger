@@ -181,14 +181,14 @@ const MemberDashboard = () => {
         return (
             <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-6">
                 <div className="max-w-4xl mx-auto">
-                    <div className="bg-amber-500/[0.06]0/[0.06] border border-yellow-200 rounded-lg p-6">
+                    <div className="bg-amber-500/[0.06] border border-yellow-200 rounded-lg p-6">
                         <div className="flex items-center gap-3">
-                            <AlertCircle className="w-6 h-6 text-amber-400" />
+                            <AlertCircle className="w-6 h-6 text-amber-300" />
                             <div>
-                                <h3 className="font-semibold text-yellow-900">
+                                <h3 className="font-semibold text-amber-300">
                                     Akun Belum Terhubung
                                 </h3>
-                                <p className="text-sm text-amber-400 mt-1">
+                                <p className="text-sm text-amber-300 mt-1">
                                     Akun Anda belum terhubung dengan data siswa.
                                     Silakan hubungi administrator untuk
                                     menghubungkan akun Anda.
@@ -224,7 +224,7 @@ const MemberDashboard = () => {
                             <h2 className="text-xl sm:text-2xl font-bold">
                                 {studentData?.nama || user.studentId.nama}
                             </h2>
-                            <p className="text-sm sm:text-base text-indigo-100">
+                            <p className="text-sm sm:text-base text-white/60">
                                 No. Absen:{' '}
                                 {studentData?.absen || user.studentId.absen}
                             </p>
@@ -238,7 +238,7 @@ const MemberDashboard = () => {
                     <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-4 sm:p-6">
                         <div className="flex items-center justify-between mb-3 sm:mb-4">
                             <div className="bg-green-100 p-2 sm:p-3 rounded-lg">
-                                <DollarSign className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
+                                <DollarSign className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-400" />
                             </div>
                         </div>
                         <h3 className="text-xs sm:text-sm font-medium text-white/60">
@@ -256,7 +256,7 @@ const MemberDashboard = () => {
                     <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-4 sm:p-6">
                         <div className="flex items-center justify-between mb-3 sm:mb-4">
                             <div className="bg-blue-100 p-2 sm:p-3 rounded-lg">
-                                <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
+                                <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-400" />
                             </div>
                         </div>
                         <h3 className="text-xs sm:text-sm font-medium text-white/60">
@@ -274,7 +274,7 @@ const MemberDashboard = () => {
                     <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-4 sm:p-6">
                         <div className="flex items-center justify-between mb-3 sm:mb-4">
                             <div className="bg-red-100 p-2 sm:p-3 rounded-lg">
-                                <TrendingDown className="w-5 h-5 sm:w-6 sm:h-6 text-rose-400" />
+                                <TrendingDown className="w-5 h-5 sm:w-6 sm:h-6 text-rose-300" />
                             </div>
                         </div>
                         <h3 className="text-xs sm:text-sm font-medium text-white/60">
@@ -292,7 +292,7 @@ const MemberDashboard = () => {
                     <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-4 sm:p-6">
                         <div className="flex items-center justify-between mb-3 sm:mb-4">
                             <div className="bg-yellow-100 p-2 sm:p-3 rounded-lg">
-                                <Wallet className="w-5 h-5 sm:w-6 sm:h-6 text-amber-400" />
+                                <Wallet className="w-5 h-5 sm:w-6 sm:h-6 text-amber-300" />
                             </div>
                         </div>
                         <h3 className="text-xs sm:text-sm font-medium text-white/60">
@@ -311,7 +311,7 @@ const MemberDashboard = () => {
                 <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] mb-4 sm:mb-6">
                     <div className="p-4 sm:p-6 border-b border-white/[0.1]">
                         <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
-                            <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
+                            <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400" />
                             Riwayat Pembayaran Saya
                         </h2>
                     </div>
@@ -360,13 +360,13 @@ const MemberDashboard = () => {
                                                 <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-white">
                                                     {payment.week}
                                                 </td>
-                                                <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm font-semibold text-blue-400">
+                                                <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm font-semibold text-indigo-400">
                                                     {formatCurrency(
                                                         payment.amount
                                                     )}
                                                 </td>
                                                 <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
-                                                    <span className="flex items-center gap-1 text-blue-400">
+                                                    <span className="flex items-center gap-1 text-indigo-400">
                                                         <CheckCircle className="w-4 h-4" />
                                                         <span className="text-sm">
                                                             Lunas
@@ -386,7 +386,7 @@ const MemberDashboard = () => {
                 <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] mb-4 sm:mb-6">
                     <div className="p-4 sm:p-6 border-b border-white/[0.1]">
                         <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
-                            <Users className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
+                            <Users className="w-4 h-4 sm:w-5 sm:h-5 text-violet-400" />
                             Leaderboard Member
                         </h2>
                         <p className="text-xs sm:text-sm text-white/60 mt-1">
@@ -459,7 +459,7 @@ const MemberDashboard = () => {
                                                             {member.studentName}
                                                         </h3>
                                                         {isCurrentUser && (
-                                                            <span className="text-xs bg-blue-500/[0.06]0 text-white px-2 py-0.5 rounded-full">
+                                                            <span className="text-xs bg-indigo-500/[0.05]0 text-white px-2 py-0.5 rounded-full">
                                                                 Anda
                                                             </span>
                                                         )}
@@ -476,7 +476,7 @@ const MemberDashboard = () => {
                                                 <p
                                                     className={`font-bold text-sm sm:text-base ${
                                                         isCurrentUser
-                                                            ? 'text-blue-400'
+                                                            ? 'text-indigo-400'
                                                             : 'text-white'
                                                     }`}
                                                 >
@@ -506,7 +506,7 @@ const MemberDashboard = () => {
                 <div className="rounded-xl bg-white/[0.035] border border-white/[0.1]">
                     <div className="p-4 sm:p-6 border-b border-white/[0.1]">
                         <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
-                            <TrendingDown className="w-4 h-4 sm:w-5 sm:h-5 text-rose-400" />
+                            <TrendingDown className="w-4 h-4 sm:w-5 sm:h-5 text-rose-300" />
                             Pengeluaran Kelas Terbaru ```
                         </h2>
                     </div>
@@ -541,7 +541,7 @@ const MemberDashboard = () => {
                                             </p>
                                         </div>
                                         <div className="text-right flex-shrink-0">
-                                            <p className="font-bold text-sm sm:text-base text-rose-400">
+                                            <p className="font-bold text-sm sm:text-base text-rose-300">
                                                 {formatCurrency(expense.amount)}
                                             </p>
                                         </div>

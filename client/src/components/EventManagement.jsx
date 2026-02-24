@@ -298,7 +298,7 @@ const EventManagement = () => {
                                         <h3 className="font-bold text-lg text-white">
                                             {event.name}
                                         </h3>
-                                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-500/[0.06]0/15 text-blue-400">
+                                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-indigo-500/[0.05]0/15 text-indigo-400">
                                             Aktif
                                         </span>
                                     </div>
@@ -314,7 +314,7 @@ const EventManagement = () => {
                                             <span className="text-white/60">
                                                 Progress
                                             </span>
-                                            <span className="font-semibold text-purple-600">
+                                            <span className="font-semibold text-violet-400">
                                                 {progress.toFixed(1)}%
                                             </span>
                                         </div>
@@ -342,7 +342,7 @@ const EventManagement = () => {
                                             <p className="text-white/60">
                                                 Terkumpul
                                             </p>
-                                            <p className="font-semibold text-blue-400">
+                                            <p className="font-semibold text-indigo-400">
                                                 {formatRp(event.totalCollected)}
                                             </p>
                                         </div>
@@ -369,11 +369,11 @@ const EventManagement = () => {
 
                                     {/* Surplus Info */}
                                     {surplus > 0 && (
-                                        <div className="bg-blue-500/[0.06]0/[0.06] border border-green-200 rounded p-2 text-sm">
-                                            <p className="text-blue-400 font-semibold">
+                                        <div className="bg-indigo-500/[0.05]0/[0.06] border border-green-200 rounded p-2 text-sm">
+                                            <p className="text-indigo-400 font-semibold">
                                                 Surplus: {formatRp(surplus)}
                                             </p>
-                                            <p className="text-xs text-blue-400">
+                                            <p className="text-xs text-indigo-400">
                                                 Akan masuk ke kas saat event
                                                 selesai
                                             </p>
@@ -382,8 +382,8 @@ const EventManagement = () => {
 
                                     {/* Unpaid Count */}
                                     {unpaid.length > 0 && (
-                                        <div className="bg-amber-500/[0.06]0/[0.06] border border-yellow-200 rounded p-2">
-                                            <p className="text-xs text-amber-400">
+                                        <div className="bg-amber-500/[0.06] border border-yellow-200 rounded p-2">
+                                            <p className="text-xs text-amber-300">
                                                 <AlertCircle className="w-3 h-3 inline mr-1" />
                                                 {unpaid.length} siswa belum
                                                 bayar
@@ -426,7 +426,7 @@ const EventManagement = () => {
                                             )}
                                         </p>
                                     </div>
-                                    <CheckCircle className="w-5 h-5 text-blue-400" />
+                                    <CheckCircle className="w-5 h-5 text-indigo-400" />
                                 </div>
                             ))}
                     </div>
@@ -435,8 +435,8 @@ const EventManagement = () => {
 
             {/* Event Detail Modal */}
             {activeEvent && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50">
-                    <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50 backdrop-animate">
+                    <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl modal-animate max-w-4xl w-full max-h-[90vh] overflow-y-auto">
                         {/* Modal Header */}
                         <div className="p-6 border-b border-white/[0.1] sticky top-0 bg-[#1e1e22] ">
                             <div className="flex items-start justify-between">
@@ -459,22 +459,22 @@ const EventManagement = () => {
                             {/* Progress Summary */}
                             <div className="mt-4 grid grid-cols-4 gap-4">
                                 <div className="bg-purple-50 p-3 rounded">
-                                    <p className="text-xs text-purple-600 mb-1">
+                                    <p className="text-xs text-violet-400 mb-1">
                                         Target
                                     </p>
                                     <p className="font-bold text-purple-900">
                                         {formatRp(activeEvent.targetAmount)}
                                     </p>
                                 </div>
-                                <div className="bg-blue-500/[0.06]0/[0.06] p-3 rounded">
-                                    <p className="text-xs text-blue-400 mb-1">
+                                <div className="bg-indigo-500/[0.05]0/[0.06] p-3 rounded">
+                                    <p className="text-xs text-indigo-400 mb-1">
                                         Terkumpul
                                     </p>
                                     <p className="font-bold text-green-900">
                                         {formatRp(activeEvent.totalCollected)}
                                     </p>
                                 </div>
-                                <div className="bg-blue-500/[0.06]0/[0.06] p-3 rounded">
+                                <div className="bg-indigo-500/[0.05]0/[0.06] p-3 rounded">
                                     <p className="text-xs text-blue-500 mb-1">
                                         Per Siswa
                                     </p>
@@ -482,11 +482,11 @@ const EventManagement = () => {
                                         {formatRp(activeEvent.perStudentAmount)}
                                     </p>
                                 </div>
-                                <div className="bg-amber-500/[0.06]0/[0.06] p-3 rounded">
-                                    <p className="text-xs text-amber-400 mb-1">
+                                <div className="bg-amber-500/[0.06] p-3 rounded">
+                                    <p className="text-xs text-amber-300 mb-1">
                                         Sudah Bayar
                                     </p>
-                                    <p className="font-bold text-yellow-900">
+                                    <p className="font-bold text-amber-300">
                                         {activeEvent.studentsPaid.length}/
                                         {students.length}
                                     </p>
@@ -511,7 +511,7 @@ const EventManagement = () => {
                                         onClick={() =>
                                             handleCompleteEvent(activeEvent._id)
                                         }
-                                        className="flex-1 bg-emerald-500/15 text-emerald-400 border border-emerald-500/20 px-4 py-2 rounded-lg hover:bg-emerald-500/25 transition flex items-center justify-center gap-2"
+                                        className="flex-1 bg-teal-500/10 text-teal-300 border border-teal-500/15 px-4 py-2 rounded-lg hover:bg-teal-500/18 transition flex items-center justify-center gap-2"
                                     >
                                         <CheckCircle className="w-4 h-4" />
                                         Selesaikan Event
@@ -521,7 +521,7 @@ const EventManagement = () => {
                                     onClick={() =>
                                         handleDeleteEvent(activeEvent._id)
                                     }
-                                    className="bg-rose-500/15 text-rose-400 border border-rose-500/20 px-4 py-2 rounded-lg hover:bg-rose-500/25 transition"
+                                    className="bg-rose-500/10 text-rose-300 border border-rose-400/15 px-4 py-2 rounded-lg hover:bg-rose-500/18 transition"
                                 >
                                     <Trash2 className="w-4 h-4" />
                                 </button>
@@ -529,7 +529,7 @@ const EventManagement = () => {
 
                             {/* Paid Students */}
                             {getPaidStudents(activeEvent).length > 0 && (
-                                <div className="bg-blue-500/[0.06]0/[0.06] border border-green-200 rounded-lg p-4">
+                                <div className="bg-indigo-500/[0.05]0/[0.06] border border-green-200 rounded-lg p-4">
                                     <h4 className="font-semibold text-green-900 mb-2">
                                         Siswa Sudah Bayar (
                                         {getPaidStudents(activeEvent).length})
@@ -540,7 +540,7 @@ const EventManagement = () => {
                                             .map((student) => (
                                                 <span
                                                     key={student._id}
-                                                    className="px-2 py-1 bg-blue-500/[0.06]0/15 text-blue-400 rounded text-sm"
+                                                    className="px-2 py-1 bg-indigo-500/[0.05]0/15 text-indigo-400 rounded text-sm"
                                                 >
                                                     {student.absen}.{' '}
                                                     {student.name}
@@ -552,8 +552,8 @@ const EventManagement = () => {
 
                             {/* Unpaid Students */}
                             {getUnpaidStudents(activeEvent).length > 0 && (
-                                <div className="bg-amber-500/[0.06]0/[0.06] border border-yellow-200 rounded-lg p-4">
-                                    <h4 className="font-semibold text-yellow-900 mb-2">
+                                <div className="bg-amber-500/[0.06] border border-yellow-200 rounded-lg p-4">
+                                    <h4 className="font-semibold text-amber-300 mb-2">
                                         Siswa Belum Bayar (
                                         {getUnpaidStudents(activeEvent).length})
                                     </h4>
@@ -563,7 +563,7 @@ const EventManagement = () => {
                                             .map((student) => (
                                                 <span
                                                     key={student._id}
-                                                    className="px-2 py-1 bg-amber-500/[0.06]0/15 text-amber-400 rounded text-sm"
+                                                    className="px-2 py-1 bg-amber-500/[0.06]0/15 text-amber-300 rounded text-sm"
                                                 >
                                                     {student.absen}.{' '}
                                                     {student.name}
@@ -634,8 +634,8 @@ const EventManagement = () => {
                                                                 className={`px-2 py-1 text-xs rounded-full ${
                                                                     payment.method ===
                                                                     'Tunai'
-                                                                        ? 'bg-blue-500/[0.06]0/15 text-blue-400'
-                                                                        : 'bg-blue-500/[0.06]0/15 text-blue-400'
+                                                                        ? 'bg-indigo-500/[0.05]0/15 text-indigo-400'
+                                                                        : 'bg-indigo-500/[0.05]0/15 text-indigo-400'
                                                                 }`}
                                                             >
                                                                 {payment.method}
@@ -660,7 +660,7 @@ const EventManagement = () => {
                                                                             payment._id
                                                                         )
                                                                     }
-                                                                    className="text-rose-400 hover:text-rose-400 p-1"
+                                                                    className="text-rose-300 hover:text-rose-300 p-1"
                                                                     title="Hapus"
                                                                 >
                                                                     <Trash2 className="w-4 h-4" />
@@ -681,8 +681,8 @@ const EventManagement = () => {
 
             {/* Create Event Modal */}
             {showCreateEvent && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50">
-                    <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl max-w-2xl w-full p-6">
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50 backdrop-animate">
+                    <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl modal-animate max-w-2xl w-full p-6">
                         <h3 className="text-xl font-bold mb-4">
                             Buat Event Baru
                         </h3>
@@ -769,9 +769,9 @@ const EventManagement = () => {
                                 </div>
                             </div>
 
-                            <div className="bg-blue-500/[0.06]0/[0.06] border border-blue-200 rounded p-3 text-sm">
+                            <div className="bg-indigo-500/[0.05]0/[0.06] border border-blue-200 rounded p-3 text-sm">
                                 <p
-                                    className="text-blue-400"
+                                    className="text-indigo-400"
                                     id="calculatedInfo"
                                 >
                                     Masukkan target iuran untuk kalkulasi
@@ -832,8 +832,8 @@ const EventManagement = () => {
 
             {/* Add Payment Modal */}
             {showPaymentModal && activeEvent && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50">
-                    <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl max-w-md w-full p-6">
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50 backdrop-animate">
+                    <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl modal-animate max-w-md w-full p-6">
                         <h3 className="text-xl font-bold mb-4">
                             Tambah Pembayaran Event
                         </h3>
@@ -939,8 +939,8 @@ const EventManagement = () => {
 
             {/* Edit Payment Modal */}
             {showEditPaymentModal && activeEvent && editingPayment && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50">
-                    <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl max-w-md w-full p-6">
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50 backdrop-animate">
+                    <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl modal-animate max-w-md w-full p-6">
                         <h3 className="text-xl font-bold mb-4">
                             Edit Pembayaran Event
                         </h3>
@@ -1041,7 +1041,7 @@ const EventManagement = () => {
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex-1 px-4 py-2 bg-blue-500/[0.06]0/15 text-blue-400 border border-blue-500/20 rounded-lg hover:bg-blue-500/[0.06]0/25 transition"
+                                    className="flex-1 px-4 py-2 bg-indigo-500/[0.05]0/15 text-indigo-400 border border-indigo-500/15 rounded-lg hover:bg-indigo-500/[0.05]0/25 transition"
                                 >
                                     Update
                                 </button>

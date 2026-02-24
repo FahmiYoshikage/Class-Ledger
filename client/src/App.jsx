@@ -962,7 +962,7 @@ const App = () => {
         return (
             <div className="min-h-screen bg-[#18181b] flex items-center justify-center">
                 <div className="text-center">
-                    <RefreshCw className="w-12 h-12 text-blue-400 animate-spin mx-auto mb-4" />
+                    <RefreshCw className="w-12 h-12 text-indigo-400 animate-spin mx-auto mb-4" />
                     <p className="text-white/60">Memuat data...</p>
                 </div>
             </div>
@@ -970,12 +970,12 @@ const App = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#18181b] text-white selection:bg-blue-500/30">
-            <div className="px-4 sm:px-6 lg:px-8 py-6">
+        <div className="min-h-screen bg-[#18181b] text-white selection:bg-indigo-500/25">
+            <div className="px-4 sm:px-6 lg:px-8 py-6 page-transition">
                 {/* Header */}
-                <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center justify-between mb-8 animate-fade-in">
                     <div className="flex items-center gap-3.5">
-                        <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                        <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-500/15 animate-pulse-glow">
                             <Wallet className="w-5 h-5 text-white" />
                         </div>
                         <div>
@@ -992,7 +992,7 @@ const App = () => {
                             <p className="text-[11px] text-white/60 uppercase tracking-wider">
                                 Minggu ke-
                             </p>
-                            <p className="text-2xl font-bold text-blue-400 tabular-nums">
+                            <p className="text-2xl font-bold text-indigo-400 tabular-nums">
                                 {currentWeek}
                             </p>
                         </div>
@@ -1012,7 +1012,7 @@ const App = () => {
 
                 {/* Error Alert */}
                 {error && (
-                    <div className="bg-red-500/10 border border-red-500/20 p-4 rounded-xl mb-6">
+                    <div className="bg-red-500/10 border border-red-500/20 p-4 rounded-xl mb-6 animate-slide-down">
                         <div className="flex items-center">
                             <AlertCircle className="w-4 h-4 text-red-400 mr-2" />
                             <p className="text-red-400 text-sm">{error}</p>
@@ -1021,8 +1021,8 @@ const App = () => {
                 )}
 
                 {/* Stats Cards */}
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
-                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-4 sm:p-5 hover:bg-white/[0.07] transition-all">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 animate-slide-up">
+                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-4 sm:p-5 hover:bg-white/[0.07] transition-all card-hover glow-hover animate-slide-up stagger-1">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-[11px] sm:text-[13px] text-white/60 font-medium">
@@ -1032,70 +1032,70 @@ const App = () => {
                                     {students.length}
                                 </p>
                             </div>
-                            <div className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/15">
-                                <Users className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
+                            <div className="p-2 rounded-lg bg-indigo-500/8 border border-indigo-500/12 icon-container-hover">
+                                <Users className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400" />
                             </div>
                         </div>
                     </div>
-                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-4 sm:p-5 hover:bg-white/[0.07] transition-all">
+                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-4 sm:p-5 hover:bg-white/[0.07] transition-all card-hover glow-hover animate-slide-up stagger-2">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-[11px] sm:text-[13px] text-white/60 font-medium">
                                     Kas Masuk
                                 </p>
-                                <p className="text-lg sm:text-xl font-bold text-emerald-400 mt-1">
+                                <p className="text-lg sm:text-xl font-bold text-teal-300 mt-1">
                                     {formatRp(totalKasMasuk)}
                                 </p>
                             </div>
-                            <div className="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/15">
-                                <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />
+                            <div className="p-2 rounded-lg bg-teal-500/8 border border-teal-500/12 icon-container-hover">
+                                <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-teal-300" />
                             </div>
                         </div>
                     </div>
-                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-4 sm:p-5 hover:bg-white/[0.07] transition-all">
+                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-4 sm:p-5 hover:bg-white/[0.07] transition-all card-hover glow-hover animate-slide-up stagger-3">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-[11px] sm:text-[13px] text-white/60 font-medium">
                                     Kas Keluar
                                 </p>
-                                <p className="text-lg sm:text-xl font-bold text-rose-400 mt-1">
+                                <p className="text-lg sm:text-xl font-bold text-rose-300 mt-1">
                                     {formatRp(totalKasKeluar)}
                                 </p>
                             </div>
-                            <div className="p-2 rounded-lg bg-rose-500/10 border border-rose-500/15">
-                                <TrendingDown className="w-4 h-4 sm:w-5 sm:h-5 text-rose-400" />
+                            <div className="p-2 rounded-lg bg-rose-500/8 border border-rose-400/12 icon-container-hover">
+                                <TrendingDown className="w-4 h-4 sm:w-5 sm:h-5 text-rose-300" />
                             </div>
                         </div>
                     </div>
-                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-4 sm:p-5 hover:bg-white/[0.07] transition-all">
+                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-4 sm:p-5 hover:bg-white/[0.07] transition-all card-hover glow-hover animate-slide-up stagger-4">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-[11px] sm:text-[13px] text-white/60 font-medium">
                                     Saldo Kas
                                 </p>
-                                <p className="text-lg sm:text-xl font-bold text-blue-400 mt-1">
+                                <p className="text-lg sm:text-xl font-bold text-indigo-400 mt-1">
                                     {formatRp(saldoKas)}
                                 </p>
                             </div>
-                            <div className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/15">
-                                <Wallet className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
+                            <div className="p-2 rounded-lg bg-indigo-500/8 border border-indigo-500/12 icon-container-hover">
+                                <Wallet className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400" />
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Export Buttons */}
-                <div className="mb-6 grid grid-cols-2 gap-3">
+                <div className="mb-6 grid grid-cols-2 gap-3 animate-slide-up stagger-5">
                     <button
                         onClick={exportCompleteReport}
-                        className="bg-emerald-500/10 hover:bg-emerald-500/15 border border-emerald-500/20 text-emerald-400 px-5 py-3 rounded-xl transition-all flex items-center justify-center gap-2.5 text-sm font-medium"
+                        className="bg-teal-500/8 hover:bg-teal-500/10 border border-teal-500/15 text-teal-300 px-5 py-3 rounded-xl transition-all flex items-center justify-center gap-2.5 text-sm font-medium btn-press ripple-effect"
                     >
                         <FileText className="w-4 h-4" />
                         <span>Excel</span>
                     </button>
                     <button
                         onClick={exportCompleteReportPDF}
-                        className="bg-rose-500/10 hover:bg-rose-500/15 border border-rose-500/20 text-rose-400 px-5 py-3 rounded-xl transition-all flex items-center justify-center gap-2.5 text-sm font-medium"
+                        className="bg-rose-500/8 hover:bg-rose-500/10 border border-rose-400/15 text-rose-300 px-5 py-3 rounded-xl transition-all flex items-center justify-center gap-2.5 text-sm font-medium btn-press ripple-effect"
                     >
                         <FileText className="w-4 h-4" />
                         <span>PDF</span>
@@ -1108,7 +1108,7 @@ const App = () => {
                 </div>
 
                 {/* Tabs */}
-                <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] mb-6">
+                <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] mb-6 animate-slide-up stagger-6">
                     <div className="flex border-b border-white/[0.1] overflow-x-auto">
                         {[
                             'dashboard',
@@ -1127,7 +1127,7 @@ const App = () => {
                                 className={
                                     'px-5 py-3 text-[13px] font-medium capitalize whitespace-nowrap flex items-center gap-2 transition-colors ' +
                                     (activeTab === tab
-                                        ? 'text-blue-400 border-b-2 border-blue-400'
+                                        ? 'text-indigo-400 border-b-2 border-indigo-400 tab-active'
                                         : 'text-white/60 hover:text-white/60')
                                 }
                             >
@@ -1157,7 +1157,7 @@ const App = () => {
                                     onChange={(e) =>
                                         setSearchQuery(e.target.value)
                                     }
-                                    className="w-full pl-10 pr-4 py-2 bg-white/[0.06] border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-blue-500/40 focus:border-transparent text-white placeholder-white/40"
+                                    className="w-full pl-10 pr-4 py-2 bg-white/[0.06] border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent text-white placeholder-white/40"
                                 />
                             </div>
 
@@ -1168,7 +1168,7 @@ const App = () => {
                                     onChange={(e) =>
                                         setFilterStatus(e.target.value)
                                     }
-                                    className="px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                                    className="px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white"
                                 >
                                     <option value="Semua">Semua Status</option>
                                     <option value="Aktif">Aktif</option>
@@ -1186,7 +1186,7 @@ const App = () => {
                                     onChange={(e) =>
                                         setFilterMethod(e.target.value)
                                     }
-                                    className="px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                                    className="px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white"
                                 >
                                     <option value="Semua">Semua Metode</option>
                                     <option value="Tunai">Tunai</option>
@@ -1201,7 +1201,7 @@ const App = () => {
                                     onChange={(e) =>
                                         setFilterCategory(e.target.value)
                                     }
-                                    className="px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                                    className="px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white"
                                 >
                                     <option value="Semua">
                                         Semua Kategori
@@ -1227,7 +1227,7 @@ const App = () => {
                                         setDateFrom(e.target.value)
                                     }
                                     placeholder="Dari tanggal"
-                                    className="px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                                    className="px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white"
                                 />
                             )}
 
@@ -1239,7 +1239,7 @@ const App = () => {
                                     value={dateTo}
                                     onChange={(e) => setDateTo(e.target.value)}
                                     placeholder="Sampai tanggal"
-                                    className="px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                                    className="px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white"
                                 />
                             )}
 
@@ -1266,10 +1266,10 @@ const App = () => {
                 {activeTab === 'dashboard' && (
                     <div className="space-y-6">
                         {studentsWithTunggakan > 0 && (
-                            <div className="bg-amber-500/10 border border-amber-500/20 p-4 rounded-xl">
+                            <div className="bg-amber-500/8 border border-amber-400/15 p-4 rounded-xl">
                                 <div className="flex items-center">
                                     <AlertCircle className="w-5 h-5 text-yellow-400 mr-2" />
-                                    <p className="text-amber-400">
+                                    <p className="text-amber-300">
                                         <strong>{studentsWithTunggakan}</strong>{' '}
                                         siswa memiliki tunggakan
                                     </p>
@@ -1322,7 +1322,7 @@ const App = () => {
                                                         key={student._id}
                                                         className={
                                                             late
-                                                                ? 'bg-rose-500/[0.06] hover:bg-rose-500/[0.1]'
+                                                                ? 'bg-rose-500/[0.05] hover:bg-rose-500/[0.1]'
                                                                 : 'hover:bg-white/[0.04]'
                                                         }
                                                     >
@@ -1346,8 +1346,8 @@ const App = () => {
                                                                 className={
                                                                     tunggakan >
                                                                     0
-                                                                        ? 'text-rose-400 font-semibold'
-                                                                        : 'text-blue-400 font-semibold'
+                                                                        ? 'text-rose-300 font-semibold'
+                                                                        : 'text-indigo-400 font-semibold'
                                                                 }
                                                             >
                                                                 {formatRp(
@@ -1357,18 +1357,18 @@ const App = () => {
                                                         </td>
                                                         <td className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                             {late ? (
-                                                                <span className="px-2 py-1 text-xs font-semibold rounded-full bg-rose-500/15 text-rose-400 inline-flex items-center gap-1">
+                                                                <span className="px-2 py-1 text-xs font-semibold rounded-full bg-rose-500/10 text-rose-300 inline-flex items-center gap-1">
                                                                     <AlertCircle className="w-3 h-3" />{' '}
                                                                     Telat
                                                                 </span>
                                                             ) : tunggakan <=
                                                               0 ? (
-                                                                <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-500/15 text-blue-400 inline-flex items-center gap-1">
+                                                                <span className="px-2 py-1 text-xs font-semibold rounded-full bg-indigo-500/10 text-indigo-400 inline-flex items-center gap-1">
                                                                     <CheckCircle className="w-3 h-3" />{' '}
                                                                     Lunas
                                                                 </span>
                                                             ) : (
-                                                                <span className="px-2 py-1 text-xs font-semibold rounded-full bg-amber-500/15 text-amber-400">
+                                                                <span className="px-2 py-1 text-xs font-semibold rounded-full bg-amber-500/10 text-amber-300">
                                                                     Aktif
                                                                 </span>
                                                             )}
@@ -1380,7 +1380,7 @@ const App = () => {
                                                                         student._id
                                                                     )
                                                                 }
-                                                                className="bg-blue-500/15 text-blue-400 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-blue-500/25 transition text-xs sm:text-sm font-medium w-full sm:w-auto border border-blue-500/20"
+                                                                className="bg-indigo-500/10 text-indigo-400 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-indigo-500/18 transition text-xs sm:text-sm font-medium w-full sm:w-auto border border-indigo-500/15"
                                                             >
                                                                 💰 Bayar
                                                             </button>
@@ -1409,7 +1409,7 @@ const App = () => {
                                 <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                                     <button
                                         onClick={exportStudentsToExcel}
-                                        className="flex-1 sm:flex-none bg-emerald-500/10 text-emerald-400 px-3 sm:px-4 py-2 rounded-lg hover:bg-emerald-500/20 transition flex items-center justify-center gap-2 text-sm border border-emerald-500/20"
+                                        className="flex-1 sm:flex-none bg-teal-500/8 text-teal-300 px-3 sm:px-4 py-2 rounded-lg hover:bg-teal-500/15 transition flex items-center justify-center gap-2 text-sm border border-teal-500/15"
                                     >
                                         <Download className="w-4 h-4" />
                                         <span className="hidden sm:inline">
@@ -1418,7 +1418,7 @@ const App = () => {
                                     </button>
                                     <button
                                         onClick={exportStudentsToPDF}
-                                        className="flex-1 sm:flex-none bg-rose-500/10 text-rose-400 px-3 sm:px-4 py-2 rounded-lg hover:bg-rose-500/20 transition flex items-center justify-center gap-2 text-sm border border-rose-500/20"
+                                        className="flex-1 sm:flex-none bg-rose-500/8 text-rose-300 px-3 sm:px-4 py-2 rounded-lg hover:bg-rose-500/12 transition flex items-center justify-center gap-2 text-sm border border-rose-400/15"
                                     >
                                         <FileText className="w-4 h-4" />
                                         <span className="hidden sm:inline">
@@ -1427,7 +1427,7 @@ const App = () => {
                                     </button>
                                     <button
                                         onClick={() => setShowAddStudent(true)}
-                                        className="w-full sm:w-auto bg-blue-500/15 text-blue-400 px-3 sm:px-4 py-2 rounded-lg hover:bg-blue-500/25 transition flex items-center justify-center gap-2 text-sm font-medium border border-blue-500/20"
+                                        className="w-full sm:w-auto bg-indigo-500/10 text-indigo-400 px-3 sm:px-4 py-2 rounded-lg hover:bg-indigo-500/18 transition flex items-center justify-center gap-2 text-sm font-medium border border-indigo-500/15"
                                     >
                                         <Plus className="w-4 h-4" />
                                         <span className="hidden sm:inline">
@@ -1509,10 +1509,10 @@ const App = () => {
                                                             className={`px-2 py-1 text-xs font-semibold rounded-full ${
                                                                 student.status ===
                                                                 'Aktif'
-                                                                    ? 'bg-blue-500/15 text-blue-400'
+                                                                    ? 'bg-indigo-500/10 text-indigo-400'
                                                                     : student.status ===
                                                                       'Alumni'
-                                                                    ? 'bg-blue-500/15 text-blue-400'
+                                                                    ? 'bg-indigo-500/10 text-indigo-400'
                                                                     : 'bg-white/[0.06] text-white/60'
                                                             }`}
                                                         >
@@ -1522,7 +1522,7 @@ const App = () => {
                                                     <td className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                         {student.enableNotification !==
                                                         false ? (
-                                                            <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-500/15 text-blue-400">
+                                                            <span className="px-2 py-1 text-xs font-semibold rounded-full bg-indigo-500/10 text-indigo-400">
                                                                 ✓ Aktif
                                                             </span>
                                                         ) : (
@@ -1539,7 +1539,7 @@ const App = () => {
                                                                         student
                                                                     )
                                                                 }
-                                                                className="bg-blue-500/15 text-blue-400 px-3 py-1.5 rounded-lg hover:bg-blue-500/25 transition font-medium border border-blue-500/20 text-xs sm:text-sm"
+                                                                className="bg-indigo-500/10 text-indigo-400 px-3 py-1.5 rounded-lg hover:bg-indigo-500/18 transition font-medium border border-indigo-500/15 text-xs sm:text-sm"
                                                             >
                                                                 ✏️ Edit
                                                             </button>
@@ -1549,7 +1549,7 @@ const App = () => {
                                                                         student._id
                                                                     )
                                                                 }
-                                                                className="text-rose-400/60 hover:text-rose-400 p-1 transition-colors"
+                                                                className="text-rose-300/60 hover:text-rose-300 p-1 transition-colors"
                                                                 title="Hapus"
                                                             >
                                                                 <Trash2 className="w-4 h-4" />
@@ -1582,7 +1582,7 @@ const App = () => {
                                 <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                                     <button
                                         onClick={exportPaymentsToExcel}
-                                        className="flex-1 sm:flex-none bg-emerald-500/10 text-emerald-400 px-3 sm:px-4 py-2 rounded-lg hover:bg-emerald-500/20 transition flex items-center justify-center gap-2 text-sm border border-emerald-500/20"
+                                        className="flex-1 sm:flex-none bg-teal-500/8 text-teal-300 px-3 sm:px-4 py-2 rounded-lg hover:bg-teal-500/15 transition flex items-center justify-center gap-2 text-sm border border-teal-500/15"
                                     >
                                         <Download className="w-4 h-4" />
                                         <span className="hidden sm:inline">
@@ -1591,7 +1591,7 @@ const App = () => {
                                     </button>
                                     <button
                                         onClick={exportPaymentsToPDF}
-                                        className="flex-1 sm:flex-none bg-rose-500/10 text-rose-400 px-3 sm:px-4 py-2 rounded-lg hover:bg-rose-500/20 transition flex items-center justify-center gap-2 text-sm border border-rose-500/20"
+                                        className="flex-1 sm:flex-none bg-rose-500/8 text-rose-300 px-3 sm:px-4 py-2 rounded-lg hover:bg-rose-500/12 transition flex items-center justify-center gap-2 text-sm border border-rose-400/15"
                                     >
                                         <Download className="w-4 h-4" />
                                         <span className="hidden sm:inline">
@@ -1600,7 +1600,7 @@ const App = () => {
                                     </button>
                                     <button
                                         onClick={() => setShowPayment(true)}
-                                        className="w-full sm:w-auto bg-blue-500/15 text-blue-400 px-3 sm:px-4 py-2 rounded-lg hover:bg-blue-500/25 transition flex items-center justify-center gap-2 text-sm font-medium border border-blue-500/20"
+                                        className="w-full sm:w-auto bg-indigo-500/10 text-indigo-400 px-3 sm:px-4 py-2 rounded-lg hover:bg-indigo-500/18 transition flex items-center justify-center gap-2 text-sm font-medium border border-indigo-500/15"
                                     >
                                         <Plus className="w-4 h-4" />
                                         <span className="hidden sm:inline">
@@ -1682,8 +1682,8 @@ const App = () => {
                                                         className={`px-2 py-1 text-xs font-semibold rounded-full ${
                                                             payment.method ===
                                                             'Tunai'
-                                                                ? 'bg-blue-500/15 text-blue-400'
-                                                                : 'bg-blue-500/15 text-blue-400'
+                                                                ? 'bg-indigo-500/10 text-indigo-400'
+                                                                : 'bg-indigo-500/10 text-indigo-400'
                                                         }`}
                                                     >
                                                         {payment.method}
@@ -1692,7 +1692,7 @@ const App = () => {
                                                 <td className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm">
                                                     {payment.source ===
                                                         'custom' && (
-                                                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-emerald-500/15 text-emerald-400">
+                                                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-teal-500/10 text-teal-300">
                                                             Custom
                                                         </span>
                                                     )}
@@ -1721,7 +1721,7 @@ const App = () => {
                                                                 payment._id
                                                             )
                                                         }
-                                                        className="text-rose-400/60 hover:text-rose-400 p-1 transition-colors"
+                                                        className="text-rose-300/60 hover:text-rose-300 p-1 transition-colors"
                                                         title="Hapus"
                                                     >
                                                         <Trash2 className="w-4 h-4" />
@@ -1747,7 +1747,7 @@ const App = () => {
                                 <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                                     <button
                                         onClick={exportExpensesToExcel}
-                                        className="flex-1 sm:flex-none bg-emerald-500/10 text-emerald-400 px-3 sm:px-4 py-2 rounded-lg hover:bg-emerald-500/20 transition flex items-center justify-center gap-2 text-sm border border-emerald-500/20"
+                                        className="flex-1 sm:flex-none bg-teal-500/8 text-teal-300 px-3 sm:px-4 py-2 rounded-lg hover:bg-teal-500/15 transition flex items-center justify-center gap-2 text-sm border border-teal-500/15"
                                     >
                                         <Download className="w-4 h-4" />
                                         <span className="hidden sm:inline">
@@ -1756,7 +1756,7 @@ const App = () => {
                                     </button>
                                     <button
                                         onClick={exportExpensesToPDF}
-                                        className="flex-1 sm:flex-none bg-rose-500/10 text-rose-400 px-3 sm:px-4 py-2 rounded-lg hover:bg-rose-500/20 transition flex items-center justify-center gap-2 text-sm border border-rose-500/20"
+                                        className="flex-1 sm:flex-none bg-rose-500/8 text-rose-300 px-3 sm:px-4 py-2 rounded-lg hover:bg-rose-500/12 transition flex items-center justify-center gap-2 text-sm border border-rose-400/15"
                                     >
                                         <Download className="w-4 h-4" />
                                         <span className="hidden sm:inline">
@@ -1765,7 +1765,7 @@ const App = () => {
                                     </button>
                                     <button
                                         onClick={() => setShowExpense(true)}
-                                        className="w-full sm:w-auto bg-blue-500/15 text-blue-400 px-3 sm:px-4 py-2 rounded-lg hover:bg-blue-500/25 transition flex items-center justify-center gap-2 text-sm font-medium border border-blue-500/20"
+                                        className="w-full sm:w-auto bg-indigo-500/10 text-indigo-400 px-3 sm:px-4 py-2 rounded-lg hover:bg-indigo-500/18 transition flex items-center justify-center gap-2 text-sm font-medium border border-indigo-500/15"
                                     >
                                         <Plus className="w-4 h-4" />
                                         <span className="hidden sm:inline">
@@ -1836,7 +1836,7 @@ const App = () => {
                                                         {expense.purpose}
                                                     </div>
                                                 </td>
-                                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-semibold text-red-600">
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-semibold text-rose-300">
                                                     {formatRp(expense.amount)}
                                                 </td>
                                                 <td className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm">
@@ -1844,13 +1844,13 @@ const App = () => {
                                                         className={`px-2 py-1 text-xs font-semibold rounded-full ${
                                                             expense.category ===
                                                             'Kebersihan'
-                                                                ? 'bg-blue-500/15 text-blue-400'
+                                                                ? 'bg-indigo-500/10 text-indigo-400'
                                                                 : expense.category ===
                                                                   'Acara'
                                                                 ? 'bg-violet-500/30 text-violet-200'
                                                                 : expense.category ===
                                                                   'Perlengkapan'
-                                                                ? 'bg-blue-500/15 text-blue-400'
+                                                                ? 'bg-indigo-500/10 text-indigo-400'
                                                                 : 'bg-white/[0.06] text-white/60'
                                                         }`}
                                                     >
@@ -1867,7 +1867,7 @@ const App = () => {
                                                                 expense._id
                                                             )
                                                         }
-                                                        className="text-rose-400/60 hover:text-rose-400 p-1 transition-colors"
+                                                        className="text-rose-300/60 hover:text-rose-300 p-1 transition-colors"
                                                         title="Hapus"
                                                     >
                                                         <Trash2 className="w-4 h-4" />
@@ -1900,7 +1900,7 @@ const App = () => {
                                     <p className="text-sm text-white/60">
                                         Total Tunggakan
                                     </p>
-                                    <p className="text-2xl font-bold text-red-600">
+                                    <p className="text-2xl font-bold text-rose-300">
                                         {getUnpaidStudents().length} Siswa
                                     </p>
                                 </div>
@@ -1909,7 +1909,7 @@ const App = () => {
                         <div className="overflow-x-auto">
                             {getUnpaidStudents().length === 0 ? (
                                 <div className="p-12 text-center">
-                                    <CheckCircle className="w-16 h-16 text-emerald-400 mx-auto mb-4" />
+                                    <CheckCircle className="w-16 h-16 text-teal-300 mx-auto mb-4" />
                                     <h3 className="text-xl font-semibold text-white mb-2">
                                         Semua Sudah Bayar! 🎉
                                     </h3>
@@ -1956,11 +1956,11 @@ const App = () => {
                                                             {student.name}
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap">
-                                                            <span className="px-2 py-1 text-xs font-semibold rounded-full bg-rose-500/15 text-rose-400">
+                                                            <span className="px-2 py-1 text-xs font-semibold rounded-full bg-rose-500/10 text-rose-300">
                                                                 Belum Bayar
                                                             </span>
                                                         </td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-rose-400 font-semibold">
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-rose-300 font-semibold">
                                                             {formatRp(
                                                                 tunggakan
                                                             )}
@@ -1972,7 +1972,7 @@ const App = () => {
                                                                         student._id
                                                                     )
                                                                 }
-                                                                className="bg-emerald-500/15 text-emerald-400 px-3 py-1.5 rounded-lg hover:bg-emerald-500/25 transition text-xs border border-emerald-500/20"
+                                                                className="bg-teal-500/10 text-teal-300 px-3 py-1.5 rounded-lg hover:bg-teal-500/18 transition text-xs border border-teal-500/15"
                                                             >
                                                                 Bayar Sekarang
                                                             </button>
@@ -2004,8 +2004,8 @@ const App = () => {
 
                 {/* Modal Add Student */}
                 {showAddStudent && (
-                    <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
-                        <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
+                    <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50 backdrop-animate">
+                        <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto modal-animate">
                             <h3 className="text-xl font-bold mb-4">
                                 Tambah Siswa Baru
                             </h3>
@@ -2018,7 +2018,7 @@ const App = () => {
                                         type="number"
                                         name="absen"
                                         required
-                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
+                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
                                     />
                                 </div>
                                 <div>
@@ -2029,7 +2029,7 @@ const App = () => {
                                         type="text"
                                         name="name"
                                         required
-                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
+                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
                                     />
                                 </div>
                                 <div>
@@ -2040,7 +2040,7 @@ const App = () => {
                                         type="text"
                                         name="nickname"
                                         placeholder="Contoh: Budi, Andi, Siti"
-                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
+                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
                                     />
                                     <p className="text-xs text-white/60 mt-1">
                                         Nama panggilan untuk ditampilkan di
@@ -2055,7 +2055,7 @@ const App = () => {
                                         type="text"
                                         name="phoneNumber"
                                         placeholder="08xxxxxxxxxx atau 628xxxxxxxxxx"
-                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
+                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
                                     />
                                     <p className="text-xs text-white/60 mt-1">
                                         Format: 08xxx atau 628xxx (tanpa
@@ -2087,7 +2087,7 @@ const App = () => {
                                     </button>
                                     <button
                                         type="submit"
-                                        className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+                                        className="flex-1 px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 btn-press transition"
                                     >
                                         Simpan
                                     </button>
@@ -2099,8 +2099,8 @@ const App = () => {
 
                 {/* Modal Edit Student */}
                 {showEditStudent && editingStudent && (
-                    <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
-                        <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
+                    <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50 backdrop-animate">
+                        <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto modal-animate">
                             <h3 className="text-xl font-bold mb-4">
                                 Edit Data Siswa
                             </h3>
@@ -2117,7 +2117,7 @@ const App = () => {
                                         name="absen"
                                         defaultValue={editingStudent.absen}
                                         required
-                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
+                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
                                     />
                                 </div>
                                 <div>
@@ -2129,7 +2129,7 @@ const App = () => {
                                         name="name"
                                         defaultValue={editingStudent.name}
                                         required
-                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
+                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
                                     />
                                 </div>
                                 <div>
@@ -2143,7 +2143,7 @@ const App = () => {
                                             editingStudent.nickname || ''
                                         }
                                         placeholder="Contoh: Budi, Andi, Siti"
-                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
+                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
                                     />
                                     <p className="text-xs text-white/60 mt-1">
                                         Nama panggilan untuk ditampilkan di
@@ -2161,7 +2161,7 @@ const App = () => {
                                             editingStudent.phoneNumber || ''
                                         }
                                         placeholder="08xxxxxxxxxx atau 628xxxxxxxxxx"
-                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
+                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
                                     />
                                     <p className="text-xs text-white/60 mt-1">
                                         Format: 08xxx atau 628xxx (tanpa
@@ -2175,7 +2175,7 @@ const App = () => {
                                     <select
                                         name="status"
                                         defaultValue={editingStudent.status}
-                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
+                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
                                     >
                                         <option value="Aktif">Aktif</option>
                                         <option value="Tidak Aktif">
@@ -2202,8 +2202,8 @@ const App = () => {
                                         Aktifkan notifikasi WhatsApp
                                     </label>
                                 </div>
-                                <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
-                                    <p className="text-xs text-blue-400">
+                                <div className="bg-indigo-500/8 border border-indigo-500/15 rounded-lg p-3">
+                                    <p className="text-xs text-indigo-400">
                                         💡 <strong>Tips:</strong> Pastikan nomor
                                         WhatsApp valid agar siswa bisa menerima
                                         reminder pembayaran kas.
@@ -2222,7 +2222,7 @@ const App = () => {
                                     </button>
                                     <button
                                         type="submit"
-                                        className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+                                        className="flex-1 px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 btn-press transition"
                                     >
                                         Update
                                     </button>
@@ -2234,8 +2234,8 @@ const App = () => {
 
                 {/* Modal Add Payment */}
                 {showPayment && (
-                    <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
-                        <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl max-w-md w-full p-6">
+                    <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50 backdrop-animate">
+                        <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl modal-animate max-w-md w-full p-6">
                             <h3 className="text-xl font-bold mb-4">
                                 Tambah Pembayaran
                             </h3>
@@ -2247,7 +2247,7 @@ const App = () => {
                                     <select
                                         name="student"
                                         required
-                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
+                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
                                     >
                                         <option value="">Pilih Siswa</option>
                                         {students
@@ -2272,7 +2272,7 @@ const App = () => {
                                         name="amount"
                                         defaultValue="2000"
                                         required
-                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
+                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
                                     />
                                 </div>
                                 <div>
@@ -2288,7 +2288,7 @@ const App = () => {
                                                 .split('T')[0]
                                         }
                                         required
-                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
+                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
                                     />
                                 </div>
                                 <div>
@@ -2297,7 +2297,7 @@ const App = () => {
                                     </label>
                                     <select
                                         name="method"
-                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
+                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
                                     >
                                         <option>Tunai</option>
                                         <option>Transfer</option>
@@ -2310,7 +2310,7 @@ const App = () => {
                                     <input
                                         type="text"
                                         name="note"
-                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
+                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
                                     />
                                 </div>
                                 <div className="flex gap-3">
@@ -2323,7 +2323,7 @@ const App = () => {
                                     </button>
                                     <button
                                         type="submit"
-                                        className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+                                        className="flex-1 px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 btn-press transition"
                                     >
                                         Simpan
                                     </button>
@@ -2335,8 +2335,8 @@ const App = () => {
 
                 {/* Modal Add Expense */}
                 {showExpense && (
-                    <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
-                        <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl max-w-md w-full p-6">
+                    <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50 backdrop-animate">
+                        <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl max-w-md w-full p-6 modal-animate">
                             <h3 className="text-xl font-bold mb-4">
                                 Tambah Pengeluaran
                             </h3>
@@ -2349,7 +2349,7 @@ const App = () => {
                                         type="text"
                                         name="purpose"
                                         required
-                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
+                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
                                     />
                                 </div>
                                 <div>
@@ -2360,7 +2360,7 @@ const App = () => {
                                         type="number"
                                         name="amount"
                                         required
-                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
+                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
                                     />
                                 </div>
                                 <div>
@@ -2376,7 +2376,7 @@ const App = () => {
                                                 .split('T')[0]
                                         }
                                         required
-                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
+                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
                                     />
                                 </div>
                                 <div>
@@ -2385,7 +2385,7 @@ const App = () => {
                                     </label>
                                     <select
                                         name="category"
-                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
+                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
                                     >
                                         <option>Kebersihan</option>
                                         <option>Acara</option>
@@ -2401,7 +2401,7 @@ const App = () => {
                                         type="text"
                                         name="approvedBy"
                                         required
-                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
+                                        className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
                                     />
                                 </div>
                                 <div className="flex gap-3">
@@ -2414,7 +2414,7 @@ const App = () => {
                                     </button>
                                     <button
                                         type="submit"
-                                        className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+                                        className="flex-1 px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 btn-press transition"
                                     >
                                         Simpan
                                     </button>

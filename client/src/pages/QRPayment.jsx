@@ -128,8 +128,8 @@ function QRPayment() {
     if (!activeQR) {
         return (
             <div className="max-w-2xl mx-auto p-6">
-                <div className="bg-amber-500/[0.06]0/[0.06] border-l-4 border-yellow-400 p-4 rounded">
-                    <p className="text-amber-400">
+                <div className="bg-amber-500/[0.06] border-l-2 border-amber-300/40 p-4 rounded">
+                    <p className="text-amber-300">
                         QR Code pembayaran belum tersedia. Silakan hubungi
                         bendahara.
                     </p>
@@ -181,7 +181,7 @@ function QRPayment() {
                             </div>
                         )}
                         {activeQR.notes && (
-                            <div className="mt-3 p-2 bg-blue-500/[0.06]0/[0.06] rounded text-blue-400">
+                            <div className="mt-3 p-2 bg-indigo-500/[0.05]0/[0.06] rounded text-indigo-400">
                                 💡 {activeQR.notes}
                             </div>
                         )}
@@ -218,8 +218,8 @@ function QRPayment() {
                         </div>
 
                         {tunggakan > 0 && (
-                            <div className="bg-rose-500/[0.06] border-l-4 border-red-400 p-3 rounded">
-                                <p className="text-sm text-rose-400">
+                            <div className="bg-rose-500/[0.05] border-l-2 border-rose-400/50 p-3 rounded">
+                                <p className="text-sm text-rose-300">
                                     <strong>Tunggakan:</strong> Rp
                                     {tunggakan.toLocaleString('id-ID')}
                                 </p>
@@ -249,7 +249,7 @@ function QRPayment() {
                                 type="file"
                                 accept="image/jpeg,image/jpg,image/png"
                                 onChange={handleImageChange}
-                                className="w-full text-sm text-white/60 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-500/[0.06]0/[0.06] file:text-blue-500 hover:file:bg-blue-100"
+                                className="w-full text-sm text-white/60 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-500/[0.05]0/[0.06] file:text-blue-500 hover:file:bg-blue-100"
                                 required
                             />
                             <p className="text-xs text-white/60 mt-1">
@@ -283,7 +283,7 @@ function QRPayment() {
                         <button
                             type="submit"
                             disabled={submitting}
-                            className="w-full bg-blue-500/[0.06]0/15 text-blue-400 border border-blue-500/20 py-2 px-4 rounded-lg hover:bg-blue-500/[0.06]0/25 disabled:bg-white/[0.1] disabled:cursor-not-allowed transition font-semibold"
+                            className="w-full bg-indigo-500/[0.05]0/15 text-indigo-400 border border-indigo-500/15 py-2 px-4 rounded-lg hover:bg-indigo-500/[0.05]0/25 disabled:bg-white/[0.1] disabled:cursor-not-allowed transition font-semibold"
                         >
                             {submitting ? 'Mengirim...' : '📤 Kirim Konfirmasi'}
                         </button>
@@ -293,8 +293,8 @@ function QRPayment() {
                         <div
                             className={`mt-4 p-3 rounded-lg ${
                                 message.startsWith('✅')
-                                    ? 'bg-blue-500/[0.06]0/[0.06] text-blue-400'
-                                    : 'bg-rose-500/[0.06] text-red-600'
+                                    ? 'bg-indigo-500/[0.05]0/[0.06] text-indigo-400'
+                                    : 'bg-rose-500/[0.05] text-rose-300'
                             }`}
                         >
                             {message}
@@ -304,7 +304,7 @@ function QRPayment() {
             </div>
 
             {/* Instructions */}
-            <div className="mt-6 bg-blue-500/[0.06]0/[0.06] rounded-lg p-6">
+            <div className="mt-6 bg-indigo-500/[0.05]0/[0.06] rounded-lg p-6">
                 <h3 className="text-lg font-semibold text-white mb-3">
                     📋 Cara Pembayaran:
                 </h3>

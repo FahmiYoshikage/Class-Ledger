@@ -91,10 +91,10 @@ const IncomeVsExpenseChart = ({ payments, expenses, timeRange }) => {
                         {payload[0].payload.date}
                     </p>
                     <div className="space-y-1">
-                        <p className="text-sm text-blue-400">
+                        <p className="text-sm text-indigo-400">
                             Pemasukan: {formatCurrency(payload[0].value)}
                         </p>
-                        <p className="text-sm text-rose-400">
+                        <p className="text-sm text-rose-300">
                             Pengeluaran: {formatCurrency(payload[1].value)}
                         </p>
                         <p className="text-sm font-semibold text-white/60 border-t pt-1">

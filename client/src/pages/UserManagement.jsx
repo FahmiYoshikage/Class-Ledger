@@ -137,7 +137,7 @@ const UserManagement = () => {
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
                         <h1 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-2 sm:gap-3">
-                            <Users className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400" />
+                            <Users className="w-6 h-6 sm:w-8 sm:h-8 text-indigo-400" />
                             User Management
                         </h1>
                         <p className="text-sm sm:text-base text-white/60 mt-1 sm:mt-2">
@@ -146,7 +146,7 @@ const UserManagement = () => {
                     </div>
                     <button
                         onClick={() => setShowAddUser(true)}
-                        className="w-full sm:w-auto bg-blue-500/[0.06]0 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-blue-600 transition flex items-center justify-center gap-2 font-semibold text-sm sm:text-base"
+                        className="w-full sm:w-auto bg-indigo-500/[0.05]0 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-blue-600 transition flex items-center justify-center gap-2 font-semibold text-sm sm:text-base"
                     >
                         <Plus className="w-5 h-5" />
                         Tambah User
@@ -155,10 +155,10 @@ const UserManagement = () => {
             </div>
 
             {error && (
-                <div className="bg-rose-500/[0.06] border-l-4 border-red-400 p-4 rounded mb-6">
+                <div className="bg-rose-500/[0.05] border-l-2 border-rose-400/50 p-4 rounded mb-6">
                     <div className="flex items-center">
                         <AlertCircle className="w-5 h-5 text-red-400 mr-2" />
-                        <p className="text-rose-400">{error}</p>
+                        <p className="text-rose-300">{error}</p>
                     </div>
                 </div>
             )}
@@ -213,7 +213,7 @@ const UserManagement = () => {
                                                 user.role === 'admin'
                                                     ? 'bg-violet-500/30 text-violet-200'
                                                     : user.role === 'member'
-                                                    ? 'bg-blue-500/[0.06]0/15 text-blue-400'
+                                                    ? 'bg-indigo-500/[0.05]0/15 text-indigo-400'
                                                     : 'bg-white/[0.04] text-white'
                                             }`}
                                         >
@@ -237,8 +237,8 @@ const UserManagement = () => {
                                             }
                                             className={`inline-flex items-center gap-1 px-2 sm:px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap ${
                                                 user.isActive
-                                                    ? 'bg-blue-500/[0.06]0/15 text-blue-400'
-                                                    : 'bg-rose-500/15 text-rose-400'
+                                                    ? 'bg-indigo-500/[0.05]0/15 text-indigo-400'
+                                                    : 'bg-rose-500/10 text-rose-300'
                                             }`}
                                         >
                                             {user.isActive ? (
@@ -271,7 +271,7 @@ const UserManagement = () => {
                                                 onClick={() =>
                                                     handleResetPassword(user)
                                                 }
-                                                className="text-blue-500 hover:text-blue-400"
+                                                className="text-blue-500 hover:text-indigo-400"
                                                 title="Reset Password"
                                             >
                                                 <Key className="w-4 h-4" />
@@ -280,7 +280,7 @@ const UserManagement = () => {
                                                 onClick={() =>
                                                     handleDeleteUser(user._id)
                                                 }
-                                                className="text-rose-400 hover:text-rose-400"
+                                                className="text-rose-300 hover:text-rose-300"
                                                 title="Delete user"
                                             >
                                                 <Trash2 className="w-4 h-4" />
@@ -296,7 +296,7 @@ const UserManagement = () => {
 
             {/* Add User Modal */}
             {showAddUser && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50">
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50 backdrop-animate">
                     <div className="bg-[#1e1e22]/98 backdrop-blur-xl border border-white/[0.1]  rounded-xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
                         <h3 className="text-xl font-bold mb-4">
                             Tambah User Baru
@@ -310,7 +310,7 @@ const UserManagement = () => {
                                     type="text"
                                     name="fullName"
                                     required
-                                    className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                                    className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white"
                                 />
                             </div>
                             <div>
@@ -321,7 +321,7 @@ const UserManagement = () => {
                                     type="text"
                                     name="username"
                                     required
-                                    className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                                    className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white"
                                 />
                             </div>
                             <div>
@@ -331,7 +331,7 @@ const UserManagement = () => {
                                 <input
                                     type="email"
                                     name="email"
-                                    className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                                    className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white"
                                 />
                             </div>
                             <div>
@@ -343,7 +343,7 @@ const UserManagement = () => {
                                     name="password"
                                     required
                                     minLength={6}
-                                    className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                                    className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white"
                                 />
                                 <p className="text-xs text-white/60 mt-1">
                                     Minimal 6 karakter
@@ -356,7 +356,7 @@ const UserManagement = () => {
                                 <select
                                     name="role"
                                     required
-                                    className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                                    className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white"
                                 >
                                     <option value="member">Member</option>
                                     <option value="admin">Admin</option>
@@ -368,7 +368,7 @@ const UserManagement = () => {
                                 </label>
                                 <select
                                     name="studentId"
-                                    className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                                    className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white"
                                 >
                                     <option value="">None</option>
                                     {students.map((student) => (
@@ -391,7 +391,7 @@ const UserManagement = () => {
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex-1 px-4 py-2 bg-blue-500/[0.06]0 text-white rounded-lg hover:bg-blue-600 transition"
+                                    className="flex-1 px-4 py-2 bg-indigo-500/[0.05]0 text-white rounded-lg hover:bg-blue-600 transition"
                                 >
                                     Simpan
                                 </button>
@@ -403,11 +403,11 @@ const UserManagement = () => {
 
             {/* Password Reset Modal */}
             {showPasswordModal && resetPasswordData && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50">
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50 backdrop-animate">
                     <div className="bg-[#1e1e22]/98 backdrop-blur-xl border border-white/[0.1]  rounded-xl max-w-md w-full p-6">
                         <div className="text-center mb-6">
                             <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <CheckCircle className="w-8 h-8 text-blue-400" />
+                                <CheckCircle className="w-8 h-8 text-indigo-400" />
                             </div>
                             <h3 className="text-xl font-bold text-white mb-2">
                                 Password Berhasil Direset!
@@ -452,7 +452,7 @@ const UserManagement = () => {
                                         type="text"
                                         value={resetPasswordData.password}
                                         readOnly
-                                        className="flex-1 px-3 py-2 rounded-xl bg-white/[0.035] border border-white/[0.1] font-mono text-sm font-bold text-blue-400"
+                                        className="flex-1 px-3 py-2 rounded-xl bg-white/[0.035] border border-white/[0.1] font-mono text-sm font-bold text-indigo-400"
                                     />
                                     <button
                                         onClick={() =>
@@ -460,7 +460,7 @@ const UserManagement = () => {
                                                 resetPasswordData.password
                                             )
                                         }
-                                        className="p-2 text-blue-400 hover:text-indigo-800 hover:bg-blue-500/[0.06]0/[0.06] rounded-lg transition"
+                                        className="p-2 text-indigo-400 hover:text-indigo-800 hover:bg-indigo-500/[0.05]0/[0.06] rounded-lg transition"
                                         title="Copy password"
                                     >
                                         <Copy className="w-4 h-4" />
@@ -469,10 +469,10 @@ const UserManagement = () => {
                             </div>
                         </div>
 
-                        <div className="bg-amber-500/[0.06]0/[0.06] border border-yellow-200 rounded-lg p-4 mb-6">
+                        <div className="bg-amber-500/[0.06] border border-yellow-200 rounded-lg p-4 mb-6">
                             <div className="flex gap-3">
-                                <AlertCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
-                                <div className="text-sm text-amber-400">
+                                <AlertCircle className="w-5 h-5 text-amber-300 flex-shrink-0 mt-0.5" />
+                                <div className="text-sm text-amber-300">
                                     <p className="font-semibold mb-1">
                                         Penting:
                                     </p>
@@ -498,7 +498,7 @@ const UserManagement = () => {
                                 setShowPasswordModal(false);
                                 setResetPasswordData(null);
                             }}
-                            className="w-full px-4 py-3 bg-blue-500/[0.06]0 text-white rounded-lg hover:bg-blue-600 transition font-semibold"
+                            className="w-full px-4 py-3 bg-indigo-500/[0.05]0 text-white rounded-lg hover:bg-blue-600 transition font-semibold"
                         >
                             Tutup
                         </button>

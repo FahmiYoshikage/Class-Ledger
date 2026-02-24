@@ -274,14 +274,14 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
 
             {/* Success & Error Messages */}
             {success && (
-                <div className="bg-blue-500/[0.06]0/[0.06] border-l-4 border-green-400 p-4 rounded">
-                    <p className="text-blue-400">{success}</p>
+                <div className="bg-indigo-500/[0.05]0/[0.06] border-l-4 border-green-400 p-4 rounded">
+                    <p className="text-indigo-400">{success}</p>
                 </div>
             )}
 
             {error && (
-                <div className="bg-rose-500/[0.06] border-l-4 border-red-400 p-4 rounded">
-                    <p className="text-rose-400">{error}</p>
+                <div className="bg-rose-500/[0.05] border-l-2 border-rose-400/50 p-4 rounded">
+                    <p className="text-rose-300">{error}</p>
                 </div>
             )}
 
@@ -298,7 +298,7 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
                             value={className}
                             onChange={(e) => setClassName(e.target.value)}
                             placeholder="Contoh: XII IPA 1"
-                            className="w-full px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                            className="w-full px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white"
                         />
                         <p className="text-xs text-white/60 mt-1">
                             Akan ditampilkan di header aplikasi
@@ -324,7 +324,7 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
                                     setSemesterName(e.target.value)
                                 }
                                 placeholder="Contoh: Semester 1 2024/2025"
-                                className="w-full px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                                className="w-full px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white"
                             />
                             <p className="text-xs text-white/60 mt-1">
                                 Nama semester yang sedang berjalan
@@ -335,20 +335,20 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
                         <div
                             className={`p-4 rounded-lg mb-4 ${
                                 semesterStatus === 'active'
-                                    ? 'bg-blue-500/[0.06]0/[0.06] border border-green-200'
-                                    : 'bg-amber-500/[0.06]0/[0.06] border border-yellow-200'
+                                    ? 'bg-indigo-500/[0.05]0/[0.06] border border-green-200'
+                                    : 'bg-amber-500/[0.06] border border-yellow-200'
                             }`}
                         >
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
                                     {semesterStatus === 'active' ? (
                                         <>
-                                            <Play className="w-6 h-6 text-blue-400" />
+                                            <Play className="w-6 h-6 text-indigo-400" />
                                             <div>
                                                 <p className="font-semibold text-green-900">
                                                     Semester Aktif
                                                 </p>
-                                                <p className="text-sm text-blue-400">
+                                                <p className="text-sm text-indigo-400">
                                                     Sistem berjalan normal, week
                                                     counter aktif
                                                 </p>
@@ -356,12 +356,12 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
                                         </>
                                     ) : (
                                         <>
-                                            <Pause className="w-6 h-6 text-amber-400" />
+                                            <Pause className="w-6 h-6 text-amber-300" />
                                             <div>
-                                                <p className="font-semibold text-yellow-900">
+                                                <p className="font-semibold text-amber-300">
                                                     Semester Di-Pause (LIBUR)
                                                 </p>
-                                                <p className="text-sm text-amber-400">
+                                                <p className="text-sm text-amber-300">
                                                     Week counter freeze di Week{' '}
                                                     {pausedWeek}, auto-reminder
                                                     off
@@ -380,7 +380,7 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
                                     type="button"
                                     onClick={handlePauseSemester}
                                     disabled={loading}
-                                    className="flex-1 px-4 py-3 bg-amber-500/[0.06]0/15 text-amber-400 border border-amber-500/20 rounded-lg hover:bg-amber-500/[0.06]0/25 transition flex items-center justify-center gap-2 font-medium disabled:opacity-50"
+                                    className="flex-1 px-4 py-3 bg-amber-500/[0.06]0/15 text-amber-300 border border-amber-400/15 rounded-lg hover:bg-amber-500/[0.06]0/25 transition flex items-center justify-center gap-2 font-medium disabled:opacity-50"
                                 >
                                     <Pause className="w-5 h-5" />
                                     Pause Semester (Mulai Libur)
@@ -390,7 +390,7 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
                                     type="button"
                                     onClick={handleResumeSemester}
                                     disabled={loading}
-                                    className="flex-1 px-4 py-3 bg-emerald-500/15 text-emerald-400 border border-emerald-500/20 rounded-lg hover:bg-emerald-500/25 transition flex items-center justify-center gap-2 font-medium disabled:opacity-50"
+                                    className="flex-1 px-4 py-3 bg-teal-500/10 text-teal-300 border border-teal-500/15 rounded-lg hover:bg-teal-500/18 transition flex items-center justify-center gap-2 font-medium disabled:opacity-50"
                                 >
                                     <Play className="w-5 h-5" />
                                     Resume Semester Baru
@@ -399,7 +399,7 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
                         </div>
 
                         {/* Info Box for Semester */}
-                        <div className="mt-4 bg-blue-500/[0.06]0/[0.06] border border-blue-200 rounded-lg p-3">
+                        <div className="mt-4 bg-indigo-500/[0.05]0/[0.06] border border-blue-200 rounded-lg p-3">
                             <p className="text-xs text-blue-500 font-medium mb-2">
                                 ℹ️ Cara Kerja Semester Control:
                             </p>
@@ -433,7 +433,7 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
                             value={startDate}
                             onChange={(e) => setStartDate(e.target.value)}
                             required
-                            className="w-full px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                            className="w-full px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white"
                         />
                         <p className="text-xs text-white/60 mt-1">
                             Tanggal mulai perhitungan minggu pertama
@@ -457,7 +457,7 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
                                 min="1000"
                                 step="500"
                                 required
-                                className="flex-1 px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                                className="flex-1 px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white"
                             />
                         </div>
                         <p className="text-xs text-white/60 mt-1">
@@ -479,7 +479,7 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
                             min="1"
                             max="12"
                             required
-                            className="w-full px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                            className="w-full px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white"
                         />
                         <p className="text-xs text-white/60 mt-1">
                             Siswa akan mendapat status "TELAT" jika tunggakan ≥{' '}
@@ -518,7 +518,7 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
                                 <span className="text-white/60">
                                     Batas telat:
                                 </span>
-                                <span className="font-semibold text-rose-400">
+                                <span className="font-semibold text-rose-300">
                                     Rp{' '}
                                     {(
                                         lateThreshold * weeklyAmount
@@ -560,7 +560,7 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="px-6 py-2 bg-blue-500/[0.06]0 text-white rounded-lg hover:bg-blue-600 transition flex items-center gap-2 disabled:opacity-50"
+                        className="px-6 py-2 bg-indigo-500/[0.05]0 text-white rounded-lg hover:bg-blue-600 transition flex items-center gap-2 disabled:opacity-50"
                     >
                         {loading ? (
                             <>
@@ -578,7 +578,7 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
             </form>
 
             {/* Info Box */}
-            <div className="bg-blue-500/[0.06]0/[0.06] border border-blue-200 rounded-lg p-4">
+            <div className="bg-indigo-500/[0.05]0/[0.06] border border-blue-200 rounded-lg p-4">
                 <h4 className="font-semibold text-blue-900 mb-2">
                     ℹ️ Informasi Penting:
                 </h4>

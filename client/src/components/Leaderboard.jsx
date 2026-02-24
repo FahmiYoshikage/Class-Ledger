@@ -109,7 +109,7 @@ const Leaderboard = () => {
         return (
             <div className="min-h-screen bg-white/[0.04] flex items-center justify-center">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-purple-600 mx-auto mb-4"></div>
+                    <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-500 mx-auto mb-4"></div>
                     <p className="text-white/60 text-lg">
                         Memuat leaderboard...
                     </p>
@@ -139,16 +139,16 @@ const Leaderboard = () => {
     }
 
     return (
-        <div className="min-h-screen bg-white/[0.04] py-8 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-white/[0.04] py-8 px-4 sm:px-6 lg:px-8 page-transition">
             <div className="max-w-5xl mx-auto">
                 {/* Header */}
-                <div className="text-center mb-12">
+                <div className="text-center mb-12 animate-slide-up">
                     <div className="flex items-center justify-center gap-3 mb-4">
-                        <Trophy className="w-12 h-12 text-amber-400 animate-bounce" />
-                        <h1 className="text-4xl sm:text-5xl font-extrabold bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent">
+                        <Trophy className="w-12 h-12 text-amber-300 trophy-shimmer" />
+                        <h1 className="text-4xl sm:text-5xl font-extrabold bg-gradient-to-r from-indigo-400 via-violet-400 to-purple-400 bg-clip-text text-transparent">
                             LEADERBOARD
                         </h1>
-                        <Trophy className="w-12 h-12 text-amber-400 animate-bounce" />
+                        <Trophy className="w-12 h-12 text-amber-300 trophy-shimmer" />
                     </div>
                     <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
                         🎯 DONATOR KELAS TERBAIK 🎯
@@ -166,7 +166,7 @@ const Leaderboard = () => {
                         className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
                             refreshingBadges
                                 ? 'bg-white/[0.08] text-white/60 cursor-not-allowed'
-                                : 'bg-blue-500/[0.06]0 text-white hover:bg-blue-600  hover:-lg'
+                                : 'bg-indigo-500/[0.05]0 text-white hover:bg-blue-600  hover:-lg'
                         }`}
                     >
                         <RefreshCw
@@ -182,9 +182,9 @@ const Leaderboard = () => {
 
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1]-apple p-6 flex items-center gap-4">
-                        <div className="p-3 bg-purple-100 rounded-full">
-                            <Users className="w-6 h-6 text-purple-600" />
+                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-6 flex items-center gap-4 card-hover glow-hover animate-slide-up stagger-1">
+                        <div className="p-3 bg-violet-500/10 rounded-full">
+                            <Users className="w-6 h-6 text-violet-400" />
                         </div>
                         <div>
                             <p className="text-sm text-white/60">
@@ -195,9 +195,9 @@ const Leaderboard = () => {
                             </p>
                         </div>
                     </div>
-                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1]-apple p-6 flex items-center gap-4">
+                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-6 flex items-center gap-4 card-hover glow-hover animate-slide-up stagger-1">
                         <div className="p-3 bg-blue-100 rounded-full">
-                            <Clock className="w-6 h-6 text-blue-400" />
+                            <Clock className="w-6 h-6 text-indigo-400" />
                         </div>
                         <div>
                             <p className="text-sm text-white/60">
@@ -281,14 +281,14 @@ const Leaderboard = () => {
                                                     </p>
                                                 </div>
                                                 {isTopThree && (
-                                                    <Medal className="w-6 h-6 text-amber-400 flex-shrink-0" />
+                                                    <Medal className="w-6 h-6 text-amber-300 flex-shrink-0" />
                                                 )}
                                             </div>
 
                                             {/* Donation Amount */}
                                             <div className="flex items-center gap-2 mb-2">
-                                                <TrendingUp className="w-5 h-5 text-blue-400" />
-                                                <span className="text-2xl sm:text-3xl font-extrabold text-blue-400">
+                                                <TrendingUp className="w-5 h-5 text-indigo-400" />
+                                                <span className="text-2xl sm:text-3xl font-extrabold text-indigo-400">
                                                     {formatRupiah(
                                                         donor.totalDonation
                                                     )}
@@ -341,7 +341,7 @@ const Leaderboard = () => {
 
                                             {/* Earliest Payment Badge */}
                                             {donor.earliestPayment && (
-                                                <div className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 rounded-full text-xs font-medium text-blue-400">
+                                                <div className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 rounded-full text-xs font-medium text-indigo-400">
                                                     <Clock className="w-3 h-3" />
                                                     Pertama bayar:{' '}
                                                     {new Date(

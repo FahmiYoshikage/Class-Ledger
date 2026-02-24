@@ -59,20 +59,20 @@ const PaymentHeatmap = ({ students, payments }) => {
     }, [students, payments]);
 
     const getStatusColor = (paid) => {
-        if (paid) return 'bg-blue-500/[0.06]0/[0.06]0';
+        if (paid) return 'bg-indigo-500/[0.05]0/[0.06]0';
         return 'bg-red-200';
     };
 
     const getStatusIcon = (paid) => {
         if (paid) return <CheckCircle className="w-3 h-3 text-white" />;
-        return <XCircle className="w-3 h-3 text-rose-400" />;
+        return <XCircle className="w-3 h-3 text-rose-300" />;
     };
 
     const getRateColor = (rate) => {
-        if (rate >= 90) return 'text-blue-400 bg-blue-500/[0.06]0/[0.06]';
-        if (rate >= 70) return 'text-blue-500 bg-blue-500/[0.06]0/[0.06]';
-        if (rate >= 50) return 'text-amber-400 bg-amber-500/[0.06]0/[0.06]';
-        return 'text-rose-400 bg-rose-500/[0.06]';
+        if (rate >= 90) return 'text-indigo-400 bg-indigo-500/[0.05]0/[0.06]';
+        if (rate >= 70) return 'text-blue-500 bg-indigo-500/[0.05]0/[0.06]';
+        if (rate >= 50) return 'text-amber-300 bg-amber-500/[0.06]';
+        return 'text-rose-300 bg-rose-500/[0.05]';
     };
 
     if (heatmapData.data.length === 0) {
@@ -88,14 +88,14 @@ const PaymentHeatmap = ({ students, payments }) => {
             {/* Legend */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 p-4 bg-white/[0.04] rounded-lg">
                 <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 bg-blue-500/[0.06]0/[0.06]0 rounded flex items-center justify-center">
+                    <div className="w-6 h-6 bg-indigo-500/[0.05]0/[0.06]0 rounded flex items-center justify-center">
                         <CheckCircle className="w-4 h-4 text-white" />
                     </div>
                     <span className="text-sm text-white/60">Sudah Bayar</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <div className="w-6 h-6 bg-red-200 rounded flex items-center justify-center">
-                        <XCircle className="w-4 h-4 text-rose-400" />
+                        <XCircle className="w-4 h-4 text-rose-300" />
                     </div>
                     <span className="text-sm text-white/60">Belum Bayar</span>
                 </div>
@@ -227,25 +227,25 @@ const PaymentHeatmap = ({ students, payments }) => {
 
             {/* Statistics Summary */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="bg-blue-500/[0.06]0/[0.06] p-4 rounded-lg">
-                    <p className="text-sm text-blue-400 font-medium">
+                <div className="bg-indigo-500/[0.05]0/[0.06] p-4 rounded-lg">
+                    <p className="text-sm text-indigo-400 font-medium">
                         Perfect Record
                     </p>
-                    <p className="text-2xl font-bold text-blue-400">
+                    <p className="text-2xl font-bold text-indigo-400">
                         {
                             heatmapData.data.filter(
                                 (d) => d.paymentRate === 100
                             ).length
                         }
                     </p>
-                    <p className="text-xs text-blue-400">Siswa 100% bayar</p>
+                    <p className="text-xs text-indigo-400">Siswa 100% bayar</p>
                 </div>
 
-                <div className="bg-blue-500/[0.06]0/[0.06] p-4 rounded-lg">
+                <div className="bg-indigo-500/[0.05]0/[0.06] p-4 rounded-lg">
                     <p className="text-sm text-blue-500 font-medium">
                         Good Record
                     </p>
-                    <p className="text-2xl font-bold text-blue-400">
+                    <p className="text-2xl font-bold text-indigo-400">
                         {
                             heatmapData.data.filter(
                                 (d) =>
@@ -253,34 +253,34 @@ const PaymentHeatmap = ({ students, payments }) => {
                             ).length
                         }
                     </p>
-                    <p className="text-xs text-blue-400">Siswa 70-99% bayar</p>
+                    <p className="text-xs text-indigo-400">Siswa 70-99% bayar</p>
                 </div>
 
-                <div className="bg-amber-500/[0.06]0/[0.06] p-4 rounded-lg">
-                    <p className="text-sm text-amber-400 font-medium">
+                <div className="bg-amber-500/[0.06] p-4 rounded-lg">
+                    <p className="text-sm text-amber-300 font-medium">
                         Need Improvement
                     </p>
-                    <p className="text-2xl font-bold text-amber-400">
+                    <p className="text-2xl font-bold text-amber-300">
                         {
                             heatmapData.data.filter(
                                 (d) => d.paymentRate >= 50 && d.paymentRate < 70
                             ).length
                         }
                     </p>
-                    <p className="text-xs text-amber-400">
+                    <p className="text-xs text-amber-300">
                         Siswa 50-69% bayar
                     </p>
                 </div>
 
-                <div className="bg-rose-500/[0.06] p-4 rounded-lg">
-                    <p className="text-sm text-rose-400 font-medium">Critical</p>
-                    <p className="text-2xl font-bold text-rose-400">
+                <div className="bg-rose-500/[0.05] p-4 rounded-lg">
+                    <p className="text-sm text-rose-300 font-medium">Critical</p>
+                    <p className="text-2xl font-bold text-rose-300">
                         {
                             heatmapData.data.filter((d) => d.paymentRate < 50)
                                 .length
                         }
                     </p>
-                    <p className="text-xs text-rose-400">Siswa &lt;50% bayar</p>
+                    <p className="text-xs text-rose-300">Siswa &lt;50% bayar</p>
                 </div>
             </div>
         </div>

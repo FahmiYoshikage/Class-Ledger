@@ -71,7 +71,7 @@ const WeeklyPaymentBarChart = ({ payments }) => {
                         {data.week}
                     </p>
                     <div className="space-y-1">
-                        <p className="text-sm text-blue-400">
+                        <p className="text-sm text-indigo-400">
                             Total: {formatCurrency(data.amount)}
                         </p>
                         <p className="text-sm text-white/60">
@@ -158,7 +158,7 @@ const WeeklyPaymentBarChart = ({ payments }) => {
                     <span className="text-white/60">30k - 50k</span>
                 </div>
                 <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 rounded bg-blue-500/[0.06]0/[0.06]0" />
+                    <div className="w-4 h-4 rounded bg-indigo-500/[0.05]0/[0.06]0" />
                     <span className="text-white/60">&gt; 50k</span>
                 </div>
             </div>

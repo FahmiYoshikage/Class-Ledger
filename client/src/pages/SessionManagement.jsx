@@ -128,7 +128,7 @@ const SessionManagement = () => {
                 {/* Header */}
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold text-white flex items-center gap-3">
-                        <Monitor className="w-8 h-8 text-blue-400" />
+                        <Monitor className="w-8 h-8 text-indigo-400" />
                         Session Management
                     </h1>
                     <p className="text-white/60 mt-2">
@@ -138,14 +138,14 @@ const SessionManagement = () => {
 
                 {/* Error Message */}
                 {error && (
-                    <div className="bg-rose-500/[0.06] border border-red-200 rounded-lg p-4 mb-6">
+                    <div className="bg-rose-500/[0.05] border border-red-200 rounded-lg p-4 mb-6">
                         <div className="flex items-center gap-3">
-                            <AlertTriangle className="w-5 h-5 text-rose-400" />
+                            <AlertTriangle className="w-5 h-5 text-rose-300" />
                             <div>
                                 <h3 className="font-semibold text-red-900">
                                     Error
                                 </h3>
-                                <p className="text-sm text-rose-400 mt-1">
+                                <p className="text-sm text-rose-300 mt-1">
                                     {error}
                                 </p>
                             </div>
@@ -167,28 +167,28 @@ const SessionManagement = () => {
                         <h3 className="text-sm font-medium text-white/60">
                             Active Sessions
                         </h3>
-                        <p className="text-2xl font-bold text-blue-400 mt-2">
+                        <p className="text-2xl font-bold text-indigo-400 mt-2">
                             {stats.active}
                         </p>
                     </div>
                 </div>
 
                 {/* Actions */}
-                <div className="bg-amber-500/[0.06]0/[0.06] border border-yellow-200 rounded-lg p-4 mb-6">
+                <div className="bg-amber-500/[0.06] border border-yellow-200 rounded-lg p-4 mb-6">
                     <div className="flex items-start gap-3">
-                        <AlertTriangle className="w-5 h-5 text-amber-400 mt-0.5" />
+                        <AlertTriangle className="w-5 h-5 text-amber-300 mt-0.5" />
                         <div className="flex-1">
-                            <h3 className="font-semibold text-yellow-900">
+                            <h3 className="font-semibold text-amber-300">
                                 Keamanan Akun
                             </h3>
-                            <p className="text-sm text-amber-400 mt-1">
+                            <p className="text-sm text-amber-300 mt-1">
                                 Jika Anda melihat perangkat yang tidak dikenal,
                                 segera hentikan sesi tersebut dan ganti password
                                 Anda.
                             </p>
                             <button
                                 onClick={handleTerminateAll}
-                                className="mt-3 px-4 py-2 bg-amber-500/[0.06]0/15 text-amber-400 border border-amber-500/20 rounded-lg hover:bg-amber-500/[0.06]0/25 transition text-sm font-medium"
+                                className="mt-3 px-4 py-2 bg-amber-500/[0.06]0/15 text-amber-300 border border-amber-400/15 rounded-lg hover:bg-amber-500/[0.06]0/25 transition text-sm font-medium"
                             >
                                 Logout Semua Perangkat Lain
                             </button>
@@ -222,7 +222,7 @@ const SessionManagement = () => {
                                         <div
                                             className={`p-3 rounded-lg ${
                                                 session.isCurrent
-                                                    ? 'bg-blue-500/[0.06]0/[0.06] text-blue-400'
+                                                    ? 'bg-indigo-500/[0.05]0/[0.06] text-indigo-400'
                                                     : 'bg-white/[0.04] text-white/60'
                                             }`}
                                         >
@@ -243,7 +243,7 @@ const SessionManagement = () => {
                                                         'Unknown OS'}
                                                 </h3>
                                                 {session.isCurrent && (
-                                                    <span className="flex items-center gap-1 px-2 py-1 bg-blue-500/[0.06]0/15 text-blue-400 text-xs font-semibold rounded">
+                                                    <span className="flex items-center gap-1 px-2 py-1 bg-indigo-500/[0.05]0/15 text-indigo-400 text-xs font-semibold rounded">
                                                         <CheckCircle className="w-3 h-3" />
                                                         Current Session
                                                     </span>
@@ -287,7 +287,7 @@ const SessionManagement = () => {
                                                     session._id
                                                 )
                                             }
-                                            className="flex items-center gap-2 px-3 py-2 text-rose-400 hover:bg-rose-500/[0.06] rounded-lg transition text-sm font-medium"
+                                            className="flex items-center gap-2 px-3 py-2 text-rose-300 hover:bg-rose-500/[0.05] rounded-lg transition text-sm font-medium"
                                         >
                                             <Trash2 className="w-4 h-4" />
                                             Terminate

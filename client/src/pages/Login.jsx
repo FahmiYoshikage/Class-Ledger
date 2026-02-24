@@ -50,10 +50,10 @@ const Login = () => {
 
     return (
         <div className="min-h-screen bg-white/[0.04] flex items-center justify-center p-4">
-            <div className="max-w-md w-full">
+            <div className="max-w-md w-full animate-slide-up">
                 {/* Logo & Title */}
                 <div className="text-center mb-8">
-                    <div className="bg-blue-500 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 ">
+                    <div className="bg-gradient-to-br from-indigo-500 to-violet-500 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 animate-pulse-glow">
                         <Wallet className="w-8 h-8 text-white" />
                     </div>
                     <h1 className="text-3xl font-bold text-white mb-2">
@@ -65,17 +65,17 @@ const Login = () => {
                 </div>
 
                 {/* Login Card */}
-                <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl p-8">
+                <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl p-8 glow-hover">
                     <h2 className="text-2xl font-bold text-white mb-6">
                         Login ke Akun
                     </h2>
 
                     {/* Error Alert */}
                     {error && (
-                        <div className="mb-4 bg-rose-500/[0.06] border-l-4 border-red-400 p-4 rounded">
+                        <div className="mb-4 bg-rose-500/[0.05] border-l-2 border-rose-400/50 p-4 rounded">
                             <div className="flex items-center">
                                 <AlertCircle className="w-5 h-5 text-red-400 mr-2" />
-                                <p className="text-rose-400 text-sm">{error}</p>
+                                <p className="text-rose-300 text-sm">{error}</p>
                             </div>
                         </div>
                     )}
@@ -94,7 +94,7 @@ const Login = () => {
                                 id="username"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
-                                className="w-full px-4 py-3 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-gray-400"
+                                className="w-full px-4 py-3 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white placeholder-gray-400"
                                 placeholder="Masukkan username"
                                 required
                                 autoFocus
@@ -117,7 +117,7 @@ const Login = () => {
                                     onChange={(e) =>
                                         setPassword(e.target.value)
                                     }
-                                    className="w-full px-4 py-3 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-gray-400 pr-12"
+                                    className="w-full px-4 py-3 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white placeholder-gray-400 pr-12"
                                     placeholder="Masukkan password"
                                     required
                                 />
@@ -141,7 +141,7 @@ const Login = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-blue-500/[0.06]0 text-white py-3 rounded-xl hover:bg-blue-600 transition-all duration-200 flex items-center justify-center gap-2 font-semibold disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
+                            className="w-full bg-indigo-500/[0.05]0 text-white py-3 rounded-xl hover:bg-blue-600 transition-all duration-200 flex items-center justify-center gap-2 font-semibold disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
                         >
                             {loading ? (
                                 <>
@@ -158,7 +158,7 @@ const Login = () => {
                     </form>
 
                     {/* Demo Credentials */}
-                    {/*<div className="mt-6 p-4 bg-blue-500/[0.06]0/[0.06] rounded-lg">
+                    {/*<div className="mt-6 p-4 bg-indigo-500/[0.05]0/[0.06] rounded-lg">
                         <p className="text-sm text-blue-500 font-medium mb-2">
                             🔐 Demo Credentials:
                         </p>

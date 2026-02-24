@@ -137,13 +137,13 @@ const PublicDashboard = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#18181b] text-white selection:bg-blue-500/30">
+        <div className="min-h-screen bg-[#18181b] text-white selection:bg-indigo-500/25">
             {/* Sticky Nav */}
             <nav className="sticky top-0 z-50 border-b border-white/[0.1] bg-[#18181b]/80 backdrop-blur-2xl">
                 <div className="px-5 sm:px-8 lg:px-12">
                     <div className="flex items-center justify-between h-14 sm:h-16">
                         <div className="flex items-center gap-2.5">
-                            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-500/15 animate-pulse-glow">
                                 <Wallet className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
                             </div>
                             <span className="font-semibold text-white text-sm sm:text-[15px] tracking-tight">
@@ -156,14 +156,14 @@ const PublicDashboard = () => {
                         <div className="flex items-center gap-2">
                             <button
                                 onClick={() => navigate('/leaderboard')}
-                                className="flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.1] text-white/60 hover:text-white/90 transition-all text-[13px]"
+                                className="flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.1] text-white/60 hover:text-white/90 transition-all text-[13px] btn-press"
                             >
-                                <Trophy className="w-3.5 h-3.5 text-amber-400" />
+                                <Trophy className="w-3.5 h-3.5 text-amber-300" />
                                 <span className="hidden sm:inline">Leaderboard</span>
                             </button>
                             <button
                                 onClick={() => navigate('/login')}
-                                className="flex items-center gap-1.5 px-4 py-1.5 sm:px-5 sm:py-2 rounded-full bg-white text-[#18181b] hover:bg-white/90 transition-all text-[13px] font-semibold"
+                                className="flex items-center gap-1.5 px-4 py-1.5 sm:px-5 sm:py-2 rounded-full bg-white/95 text-zinc-900 hover:bg-white transition-all text-[13px] font-semibold btn-press"
                             >
                                 <LogIn className="w-3.5 h-3.5" />
                                 <span>Login</span>
@@ -176,14 +176,14 @@ const PublicDashboard = () => {
             {/* Hero */}
             <section className="relative overflow-hidden">
                 {/* Ambient glow */}
-                <div className="absolute top-0 left-1/4 w-[600px] h-[400px] bg-blue-600/[0.04] blur-[120px] rounded-full pointer-events-none" />
-                <div className="absolute top-20 right-1/4 w-[400px] h-[300px] bg-violet-600/[0.03] blur-[100px] rounded-full pointer-events-none" />
+                <div className="absolute top-0 left-1/4 w-[600px] h-[400px] bg-indigo-600/[0.04] blur-[120px] rounded-full pointer-events-none animate-gradient-shift" />
+                <div className="absolute top-20 right-1/4 w-[400px] h-[300px] bg-violet-600/[0.03] blur-[100px] rounded-full pointer-events-none animate-gradient-shift stagger-3" />
 
-                <div className="relative px-5 sm:px-8 lg:px-12 pt-20 sm:pt-28 pb-16 sm:pb-20">
-                    <p className="text-blue-400 text-[13px] font-semibold mb-4 tracking-widest uppercase">
+                <div className="relative px-5 sm:px-8 lg:px-12 pt-20 sm:pt-28 pb-16 sm:pb-20 animate-slide-up">
+                    <p className="text-gradient text-[13px] font-semibold mb-4 tracking-widest uppercase animate-fade-in">
                         Transparansi Keuangan
                     </p>
-                    <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tighter text-white leading-[0.95] mb-5">
+                    <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tighter text-white leading-[0.95] mb-5 animate-fade-in stagger-1">
                         {formatCurrency(stats.balance)}
                     </h1>
                     <p className="text-base sm:text-lg text-white/35 mb-10 max-w-lg leading-relaxed">
@@ -204,11 +204,11 @@ const PublicDashboard = () => {
 
             {/* Stats */}
             <section className="px-5 sm:px-8 lg:px-12 pb-14">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-slide-up stagger-2">
                     {/* Income */}
-                    <div className="rounded-2xl bg-white/[0.035] border border-white/[0.1] p-6 sm:p-8 hover:bg-white/[0.07] hover:border-white/[0.09] transition-all duration-300 group">
-                        <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/15 w-fit mb-5">
-                            <TrendingUp className="w-5 h-5 text-emerald-400" />
+                    <div className="rounded-2xl bg-white/[0.035] border border-white/[0.1] p-6 sm:p-8 hover:bg-white/[0.07] hover:border-white/[0.09] transition-all duration-300 group card-hover glow-hover">
+                        <div className="p-2.5 rounded-xl bg-teal-500/8 border border-teal-500/12 w-fit mb-5 icon-container-hover">
+                            <TrendingUp className="w-5 h-5 text-teal-300" />
                         </div>
                         <p className="text-[13px] text-white/35 mb-1 font-medium">Total Pemasukan</p>
                         <p className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
@@ -217,9 +217,9 @@ const PublicDashboard = () => {
                         <p className="text-xs text-white/55 mt-4">Dari pembayaran kas kelas & event</p>
                     </div>
                     {/* Expenses */}
-                    <div className="rounded-2xl bg-white/[0.035] border border-white/[0.1] p-6 sm:p-8 hover:bg-white/[0.07] hover:border-white/[0.09] transition-all duration-300 group">
-                        <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/15 w-fit mb-5">
-                            <TrendingDown className="w-5 h-5 text-rose-400" />
+                    <div className="rounded-2xl bg-white/[0.035] border border-white/[0.1] p-6 sm:p-8 hover:bg-white/[0.07] hover:border-white/[0.09] transition-all duration-300 group card-hover glow-hover">
+                        <div className="p-2.5 rounded-xl bg-rose-500/8 border border-rose-400/12 w-fit mb-5 icon-container-hover">
+                            <TrendingDown className="w-5 h-5 text-rose-300" />
                         </div>
                         <p className="text-[13px] text-white/35 mb-1 font-medium">Total Pengeluaran</p>
                         <p className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
@@ -232,7 +232,7 @@ const PublicDashboard = () => {
 
             {/* Events */}
             {events.length > 0 && (
-                <section className="px-5 sm:px-8 lg:px-12 pb-14">
+                <section className="px-5 sm:px-8 lg:px-12 pb-14 animate-slide-up">
                     <div className="flex items-center gap-2.5 mb-5">
                         <Gift className="w-[18px] h-[18px] text-violet-400" />
                         <h2 className="text-[15px] font-semibold text-white">Event Kelas</h2>
@@ -241,7 +241,7 @@ const PublicDashboard = () => {
                         {events.map((event, idx) => {
                             const progress = Math.min(100, ((event.totalPaid || 0) / (event.targetAmount || 1)) * 100);
                             return (
-                                <div key={idx} className="rounded-2xl bg-white/[0.035] border border-white/[0.1] p-5 sm:p-6 hover:bg-white/[0.07] transition-all">
+                                <div key={idx} className="rounded-2xl bg-white/[0.035] border border-white/[0.1] p-5 sm:p-6 hover:bg-white/[0.07] transition-all card-hover glow-hover">
                                     <h3 className="font-semibold text-white text-[15px] mb-4">{event.name || 'Event'}</h3>
                                     <div className="space-y-2.5 text-[13px]">
                                         <div className="flex justify-between">
@@ -250,7 +250,7 @@ const PublicDashboard = () => {
                                         </div>
                                         <div className="flex justify-between">
                                             <span className="text-white/60">Terkumpul</span>
-                                            <span className="text-blue-400 font-medium">{formatCurrency(event.totalPaid || 0)}</span>
+                                            <span className="text-indigo-400 font-medium">{formatCurrency(event.totalPaid || 0)}</span>
                                         </div>
                                         <div className="flex justify-between">
                                             <span className="text-white/60">Peserta</span>
@@ -258,7 +258,7 @@ const PublicDashboard = () => {
                                         </div>
                                     </div>
                                     <div className="mt-4 h-1 bg-white/[0.06] rounded-full overflow-hidden">
-                                        <div className="h-full bg-gradient-to-r from-violet-500 to-blue-500 rounded-full transition-all duration-700" style={{ width: `${progress}%` }} />
+                                        <div className="h-full bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full transition-all duration-700 progress-animate" style={{ width: `${progress}%` }} />
                                     </div>
                                     <p className="text-[11px] text-white/55 mt-2 text-right">{progress.toFixed(0)}%</p>
                                 </div>
@@ -270,10 +270,10 @@ const PublicDashboard = () => {
 
             {/* Leaderboard */}
             {leaderboard.length > 0 && (
-                <section className="px-5 sm:px-8 lg:px-12 pb-14">
+                <section className="px-5 sm:px-8 lg:px-12 pb-14 animate-slide-up">
                     <div className="flex items-center justify-between mb-5">
                         <div className="flex items-center gap-2.5">
-                            <Trophy className="w-[18px] h-[18px] text-amber-400" />
+                            <Trophy className="w-[18px] h-[18px] text-amber-300" />
                             <h2 className="text-[15px] font-semibold text-white">Top Contributors</h2>
                         </div>
                         <button onClick={() => navigate('/leaderboard')} className="flex items-center gap-1 text-[13px] text-white/60 hover:text-white/60 transition">
@@ -282,14 +282,14 @@ const PublicDashboard = () => {
                     </div>
                     <div className="rounded-2xl bg-white/[0.035] border border-white/[0.1] overflow-hidden">
                         {leaderboard.map((member, index) => {
-                            const rankColors = ['text-amber-400', 'text-white/55', 'text-orange-400'];
-                            const rankBg = ['bg-amber-400/10 border-amber-400/20', 'bg-white/[0.1]/10 border-white/[0.1]/20', 'bg-orange-400/10 border-orange-400/20'];
+                            const rankColors = ['text-amber-300', 'text-white/55', 'text-orange-400'];
+                            const rankBg = ['bg-amber-400/10 border-amber-400/15', 'bg-white/[0.1]/10 border-white/[0.1]/20', 'bg-orange-400/10 border-orange-400/20'];
                             const RankIcon = index === 0 ? Trophy : index === 1 ? Medal : index === 2 ? Award : null;
                             return (
-                                <div key={member.studentId} className={`flex items-center justify-between px-5 sm:px-6 py-3.5 hover:bg-white/[0.015] transition-colors ${index !== leaderboard.length - 1 ? 'border-b border-white/[0.12]' : ''}`}>
+                                <div key={member.studentId} className={`flex items-center justify-between px-5 sm:px-6 py-3.5 hover:bg-white/[0.015] transition-colors rank-enter ${index !== leaderboard.length - 1 ? 'border-b border-white/[0.12]' : ''}`}>
                                     <div className="flex items-center gap-3.5 min-w-0">
                                         <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center border ${index < 3 ? rankBg[index] : 'bg-white/[0.03] border-white/[0.1]'}`}>
-                                            {RankIcon ? <RankIcon className={`w-3.5 h-3.5 ${rankColors[index]}`} /> : <span className="text-[11px] font-semibold text-white/55">{index + 1}</span>}
+                                            {RankIcon ? <RankIcon className={`w-3.5 h-3.5 ${rankColors[index]} ${index === 0 ? "trophy-shimmer" : ""}`} /> : <span className="text-[11px] font-semibold text-white/55">{index + 1}</span>}
                                         </div>
                                         <div className="min-w-0">
                                             <p className="text-[13px] font-medium text-white/90 truncate">{member.studentName}</p>
@@ -307,8 +307,8 @@ const PublicDashboard = () => {
             )}
 
             {/* CTA */}
-            <section className="px-5 sm:px-8 lg:px-12 pb-20">
-                <div className="rounded-2xl bg-gradient-to-br from-blue-500/[0.08] to-violet-500/[0.06] border border-blue-500/[0.08] p-8 sm:p-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+            <section className="px-5 sm:px-8 lg:px-12 pb-20 animate-fade-in">
+                <div className="rounded-2xl bg-gradient-to-br from-indigo-500/[0.06] to-violet-500/[0.04] border border-indigo-500/[0.08] border-glow p-8 sm:p-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
                     <div>
                         <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 tracking-tight">
                             Lihat Detail Pembayaranmu
@@ -319,7 +319,7 @@ const PublicDashboard = () => {
                     </div>
                     <button
                         onClick={() => navigate('/login')}
-                        className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-white text-[#18181b] hover:bg-white/90 transition-all text-sm font-semibold flex-shrink-0 shadow-lg shadow-white/5"
+                        className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-white/95 text-zinc-900 hover:bg-white transition-all text-sm font-semibold flex-shrink-0 shadow-lg shadow-indigo-500/10 btn-press"
                     >
                         Login Sekarang
                         <ArrowRight className="w-4 h-4" />
@@ -331,7 +331,7 @@ const PublicDashboard = () => {
             <footer className="border-t border-white/[0.12]">
                 <div className="px-5 sm:px-8 lg:px-12 py-6 sm:py-8 flex flex-col sm:flex-row items-center justify-between gap-3">
                     <div className="flex items-center gap-2">
-                        <div className="w-5 h-5 rounded bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center">
+                        <div className="w-5 h-5 rounded bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
                             <Wallet className="w-2.5 h-2.5 text-white" />
                         </div>
                         <span className="text-[13px] text-white/55">Kas Kelas TRIFORCE</span>

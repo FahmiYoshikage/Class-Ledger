@@ -670,7 +670,7 @@ const NotificationManager = () => {
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mb-3 sm:mb-4">
                     <div>
                         <h1 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-2">
-                            <Bell className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400" />
+                            <Bell className="w-6 h-6 sm:w-8 sm:h-8 text-indigo-400" />
                             WhatsApp Notification
                         </h1>
                         <p className="text-sm sm:text-base text-white/60 mt-1">
@@ -698,32 +698,32 @@ const NotificationManager = () => {
                     <div
                         className={`flex items-center gap-2 p-3 rounded-lg ${
                             apiStatus.testMode
-                                ? 'bg-amber-500/[0.06]0/[0.06] border border-yellow-200'
+                                ? 'bg-amber-500/[0.06] border border-yellow-200'
                                 : apiStatus.connected
-                                ? 'bg-blue-500/[0.06]0/[0.06] border border-green-200'
-                                : 'bg-rose-500/[0.06] border border-red-200'
+                                ? 'bg-indigo-500/[0.05]0/[0.06] border border-green-200'
+                                : 'bg-rose-500/[0.05] border border-red-200'
                         }`}
                     >
                         {apiStatus.testMode ? (
                             <>
-                                <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 flex-shrink-0" />
-                                <span className="text-xs sm:text-sm text-amber-400 font-medium">
+                                <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-300 flex-shrink-0" />
+                                <span className="text-xs sm:text-sm text-amber-300 font-medium">
                                     TEST MODE - Pesan tidak akan benar-benar
                                     dikirim
                                 </span>
                             </>
                         ) : apiStatus.connected ? (
                             <>
-                                <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400 flex-shrink-0" />
-                                <span className="text-xs sm:text-sm text-blue-400">
+                                <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400 flex-shrink-0" />
+                                <span className="text-xs sm:text-sm text-indigo-400">
                                     WhatsApp API Connected • Device:{' '}
                                     {apiStatus.device}
                                 </span>
                             </>
                         ) : (
                             <>
-                                <XCircle className="w-4 h-4 sm:w-5 sm:h-5 text-rose-400 flex-shrink-0" />
-                                <span className="text-xs sm:text-sm text-rose-400">
+                                <XCircle className="w-4 h-4 sm:w-5 sm:h-5 text-rose-300 flex-shrink-0" />
+                                <span className="text-xs sm:text-sm text-rose-300">
                                     WhatsApp API Tidak Terhubung - Set
                                     FONNTE_API_TOKEN di .env
                                 </span>
@@ -736,7 +736,7 @@ const NotificationManager = () => {
             {/* Stats Cards */}
             {stats && (
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
-                    <div className="bg-[#1e1e22]/98 backdrop-blur-xl p-3 sm:p-4 rounded-lg shadow border-l-4 border-blue-500">
+                    <div className="bg-[#1e1e22]/98 backdrop-blur-xl p-3 sm:p-4 rounded-lg shadow border-l-2 border-indigo-400/50">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-white/60 text-xs sm:text-sm">
@@ -746,11 +746,11 @@ const NotificationManager = () => {
                                     {stats.sent}
                                 </p>
                             </div>
-                            <CheckCircle className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400" />
+                            <CheckCircle className="w-6 h-6 sm:w-8 sm:h-8 text-indigo-400" />
                         </div>
                     </div>
 
-                    <div className="bg-[#1e1e22]/98 backdrop-blur-xl p-3 sm:p-4 rounded-lg shadow border-l-4 border-red-500">
+                    <div className="bg-[#1e1e22]/98 backdrop-blur-xl p-3 sm:p-4 rounded-lg shadow border-l-2 border-rose-400/50">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-white/60 text-xs sm:text-sm">
@@ -760,11 +760,11 @@ const NotificationManager = () => {
                                     {stats.failed}
                                 </p>
                             </div>
-                            <XCircle className="w-6 h-6 sm:w-8 sm:h-8 text-rose-400" />
+                            <XCircle className="w-6 h-6 sm:w-8 sm:h-8 text-rose-300" />
                         </div>
                     </div>
 
-                    <div className="bg-[#1e1e22]/98 backdrop-blur-xl p-3 sm:p-4 rounded-lg shadow border-l-4 border-green-500">
+                    <div className="bg-[#1e1e22]/98 backdrop-blur-xl p-3 sm:p-4 rounded-lg shadow border-l-2 border-teal-400/50">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-white/60 text-xs sm:text-sm">
@@ -774,7 +774,7 @@ const NotificationManager = () => {
                                     {stats.last7Days}
                                 </p>
                             </div>
-                            <TrendingUp className="w-6 h-6 sm:w-8 sm:h-8 text-emerald-400" />
+                            <TrendingUp className="w-6 h-6 sm:w-8 sm:h-8 text-teal-300" />
                         </div>
                     </div>
 
@@ -788,7 +788,7 @@ const NotificationManager = () => {
                                     {needsReminder.length}
                                 </p>
                             </div>
-                            <Bell className="w-6 h-6 sm:w-8 sm:h-8 text-amber-400" />
+                            <Bell className="w-6 h-6 sm:w-8 sm:h-8 text-amber-300" />
                         </div>
                     </div>
                 </div>
@@ -842,7 +842,7 @@ const NotificationManager = () => {
                         onClick={() => setActiveTab('custom')}
                         className={`flex items-center gap-2 px-4 sm:px-6 py-3 font-medium transition-colors whitespace-nowrap text-sm sm:text-base ${
                             activeTab === 'custom'
-                                ? 'text-purple-600 border-b-2 border-purple-600'
+                                ? 'text-violet-400 border-b-2 border-purple-600'
                                 : 'text-white/60 hover:text-white'
                         }`}
                     >
@@ -938,7 +938,7 @@ const NotificationManager = () => {
                                 <div className="flex gap-2 sm:gap-3">
                                     <button
                                         onClick={selectAll}
-                                        className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-blue-500/[0.06]0/[0.06] text-blue-500 rounded-lg hover:bg-blue-100 transition-colors text-sm sm:text-base"
+                                        className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-indigo-500/[0.05]0/[0.06] text-blue-500 rounded-lg hover:bg-blue-100 transition-colors text-sm sm:text-base"
                                     >
                                         Pilih Semua
                                     </button>
@@ -954,7 +954,7 @@ const NotificationManager = () => {
                                 <button
                                     onClick={handleSendBulk}
                                     disabled={sending}
-                                    className="w-full sm:w-auto sm:ml-auto flex items-center justify-center gap-2 px-4 sm:px-6 py-2 bg-blue-500/[0.06]0 text-white rounded-xl hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm sm:text-base"
+                                    className="w-full sm:w-auto sm:ml-auto flex items-center justify-center gap-2 px-4 sm:px-6 py-2 bg-indigo-500/[0.05]0 text-white rounded-xl hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm sm:text-base"
                                 >
                                     {sending ? (
                                         <>
@@ -978,7 +978,7 @@ const NotificationManager = () => {
                                 <div className="bg-gradient-to-br from-green-50 to-blue-50 p-6 rounded-lg border-2 border-blue-200">
                                     <div className="flex items-start justify-between mb-3">
                                         <h3 className="font-bold text-lg text-white flex items-center gap-2">
-                                            <MessageSquare className="w-5 h-5 text-blue-400" />
+                                            <MessageSquare className="w-5 h-5 text-indigo-400" />
                                             Preview Pesan
                                         </h3>
                                         <button
@@ -999,14 +999,14 @@ const NotificationManager = () => {
                             {/* Students List */}
                             <div>
                                 <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
-                                    <Users className="w-5 h-5 text-blue-400" />
+                                    <Users className="w-5 h-5 text-indigo-400" />
                                     Siswa yang Perlu Reminder (
                                     {needsReminder.length})
                                 </h3>
 
                                 {needsReminder.length === 0 ? (
                                     <div className="text-center py-12 bg-white/[0.04] rounded-lg">
-                                        <CheckCircle className="w-16 h-16 text-emerald-400 mx-auto mb-3" />
+                                        <CheckCircle className="w-16 h-16 text-teal-300 mx-auto mb-3" />
                                         <p className="text-white/60 font-medium">
                                             Semua siswa sudah bayar! 🎉
                                         </p>
@@ -1020,8 +1020,8 @@ const NotificationManager = () => {
                                                     selectedStudents.includes(
                                                         item.student._id
                                                     )
-                                                        ? 'border-blue-500 bg-blue-500/[0.06]0/[0.06]'
-                                                        : 'border-blue-500/30 bg-blue-500/10 text-blue-400'
+                                                        ? 'border-blue-500 bg-indigo-500/[0.05]0/[0.06]'
+                                                        : 'border-indigo-500/25 bg-indigo-500/8 text-indigo-400'
                                                 }`}
                                             >
                                                 <div className="flex items-center gap-3 sm:gap-4 flex-1 w-full">
@@ -1066,7 +1066,7 @@ const NotificationManager = () => {
                                                             {item.weeksLate}{' '}
                                                             minggu
                                                         </p>
-                                                        <p className="font-bold text-sm sm:text-base text-rose-400">
+                                                        <p className="font-bold text-sm sm:text-base text-rose-300">
                                                             Rp{' '}
                                                             {item.amountOwed.toLocaleString(
                                                                 'id-ID'
@@ -1084,7 +1084,7 @@ const NotificationManager = () => {
                                                             !item.student
                                                                 .phoneNumber
                                                         }
-                                                        className="px-3 py-1.5 sm:py-1 bg-blue-500/[0.06]0/15 text-blue-400 border border-blue-500/20 rounded-lg hover:bg-blue-500/[0.06]0/25 disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm flex-shrink-0"
+                                                        className="px-3 py-1.5 sm:py-1 bg-indigo-500/[0.05]0/15 text-indigo-400 border border-indigo-500/15 rounded-lg hover:bg-indigo-500/[0.05]0/25 disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm flex-shrink-0"
                                                     >
                                                         Kirim
                                                     </button>
@@ -1205,7 +1205,7 @@ const NotificationManager = () => {
                                 <button
                                     onClick={handleSendToGroup}
                                     disabled={sending || !groupId.trim()}
-                                    className="flex items-center gap-2 px-6 py-2 bg-blue-500/[0.06]0 text-white rounded-xl hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all ml-auto"
+                                    className="flex items-center gap-2 px-6 py-2 bg-indigo-500/[0.05]0 text-white rounded-xl hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all ml-auto"
                                 >
                                     {sending ? (
                                         <>
@@ -1227,7 +1227,7 @@ const NotificationManager = () => {
                                 <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-lg border-2 border-purple-200">
                                     <div className="flex items-start justify-between mb-3">
                                         <h3 className="font-bold text-lg text-white flex items-center gap-2">
-                                            <MessageSquare className="w-5 h-5 text-purple-600" />
+                                            <MessageSquare className="w-5 h-5 text-violet-400" />
                                             Preview Pesan Grup
                                         </h3>
                                         <button
@@ -1250,13 +1250,13 @@ const NotificationManager = () => {
                             )}
 
                             {/* Cara Dapatkan Group ID */}
-                            <div className="bg-blue-500/[0.06]0/[0.06] p-6 rounded-lg border border-blue-200">
+                            <div className="bg-indigo-500/[0.05]0/[0.06] p-6 rounded-lg border border-blue-200">
                                 <h4 className="font-bold text-blue-900 mb-3">
                                     📱 Cara Mendapatkan Group ID WhatsApp
                                 </h4>
                                 <ol className="space-y-2 text-sm text-white/60">
                                     <li className="flex gap-2">
-                                        <span className="font-bold text-blue-400">
+                                        <span className="font-bold text-indigo-400">
                                             1.
                                         </span>
                                         <div>
@@ -1270,7 +1270,7 @@ const NotificationManager = () => {
                                         </div>
                                     </li>
                                     <li className="flex gap-2">
-                                        <span className="font-bold text-blue-400">
+                                        <span className="font-bold text-indigo-400">
                                             2.
                                         </span>
                                         <div>
@@ -1284,7 +1284,7 @@ const NotificationManager = () => {
                                         </div>
                                     </li>
                                     <li className="flex gap-2">
-                                        <span className="font-bold text-blue-400">
+                                        <span className="font-bold text-indigo-400">
                                             3.
                                         </span>
                                         <div>
@@ -1433,7 +1433,7 @@ const NotificationManager = () => {
                                                 <p className="text-sm text-white/60">
                                                     Sudah Bayar
                                                 </p>
-                                                <p className="text-xl font-bold text-blue-400">
+                                                <p className="text-xl font-bold text-indigo-400">
                                                     {
                                                         selectedEvent
                                                             .studentsPaid.length
@@ -1552,7 +1552,7 @@ const NotificationManager = () => {
                                             {eventUnpaidStudents.length ===
                                             0 ? (
                                                 <div className="text-center py-8 text-white/60">
-                                                    <CheckCircle className="w-12 h-12 mx-auto mb-2 text-emerald-400" />
+                                                    <CheckCircle className="w-12 h-12 mx-auto mb-2 text-teal-300" />
                                                     <p>
                                                         Semua siswa sudah bayar!
                                                         🎉
@@ -1624,7 +1624,7 @@ const NotificationManager = () => {
                                                                     disabled={
                                                                         sending
                                                                     }
-                                                                    className="flex items-center gap-2 px-3 py-1 bg-blue-500/[0.06]0/15 text-blue-400 border border-blue-500/20 rounded-lg hover:bg-blue-500/[0.06]0/25 disabled:bg-white/[0.08]"
+                                                                    className="flex items-center gap-2 px-3 py-1 bg-indigo-500/[0.05]0/15 text-indigo-400 border border-indigo-500/15 rounded-lg hover:bg-indigo-500/[0.05]0/25 disabled:bg-white/[0.08]"
                                                                 >
                                                                     <Send className="w-4 h-4" />
                                                                     Kirim
@@ -1658,7 +1658,7 @@ const NotificationManager = () => {
                                                     eventUnpaidStudents.length ===
                                                         0
                                                 }
-                                                className="flex items-center justify-center gap-2 px-4 py-3 bg-blue-500/[0.06]0/15 text-blue-400 border border-blue-500/20 rounded-lg hover:bg-blue-500/[0.06]0/25 disabled:bg-white/[0.08] transition-colors"
+                                                className="flex items-center justify-center gap-2 px-4 py-3 bg-indigo-500/[0.05]0/15 text-indigo-400 border border-indigo-500/15 rounded-lg hover:bg-indigo-500/[0.05]0/25 disabled:bg-white/[0.08] transition-colors"
                                             >
                                                 <Send className="w-5 h-5" />
                                                 {sending
@@ -1684,8 +1684,8 @@ const NotificationManager = () => {
 
                                     {/* Group Modal for Event */}
                                     {showGroupModal && (
-                                        <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
-                                            <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                                        <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 backdrop-animate">
+                                            <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl modal-animate max-w-2xl w-full max-h-[90vh] overflow-y-auto">
                                                 <div className="p-6">
                                                     <h3 className="text-xl font-bold mb-4">
                                                         Kirim Event Reminder ke
@@ -1785,7 +1785,7 @@ const NotificationManager = () => {
                         <div className="space-y-6">
                             <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
                                 <div className="flex items-start gap-3">
-                                    <MessageSquare className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
+                                    <MessageSquare className="w-5 h-5 text-violet-400 flex-shrink-0 mt-0.5" />
                                     <div>
                                         <h3 className="font-semibold text-purple-900 mb-1">
                                             💌 Pesan Custom
@@ -1934,7 +1934,7 @@ const NotificationManager = () => {
                             )}
 
                             {/* Info */}
-                            <div className="bg-blue-500/[0.06]0/[0.06] border border-blue-200 rounded-lg p-4">
+                            <div className="bg-indigo-500/[0.05]0/[0.06] border border-blue-200 rounded-lg p-4">
                                 <h4 className="font-semibold text-blue-900 mb-2">
                                     💡 Tips Penggunaan:
                                 </h4>
@@ -1989,11 +1989,11 @@ const NotificationManager = () => {
                                                 <span
                                                     className={`px-3 py-1 rounded-full text-xs font-medium ${
                                                         notif.status === 'sent'
-                                                            ? 'bg-blue-500/[0.06]0/15 text-blue-400'
+                                                            ? 'bg-indigo-500/[0.05]0/15 text-indigo-400'
                                                             : notif.status ===
                                                               'failed'
-                                                            ? 'bg-rose-500/15 text-rose-400'
-                                                            : 'bg-amber-500/[0.06]0/15 text-amber-400'
+                                                            ? 'bg-rose-500/10 text-rose-300'
+                                                            : 'bg-amber-500/[0.06]0/15 text-amber-300'
                                                     }`}
                                                 >
                                                     {notif.status}
@@ -2020,7 +2020,7 @@ const NotificationManager = () => {
 
                     {activeTab === 'settings' && (
                         <div className="space-y-6">
-                            <div className="bg-blue-500/[0.06]0/[0.06] p-6 rounded-lg border border-blue-200">
+                            <div className="bg-indigo-500/[0.05]0/[0.06] p-6 rounded-lg border border-blue-200">
                                 <h3 className="font-bold text-lg mb-4 text-blue-900">
                                     🚀 Cara Setup WhatsApp Bot
                                 </h3>
@@ -2103,8 +2103,8 @@ AUTO_REMINDER_ENABLED=true`}
                                 </div>
                             </div>
 
-                            <div className="bg-amber-500/[0.06]0/[0.06] p-6 rounded-lg border border-yellow-200">
-                                <h3 className="font-bold text-lg mb-3 text-yellow-900">
+                            <div className="bg-amber-500/[0.06] p-6 rounded-lg border border-yellow-200">
+                                <h3 className="font-bold text-lg mb-3 text-amber-300">
                                     ⏰ Auto-Reminder Schedule
                                 </h3>
                                 <ul className="space-y-2 text-sm text-white/60">

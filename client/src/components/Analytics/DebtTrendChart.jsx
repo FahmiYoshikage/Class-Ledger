@@ -101,16 +101,16 @@ const DebtTrendChart = ({ students, payments }) => {
                         Minggu {data.weekNumber}
                     </p>
                     <div className="space-y-1">
-                        <p className="text-sm text-rose-400">
+                        <p className="text-sm text-rose-300">
                             Total Tunggakan: {formatCurrency(data.totalDebt)}
                         </p>
-                        <p className="text-sm text-orange-600">
+                        <p className="text-sm text-orange-400/80">
                             Siswa Menunggak: {data.studentsWithDebt} siswa
                         </p>
-                        <p className="text-sm text-amber-400">
+                        <p className="text-sm text-amber-300">
                             Rata-rata Tunggakan: {formatCurrency(data.avgDebt)}
                         </p>
-                        <p className="text-sm text-blue-400">
+                        <p className="text-sm text-indigo-400">
                             Tingkat Koleksi: {data.collectionRate.toFixed(1)}%
                         </p>
                         <div className="border-t pt-2 mt-2">
@@ -149,15 +149,15 @@ const DebtTrendChart = ({ students, payments }) => {
             <div
                 className={`p-4 rounded-lg ${
                     isImproving
-                        ? 'bg-blue-500/[0.06]0/[0.06] border border-green-200'
-                        : 'bg-rose-500/[0.06] border border-red-200'
+                        ? 'bg-indigo-500/[0.05]0/[0.06] border border-green-200'
+                        : 'bg-rose-500/[0.05] border border-red-200'
                 }`}
             >
                 <div className="flex items-center justify-between">
                     <div>
                         <p
                             className={`text-sm font-medium ${
-                                isImproving ? 'text-blue-400' : 'text-red-600'
+                                isImproving ? 'text-indigo-400' : 'text-rose-300'
                             }`}
                         >
                             {isImproving
@@ -166,7 +166,7 @@ const DebtTrendChart = ({ students, payments }) => {
                         </p>
                         <p
                             className={`text-xs mt-1 ${
-                                isImproving ? 'text-blue-400' : 'text-red-600'
+                                isImproving ? 'text-indigo-400' : 'text-rose-300'
                             }`}
                         >
                             {isImproving
@@ -177,7 +177,7 @@ const DebtTrendChart = ({ students, payments }) => {
                     <div className="text-right">
                         <p
                             className={`text-2xl font-bold ${
-                                isImproving ? 'text-blue-400' : 'text-red-600'
+                                isImproving ? 'text-indigo-400' : 'text-rose-300'
                             }`}
                         >
                             {debtChange >= 0 ? '+' : ''}
@@ -249,7 +249,7 @@ const DebtTrendChart = ({ students, payments }) => {
                     <p className="text-sm text-white/60 mb-1">
                         Tunggakan Tertinggi
                     </p>
-                    <p className="text-xl font-bold text-rose-400">
+                    <p className="text-xl font-bold text-rose-300">
                         {formatCurrency(
                             Math.max(...chartData.map((d) => d.totalDebt))
                         )}
@@ -272,7 +272,7 @@ const DebtTrendChart = ({ students, payments }) => {
                     <p className="text-sm text-white/60 mb-1">
                         Rata-rata Tunggakan/Siswa
                     </p>
-                    <p className="text-xl font-bold text-orange-600">
+                    <p className="text-xl font-bold text-orange-400/80">
                         {formatCurrency(
                             chartData.length > 0
                                 ? chartData.reduce(
@@ -291,7 +291,7 @@ const DebtTrendChart = ({ students, payments }) => {
                     <p className="text-sm text-white/60 mb-1">
                         Tingkat Koleksi Rata-rata
                     </p>
-                    <p className="text-xl font-bold text-blue-400">
+                    <p className="text-xl font-bold text-indigo-400">
                         {chartData.length > 0
                             ? (
                                   chartData.reduce(
@@ -309,7 +309,7 @@ const DebtTrendChart = ({ students, payments }) => {
             </div>
 
             {/* Insights */}
-            <div className="bg-blue-500/[0.06]0/[0.06] p-4 rounded-lg border border-blue-200">
+            <div className="bg-indigo-500/[0.05]0/[0.06] p-4 rounded-lg border border-blue-200">
                 <p className="text-sm font-medium text-blue-900 mb-2">
                     💡 Insight & Rekomendasi
                 </p>
