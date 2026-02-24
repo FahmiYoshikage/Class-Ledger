@@ -256,7 +256,7 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
     return (
         <div className="space-y-6">
             {/* Header */}
-            <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-6">
+            <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-6">
                 <div className="flex items-center gap-3">
                     <div className="bg-blue-500 p-3 rounded-xl">
                         <SettingsIcon className="w-6 h-6 text-white" />
@@ -265,7 +265,7 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
                         <h2 className="text-2xl font-bold text-white">
                             Pengaturan Sistem
                         </h2>
-                        <p className="text-white/30">
+                        <p className="text-white/60">
                             Konfigurasi sistem kas kelas
                         </p>
                     </div>
@@ -286,11 +286,11 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
             )}
 
             {/* Settings Form */}
-            <form onSubmit={handleSave} className="rounded-xl bg-white/[0.025] border border-white/[0.06]">
+            <form onSubmit={handleSave} className="rounded-xl bg-white/[0.035] border border-white/[0.1]">
                 <div className="p-6 space-y-6">
                     {/* Class Name */}
                     <div>
-                        <label className="block text-sm font-medium text-white/50 mb-2">
+                        <label className="block text-sm font-medium text-white/60 mb-2">
                             Nama Kelas
                         </label>
                         <input
@@ -298,15 +298,15 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
                             value={className}
                             onChange={(e) => setClassName(e.target.value)}
                             placeholder="Contoh: XII IPA 1"
-                            className="w-full px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                            className="w-full px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
                         />
-                        <p className="text-xs text-white/30 mt-1">
+                        <p className="text-xs text-white/60 mt-1">
                             Akan ditampilkan di header aplikasi
                         </p>
                     </div>
 
                     {/* Semester Control Section */}
-                    <div className="border-t border-white/[0.04] pt-6">
+                    <div className="border-t border-white/[0.12] pt-6">
                         <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
                             <BookOpen className="w-5 h-5" />
                             Kontrol Semester
@@ -314,7 +314,7 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
 
                         {/* Semester Name */}
                         <div className="mb-4">
-                            <label className="block text-sm font-medium text-white/50 mb-2">
+                            <label className="block text-sm font-medium text-white/60 mb-2">
                                 Nama Semester
                             </label>
                             <input
@@ -324,9 +324,9 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
                                     setSemesterName(e.target.value)
                                 }
                                 placeholder="Contoh: Semester 1 2024/2025"
-                                className="w-full px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                                className="w-full px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
                             />
-                            <p className="text-xs text-white/30 mt-1">
+                            <p className="text-xs text-white/60 mt-1">
                                 Nama semester yang sedang berjalan
                             </p>
                         </div>
@@ -424,7 +424,7 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
 
                     {/* Start Date */}
                     <div>
-                        <label className="block text-sm font-medium text-white/50 mb-2">
+                        <label className="block text-sm font-medium text-white/60 mb-2">
                             <Calendar className="w-4 h-4 inline mr-1" />
                             Tanggal Mulai Pembayaran
                         </label>
@@ -433,21 +433,21 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
                             value={startDate}
                             onChange={(e) => setStartDate(e.target.value)}
                             required
-                            className="w-full px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                            className="w-full px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
                         />
-                        <p className="text-xs text-white/30 mt-1">
+                        <p className="text-xs text-white/60 mt-1">
                             Tanggal mulai perhitungan minggu pertama
                         </p>
                     </div>
 
                     {/* Weekly Amount */}
                     <div>
-                        <label className="block text-sm font-medium text-white/50 mb-2">
+                        <label className="block text-sm font-medium text-white/60 mb-2">
                             <DollarSign className="w-4 h-4 inline mr-1" />
                             Jumlah Kas Per Minggu
                         </label>
                         <div className="flex items-center gap-2">
-                            <span className="text-white/50">Rp</span>
+                            <span className="text-white/60">Rp</span>
                             <input
                                 type="number"
                                 value={weeklyAmount}
@@ -457,17 +457,17 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
                                 min="1000"
                                 step="500"
                                 required
-                                className="flex-1 px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                                className="flex-1 px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
                             />
                         </div>
-                        <p className="text-xs text-white/30 mt-1">
+                        <p className="text-xs text-white/60 mt-1">
                             Jumlah uang kas yang harus dibayar setiap minggu
                         </p>
                     </div>
 
                     {/* Late Threshold */}
                     <div>
-                        <label className="block text-sm font-medium text-white/50 mb-2">
+                        <label className="block text-sm font-medium text-white/60 mb-2">
                             Batas Keterlambatan (Minggu)
                         </label>
                         <input
@@ -479,9 +479,9 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
                             min="1"
                             max="12"
                             required
-                            className="w-full px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                            className="w-full px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
                         />
-                        <p className="text-xs text-white/30 mt-1">
+                        <p className="text-xs text-white/60 mt-1">
                             Siswa akan mendapat status "TELAT" jika tunggakan ≥{' '}
                             {lateThreshold} minggu (Rp{' '}
                             {(lateThreshold * weeklyAmount).toLocaleString(
@@ -492,13 +492,13 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
                     </div>
 
                     {/* Preview Section */}
-                    <div className="bg-white/[0.02] p-4 rounded-lg border border-white/[0.06] bg-white/[0.02] text-white">
+                    <div className="bg-white/[0.04] p-4 rounded-lg border border-white/[0.1] bg-white/[0.04] text-white">
                         <h3 className="font-semibold text-white mb-3">
                             Preview Perhitungan:
                         </h3>
                         <div className="space-y-2 text-sm">
                             <div className="flex justify-between">
-                                <span className="text-white/50">
+                                <span className="text-white/60">
                                     Kas per minggu:
                                 </span>
                                 <span className="font-semibold">
@@ -506,7 +506,7 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
                                 </span>
                             </div>
                             <div className="flex justify-between">
-                                <span className="text-white/50">
+                                <span className="text-white/60">
                                     Kas per bulan (4 minggu):
                                 </span>
                                 <span className="font-semibold">
@@ -515,7 +515,7 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
                                 </span>
                             </div>
                             <div className="flex justify-between">
-                                <span className="text-white/50">
+                                <span className="text-white/60">
                                     Batas telat:
                                 </span>
                                 <span className="font-semibold text-rose-400">
@@ -527,7 +527,7 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
                             </div>
                             {startDate && (
                                 <div className="flex justify-between">
-                                    <span className="text-white/50">
+                                    <span className="text-white/60">
                                         Tanggal mulai:
                                     </span>
                                     <span className="font-semibold">
@@ -548,11 +548,11 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="px-6 py-4 bg-white/[0.02] border-t border-white/[0.04] flex justify-between rounded-b-lg">
+                <div className="px-6 py-4 bg-white/[0.04] border-t border-white/[0.12] flex justify-between rounded-b-lg">
                     <button
                         type="button"
                         onClick={handleReset}
-                        className="px-4 py-2 text-white/50 rounded-xl bg-white/[0.025] border border-white/[0.06] hover:bg-white/[0.02] transition flex items-center gap-2"
+                        className="px-4 py-2 text-white/60 rounded-xl bg-white/[0.035] border border-white/[0.1] hover:bg-white/[0.04] transition flex items-center gap-2"
                     >
                         <RefreshCw className="w-4 h-4" />
                         Reset Default

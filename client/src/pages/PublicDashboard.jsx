@@ -127,19 +127,19 @@ const PublicDashboard = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-[#09090b] flex items-center justify-center">
+            <div className="min-h-screen bg-[#18181b] flex items-center justify-center">
                 <div className="flex flex-col items-center gap-4">
                     <div className="w-10 h-10 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                    <p className="text-white/40 text-sm">Memuat data...</p>
+                    <p className="text-white/55 text-sm">Memuat data...</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-[#09090b] text-white selection:bg-blue-500/30">
+        <div className="min-h-screen bg-[#18181b] text-white selection:bg-blue-500/30">
             {/* Sticky Nav */}
-            <nav className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#09090b]/80 backdrop-blur-2xl">
+            <nav className="sticky top-0 z-50 border-b border-white/[0.1] bg-[#18181b]/80 backdrop-blur-2xl">
                 <div className="px-5 sm:px-8 lg:px-12">
                     <div className="flex items-center justify-between h-14 sm:h-16">
                         <div className="flex items-center gap-2.5">
@@ -149,21 +149,21 @@ const PublicDashboard = () => {
                             <span className="font-semibold text-white text-sm sm:text-[15px] tracking-tight">
                                 Kas Kelas
                             </span>
-                            <span className="hidden sm:inline text-[13px] text-white/30 font-medium">
+                            <span className="hidden sm:inline text-[13px] text-white/60 font-medium">
                                 TRIFORCE
                             </span>
                         </div>
                         <div className="flex items-center gap-2">
                             <button
                                 onClick={() => navigate('/leaderboard')}
-                                className="flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.06] text-white/60 hover:text-white/90 transition-all text-[13px]"
+                                className="flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.1] text-white/60 hover:text-white/90 transition-all text-[13px]"
                             >
                                 <Trophy className="w-3.5 h-3.5 text-amber-400" />
                                 <span className="hidden sm:inline">Leaderboard</span>
                             </button>
                             <button
                                 onClick={() => navigate('/login')}
-                                className="flex items-center gap-1.5 px-4 py-1.5 sm:px-5 sm:py-2 rounded-full bg-white text-[#09090b] hover:bg-white/90 transition-all text-[13px] font-semibold"
+                                className="flex items-center gap-1.5 px-4 py-1.5 sm:px-5 sm:py-2 rounded-full bg-white text-[#18181b] hover:bg-white/90 transition-all text-[13px] font-semibold"
                             >
                                 <LogIn className="w-3.5 h-3.5" />
                                 <span>Login</span>
@@ -189,7 +189,7 @@ const PublicDashboard = () => {
                     <p className="text-base sm:text-lg text-white/35 mb-10 max-w-lg leading-relaxed">
                         Total saldo kas kelas saat ini. Semua transaksi tercatat transparan dan real-time.
                     </p>
-                    <div className="flex flex-wrap gap-5 sm:gap-8 text-[13px] text-white/30">
+                    <div className="flex flex-wrap gap-5 sm:gap-8 text-[13px] text-white/60">
                         <div className="flex items-center gap-2">
                             <Users className="w-4 h-4" />
                             <span>{stats.totalStudents} Siswa</span>
@@ -206,7 +206,7 @@ const PublicDashboard = () => {
             <section className="px-5 sm:px-8 lg:px-12 pb-14">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {/* Income */}
-                    <div className="rounded-2xl bg-white/[0.025] border border-white/[0.06] p-6 sm:p-8 hover:bg-white/[0.04] hover:border-white/[0.09] transition-all duration-300 group">
+                    <div className="rounded-2xl bg-white/[0.035] border border-white/[0.1] p-6 sm:p-8 hover:bg-white/[0.07] hover:border-white/[0.09] transition-all duration-300 group">
                         <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/15 w-fit mb-5">
                             <TrendingUp className="w-5 h-5 text-emerald-400" />
                         </div>
@@ -214,10 +214,10 @@ const PublicDashboard = () => {
                         <p className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
                             {formatCurrency(stats.totalIncome)}
                         </p>
-                        <p className="text-xs text-white/20 mt-4">Dari pembayaran kas kelas & event</p>
+                        <p className="text-xs text-white/55 mt-4">Dari pembayaran kas kelas & event</p>
                     </div>
                     {/* Expenses */}
-                    <div className="rounded-2xl bg-white/[0.025] border border-white/[0.06] p-6 sm:p-8 hover:bg-white/[0.04] hover:border-white/[0.09] transition-all duration-300 group">
+                    <div className="rounded-2xl bg-white/[0.035] border border-white/[0.1] p-6 sm:p-8 hover:bg-white/[0.07] hover:border-white/[0.09] transition-all duration-300 group">
                         <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/15 w-fit mb-5">
                             <TrendingDown className="w-5 h-5 text-rose-400" />
                         </div>
@@ -225,7 +225,7 @@ const PublicDashboard = () => {
                         <p className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
                             {formatCurrency(stats.totalExpenses)}
                         </p>
-                        <p className="text-xs text-white/20 mt-4">Untuk keperluan kelas</p>
+                        <p className="text-xs text-white/55 mt-4">Untuk keperluan kelas</p>
                     </div>
                 </div>
             </section>
@@ -241,26 +241,26 @@ const PublicDashboard = () => {
                         {events.map((event, idx) => {
                             const progress = Math.min(100, ((event.totalPaid || 0) / (event.targetAmount || 1)) * 100);
                             return (
-                                <div key={idx} className="rounded-2xl bg-white/[0.025] border border-white/[0.06] p-5 sm:p-6 hover:bg-white/[0.04] transition-all">
+                                <div key={idx} className="rounded-2xl bg-white/[0.035] border border-white/[0.1] p-5 sm:p-6 hover:bg-white/[0.07] transition-all">
                                     <h3 className="font-semibold text-white text-[15px] mb-4">{event.name || 'Event'}</h3>
                                     <div className="space-y-2.5 text-[13px]">
                                         <div className="flex justify-between">
-                                            <span className="text-white/30">Target</span>
+                                            <span className="text-white/60">Target</span>
                                             <span className="text-white/60 font-medium">{formatCurrency(event.targetAmount || 0)}</span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-white/30">Terkumpul</span>
+                                            <span className="text-white/60">Terkumpul</span>
                                             <span className="text-blue-400 font-medium">{formatCurrency(event.totalPaid || 0)}</span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-white/30">Peserta</span>
+                                            <span className="text-white/60">Peserta</span>
                                             <span className="text-white/60 font-medium">{event.paidCount || 0} siswa</span>
                                         </div>
                                     </div>
                                     <div className="mt-4 h-1 bg-white/[0.06] rounded-full overflow-hidden">
                                         <div className="h-full bg-gradient-to-r from-violet-500 to-blue-500 rounded-full transition-all duration-700" style={{ width: `${progress}%` }} />
                                     </div>
-                                    <p className="text-[11px] text-white/20 mt-2 text-right">{progress.toFixed(0)}%</p>
+                                    <p className="text-[11px] text-white/55 mt-2 text-right">{progress.toFixed(0)}%</p>
                                 </div>
                             );
                         })}
@@ -276,27 +276,27 @@ const PublicDashboard = () => {
                             <Trophy className="w-[18px] h-[18px] text-amber-400" />
                             <h2 className="text-[15px] font-semibold text-white">Top Contributors</h2>
                         </div>
-                        <button onClick={() => navigate('/leaderboard')} className="flex items-center gap-1 text-[13px] text-white/30 hover:text-white/60 transition">
+                        <button onClick={() => navigate('/leaderboard')} className="flex items-center gap-1 text-[13px] text-white/60 hover:text-white/60 transition">
                             Selengkapnya <ChevronRight className="w-3.5 h-3.5" />
                         </button>
                     </div>
-                    <div className="rounded-2xl bg-white/[0.025] border border-white/[0.06] overflow-hidden">
+                    <div className="rounded-2xl bg-white/[0.035] border border-white/[0.1] overflow-hidden">
                         {leaderboard.map((member, index) => {
-                            const rankColors = ['text-amber-400', 'text-white/20', 'text-orange-400'];
+                            const rankColors = ['text-amber-400', 'text-white/55', 'text-orange-400'];
                             const rankBg = ['bg-amber-400/10 border-amber-400/20', 'bg-white/[0.1]/10 border-white/[0.1]/20', 'bg-orange-400/10 border-orange-400/20'];
                             const RankIcon = index === 0 ? Trophy : index === 1 ? Medal : index === 2 ? Award : null;
                             return (
-                                <div key={member.studentId} className={`flex items-center justify-between px-5 sm:px-6 py-3.5 hover:bg-white/[0.015] transition-colors ${index !== leaderboard.length - 1 ? 'border-b border-white/[0.04]' : ''}`}>
+                                <div key={member.studentId} className={`flex items-center justify-between px-5 sm:px-6 py-3.5 hover:bg-white/[0.015] transition-colors ${index !== leaderboard.length - 1 ? 'border-b border-white/[0.12]' : ''}`}>
                                     <div className="flex items-center gap-3.5 min-w-0">
-                                        <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center border ${index < 3 ? rankBg[index] : 'bg-white/[0.03] border-white/[0.06]'}`}>
-                                            {RankIcon ? <RankIcon className={`w-3.5 h-3.5 ${rankColors[index]}`} /> : <span className="text-[11px] font-semibold text-white/40">{index + 1}</span>}
+                                        <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center border ${index < 3 ? rankBg[index] : 'bg-white/[0.03] border-white/[0.1]'}`}>
+                                            {RankIcon ? <RankIcon className={`w-3.5 h-3.5 ${rankColors[index]}`} /> : <span className="text-[11px] font-semibold text-white/55">{index + 1}</span>}
                                         </div>
                                         <div className="min-w-0">
                                             <p className="text-[13px] font-medium text-white/90 truncate">{member.studentName}</p>
                                             <p className="text-[11px] text-white/25">{member.paymentCount} transaksi</p>
                                         </div>
                                     </div>
-                                    <p className={`text-[13px] font-semibold flex-shrink-0 ml-4 ${index < 3 ? rankColors[index] : 'text-white/50'}`}>
+                                    <p className={`text-[13px] font-semibold flex-shrink-0 ml-4 ${index < 3 ? rankColors[index] : 'text-white/60'}`}>
                                         {formatCurrency(member.totalPaid)}
                                     </p>
                                 </div>
@@ -313,13 +313,13 @@ const PublicDashboard = () => {
                         <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 tracking-tight">
                             Lihat Detail Pembayaranmu
                         </h3>
-                        <p className="text-white/30 text-sm max-w-md leading-relaxed">
+                        <p className="text-white/60 text-sm max-w-md leading-relaxed">
                             Login untuk melihat riwayat pembayaran, total kontribusi, dan status keuanganmu.
                         </p>
                     </div>
                     <button
                         onClick={() => navigate('/login')}
-                        className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-white text-[#09090b] hover:bg-white/90 transition-all text-sm font-semibold flex-shrink-0 shadow-lg shadow-white/5"
+                        className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-white text-[#18181b] hover:bg-white/90 transition-all text-sm font-semibold flex-shrink-0 shadow-lg shadow-white/5"
                     >
                         Login Sekarang
                         <ArrowRight className="w-4 h-4" />
@@ -328,13 +328,13 @@ const PublicDashboard = () => {
             </section>
 
             {/* Footer */}
-            <footer className="border-t border-white/[0.04]">
+            <footer className="border-t border-white/[0.12]">
                 <div className="px-5 sm:px-8 lg:px-12 py-6 sm:py-8 flex flex-col sm:flex-row items-center justify-between gap-3">
                     <div className="flex items-center gap-2">
                         <div className="w-5 h-5 rounded bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center">
                             <Wallet className="w-2.5 h-2.5 text-white" />
                         </div>
-                        <span className="text-[13px] text-white/20">Kas Kelas TRIFORCE</span>
+                        <span className="text-[13px] text-white/55">Kas Kelas TRIFORCE</span>
                     </div>
                     <p className="text-[11px] text-white/15">Data diperbarui secara real-time</p>
                 </div>

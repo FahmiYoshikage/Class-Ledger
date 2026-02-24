@@ -96,7 +96,7 @@ const DebtTrendChart = ({ students, payments }) => {
         if (active && payload && payload.length) {
             const data = payload[0].payload;
             return (
-                <div className="bg-[#111113]/95 backdrop-blur-xl p-4 rounded-lg  border border-white/[0.06] bg-white/[0.02] text-white">
+                <div className="bg-[#1e1e22]/98 backdrop-blur-xl p-4 rounded-lg  border border-white/[0.1] bg-white/[0.04] text-white">
                     <p className="font-semibold text-white mb-2">
                         Minggu {data.weekNumber}
                     </p>
@@ -114,10 +114,10 @@ const DebtTrendChart = ({ students, payments }) => {
                             Tingkat Koleksi: {data.collectionRate.toFixed(1)}%
                         </p>
                         <div className="border-t pt-2 mt-2">
-                            <p className="text-xs text-white/50">
+                            <p className="text-xs text-white/60">
                                 Target: {formatCurrency(data.totalExpected)}
                             </p>
-                            <p className="text-xs text-white/50">
+                            <p className="text-xs text-white/60">
                                 Terkumpul: {formatCurrency(data.totalPaid)}
                             </p>
                         </div>
@@ -130,7 +130,7 @@ const DebtTrendChart = ({ students, payments }) => {
 
     if (chartData.length === 0) {
         return (
-            <div className="h-64 flex items-center justify-center text-white/30">
+            <div className="h-64 flex items-center justify-center text-white/60">
                 <p>Tidak ada data tunggakan</p>
             </div>
         );
@@ -183,7 +183,7 @@ const DebtTrendChart = ({ students, payments }) => {
                             {debtChange >= 0 ? '+' : ''}
                             {formatCurrency(debtChange)}
                         </p>
-                        <p className="text-xs text-white/50">
+                        <p className="text-xs text-white/60">
                             Perubahan minggu ini
                         </p>
                     </div>
@@ -216,15 +216,15 @@ const DebtTrendChart = ({ students, payments }) => {
                             />
                         </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
                     <XAxis
                         dataKey="week"
                         tick={{ fontSize: 12 }}
-                        stroke="rgba(255,255,255,0.15)"
+                        stroke="rgba(255,255,255,0.25)"
                     />
                     <YAxis
                         tick={{ fontSize: 12 }}
-                        stroke="rgba(255,255,255,0.15)"
+                        stroke="rgba(255,255,255,0.25)"
                         tickFormatter={(value) =>
                             `${(value / 1000).toFixed(0)}k`
                         }
@@ -245,8 +245,8 @@ const DebtTrendChart = ({ students, payments }) => {
 
             {/* Statistics Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-white/[0.02] p-4 rounded-lg">
-                    <p className="text-sm text-white/50 mb-1">
+                <div className="bg-white/[0.04] p-4 rounded-lg">
+                    <p className="text-sm text-white/60 mb-1">
                         Tunggakan Tertinggi
                     </p>
                     <p className="text-xl font-bold text-rose-400">
@@ -254,7 +254,7 @@ const DebtTrendChart = ({ students, payments }) => {
                             Math.max(...chartData.map((d) => d.totalDebt))
                         )}
                     </p>
-                    <p className="text-xs text-white/30 mt-1">
+                    <p className="text-xs text-white/60 mt-1">
                         Minggu{' '}
                         {
                             chartData.find(
@@ -268,8 +268,8 @@ const DebtTrendChart = ({ students, payments }) => {
                     </p>
                 </div>
 
-                <div className="bg-white/[0.02] p-4 rounded-lg">
-                    <p className="text-sm text-white/50 mb-1">
+                <div className="bg-white/[0.04] p-4 rounded-lg">
+                    <p className="text-sm text-white/60 mb-1">
                         Rata-rata Tunggakan/Siswa
                     </p>
                     <p className="text-xl font-bold text-orange-600">
@@ -282,13 +282,13 @@ const DebtTrendChart = ({ students, payments }) => {
                                 : 0
                         )}
                     </p>
-                    <p className="text-xs text-white/30 mt-1">
+                    <p className="text-xs text-white/60 mt-1">
                         Seluruh periode
                     </p>
                 </div>
 
-                <div className="bg-white/[0.02] p-4 rounded-lg">
-                    <p className="text-sm text-white/50 mb-1">
+                <div className="bg-white/[0.04] p-4 rounded-lg">
+                    <p className="text-sm text-white/60 mb-1">
                         Tingkat Koleksi Rata-rata
                     </p>
                     <p className="text-xl font-bold text-blue-400">
@@ -302,7 +302,7 @@ const DebtTrendChart = ({ students, payments }) => {
                             : 0}
                         %
                     </p>
-                    <p className="text-xs text-white/30 mt-1">
+                    <p className="text-xs text-white/60 mt-1">
                         Target vs Terkumpul
                     </p>
                 </div>

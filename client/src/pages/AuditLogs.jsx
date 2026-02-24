@@ -129,7 +129,7 @@ const AuditLogs = () => {
                         <Activity className="w-8 h-8 text-blue-400" />
                         Audit Logs
                     </h1>
-                    <p className="text-white/50 mt-2">
+                    <p className="text-white/60 mt-2">
                         Track semua aktivitas user di sistem
                     </p>
                 </div>
@@ -137,8 +137,8 @@ const AuditLogs = () => {
                 {/* Statistics Cards */}
                 {stats && (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                        <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-4">
-                            <h3 className="text-sm font-medium text-white/30">
+                        <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-4">
+                            <h3 className="text-sm font-medium text-white/60">
                                 Total Actions
                             </h3>
                             <p className="text-2xl font-bold text-white mt-2">
@@ -148,8 +148,8 @@ const AuditLogs = () => {
                                 )}
                             </p>
                         </div>
-                        <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-4">
-                            <h3 className="text-sm font-medium text-white/30">
+                        <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-4">
+                            <h3 className="text-sm font-medium text-white/60">
                                 Success Rate
                             </h3>
                             <p className="text-2xl font-bold text-blue-400 mt-2">
@@ -171,8 +171,8 @@ const AuditLogs = () => {
                                 %
                             </p>
                         </div>
-                        <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-4">
-                            <h3 className="text-sm font-medium text-white/30">
+                        <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-4">
+                            <h3 className="text-sm font-medium text-white/60">
                                 Active Users
                             </h3>
                             <p className="text-2xl font-bold text-blue-400 mt-2">
@@ -183,14 +183,14 @@ const AuditLogs = () => {
                 )}
 
                 {/* Filters */}
-                <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-4 mb-6">
+                <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-4 mb-6">
                     <div className="flex items-center gap-2 mb-4">
-                        <Filter className="w-5 h-5 text-white/30" />
+                        <Filter className="w-5 h-5 text-white/60" />
                         <h2 className="text-lg font-semibold">Filters</h2>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-white/50 mb-1">
+                            <label className="block text-sm font-medium text-white/60 mb-1">
                                 Action
                             </label>
                             <select
@@ -198,7 +198,7 @@ const AuditLogs = () => {
                                 onChange={(e) =>
                                     handleFilterChange('action', e.target.value)
                                 }
-                                className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                                className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
                             >
                                 <option value="">All Actions</option>
                                 <option value="LOGIN">Login</option>
@@ -215,7 +215,7 @@ const AuditLogs = () => {
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-white/50 mb-1">
+                            <label className="block text-sm font-medium text-white/60 mb-1">
                                 Resource
                             </label>
                             <select
@@ -226,7 +226,7 @@ const AuditLogs = () => {
                                         e.target.value
                                     )
                                 }
-                                className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                                className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
                             >
                                 <option value="">All Resources</option>
                                 <option value="Auth">Auth</option>
@@ -237,7 +237,7 @@ const AuditLogs = () => {
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-white/50 mb-1">
+                            <label className="block text-sm font-medium text-white/60 mb-1">
                                 Start Date
                             </label>
                             <input
@@ -249,11 +249,11 @@ const AuditLogs = () => {
                                         e.target.value
                                     )
                                 }
-                                className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                                className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-white/50 mb-1">
+                            <label className="block text-sm font-medium text-white/60 mb-1">
                                 End Date
                             </label>
                             <input
@@ -265,7 +265,7 @@ const AuditLogs = () => {
                                         e.target.value
                                     )
                                 }
-                                className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
+                                className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
                             />
                         </div>
                     </div>
@@ -280,26 +280,26 @@ const AuditLogs = () => {
                 </div>
 
                 {/* Logs Table */}
-                <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] overflow-hidden">
+                <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] overflow-hidden">
                     <table className="min-w-full divide-y divide-white/[0.04]">
-                        <thead className="bg-white/[0.02]">
+                        <thead className="bg-white/[0.04]">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-white/30 uppercase">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-white/60 uppercase">
                                     Time
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-white/30 uppercase">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-white/60 uppercase">
                                     User
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-white/30 uppercase">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-white/60 uppercase">
                                     Action
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-white/30 uppercase">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-white/60 uppercase">
                                     Resource
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-white/30 uppercase">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-white/60 uppercase">
                                     Status
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-white/30 uppercase">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-white/60 uppercase">
                                     IP Address
                                 </th>
                             </tr>
@@ -309,7 +309,7 @@ const AuditLogs = () => {
                                 <tr>
                                     <td
                                         colSpan="6"
-                                        className="px-6 py-12 text-center text-white/30"
+                                        className="px-6 py-12 text-center text-white/60"
                                     >
                                         Loading...
                                     </td>
@@ -318,7 +318,7 @@ const AuditLogs = () => {
                                 <tr>
                                     <td
                                         colSpan="6"
-                                        className="px-6 py-12 text-center text-white/30"
+                                        className="px-6 py-12 text-center text-white/60"
                                     >
                                         No audit logs found
                                     </td>
@@ -327,23 +327,23 @@ const AuditLogs = () => {
                                 logs.map((log) => (
                                     <tr
                                         key={log._id}
-                                        className="hover:bg-white/[0.02]"
+                                        className="hover:bg-white/[0.04]"
                                     >
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
                                             <div className="flex items-center gap-2">
-                                                <Clock className="w-4 h-4 text-white/20" />
+                                                <Clock className="w-4 h-4 text-white/55" />
                                                 {formatDate(log.createdAt)}
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center gap-2">
-                                                <User className="w-4 h-4 text-white/20" />
+                                                <User className="w-4 h-4 text-white/55" />
                                                 <div>
                                                     <div className="text-sm font-medium text-white">
                                                         {log.user?.fullName ||
                                                             'Unknown'}
                                                     </div>
-                                                    <div className="text-xs text-white/30">
+                                                    <div className="text-xs text-white/60">
                                                         @{log.user?.username}
                                                     </div>
                                                 </div>
@@ -355,7 +355,7 @@ const AuditLogs = () => {
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
                                             {log.resource}
                                             {log.resourceId && (
-                                                <span className="text-xs text-white/30 ml-1">
+                                                <span className="text-xs text-white/60 ml-1">
                                                     #{log.resourceId.slice(-6)}
                                                 </span>
                                             )}
@@ -377,7 +377,7 @@ const AuditLogs = () => {
                                                 </div>
                                             )}
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-white/30">
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-white/60">
                                             {log.ipAddress || 'N/A'}
                                         </td>
                                     </tr>
@@ -388,8 +388,8 @@ const AuditLogs = () => {
 
                     {/* Pagination */}
                     {!loading && logs.length > 0 && (
-                        <div className="bg-white/[0.02] px-6 py-4 flex items-center justify-between border-t border-white/[0.04]">
-                            <div className="text-sm text-white/50">
+                        <div className="bg-white/[0.04] px-6 py-4 flex items-center justify-between border-t border-white/[0.12]">
+                            <div className="text-sm text-white/60">
                                 Showing{' '}
                                 {(pagination.page - 1) * pagination.limit + 1}{' '}
                                 to{' '}
@@ -408,7 +408,7 @@ const AuditLogs = () => {
                                         }))
                                     }
                                     disabled={pagination.page === 1}
-                                    className="px-3 py-1 border border-white/[0.06] rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/[0.04]"
+                                    className="px-3 py-1 border border-white/[0.1] rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/[0.07]"
                                 >
                                     <ChevronLeft className="w-4 h-4" />
                                 </button>
@@ -425,7 +425,7 @@ const AuditLogs = () => {
                                     disabled={
                                         pagination.page >= pagination.pages
                                     }
-                                    className="px-3 py-1 border border-white/[0.06] rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/[0.04]"
+                                    className="px-3 py-1 border border-white/[0.1] rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/[0.07]"
                                 >
                                     <ChevronRight className="w-4 h-4" />
                                 </button>

@@ -60,7 +60,7 @@ const ProfileEdit = () => {
                 <div className="mb-6">
                     <button
                         onClick={() => navigate('/app/dashboard')}
-                        className="flex items-center gap-2 text-white/50 hover:text-white mb-4 text-sm sm:text-base"
+                        className="flex items-center gap-2 text-white/60 hover:text-white mb-4 text-sm sm:text-base"
                     >
                         <ArrowLeft className="w-4 h-4" />
                         <span>Kembali ke Dashboard</span>
@@ -68,13 +68,13 @@ const ProfileEdit = () => {
                     <h1 className="text-2xl sm:text-3xl font-bold text-white">
                         Edit Profile
                     </h1>
-                    <p className="text-sm sm:text-base text-white/50 mt-2">
+                    <p className="text-sm sm:text-base text-white/60 mt-2">
                         Update informasi profile Anda
                     </p>
                 </div>
 
                 {/* Form Card */}
-                <div className="rounded-xl bg-white/[0.025] border border-white/[0.06]-apple p-6 sm:p-8">
+                <div className="rounded-xl bg-white/[0.035] border border-white/[0.1]-apple p-6 sm:p-8">
                     {/* Alert Messages */}
                     {error && (
                         <div className="mb-6 bg-rose-500/[0.06] border border-red-200 rounded-lg p-4">
@@ -101,13 +101,13 @@ const ProfileEdit = () => {
                         <div>
                             <label
                                 htmlFor="username"
-                                className="block text-sm font-medium text-white/50 mb-2"
+                                className="block text-sm font-medium text-white/60 mb-2"
                             >
                                 Username
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <User className="w-5 h-5 text-white/20" />
+                                    <User className="w-5 h-5 text-white/55" />
                                 </div>
                                 <input
                                     type="text"
@@ -115,12 +115,12 @@ const ProfileEdit = () => {
                                     name="username"
                                     value={formData.username}
                                     onChange={handleChange}
-                                    className="block w-full pl-10 pr-3 py-2 sm:py-3 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-blue-500/40 focus:border-transparent text-sm sm:text-base"
+                                    className="block w-full pl-10 pr-3 py-2 sm:py-3 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-blue-500/40 focus:border-transparent text-sm sm:text-base"
                                     placeholder="username"
                                     required
                                 />
                             </div>
-                            <p className="mt-1 text-xs text-white/30">
+                            <p className="mt-1 text-xs text-white/60">
                                 Username akan digunakan untuk login
                             </p>
                         </div>
@@ -129,13 +129,13 @@ const ProfileEdit = () => {
                         <div>
                             <label
                                 htmlFor="email"
-                                className="block text-sm font-medium text-white/50 mb-2"
+                                className="block text-sm font-medium text-white/60 mb-2"
                             >
                                 Email (Optional)
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Mail className="w-5 h-5 text-white/20" />
+                                    <Mail className="w-5 h-5 text-white/55" />
                                 </div>
                                 <input
                                     type="email"
@@ -143,29 +143,29 @@ const ProfileEdit = () => {
                                     name="email"
                                     value={formData.email}
                                     onChange={handleChange}
-                                    className="block w-full pl-10 pr-3 py-2 sm:py-3 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-blue-500/40 focus:border-transparent text-sm sm:text-base"
+                                    className="block w-full pl-10 pr-3 py-2 sm:py-3 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-blue-500/40 focus:border-transparent text-sm sm:text-base"
                                     placeholder="email@example.com"
                                 />
                             </div>
-                            <p className="mt-1 text-xs text-white/30">
+                            <p className="mt-1 text-xs text-white/60">
                                 Email untuk notifikasi (optional)
                             </p>
                         </div>
 
                         {/* Current Info Display */}
-                        <div className="bg-white/[0.02] rounded-lg p-4 border border-white/[0.06] bg-white/[0.02] text-white">
-                            <h3 className="text-sm font-semibold text-white/50 mb-3">
+                        <div className="bg-white/[0.04] rounded-lg p-4 border border-white/[0.1] bg-white/[0.04] text-white">
+                            <h3 className="text-sm font-semibold text-white/60 mb-3">
                                 Informasi Akun Saat Ini
                             </h3>
                             <div className="space-y-2 text-sm">
                                 <div className="flex justify-between">
-                                    <span className="text-white/50">Role:</span>
+                                    <span className="text-white/60">Role:</span>
                                     <span className="font-medium text-white capitalize">
                                         {user?.role}
                                     </span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-white/50">
+                                    <span className="text-white/60">
                                         Full Name:
                                     </span>
                                     <span className="font-medium text-white">
@@ -174,7 +174,7 @@ const ProfileEdit = () => {
                                 </div>
                                 {user?.studentId && (
                                     <div className="flex justify-between">
-                                        <span className="text-white/50">
+                                        <span className="text-white/60">
                                             Student Name:
                                         </span>
                                         <span className="font-medium text-white">
@@ -190,7 +190,7 @@ const ProfileEdit = () => {
                             <button
                                 type="button"
                                 onClick={() => navigate('/app/dashboard')}
-                                className="flex-1 px-4 py-2 sm:py-3 border border-white/[0.06] text-white/50 rounded-lg hover:bg-white/[0.02] transition-colors text-sm sm:text-base font-medium"
+                                className="flex-1 px-4 py-2 sm:py-3 border border-white/[0.1] text-white/60 rounded-lg hover:bg-white/[0.04] transition-colors text-sm sm:text-base font-medium"
                                 disabled={loading}
                             >
                                 Cancel

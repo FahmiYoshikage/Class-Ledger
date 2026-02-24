@@ -249,7 +249,7 @@ const EventManagement = () => {
     return (
         <div className="space-y-6">
             {/* Header */}
-            <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-6">
+            <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-6">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="bg-purple-600 p-3 rounded-lg">
@@ -259,7 +259,7 @@ const EventManagement = () => {
                             <h2 className="text-2xl font-bold text-white">
                                 Event Management
                             </h2>
-                            <p className="text-white/30">
+                            <p className="text-white/60">
                                 Kelola iuran event & kegiatan kelas
                             </p>
                         </div>
@@ -287,7 +287,7 @@ const EventManagement = () => {
                         return (
                             <div
                                 key={event._id}
-                                className="rounded-xl bg-white/[0.025] border border-white/[0.06] hover: transition cursor-pointer"
+                                className="rounded-xl bg-white/[0.035] border border-white/[0.1] hover: transition cursor-pointer"
                                 onClick={() => {
                                     setActiveEvent(event);
                                     loadEventPayments(event._id);
@@ -302,7 +302,7 @@ const EventManagement = () => {
                                             Aktif
                                         </span>
                                     </div>
-                                    <p className="text-sm text-white/30">
+                                    <p className="text-sm text-white/60">
                                         {event.description}
                                     </p>
                                 </div>
@@ -311,7 +311,7 @@ const EventManagement = () => {
                                     {/* Progress Bar */}
                                     <div>
                                         <div className="flex justify-between text-sm mb-1">
-                                            <span className="text-white/50">
+                                            <span className="text-white/60">
                                                 Progress
                                             </span>
                                             <span className="font-semibold text-purple-600">
@@ -331,7 +331,7 @@ const EventManagement = () => {
                                     {/* Stats */}
                                     <div className="grid grid-cols-2 gap-2 text-sm">
                                         <div>
-                                            <p className="text-white/30">
+                                            <p className="text-white/60">
                                                 Target
                                             </p>
                                             <p className="font-semibold">
@@ -339,7 +339,7 @@ const EventManagement = () => {
                                             </p>
                                         </div>
                                         <div>
-                                            <p className="text-white/30">
+                                            <p className="text-white/60">
                                                 Terkumpul
                                             </p>
                                             <p className="font-semibold text-blue-400">
@@ -347,7 +347,7 @@ const EventManagement = () => {
                                             </p>
                                         </div>
                                         <div>
-                                            <p className="text-white/30">
+                                            <p className="text-white/60">
                                                 Per Siswa
                                             </p>
                                             <p className="font-semibold">
@@ -357,7 +357,7 @@ const EventManagement = () => {
                                             </p>
                                         </div>
                                         <div>
-                                            <p className="text-white/30">
+                                            <p className="text-white/60">
                                                 Sudah Bayar
                                             </p>
                                             <p className="font-semibold">
@@ -398,7 +398,7 @@ const EventManagement = () => {
 
             {/* Completed Events */}
             {events.filter((e) => e.status === 'selesai').length > 0 && (
-                <div className="rounded-xl bg-white/[0.025] border border-white/[0.06]">
+                <div className="rounded-xl bg-white/[0.035] border border-white/[0.1]">
                     <div className="p-4 border-b">
                         <h3 className="font-bold text-white">
                             Event Selesai
@@ -410,13 +410,13 @@ const EventManagement = () => {
                             .map((event) => (
                                 <div
                                     key={event._id}
-                                    className="flex items-center justify-between p-3 bg-white/[0.02] rounded"
+                                    className="flex items-center justify-between p-3 bg-white/[0.04] rounded"
                                 >
                                     <div>
                                         <p className="font-semibold text-white">
                                             {event.name}
                                         </p>
-                                        <p className="text-sm text-white/30">
+                                        <p className="text-sm text-white/60">
                                             Terkumpul:{' '}
                                             {formatRp(event.totalCollected)} •
                                             Surplus:{' '}
@@ -436,21 +436,21 @@ const EventManagement = () => {
             {/* Event Detail Modal */}
             {activeEvent && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50">
-                    <div className="bg-[#111113] border border-white/[0.08] rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                    <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
                         {/* Modal Header */}
-                        <div className="p-6 border-b border-white/[0.06] sticky top-0 bg-[#111113] ">
+                        <div className="p-6 border-b border-white/[0.1] sticky top-0 bg-[#1e1e22] ">
                             <div className="flex items-start justify-between">
                                 <div>
                                     <h3 className="text-2xl font-bold text-white">
                                         {activeEvent.name}
                                     </h3>
-                                    <p className="text-white/30 mt-1">
+                                    <p className="text-white/60 mt-1">
                                         {activeEvent.description}
                                     </p>
                                 </div>
                                 <button
                                     onClick={() => setActiveEvent(null)}
-                                    className="p-2 hover:bg-white/[0.04] rounded"
+                                    className="p-2 hover:bg-white/[0.07] rounded"
                                 >
                                     <X className="w-5 h-5" />
                                 </button>
@@ -580,21 +580,21 @@ const EventManagement = () => {
                                 </h4>
                                 <div className="border rounded-lg overflow-hidden">
                                     <table className="w-full">
-                                        <thead className="bg-white/[0.02]">
+                                        <thead className="bg-white/[0.04]">
                                             <tr>
-                                                <th className="px-4 py-2 text-left text-xs font-medium text-white/30">
+                                                <th className="px-4 py-2 text-left text-xs font-medium text-white/60">
                                                     Tanggal
                                                 </th>
-                                                <th className="px-4 py-2 text-left text-xs font-medium text-white/30">
+                                                <th className="px-4 py-2 text-left text-xs font-medium text-white/60">
                                                     Nama
                                                 </th>
-                                                <th className="px-4 py-2 text-left text-xs font-medium text-white/30">
+                                                <th className="px-4 py-2 text-left text-xs font-medium text-white/60">
                                                     Jumlah
                                                 </th>
-                                                <th className="px-4 py-2 text-left text-xs font-medium text-white/30">
+                                                <th className="px-4 py-2 text-left text-xs font-medium text-white/60">
                                                     Metode
                                                 </th>
-                                                <th className="px-4 py-2 text-center text-xs font-medium text-white/30">
+                                                <th className="px-4 py-2 text-center text-xs font-medium text-white/60">
                                                     Aksi
                                                 </th>
                                             </tr>
@@ -604,7 +604,7 @@ const EventManagement = () => {
                                                 <tr>
                                                     <td
                                                         colSpan="5"
-                                                        className="px-4 py-8 text-center text-white/30"
+                                                        className="px-4 py-8 text-center text-white/60"
                                                     >
                                                         Belum ada riwayat
                                                         pembayaran
@@ -682,7 +682,7 @@ const EventManagement = () => {
             {/* Create Event Modal */}
             {showCreateEvent && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50">
-                    <div className="bg-[#111113] border border-white/[0.08] rounded-2xl max-w-2xl w-full p-6">
+                    <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl max-w-2xl w-full p-6">
                         <h3 className="text-xl font-bold mb-4">
                             Buat Event Baru
                         </h3>
@@ -691,7 +691,7 @@ const EventManagement = () => {
                             className="space-y-4"
                         >
                             <div>
-                                <label className="block text-sm font-medium text-white/50 mb-1">
+                                <label className="block text-sm font-medium text-white/60 mb-1">
                                     Nama Event
                                 </label>
                                 <input
@@ -699,25 +699,25 @@ const EventManagement = () => {
                                     name="name"
                                     required
                                     placeholder="Contoh: Study Tour"
-                                    className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-white/50 mb-1">
+                                <label className="block text-sm font-medium text-white/60 mb-1">
                                     Deskripsi
                                 </label>
                                 <textarea
                                     name="description"
                                     rows="2"
                                     placeholder="Deskripsi singkat event"
-                                    className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                 />
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-white/50 mb-1">
+                                    <label className="block text-sm font-medium text-white/60 mb-1">
                                         Target Iuran Total
                                     </label>
                                     <input
@@ -750,12 +750,12 @@ const EventManagement = () => {
                                                     : 'Belum ada data siswa. Silakan tambahkan siswa terlebih dahulu.';
                                         }}
                                         placeholder="100000"
-                                        className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                        className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-white/50 mb-1">
+                                    <label className="block text-sm font-medium text-white/60 mb-1">
                                         Iuran Per Siswa
                                     </label>
                                     <input
@@ -764,7 +764,7 @@ const EventManagement = () => {
                                         required
                                         id="perStudentAmount"
                                         placeholder="3500"
-                                        className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                        className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                     />
                                 </div>
                             </div>
@@ -781,7 +781,7 @@ const EventManagement = () => {
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-white/50 mb-1">
+                                    <label className="block text-sm font-medium text-white/60 mb-1">
                                         Tanggal Mulai
                                     </label>
                                     <input
@@ -793,19 +793,19 @@ const EventManagement = () => {
                                                 .toISOString()
                                                 .split('T')[0]
                                         }
-                                        className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                        className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-white/50 mb-1">
+                                    <label className="block text-sm font-medium text-white/60 mb-1">
                                         Tanggal Selesai
                                     </label>
                                     <input
                                         type="date"
                                         name="endDate"
                                         required
-                                        className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                        className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                     />
                                 </div>
                             </div>
@@ -814,7 +814,7 @@ const EventManagement = () => {
                                 <button
                                     type="button"
                                     onClick={() => setShowCreateEvent(false)}
-                                    className="flex-1 px-4 py-2 border border-white/[0.06] rounded-lg hover:bg-white/[0.02] transition"
+                                    className="flex-1 px-4 py-2 border border-white/[0.1] rounded-lg hover:bg-white/[0.04] transition"
                                 >
                                     Batal
                                 </button>
@@ -833,19 +833,19 @@ const EventManagement = () => {
             {/* Add Payment Modal */}
             {showPaymentModal && activeEvent && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50">
-                    <div className="bg-[#111113] border border-white/[0.08] rounded-2xl max-w-md w-full p-6">
+                    <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl max-w-md w-full p-6">
                         <h3 className="text-xl font-bold mb-4">
                             Tambah Pembayaran Event
                         </h3>
                         <form onSubmit={handleAddPayment} className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-white/50 mb-1">
+                                <label className="block text-sm font-medium text-white/60 mb-1">
                                     Siswa
                                 </label>
                                 <select
                                     name="studentId"
                                     required
-                                    className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                 >
                                     <option value="">Pilih Siswa</option>
                                     {students
@@ -862,7 +862,7 @@ const EventManagement = () => {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-white/50 mb-1">
+                                <label className="block text-sm font-medium text-white/60 mb-1">
                                     Jumlah
                                 </label>
                                 <input
@@ -870,16 +870,16 @@ const EventManagement = () => {
                                     name="amount"
                                     defaultValue={activeEvent.perStudentAmount}
                                     required
-                                    className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                 />
-                                <p className="text-xs text-white/30 mt-1">
+                                <p className="text-xs text-white/60 mt-1">
                                     Default:{' '}
                                     {formatRp(activeEvent.perStudentAmount)}
                                 </p>
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-white/50 mb-1">
+                                <label className="block text-sm font-medium text-white/60 mb-1">
                                     Tanggal
                                 </label>
                                 <input
@@ -889,17 +889,17 @@ const EventManagement = () => {
                                         new Date().toISOString().split('T')[0]
                                     }
                                     required
-                                    className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-white/50 mb-1">
+                                <label className="block text-sm font-medium text-white/60 mb-1">
                                     Metode
                                 </label>
                                 <select
                                     name="method"
-                                    className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                 >
                                     <option>Tunai</option>
                                     <option>Transfer</option>
@@ -907,13 +907,13 @@ const EventManagement = () => {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-white/50 mb-1">
+                                <label className="block text-sm font-medium text-white/60 mb-1">
                                     Catatan (opsional)
                                 </label>
                                 <input
                                     type="text"
                                     name="note"
-                                    className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                 />
                             </div>
 
@@ -921,7 +921,7 @@ const EventManagement = () => {
                                 <button
                                     type="button"
                                     onClick={() => setShowPaymentModal(false)}
-                                    className="flex-1 px-4 py-2 border border-white/[0.06] rounded-lg hover:bg-white/[0.02] transition"
+                                    className="flex-1 px-4 py-2 border border-white/[0.1] rounded-lg hover:bg-white/[0.04] transition"
                                 >
                                     Batal
                                 </button>
@@ -940,7 +940,7 @@ const EventManagement = () => {
             {/* Edit Payment Modal */}
             {showEditPaymentModal && activeEvent && editingPayment && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50">
-                    <div className="bg-[#111113] border border-white/[0.08] rounded-2xl max-w-md w-full p-6">
+                    <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl max-w-md w-full p-6">
                         <h3 className="text-xl font-bold mb-4">
                             Edit Pembayaran Event
                         </h3>
@@ -949,14 +949,14 @@ const EventManagement = () => {
                             className="space-y-4"
                         >
                             <div>
-                                <label className="block text-sm font-medium text-white/50 mb-1">
+                                <label className="block text-sm font-medium text-white/60 mb-1">
                                     Siswa
                                 </label>
                                 <select
                                     name="studentId"
                                     required
                                     defaultValue={editingPayment.studentId?._id}
-                                    className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                 >
                                     <option value="">Pilih Siswa</option>
                                     {students
@@ -973,7 +973,7 @@ const EventManagement = () => {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-white/50 mb-1">
+                                <label className="block text-sm font-medium text-white/60 mb-1">
                                     Jumlah
                                 </label>
                                 <input
@@ -981,12 +981,12 @@ const EventManagement = () => {
                                     name="amount"
                                     defaultValue={editingPayment.amount}
                                     required
-                                    className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-white/50 mb-1">
+                                <label className="block text-sm font-medium text-white/60 mb-1">
                                     Tanggal
                                 </label>
                                 <input
@@ -998,18 +998,18 @@ const EventManagement = () => {
                                             .split('T')[0]
                                     }
                                     required
-                                    className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-white/50 mb-1">
+                                <label className="block text-sm font-medium text-white/60 mb-1">
                                     Metode
                                 </label>
                                 <select
                                     name="method"
                                     defaultValue={editingPayment.method}
-                                    className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                 >
                                     <option>Tunai</option>
                                     <option>Transfer</option>
@@ -1017,14 +1017,14 @@ const EventManagement = () => {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-white/50 mb-1">
+                                <label className="block text-sm font-medium text-white/60 mb-1">
                                     Catatan (opsional)
                                 </label>
                                 <input
                                     type="text"
                                     name="note"
                                     defaultValue={editingPayment.note || ''}
-                                    className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                 />
                             </div>
 
@@ -1035,7 +1035,7 @@ const EventManagement = () => {
                                         setShowEditPaymentModal(false);
                                         setEditingPayment(null);
                                     }}
-                                    className="flex-1 px-4 py-2 border border-white/[0.06] rounded-lg hover:bg-white/[0.02] transition"
+                                    className="flex-1 px-4 py-2 border border-white/[0.1] rounded-lg hover:bg-white/[0.04] transition"
                                 >
                                     Batal
                                 </button>

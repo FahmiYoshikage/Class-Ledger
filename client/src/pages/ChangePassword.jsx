@@ -55,7 +55,7 @@ const ChangePassword = () => {
     return (
         <div className="min-h-screen bg-white/[0.04] flex items-center justify-center p-4">
             <div className="max-w-md w-full">
-                <div className="bg-[#111113] border border-white/[0.08] rounded-2xl p-8">
+                <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl p-8">
                     {/* Header */}
                     <div className="text-center mb-6">
                         <div className="bg-blue-500/[0.06]0/[0.06] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -92,7 +92,7 @@ const ChangePassword = () => {
                     <form onSubmit={handleSubmit} className="space-y-5">
                         {/* Current Password */}
                         <div>
-                            <label className="block text-sm font-medium text-white/50 mb-2">
+                            <label className="block text-sm font-medium text-white/60 mb-2">
                                 Password Saat Ini
                             </label>
                             <div className="relative">
@@ -102,14 +102,14 @@ const ChangePassword = () => {
                                     onChange={(e) =>
                                         setCurrentPassword(e.target.value)
                                     }
-                                    className="w-full px-4 py-3 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-blue-500/40 focus:border-transparent pr-12"
+                                    className="w-full px-4 py-3 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-blue-500/40 focus:border-transparent pr-12"
                                     placeholder="Masukkan password saat ini"
                                     required
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowCurrent(!showCurrent)}
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/30 hover:text-white/50"
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/60 hover:text-white/60"
                                 >
                                     {showCurrent ? (
                                         <EyeOff className="w-5 h-5" />
@@ -122,7 +122,7 @@ const ChangePassword = () => {
 
                         {/* New Password */}
                         <div>
-                            <label className="block text-sm font-medium text-white/50 mb-2">
+                            <label className="block text-sm font-medium text-white/60 mb-2">
                                 Password Baru
                             </label>
                             <div className="relative">
@@ -132,14 +132,14 @@ const ChangePassword = () => {
                                     onChange={(e) =>
                                         setNewPassword(e.target.value)
                                     }
-                                    className="w-full px-4 py-3 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-blue-500/40 focus:border-transparent pr-12"
+                                    className="w-full px-4 py-3 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-blue-500/40 focus:border-transparent pr-12"
                                     placeholder="Minimal 6 karakter"
                                     required
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowNew(!showNew)}
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/30 hover:text-white/50"
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/60 hover:text-white/60"
                                 >
                                     {showNew ? (
                                         <EyeOff className="w-5 h-5" />
@@ -148,14 +148,14 @@ const ChangePassword = () => {
                                     )}
                                 </button>
                             </div>
-                            <p className="text-xs text-white/30 mt-1">
+                            <p className="text-xs text-white/60 mt-1">
                                 Minimal 6 karakter
                             </p>
                         </div>
 
                         {/* Confirm Password */}
                         <div>
-                            <label className="block text-sm font-medium text-white/50 mb-2">
+                            <label className="block text-sm font-medium text-white/60 mb-2">
                                 Konfirmasi Password Baru
                             </label>
                             <div className="relative">
@@ -165,14 +165,14 @@ const ChangePassword = () => {
                                     onChange={(e) =>
                                         setConfirmPassword(e.target.value)
                                     }
-                                    className="w-full px-4 py-3 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-blue-500/40 focus:border-transparent pr-12"
+                                    className="w-full px-4 py-3 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-blue-500/40 focus:border-transparent pr-12"
                                     placeholder="Ketik ulang password baru"
                                     required
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowConfirm(!showConfirm)}
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/30 hover:text-white/50"
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/60 hover:text-white/60"
                                 >
                                     {showConfirm ? (
                                         <EyeOff className="w-5 h-5" />
@@ -226,7 +226,7 @@ const ChangePassword = () => {
                             <button
                                 type="button"
                                 onClick={() => navigate('/dashboard')}
-                                className="w-full bg-white/[0.04] text-white/50 py-3 rounded-lg hover:bg-white/[0.04] transition font-medium"
+                                className="w-full bg-white/[0.04] text-white/60 py-3 rounded-lg hover:bg-white/[0.07] transition font-medium"
                             >
                                 Batal
                             </button>

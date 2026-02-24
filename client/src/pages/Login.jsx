@@ -59,13 +59,13 @@ const Login = () => {
                     <h1 className="text-3xl font-bold text-white mb-2">
                         Kas Kelas TRIFORCE
                     </h1>
-                    <p className="text-white/50">
+                    <p className="text-white/60">
                         Sistem Pencatatan Keuangan Kelas
                     </p>
                 </div>
 
                 {/* Login Card */}
-                <div className="bg-[#111113] border border-white/[0.08] rounded-2xl p-8">
+                <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl p-8">
                     <h2 className="text-2xl font-bold text-white mb-6">
                         Login ke Akun
                     </h2>
@@ -85,7 +85,7 @@ const Login = () => {
                         <div>
                             <label
                                 htmlFor="username"
-                                className="block text-sm font-medium text-white/50 mb-2"
+                                className="block text-sm font-medium text-white/60 mb-2"
                             >
                                 Username
                             </label>
@@ -94,7 +94,7 @@ const Login = () => {
                                 id="username"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
-                                className="w-full px-4 py-3 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-gray-400"
+                                className="w-full px-4 py-3 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-gray-400"
                                 placeholder="Masukkan username"
                                 required
                                 autoFocus
@@ -105,7 +105,7 @@ const Login = () => {
                         <div>
                             <label
                                 htmlFor="password"
-                                className="block text-sm font-medium text-white/50 mb-2"
+                                className="block text-sm font-medium text-white/60 mb-2"
                             >
                                 Password
                             </label>
@@ -117,7 +117,7 @@ const Login = () => {
                                     onChange={(e) =>
                                         setPassword(e.target.value)
                                     }
-                                    className="w-full px-4 py-3 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-gray-400 pr-12"
+                                    className="w-full px-4 py-3 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-gray-400 pr-12"
                                     placeholder="Masukkan password"
                                     required
                                 />
@@ -126,7 +126,7 @@ const Login = () => {
                                     onClick={() =>
                                         setShowPassword(!showPassword)
                                     }
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/30 hover:text-white/50"
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/60 hover:text-white/60"
                                 >
                                     {showPassword ? (
                                         <EyeOff className="w-5 h-5" />
@@ -173,7 +173,7 @@ const Login = () => {
 
                 {/* Footer */}
                 <div className="mt-8 text-center">
-                    <p className="text-sm text-white/50">
+                    <p className="text-sm text-white/60">
                         Lupa password? Hubungi bendahara kelas
                     </p>
                 </div>

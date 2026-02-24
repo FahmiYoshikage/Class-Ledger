@@ -220,7 +220,7 @@ function QRPaymentAdmin() {
                     className={`px-4 py-2 font-semibold transition ${
                         activeTab === 'pending'
                             ? 'border-b-2 border-blue-600 text-blue-500'
-                            : 'text-white/50 hover:text-white'
+                            : 'text-white/60 hover:text-white'
                     }`}
                 >
                     🔔 Pending ({pendingConfirmations.length})
@@ -230,7 +230,7 @@ function QRPaymentAdmin() {
                     className={`px-4 py-2 font-semibold transition ${
                         activeTab === 'history'
                             ? 'border-b-2 border-blue-600 text-blue-500'
-                            : 'text-white/50 hover:text-white'
+                            : 'text-white/60 hover:text-white'
                     }`}
                 >
                     📜 Riwayat
@@ -240,7 +240,7 @@ function QRPaymentAdmin() {
                     className={`px-4 py-2 font-semibold transition ${
                         activeTab === 'manage'
                             ? 'border-b-2 border-blue-600 text-blue-500'
-                            : 'text-white/50 hover:text-white'
+                            : 'text-white/60 hover:text-white'
                     }`}
                 >
                     📷 Kelola QR Code
@@ -267,8 +267,8 @@ function QRPaymentAdmin() {
                     {loading ? (
                         <div className="text-center py-8">Loading...</div>
                     ) : pendingConfirmations.length === 0 ? (
-                        <div className="bg-white/[0.02] rounded-lg p-8 text-center">
-                            <p className="text-white/50">
+                        <div className="bg-white/[0.04] rounded-lg p-8 text-center">
+                            <p className="text-white/60">
                                 Tidak ada konfirmasi pending
                             </p>
                         </div>
@@ -277,14 +277,14 @@ function QRPaymentAdmin() {
                             {pendingConfirmations.map((conf) => (
                                 <div
                                     key={conf._id}
-                                    className="rounded-xl bg-white/[0.025] border border-white/[0.06]-apple-sm p-6"
+                                    className="rounded-xl bg-white/[0.035] border border-white/[0.1]-apple-sm p-6"
                                 >
                                     <div className="flex justify-between items-start mb-4">
                                         <div>
                                             <h3 className="text-lg font-semibold text-white">
                                                 {conf.studentId.name}
                                             </h3>
-                                            <p className="text-sm text-white/50">
+                                            <p className="text-sm text-white/60">
                                                 {conf.studentId.phone}
                                             </p>
                                         </div>
@@ -300,7 +300,7 @@ function QRPaymentAdmin() {
                                                 'id-ID'
                                             )}
                                         </p>
-                                        <p className="text-xs text-white/30">
+                                        <p className="text-xs text-white/60">
                                             Submitted:{' '}
                                             {new Date(
                                                 conf.submittedAt
@@ -365,23 +365,23 @@ function QRPaymentAdmin() {
                     {loading ? (
                         <div className="text-center py-8">Loading...</div>
                     ) : (
-                        <div className="rounded-xl bg-white/[0.025] border border-white/[0.06]-apple-sm overflow-hidden">
+                        <div className="rounded-xl bg-white/[0.035] border border-white/[0.1]-apple-sm overflow-hidden">
                             <table className="min-w-full divide-y divide-white/[0.04]">
-                                <thead className="bg-white/[0.02]">
+                                <thead className="bg-white/[0.04]">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-white/30 uppercase">
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-white/60 uppercase">
                                             Siswa
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-white/30 uppercase">
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-white/60 uppercase">
                                             Jumlah
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-white/30 uppercase">
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-white/60 uppercase">
                                             Status
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-white/30 uppercase">
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-white/60 uppercase">
                                             Tanggal
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-white/30 uppercase">
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-white/60 uppercase">
                                             Reviewer
                                         </th>
                                     </tr>
@@ -417,12 +417,12 @@ function QRPaymentAdmin() {
                                                     {conf.status}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-white/30">
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-white/60">
                                                 {new Date(
                                                     conf.submittedAt
                                                 ).toLocaleDateString('id-ID')}
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-white/30">
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-white/60">
                                                 {conf.reviewedBy || '-'}
                                             </td>
                                         </tr>
@@ -438,13 +438,13 @@ function QRPaymentAdmin() {
             {activeTab === 'manage' && (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Upload Form */}
-                    <div className="rounded-xl bg-white/[0.025] border border-white/[0.06]-apple-sm p-6">
+                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1]-apple-sm p-6">
                         <h2 className="text-xl font-semibold mb-4 text-white">
                             Upload QR Code Baru
                         </h2>
                         <form onSubmit={handleUploadQR} className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-white/50 mb-1">
+                                <label className="block text-sm font-medium text-white/60 mb-1">
                                     Metode Pembayaran
                                 </label>
                                 <select
@@ -455,7 +455,7 @@ function QRPaymentAdmin() {
                                             paymentMethod: e.target.value,
                                         })
                                     }
-                                    className="w-full px-3 py-2 border border-white/[0.06] rounded-lg"
+                                    className="w-full px-3 py-2 border border-white/[0.1] rounded-lg"
                                 >
                                     <option value="dana">DANA</option>
                                     <option value="gopay">GoPay</option>
@@ -466,7 +466,7 @@ function QRPaymentAdmin() {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-white/50 mb-1">
+                                <label className="block text-sm font-medium text-white/60 mb-1">
                                     Nama Akun *
                                 </label>
                                 <input
@@ -478,13 +478,13 @@ function QRPaymentAdmin() {
                                             accountName: e.target.value,
                                         })
                                     }
-                                    className="w-full px-3 py-2 border border-white/[0.06] rounded-lg"
+                                    className="w-full px-3 py-2 border border-white/[0.1] rounded-lg"
                                     required
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-white/50 mb-1">
+                                <label className="block text-sm font-medium text-white/60 mb-1">
                                     Nomor Akun
                                 </label>
                                 <input
@@ -496,12 +496,12 @@ function QRPaymentAdmin() {
                                             accountNumber: e.target.value,
                                         })
                                     }
-                                    className="w-full px-3 py-2 border border-white/[0.06] rounded-lg"
+                                    className="w-full px-3 py-2 border border-white/[0.1] rounded-lg"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-white/50 mb-1">
+                                <label className="block text-sm font-medium text-white/60 mb-1">
                                     Gambar QR Code *
                                 </label>
                                 <input
@@ -522,7 +522,7 @@ function QRPaymentAdmin() {
                             )}
 
                             <div>
-                                <label className="block text-sm font-medium text-white/50 mb-1">
+                                <label className="block text-sm font-medium text-white/60 mb-1">
                                     Catatan
                                 </label>
                                 <textarea
@@ -533,7 +533,7 @@ function QRPaymentAdmin() {
                                             notes: e.target.value,
                                         })
                                     }
-                                    className="w-full px-3 py-2 border border-white/[0.06] rounded-lg"
+                                    className="w-full px-3 py-2 border border-white/[0.1] rounded-lg"
                                     rows="2"
                                 />
                             </div>
@@ -562,7 +562,7 @@ function QRPaymentAdmin() {
                                 {qrCodes.map((qr) => (
                                     <div
                                         key={qr._id}
-                                        className={`rounded-xl bg-white/[0.025] border border-white/[0.06]-apple-sm p-4 ${
+                                        className={`rounded-xl bg-white/[0.035] border border-white/[0.1]-apple-sm p-4 ${
                                             qr.isActive
                                                 ? 'border-2 border-green-500'
                                                 : ''
@@ -583,11 +583,11 @@ function QRPaymentAdmin() {
                                                         <p className="font-semibold text-white">
                                                             {qr.accountName}
                                                         </p>
-                                                        <p className="text-sm text-white/50 uppercase">
+                                                        <p className="text-sm text-white/60 uppercase">
                                                             {qr.paymentMethod}
                                                         </p>
                                                         {qr.accountNumber && (
-                                                            <p className="text-xs text-white/30">
+                                                            <p className="text-xs text-white/60">
                                                                 {
                                                                     qr.accountNumber
                                                                 }
@@ -600,7 +600,7 @@ function QRPaymentAdmin() {
                                                         </span>
                                                     )}
                                                 </div>
-                                                <p className="text-xs text-white/30 mt-2">
+                                                <p className="text-xs text-white/60 mt-2">
                                                     Uploaded:{' '}
                                                     {new Date(
                                                         qr.uploadedAt

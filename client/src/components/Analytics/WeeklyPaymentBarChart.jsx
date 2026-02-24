@@ -66,7 +66,7 @@ const WeeklyPaymentBarChart = ({ payments }) => {
         if (active && payload && payload.length) {
             const data = payload[0].payload;
             return (
-                <div className="bg-[#111113]/95 backdrop-blur-xl p-4 rounded-lg  border border-white/[0.06] bg-white/[0.02] text-white">
+                <div className="bg-[#1e1e22]/98 backdrop-blur-xl p-4 rounded-lg  border border-white/[0.1] bg-white/[0.04] text-white">
                     <p className="font-semibold text-white mb-2">
                         {data.week}
                     </p>
@@ -74,10 +74,10 @@ const WeeklyPaymentBarChart = ({ payments }) => {
                         <p className="text-sm text-blue-400">
                             Total: {formatCurrency(data.amount)}
                         </p>
-                        <p className="text-sm text-white/50">
+                        <p className="text-sm text-white/60">
                             Transaksi: {data.count}
                         </p>
-                        <p className="text-sm text-white/30">
+                        <p className="text-sm text-white/60">
                             Rata-rata:{' '}
                             {formatCurrency(
                                 data.count > 0 ? data.amount / data.count : 0
@@ -100,7 +100,7 @@ const WeeklyPaymentBarChart = ({ payments }) => {
 
     if (chartData.length === 0) {
         return (
-            <div className="h-64 flex items-center justify-center text-white/30">
+            <div className="h-64 flex items-center justify-center text-white/60">
                 <p>Tidak ada data pembayaran</p>
             </div>
         );
@@ -113,15 +113,15 @@ const WeeklyPaymentBarChart = ({ payments }) => {
                     data={chartData}
                     margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
                 >
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
                     <XAxis
                         dataKey="week"
                         tick={{ fontSize: 12 }}
-                        stroke="rgba(255,255,255,0.15)"
+                        stroke="rgba(255,255,255,0.25)"
                     />
                     <YAxis
                         tick={{ fontSize: 12 }}
-                        stroke="rgba(255,255,255,0.15)"
+                        stroke="rgba(255,255,255,0.25)"
                         tickFormatter={(value) =>
                             `${(value / 1000).toFixed(0)}k`
                         }
@@ -147,19 +147,19 @@ const WeeklyPaymentBarChart = ({ payments }) => {
             <div className="flex items-center justify-center gap-4 mt-4 text-sm">
                 <div className="flex items-center gap-2">
                     <div className="w-4 h-4 rounded bg-white/[0.08]" />
-                    <span className="text-white/50">Tidak ada</span>
+                    <span className="text-white/60">Tidak ada</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <div className="w-4 h-4 rounded bg-yellow-400" />
-                    <span className="text-white/50">&lt; 30k</span>
+                    <span className="text-white/60">&lt; 30k</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <div className="w-4 h-4 rounded bg-blue-400" />
-                    <span className="text-white/50">30k - 50k</span>
+                    <span className="text-white/60">30k - 50k</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <div className="w-4 h-4 rounded bg-blue-500/[0.06]0/[0.06]0" />
-                    <span className="text-white/50">&gt; 50k</span>
+                    <span className="text-white/60">&gt; 50k</span>
                 </div>
             </div>
         </div>

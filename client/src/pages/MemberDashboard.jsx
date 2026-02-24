@@ -209,7 +209,7 @@ const MemberDashboard = () => {
                     <h1 className="text-2xl sm:text-3xl font-bold text-white">
                         Dashboard Member
                     </h1>
-                    <p className="text-sm sm:text-base text-white/50 mt-2">
+                    <p className="text-sm sm:text-base text-white/60 mt-2">
                         Selamat datang, {user.fullName}!
                     </p>
                 </div>
@@ -235,81 +235,81 @@ const MemberDashboard = () => {
                 {/* Statistics */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-4 sm:mb-6">
                     {/* Personal Payment */}
-                    <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-4 sm:p-6">
+                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-4 sm:p-6">
                         <div className="flex items-center justify-between mb-3 sm:mb-4">
                             <div className="bg-green-100 p-2 sm:p-3 rounded-lg">
                                 <DollarSign className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
                             </div>
                         </div>
-                        <h3 className="text-xs sm:text-sm font-medium text-white/30">
+                        <h3 className="text-xs sm:text-sm font-medium text-white/60">
                             Pembayaran Saya
                         </h3>
                         <p className="text-lg sm:text-2xl font-bold text-white mt-1 sm:mt-2">
                             {formatCurrency(stats.totalPaid)}
                         </p>
-                        <p className="text-xs text-white/30 mt-1">
+                        <p className="text-xs text-white/60 mt-1">
                             {stats.paymentCount} transaksi
                         </p>
                     </div>
 
                     {/* Total Class Income */}
-                    <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-4 sm:p-6">
+                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-4 sm:p-6">
                         <div className="flex items-center justify-between mb-3 sm:mb-4">
                             <div className="bg-blue-100 p-2 sm:p-3 rounded-lg">
                                 <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
                             </div>
                         </div>
-                        <h3 className="text-xs sm:text-sm font-medium text-white/30">
+                        <h3 className="text-xs sm:text-sm font-medium text-white/60">
                             Total Pemasukan Kelas
                         </h3>
                         <p className="text-lg sm:text-2xl font-bold text-white mt-1 sm:mt-2">
                             {formatCurrency(stats.totalClassIncome)}
                         </p>
-                        <p className="text-xs text-white/30 mt-1">
+                        <p className="text-xs text-white/60 mt-1">
                             {allPayments.length} transaksi total
                         </p>
                     </div>
 
                     {/* Total Expenses */}
-                    <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-4 sm:p-6">
+                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-4 sm:p-6">
                         <div className="flex items-center justify-between mb-3 sm:mb-4">
                             <div className="bg-red-100 p-2 sm:p-3 rounded-lg">
                                 <TrendingDown className="w-5 h-5 sm:w-6 sm:h-6 text-rose-400" />
                             </div>
                         </div>
-                        <h3 className="text-xs sm:text-sm font-medium text-white/30">
+                        <h3 className="text-xs sm:text-sm font-medium text-white/60">
                             Total Pengeluaran Kelas
                         </h3>
                         <p className="text-lg sm:text-2xl font-bold text-white mt-1 sm:mt-2">
                             {formatCurrency(stats.totalExpenses)}
                         </p>
-                        <p className="text-xs text-white/30 mt-1">
+                        <p className="text-xs text-white/60 mt-1">
                             {expenses.length} transaksi
                         </p>
                     </div>
 
                     {/* Class Balance */}
-                    <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-4 sm:p-6">
+                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-4 sm:p-6">
                         <div className="flex items-center justify-between mb-3 sm:mb-4">
                             <div className="bg-yellow-100 p-2 sm:p-3 rounded-lg">
                                 <Wallet className="w-5 h-5 sm:w-6 sm:h-6 text-amber-400" />
                             </div>
                         </div>
-                        <h3 className="text-xs sm:text-sm font-medium text-white/30">
+                        <h3 className="text-xs sm:text-sm font-medium text-white/60">
                             Saldo Kas Kelas
                         </h3>
                         <p className="text-lg sm:text-2xl font-bold text-white mt-1 sm:mt-2">
                             {formatCurrency(stats.totalClassBalance)}
                         </p>
-                        <p className="text-xs text-white/30 mt-1">
+                        <p className="text-xs text-white/60 mt-1">
                             Sisa kas kelas
                         </p>
                     </div>
                 </div>
 
                 {/* Payment History */}
-                <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] mb-4 sm:mb-6">
-                    <div className="p-4 sm:p-6 border-b border-white/[0.06]">
+                <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] mb-4 sm:mb-6">
+                    <div className="p-4 sm:p-6 border-b border-white/[0.1]">
                         <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
                             <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
                             Riwayat Pembayaran Saya
@@ -317,28 +317,28 @@ const MemberDashboard = () => {
                     </div>
                     <div className="p-4 sm:p-6">
                         {loading ? (
-                            <div className="text-center py-8 text-white/30">
+                            <div className="text-center py-8 text-white/60">
                                 Loading...
                             </div>
                         ) : payments.length === 0 ? (
-                            <div className="text-center py-8 text-white/30">
+                            <div className="text-center py-8 text-white/60">
                                 Belum ada pembayaran
                             </div>
                         ) : (
                             <div className="overflow-x-auto -mx-4 sm:mx-0">
                                 <table className="min-w-full">
-                                    <thead className="bg-white/[0.02]">
+                                    <thead className="bg-white/[0.04]">
                                         <tr>
-                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase">
+                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/60 uppercase">
                                                 Tanggal
                                             </th>
-                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase">
+                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/60 uppercase">
                                                 Minggu
                                             </th>
-                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase">
+                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/60 uppercase">
                                                 Jumlah
                                             </th>
-                                            <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-white/30 uppercase">
+                                            <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-white/60 uppercase">
                                                 Status
                                             </th>
                                         </tr>
@@ -383,23 +383,23 @@ const MemberDashboard = () => {
                 </div>
 
                 {/* Member Leaderboard */}
-                <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] mb-4 sm:mb-6">
-                    <div className="p-4 sm:p-6 border-b border-white/[0.06]">
+                <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] mb-4 sm:mb-6">
+                    <div className="p-4 sm:p-6 border-b border-white/[0.1]">
                         <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
                             <Users className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
                             Leaderboard Member
                         </h2>
-                        <p className="text-xs sm:text-sm text-white/30 mt-1">
+                        <p className="text-xs sm:text-sm text-white/60 mt-1">
                             Total kontribusi pembayaran kas dari semua member
                         </p>
                     </div>
                     <div className="p-4 sm:p-6">
                         {loading ? (
-                            <div className="text-center py-8 text-white/30">
+                            <div className="text-center py-8 text-white/60">
                                 Loading...
                             </div>
                         ) : memberStats.length === 0 ? (
-                            <div className="text-center py-8 text-white/30">
+                            <div className="text-center py-8 text-white/60">
                                 Belum ada data member
                             </div>
                         ) : (
@@ -431,7 +431,7 @@ const MemberDashboard = () => {
                                             className={`flex items-center justify-between p-3 sm:p-4 rounded-lg ${
                                                 isCurrentUser
                                                     ? 'bg-gradient-to-r from-indigo-50 to-purple-50 border-2 border-indigo-300'
-                                                    : 'bg-white/[0.02]'
+                                                    : 'bg-white/[0.04]'
                                             }`}
                                         >
                                             <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -440,7 +440,7 @@ const MemberDashboard = () => {
                                                     className={`flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center ${
                                                         index < 3
                                                             ? `bg-gradient-to-br ${rankColor} text-white`
-                                                            : 'bg-white/[0.06] text-white/50'
+                                                            : 'bg-white/[0.06] text-white/60'
                                                     }`}
                                                 >
                                                     {RankIcon ? (
@@ -464,7 +464,7 @@ const MemberDashboard = () => {
                                                             </span>
                                                         )}
                                                     </div>
-                                                    <p className="text-xs sm:text-sm text-white/30">
+                                                    <p className="text-xs sm:text-sm text-white/60">
                                                         {member.paymentCount}{' '}
                                                         transaksi
                                                     </p>
@@ -485,7 +485,7 @@ const MemberDashboard = () => {
                                                     )}
                                                 </p>
                                                 {index < 3 && (
-                                                    <p className="text-xs text-white/30">
+                                                    <p className="text-xs text-white/60">
                                                         {index === 0
                                                             ? '👑 Top 1'
                                                             : index === 1
@@ -503,8 +503,8 @@ const MemberDashboard = () => {
                 </div>
 
                 {/* Recent Expenses */}
-                <div className="rounded-xl bg-white/[0.025] border border-white/[0.06]">
-                    <div className="p-4 sm:p-6 border-b border-white/[0.06]">
+                <div className="rounded-xl bg-white/[0.035] border border-white/[0.1]">
+                    <div className="p-4 sm:p-6 border-b border-white/[0.1]">
                         <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
                             <TrendingDown className="w-4 h-4 sm:w-5 sm:h-5 text-rose-400" />
                             Pengeluaran Kelas Terbaru ```
@@ -512,11 +512,11 @@ const MemberDashboard = () => {
                     </div>
                     <div className="p-4 sm:p-6">
                         {loading ? (
-                            <div className="text-center py-8 text-white/30">
+                            <div className="text-center py-8 text-white/60">
                                 Loading...
                             </div>
                         ) : expenses.length === 0 ? (
-                            <div className="text-center py-8 text-white/30">
+                            <div className="text-center py-8 text-white/60">
                                 Belum ada pengeluaran
                             </div>
                         ) : (
@@ -524,13 +524,13 @@ const MemberDashboard = () => {
                                 {expenses.slice(0, 5).map((expense) => (
                                     <div
                                         key={expense._id}
-                                        className="flex items-center justify-between p-3 sm:p-4 bg-white/[0.02] rounded-lg gap-3"
+                                        className="flex items-center justify-between p-3 sm:p-4 bg-white/[0.04] rounded-lg gap-3"
                                     >
                                         <div className="flex-1 min-w-0">
                                             <h3 className="font-semibold text-sm sm:text-base text-white truncate">
                                                 {expense.description}
                                             </h3>
-                                            <p className="text-xs sm:text-sm text-white/30">
+                                            <p className="text-xs sm:text-sm text-white/60">
                                                 {new Date(
                                                     expense.date
                                                 ).toLocaleDateString('id-ID', {

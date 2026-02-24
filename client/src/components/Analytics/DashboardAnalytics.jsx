@@ -212,7 +212,7 @@ const DashboardAnalytics = () => {
             <div className="flex items-center justify-center min-h-screen">
                 <div className="text-center">
                     <RefreshCw className="w-12 h-12 text-blue-400 animate-spin mx-auto mb-4" />
-                    <p className="text-white/50">Memuat analytics...</p>
+                    <p className="text-white/60">Memuat analytics...</p>
                 </div>
             </div>
         );
@@ -281,9 +281,9 @@ const DashboardAnalytics = () => {
             {analytics && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {/* Total Income */}
-                    <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-6 border-l-4 border-green-500">
+                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-6 border-l-4 border-green-500">
                         <div className="flex items-center justify-between mb-2">
-                            <p className="text-sm text-white/50">
+                            <p className="text-sm text-white/60">
                                 Total Pemasukan
                             </p>
                             <TrendingUp className="w-5 h-5 text-emerald-400" />
@@ -307,16 +307,16 @@ const DashboardAnalytics = () => {
                                     </span>
                                 </>
                             )}
-                            <span className="text-white/30">
+                            <span className="text-white/60">
                                 vs periode sebelumnya
                             </span>
                         </div>
                     </div>
 
                     {/* Total Expense */}
-                    <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-6 border-l-4 border-red-500">
+                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-6 border-l-4 border-red-500">
                         <div className="flex items-center justify-between mb-2">
-                            <p className="text-sm text-white/50">
+                            <p className="text-sm text-white/60">
                                 Total Pengeluaran
                             </p>
                             <TrendingDown className="w-5 h-5 text-rose-400" />
@@ -340,16 +340,16 @@ const DashboardAnalytics = () => {
                                     </span>
                                 </>
                             )}
-                            <span className="text-white/30">
+                            <span className="text-white/60">
                                 vs periode sebelumnya
                             </span>
                         </div>
                     </div>
 
                     {/* Net Balance */}
-                    <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-6 border-l-4 border-indigo-500">
+                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-6 border-l-4 border-indigo-500">
                         <div className="flex items-center justify-between mb-2">
-                            <p className="text-sm text-white/50">
+                            <p className="text-sm text-white/60">
                                 Saldo Bersih
                             </p>
                             <DollarSign className="w-5 h-5 text-blue-400" />
@@ -363,16 +363,16 @@ const DashboardAnalytics = () => {
                         >
                             {formatRp(analytics.netBalance)}
                         </p>
-                        <p className="text-sm text-white/30">
+                        <p className="text-sm text-white/60">
                             {analytics.paymentCount} pembayaran •{' '}
                             {analytics.expenseCount} pengeluaran
                         </p>
                     </div>
 
                     {/* Active Students */}
-                    <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-6 border-l-4 border-blue-500">
+                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-6 border-l-4 border-blue-500">
                         <div className="flex items-center justify-between mb-2">
-                            <p className="text-sm text-white/50">
+                            <p className="text-sm text-white/60">
                                 Siswa Aktif Bayar
                             </p>
                             <Users className="w-5 h-5 text-blue-400" />
@@ -380,7 +380,7 @@ const DashboardAnalytics = () => {
                         <p className="text-2xl font-bold text-white mb-1">
                             {analytics.uniquePayingStudents}
                         </p>
-                        <p className="text-sm text-white/30">
+                        <p className="text-sm text-white/60">
                             Rata-rata: {formatRp(analytics.avgPaymentAmount)}
                         </p>
                     </div>
@@ -408,7 +408,7 @@ const DashboardAnalytics = () => {
             {/* Charts Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Income vs Expense Line Chart */}
-                <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-6">
+                <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-6">
                     <div className="flex items-center gap-2 mb-4">
                         <Activity className="w-5 h-5 text-blue-400" />
                         <h3 className="text-lg font-bold text-white">
@@ -423,7 +423,7 @@ const DashboardAnalytics = () => {
                 </div>
 
                 {/* Expense Category Pie Chart */}
-                <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-6">
+                <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-6">
                     <div className="flex items-center gap-2 mb-4">
                         <PieChart className="w-5 h-5 text-purple-600" />
                         <h3 className="text-lg font-bold text-white">
@@ -438,7 +438,7 @@ const DashboardAnalytics = () => {
             </div>
 
             {/* Weekly Payment Bar Chart */}
-            <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-6">
+            <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-6">
                 <div className="flex items-center gap-2 mb-4">
                     <BarChart3 className="w-5 h-5 text-blue-400" />
                     <h3 className="text-lg font-bold text-white">
@@ -449,7 +449,7 @@ const DashboardAnalytics = () => {
             </div>
 
             {/* Payment Heatmap */}
-            <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-6">
+            <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-6">
                 <div className="flex items-center gap-2 mb-4">
                     <Calendar className="w-5 h-5 text-orange-600" />
                     <h3 className="text-lg font-bold text-white">
@@ -460,7 +460,7 @@ const DashboardAnalytics = () => {
             </div>
 
             {/* Debt Trend Chart */}
-            <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-6">
+            <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-6">
                 <div className="flex items-center gap-2 mb-4">
                     <TrendingUp className="w-5 h-5 text-rose-400" />
                     <h3 className="text-lg font-bold text-white">

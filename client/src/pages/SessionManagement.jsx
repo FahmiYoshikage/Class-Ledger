@@ -131,7 +131,7 @@ const SessionManagement = () => {
                         <Monitor className="w-8 h-8 text-blue-400" />
                         Session Management
                     </h1>
-                    <p className="text-white/50 mt-2">
+                    <p className="text-white/60 mt-2">
                         Kelola perangkat yang terhubung dengan akun Anda
                     </p>
                 </div>
@@ -155,16 +155,16 @@ const SessionManagement = () => {
 
                 {/* Statistics */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-4">
-                        <h3 className="text-sm font-medium text-white/30">
+                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-4">
+                        <h3 className="text-sm font-medium text-white/60">
                             Total Sessions
                         </h3>
                         <p className="text-2xl font-bold text-white mt-2">
                             {stats.total}
                         </p>
                     </div>
-                    <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-4">
-                        <h3 className="text-sm font-medium text-white/30">
+                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-4">
+                        <h3 className="text-sm font-medium text-white/60">
                             Active Sessions
                         </h3>
                         <p className="text-2xl font-bold text-blue-400 mt-2">
@@ -199,18 +199,18 @@ const SessionManagement = () => {
                 {/* Sessions List */}
                 <div className="space-y-4">
                     {loading ? (
-                        <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-8 text-center text-white/30">
+                        <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-8 text-center text-white/60">
                             Loading sessions...
                         </div>
                     ) : sessions.length === 0 ? (
-                        <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-8 text-center text-white/30">
+                        <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-8 text-center text-white/60">
                             Tidak ada sesi aktif
                         </div>
                     ) : (
                         sessions.map((session) => (
                             <div
                                 key={session._id}
-                                className={`rounded-xl bg-white/[0.025] border border-white/[0.06] p-6 ${
+                                className={`rounded-xl bg-white/[0.035] border border-white/[0.1] p-6 ${
                                     session.isCurrent
                                         ? 'ring-2 ring-[#0071e3]'
                                         : ''
@@ -223,7 +223,7 @@ const SessionManagement = () => {
                                             className={`p-3 rounded-lg ${
                                                 session.isCurrent
                                                     ? 'bg-blue-500/[0.06]0/[0.06] text-blue-400'
-                                                    : 'bg-white/[0.04] text-white/50'
+                                                    : 'bg-white/[0.04] text-white/60'
                                             }`}
                                         >
                                             {getDeviceIcon(
@@ -250,7 +250,7 @@ const SessionManagement = () => {
                                                 )}
                                             </div>
 
-                                            <div className="space-y-1 text-sm text-white/50">
+                                            <div className="space-y-1 text-sm text-white/60">
                                                 <div className="flex items-center gap-2">
                                                     <MapPin className="w-4 h-4" />
                                                     <span>

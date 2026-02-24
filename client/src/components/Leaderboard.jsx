@@ -110,7 +110,7 @@ const Leaderboard = () => {
             <div className="min-h-screen bg-white/[0.04] flex items-center justify-center">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-purple-600 mx-auto mb-4"></div>
-                    <p className="text-white/50 text-lg">
+                    <p className="text-white/60 text-lg">
                         Memuat leaderboard...
                     </p>
                 </div>
@@ -121,12 +121,12 @@ const Leaderboard = () => {
     if (error) {
         return (
             <div className="min-h-screen bg-white/[0.04] flex items-center justify-center p-4">
-                <div className="bg-[#111113] border border-white/[0.08] rounded-2xl p-8 max-w-md w-full text-center">
+                <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl p-8 max-w-md w-full text-center">
                     <div className="text-6xl mb-4">😔</div>
                     <h2 className="text-2xl font-bold text-white mb-2">
                         Oops!
                     </h2>
-                    <p className="text-white/50 mb-6">{error}</p>
+                    <p className="text-white/60 mb-6">{error}</p>
                     <button
                         onClick={fetchLeaderboard}
                         className="px-6 py-3 bg-violet-500/15 text-violet-400 border border-violet-500/20 rounded-lg hover:bg-violet-500/25 transition font-medium"
@@ -153,7 +153,7 @@ const Leaderboard = () => {
                     <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
                         🎯 DONATOR KELAS TERBAIK 🎯
                     </h2>
-                    <p className="text-white/50 text-sm sm:text-base">
+                    <p className="text-white/60 text-sm sm:text-base">
                         Top 10 siswa dengan kontribusi kas terbesar & tercepat
                     </p>
                 </div>
@@ -165,7 +165,7 @@ const Leaderboard = () => {
                         disabled={refreshingBadges}
                         className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
                             refreshingBadges
-                                ? 'bg-white/[0.08] text-white/50 cursor-not-allowed'
+                                ? 'bg-white/[0.08] text-white/60 cursor-not-allowed'
                                 : 'bg-blue-500/[0.06]0 text-white hover:bg-blue-600  hover:-lg'
                         }`}
                     >
@@ -182,12 +182,12 @@ const Leaderboard = () => {
 
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                    <div className="rounded-xl bg-white/[0.025] border border-white/[0.06]-apple p-6 flex items-center gap-4">
+                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1]-apple p-6 flex items-center gap-4">
                         <div className="p-3 bg-purple-100 rounded-full">
                             <Users className="w-6 h-6 text-purple-600" />
                         </div>
                         <div>
-                            <p className="text-sm text-white/50">
+                            <p className="text-sm text-white/60">
                                 Total Donatur
                             </p>
                             <p className="text-2xl font-bold text-white">
@@ -195,12 +195,12 @@ const Leaderboard = () => {
                             </p>
                         </div>
                     </div>
-                    <div className="rounded-xl bg-white/[0.025] border border-white/[0.06]-apple p-6 flex items-center gap-4">
+                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1]-apple p-6 flex items-center gap-4">
                         <div className="p-3 bg-blue-100 rounded-full">
                             <Clock className="w-6 h-6 text-blue-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-white/50">
+                            <p className="text-sm text-white/60">
                                 Update Terakhir
                             </p>
                             <p className="text-lg font-semibold text-white">
@@ -218,12 +218,12 @@ const Leaderboard = () => {
 
                 {/* Leaderboard */}
                 {leaderboard.length === 0 ? (
-                    <div className="bg-[#111113] border border-white/[0.08] rounded-2xl p-12 text-center">
+                    <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl p-12 text-center">
                         <div className="text-6xl mb-4">📊</div>
                         <h3 className="text-2xl font-bold text-white mb-2">
                             Belum Ada Data
                         </h3>
-                        <p className="text-white/50">
+                        <p className="text-white/60">
                             Leaderboard akan muncul setelah ada pembayaran kas
                         </p>
                     </div>
@@ -237,7 +237,7 @@ const Leaderboard = () => {
                                 <div
                                     key={donor.studentId}
                                     className={`
-                                        bg-[#111113] border border-white/[0.08] rounded-2xl overflow-hidden
+                                        bg-[#1e1e22] border border-white/[0.12] rounded-2xl overflow-hidden
                                         transform transition-all duration-300 hover:scale-102 hover:shadow-2xl
                                         ${
                                             isTopThree
@@ -274,7 +274,7 @@ const Leaderboard = () => {
                                                     <h3 className="text-xl sm:text-2xl font-bold text-white truncate">
                                                         {donor.nickname}
                                                     </h3>
-                                                    <p className="text-sm text-white/30">
+                                                    <p className="text-sm text-white/60">
                                                         Absen {donor.absen} •{' '}
                                                         {donor.paymentCount}x
                                                         bayar
@@ -374,7 +374,7 @@ const Leaderboard = () => {
 
                 {/* Footer */}
                 <div className="mt-12 text-center">
-                    <p className="text-white/30 text-sm">
+                    <p className="text-white/60 text-sm">
                         💪 Ayo semangat bayar kas! Raih posisi teratas! 🚀
                     </p>
                     <button

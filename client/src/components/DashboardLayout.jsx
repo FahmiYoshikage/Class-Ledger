@@ -37,7 +37,7 @@ const DashboardLayout = () => {
             danger: 'text-red-400 hover:bg-red-500/10',
             default: active
                 ? 'text-white bg-white/[0.06]'
-                : 'text-white/50 hover:text-white/80 hover:bg-white/[0.04]',
+                : 'text-white/60 hover:text-white/80 hover:bg-white/[0.07]',
         };
         return (
             <button onClick={onClick} className={`${base} ${variants[variant]}`}>
@@ -52,7 +52,7 @@ const DashboardLayout = () => {
         const variants = {
             primary: 'text-blue-400 hover:bg-blue-500/10',
             danger: 'text-red-400 hover:bg-red-500/10',
-            default: 'text-white/60 hover:text-white/90 hover:bg-white/[0.04]',
+            default: 'text-white/60 hover:text-white/90 hover:bg-white/[0.07]',
         };
         return (
             <button
@@ -69,9 +69,9 @@ const DashboardLayout = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#09090b]">
+        <div className="min-h-screen bg-[#18181b]">
             {/* Top Navigation */}
-            <nav className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#09090b]/80 backdrop-blur-2xl">
+            <nav className="sticky top-0 z-50 border-b border-white/[0.1] bg-[#18181b]/80 backdrop-blur-2xl">
                 <div className="px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center justify-between h-14">
                         {/* User Info */}
@@ -87,7 +87,7 @@ const DashboardLayout = () => {
                                 <p className="text-[13px] font-semibold text-white leading-tight">
                                     {user?.fullName}
                                 </p>
-                                <p className="text-[11px] text-white/30 capitalize">
+                                <p className="text-[11px] text-white/60 capitalize">
                                     {user?.role === 'admin' && '👑 '}
                                     {user?.role}
                                 </p>
@@ -151,7 +151,7 @@ const DashboardLayout = () => {
                         {/* Mobile Menu Toggle */}
                         <button
                             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                            className="lg:hidden p-2 text-white/50 hover:text-white/80 hover:bg-white/[0.04] rounded-lg transition"
+                            className="lg:hidden p-2 text-white/60 hover:text-white/80 hover:bg-white/[0.07] rounded-lg transition"
                         >
                             {mobileMenuOpen ? (
                                 <X className="w-5 h-5" />
@@ -163,7 +163,7 @@ const DashboardLayout = () => {
 
                     {/* Mobile Menu */}
                     {mobileMenuOpen && (
-                        <div className="lg:hidden border-t border-white/[0.04] py-2 pb-4 space-y-0.5 animate-fade-in">
+                        <div className="lg:hidden border-t border-white/[0.12] py-2 pb-4 space-y-0.5 animate-fade-in">
                             {location.pathname !== '/app/dashboard' && (
                                 <MobileNavButton onClick={() => navigate('/app/dashboard')} icon={Home} label="Dashboard" variant="primary" />
                             )}
@@ -178,7 +178,7 @@ const DashboardLayout = () => {
                             <MobileNavButton onClick={() => navigate('/app/profile')} icon={Edit} label="Edit Profile" />
                             <MobileNavButton onClick={() => navigate('/app/change-password')} icon={Key} label="Change Password" />
                             <MobileNavButton onClick={() => navigate('/app/sessions')} icon={Laptop} label="Sessions" />
-                            <div className="border-t border-white/[0.04] my-1" />
+                            <div className="border-t border-white/[0.12] my-1" />
                             <MobileNavButton onClick={handleLogout} icon={LogOut} label="Logout" variant="danger" />
                         </div>
                     )}

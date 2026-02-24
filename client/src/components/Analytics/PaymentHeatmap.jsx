@@ -77,7 +77,7 @@ const PaymentHeatmap = ({ students, payments }) => {
 
     if (heatmapData.data.length === 0) {
         return (
-            <div className="h-64 flex items-center justify-center text-white/30">
+            <div className="h-64 flex items-center justify-center text-white/60">
                 <p>Tidak ada data siswa</p>
             </div>
         );
@@ -86,24 +86,24 @@ const PaymentHeatmap = ({ students, payments }) => {
     return (
         <div className="space-y-4">
             {/* Legend */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 p-4 bg-white/[0.02] rounded-lg">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 p-4 bg-white/[0.04] rounded-lg">
                 <div className="flex items-center gap-2">
                     <div className="w-6 h-6 bg-blue-500/[0.06]0/[0.06]0 rounded flex items-center justify-center">
                         <CheckCircle className="w-4 h-4 text-white" />
                     </div>
-                    <span className="text-sm text-white/50">Sudah Bayar</span>
+                    <span className="text-sm text-white/60">Sudah Bayar</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <div className="w-6 h-6 bg-red-200 rounded flex items-center justify-center">
                         <XCircle className="w-4 h-4 text-rose-400" />
                     </div>
-                    <span className="text-sm text-white/50">Belum Bayar</span>
+                    <span className="text-sm text-white/60">Belum Bayar</span>
                 </div>
-                <div className="sm:ml-auto text-sm text-white/50">
+                <div className="sm:ml-auto text-sm text-white/60">
                     Total: {heatmapData.data.length} siswa ×{' '}
                     {heatmapData.maxWeeks} minggu
                 </div>
-                <div className="text-xs text-white/30 italic">
+                <div className="text-xs text-white/60 italic">
                     💡 Scroll horizontal untuk melihat semua minggu
                 </div>
             </div>
@@ -114,12 +114,12 @@ const PaymentHeatmap = ({ students, payments }) => {
                 style={{ WebkitOverflowScrolling: 'touch' }}
             >
                 <div className="inline-block min-w-full align-middle">
-                    <div className="overflow-hidden rounded-lg border border-white/[0.06] bg-white/[0.02] text-white">
+                    <div className="overflow-hidden rounded-lg border border-white/[0.1] bg-white/[0.04] text-white">
                         <table className="min-w-full divide-y divide-white/[0.04] table-fixed">
-                            <thead className="bg-white/[0.02]">
+                            <thead className="bg-white/[0.04]">
                                 <tr>
                                     <th
-                                        className="sticky left-0 z-20 bg-white/[0.02] px-4 py-3 text-left text-xs font-medium text-white/30 uppercase min-w-[200px] border-r-2 border-white/[0.06] shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]"
+                                        className="sticky left-0 z-20 bg-white/[0.04] px-4 py-3 text-left text-xs font-medium text-white/60 uppercase min-w-[200px] border-r-2 border-white/[0.1] shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]"
                                         style={{
                                             willChange: 'transform',
                                             transform: 'translateZ(0)',
@@ -132,13 +132,13 @@ const PaymentHeatmap = ({ students, payments }) => {
                                         (_, i) => (
                                             <th
                                                 key={i}
-                                                className="px-2 py-3 text-center text-xs font-medium text-white/30 uppercase"
+                                                className="px-2 py-3 text-center text-xs font-medium text-white/60 uppercase"
                                             >
                                                 W{i + 1}
                                             </th>
                                         )
                                     )}
-                                    <th className="px-4 py-3 text-center text-xs font-medium text-white/30 uppercase">
+                                    <th className="px-4 py-3 text-center text-xs font-medium text-white/60 uppercase">
                                         Rate
                                     </th>
                                 </tr>
@@ -148,14 +148,14 @@ const PaymentHeatmap = ({ students, payments }) => {
                                     const bgColor =
                                         rowIndex % 2 === 0
                                             ? 'bg-transparent'
-                                            : 'bg-white/[0.02]';
+                                            : 'bg-white/[0.04]';
                                     return (
                                         <tr
                                             key={row.student._id}
                                             className={bgColor}
                                         >
                                             <td
-                                                className={`sticky left-0 z-10 ${bgColor} px-4 py-3 whitespace-nowrap min-w-[200px] border-r-2 border-white/[0.06] shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]`}
+                                                className={`sticky left-0 z-10 ${bgColor} px-4 py-3 whitespace-nowrap min-w-[200px] border-r-2 border-white/[0.1] shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]`}
                                                 style={{
                                                     willChange: 'transform',
                                                     transform: 'translateZ(0)',
@@ -164,7 +164,7 @@ const PaymentHeatmap = ({ students, payments }) => {
                                                 }}
                                             >
                                                 <div className="flex items-center gap-3">
-                                                    <span className="text-xs text-white/30 font-semibold bg-white/[0.04] px-2 py-1 rounded min-w-[40px] text-center">
+                                                    <span className="text-xs text-white/60 font-semibold bg-white/[0.04] px-2 py-1 rounded min-w-[40px] text-center">
                                                         {row.student.absen}
                                                     </span>
                                                     <span
