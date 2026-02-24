@@ -14,6 +14,7 @@ import {
     Menu,
     X,
     QrCode,
+    ChevronDown,
 } from 'lucide-react';
 
 const DashboardLayout = () => {
@@ -29,103 +30,128 @@ const DashboardLayout = () => {
         }
     };
 
+    const NavButton = ({ onClick, icon: Icon, label, variant = 'default', active = false }) => {
+        const base = 'flex items-center gap-2 px-3 py-1.5 text-[13px] font-medium rounded-lg transition-all duration-200';
+        const variants = {
+            primary: 'text-blue-400 hover:bg-blue-500/10',
+            danger: 'text-red-400 hover:bg-red-500/10',
+            default: active
+                ? 'text-white bg-white/[0.06]'
+                : 'text-white/50 hover:text-white/80 hover:bg-white/[0.04]',
+        };
+        return (
+            <button onClick={onClick} className={`${base} ${variants[variant]}`}>
+                <Icon className="w-3.5 h-3.5" />
+                <span>{label}</span>
+            </button>
+        );
+    };
+
+    const MobileNavButton = ({ onClick, icon: Icon, label, variant = 'default' }) => {
+        const base = 'w-full flex items-center gap-3 px-4 py-2.5 text-[13px] font-medium rounded-lg transition-all duration-200';
+        const variants = {
+            primary: 'text-blue-400 hover:bg-blue-500/10',
+            danger: 'text-red-400 hover:bg-red-500/10',
+            default: 'text-white/60 hover:text-white/90 hover:bg-white/[0.04]',
+        };
+        return (
+            <button
+                onClick={() => {
+                    onClick();
+                    setMobileMenuOpen(false);
+                }}
+                className={`${base} ${variants[variant]}`}
+            >
+                <Icon className="w-4 h-4" />
+                <span>{label}</span>
+            </button>
+        );
+    };
+
     return (
-        <div className="min-h-screen bg-[#f5f5f7]">
-            {/* Top Navigation Bar */}
-            <div className="bg-white/72 backdrop-blur-xl backdrop-saturate-150 border-b border-gray-200/80 sticky top-0 z-50">
-                <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-                    <div className="flex items-center justify-between h-14 sm:h-16">
+        <div className="min-h-screen bg-[#09090b]">
+            {/* Top Navigation */}
+            <nav className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#09090b]/80 backdrop-blur-2xl">
+                <div className="px-4 sm:px-6 lg:px-8">
+                    <div className="flex items-center justify-between h-14">
                         {/* User Info */}
-                        <div className="flex items-center gap-2 sm:gap-3">
-                            <div className="bg-blue-50 p-1.5 sm:p-2 rounded-lg">
+                        <div className="flex items-center gap-2.5">
+                            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center shadow-lg shadow-blue-500/10">
                                 {user?.role === 'admin' ? (
-                                    <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-[#0071e3]" />
+                                    <Shield className="w-4 h-4 text-white" />
                                 ) : (
-                                    <User className="w-4 h-4 sm:w-5 sm:h-5 text-[#0071e3]" />
+                                    <User className="w-4 h-4 text-white" />
                                 )}
                             </div>
                             <div className="hidden sm:block">
-                                <p className="text-sm font-semibold text-gray-900">
+                                <p className="text-[13px] font-semibold text-white leading-tight">
                                     {user?.fullName}
                                 </p>
-                                <p className="text-xs text-gray-500 capitalize">
+                                <p className="text-[11px] text-white/30 capitalize">
                                     {user?.role === 'admin' && '👑 '}
                                     {user?.role}
                                 </p>
                             </div>
                         </div>
 
-                        {/* Desktop Actions - Hidden on mobile */}
-                        <div className="hidden lg:flex items-center gap-2">
+                        {/* Desktop Nav */}
+                        <div className="hidden lg:flex items-center gap-1">
                             {location.pathname !== '/app/dashboard' && (
-                                <button
+                                <NavButton
                                     onClick={() => navigate('/app/dashboard')}
-                                    className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-[#0071e3] hover:bg-blue-50 rounded-lg transition"
-                                >
-                                    <Home className="w-4 h-4" />
-                                    <span>Dashboard</span>
-                                </button>
+                                    icon={Home}
+                                    label="Dashboard"
+                                    variant="primary"
+                                />
                             )}
-
-                            <button
+                            <NavButton
                                 onClick={() => navigate('/app/qr-payment')}
-                                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-[#0071e3] hover:bg-blue-50 rounded-lg transition"
-                            >
-                                <QrCode className="w-4 h-4" />
-                                <span>QR Pay</span>
-                            </button>
-
+                                icon={QrCode}
+                                label="QR Pay"
+                                variant="primary"
+                                active={location.pathname === '/app/qr-payment'}
+                            />
                             {user?.role === 'admin' && (
                                 <>
-                                    <button
-                                        onClick={() =>
-                                            navigate('/app/qr-admin')
-                                        }
-                                        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition"
-                                    >
-                                        <QrCode className="w-4 h-4" />
-                                        <span>QR Admin</span>
-                                    </button>
-                                    <button
+                                    <NavButton
+                                        onClick={() => navigate('/app/qr-admin')}
+                                        icon={QrCode}
+                                        label="QR Admin"
+                                        active={location.pathname === '/app/qr-admin'}
+                                    />
+                                    <NavButton
                                         onClick={() => navigate('/app/users')}
-                                        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition"
-                                    >
-                                        <UsersIcon className="w-4 h-4" />
-                                        <span>Users</span>
-                                    </button>
-                                    <button
-                                        onClick={() =>
-                                            navigate('/app/audit-logs')
-                                        }
-                                        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition"
-                                    >
-                                        <Activity className="w-4 h-4" />
-                                        <span>Logs</span>
-                                    </button>
+                                        icon={UsersIcon}
+                                        label="Users"
+                                        active={location.pathname === '/app/users'}
+                                    />
+                                    <NavButton
+                                        onClick={() => navigate('/app/audit-logs')}
+                                        icon={Activity}
+                                        label="Logs"
+                                        active={location.pathname === '/app/audit-logs'}
+                                    />
                                 </>
                             )}
-
-                            <button
+                            <NavButton
                                 onClick={() => navigate('/app/profile')}
-                                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition"
-                            >
-                                <Edit className="w-4 h-4" />
-                                <span>Profile</span>
-                            </button>
-
-                            <button
+                                icon={Edit}
+                                label="Profile"
+                                active={location.pathname === '/app/profile'}
+                            />
+                            <div className="w-px h-5 bg-white/[0.08] mx-1" />
+                            <NavButton
                                 onClick={handleLogout}
-                                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition"
-                            >
-                                <LogOut className="w-4 h-4" />
-                                <span>Logout</span>
-                            </button>
+                                icon={LogOut}
+                                label="Logout"
+                                variant="danger"
+                            />
                         </div>
 
-                        {/* Mobile Menu Button */}
+                        {/* Mobile Menu Toggle */}
                         <button
                             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                            className="lg:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition"
+                            className="lg:hidden p-2 text-white/50 hover:text-white/80 hover:bg-white/[0.04] rounded-lg transition"
                         >
                             {mobileMenuOpen ? (
                                 <X className="w-5 h-5" />
@@ -135,115 +161,34 @@ const DashboardLayout = () => {
                         </button>
                     </div>
 
-                    {/* Mobile Menu Dropdown */}
+                    {/* Mobile Menu */}
                     {mobileMenuOpen && (
-                        <div className="lg:hidden border-t border-gray-100 py-2 space-y-1">
+                        <div className="lg:hidden border-t border-white/[0.04] py-2 pb-4 space-y-0.5 animate-fade-in">
                             {location.pathname !== '/app/dashboard' && (
-                                <button
-                                    onClick={() => {
-                                        navigate('/app/dashboard');
-                                        setMobileMenuOpen(false);
-                                    }}
-                                    className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-[#0071e3] hover:bg-blue-50 rounded-lg transition"
-                                >
-                                    <Home className="w-4 h-4" />
-                                    <span>Dashboard</span>
-                                </button>
+                                <MobileNavButton onClick={() => navigate('/app/dashboard')} icon={Home} label="Dashboard" variant="primary" />
                             )}
-
-                            <button
-                                onClick={() => {
-                                    navigate('/app/qr-payment');
-                                    setMobileMenuOpen(false);
-                                }}
-                                className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-[#0071e3] hover:bg-blue-50 rounded-lg transition"
-                            >
-                                <QrCode className="w-4 h-4" />
-                                <span>QR Payment</span>
-                            </button>
-
+                            <MobileNavButton onClick={() => navigate('/app/qr-payment')} icon={QrCode} label="QR Payment" variant="primary" />
                             {user?.role === 'admin' && (
                                 <>
-                                    <button
-                                        onClick={() => {
-                                            navigate('/app/qr-admin');
-                                            setMobileMenuOpen(false);
-                                        }}
-                                        className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition"
-                                    >
-                                        <QrCode className="w-4 h-4" />
-                                        <span>QR Admin</span>
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            navigate('/app/users');
-                                            setMobileMenuOpen(false);
-                                        }}
-                                        className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition"
-                                    >
-                                        <UsersIcon className="w-4 h-4" />
-                                        <span>Manage Users</span>
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            navigate('/app/audit-logs');
-                                            setMobileMenuOpen(false);
-                                        }}
-                                        className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition"
-                                    >
-                                        <Activity className="w-4 h-4" />
-                                        <span>Audit Logs</span>
-                                    </button>
+                                    <MobileNavButton onClick={() => navigate('/app/qr-admin')} icon={QrCode} label="QR Admin" />
+                                    <MobileNavButton onClick={() => navigate('/app/users')} icon={UsersIcon} label="Manage Users" />
+                                    <MobileNavButton onClick={() => navigate('/app/audit-logs')} icon={Activity} label="Audit Logs" />
                                 </>
                             )}
-
-                            <button
-                                onClick={() => {
-                                    navigate('/app/profile');
-                                    setMobileMenuOpen(false);
-                                }}
-                                className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition"
-                            >
-                                <Edit className="w-4 h-4" />
-                                <span>Edit Profile</span>
-                            </button>
-
-                            <button
-                                onClick={() => {
-                                    navigate('/app/change-password');
-                                    setMobileMenuOpen(false);
-                                }}
-                                className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition"
-                            >
-                                <Key className="w-4 h-4" />
-                                <span>Change Password</span>
-                            </button>
-
-                            <button
-                                onClick={() => {
-                                    navigate('/app/sessions');
-                                    setMobileMenuOpen(false);
-                                }}
-                                className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition"
-                            >
-                                <Laptop className="w-4 h-4" />
-                                <span>Sessions</span>
-                            </button>
-
-                            <button
-                                onClick={handleLogout}
-                                className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition"
-                            >
-                                <LogOut className="w-4 h-4" />
-                                <span>Logout</span>
-                            </button>
+                            <MobileNavButton onClick={() => navigate('/app/profile')} icon={Edit} label="Edit Profile" />
+                            <MobileNavButton onClick={() => navigate('/app/change-password')} icon={Key} label="Change Password" />
+                            <MobileNavButton onClick={() => navigate('/app/sessions')} icon={Laptop} label="Sessions" />
+                            <div className="border-t border-white/[0.04] my-1" />
+                            <MobileNavButton onClick={handleLogout} icon={LogOut} label="Logout" variant="danger" />
                         </div>
                     )}
                 </div>
-            </div>
+            </nav>
 
-            {/* Main Content */}
-            <Outlet />
+            {/* Main Content - Full Width */}
+            <main>
+                <Outlet />
+            </main>
         </div>
     );
 };

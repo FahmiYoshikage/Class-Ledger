@@ -127,25 +127,25 @@ const SessionManagement = () => {
             <div className="max-w-6xl mx-auto">
                 {/* Header */}
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-                        <Monitor className="w-8 h-8 text-[#0071e3]" />
+                    <h1 className="text-3xl font-bold text-white flex items-center gap-3">
+                        <Monitor className="w-8 h-8 text-blue-400" />
                         Session Management
                     </h1>
-                    <p className="text-gray-600 mt-2">
+                    <p className="text-white/50 mt-2">
                         Kelola perangkat yang terhubung dengan akun Anda
                     </p>
                 </div>
 
                 {/* Error Message */}
                 {error && (
-                    <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                    <div className="bg-rose-500/[0.06] border border-red-200 rounded-lg p-4 mb-6">
                         <div className="flex items-center gap-3">
-                            <AlertTriangle className="w-5 h-5 text-red-600" />
+                            <AlertTriangle className="w-5 h-5 text-rose-400" />
                             <div>
                                 <h3 className="font-semibold text-red-900">
                                     Error
                                 </h3>
-                                <p className="text-sm text-red-600 mt-1">
+                                <p className="text-sm text-rose-400 mt-1">
                                     {error}
                                 </p>
                             </div>
@@ -155,40 +155,40 @@ const SessionManagement = () => {
 
                 {/* Statistics */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl p-4">
-                        <h3 className="text-sm font-medium text-gray-500">
+                    <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-4">
+                        <h3 className="text-sm font-medium text-white/30">
                             Total Sessions
                         </h3>
-                        <p className="text-2xl font-bold text-gray-900 mt-2">
+                        <p className="text-2xl font-bold text-white mt-2">
                             {stats.total}
                         </p>
                     </div>
-                    <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl p-4">
-                        <h3 className="text-sm font-medium text-gray-500">
+                    <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-4">
+                        <h3 className="text-sm font-medium text-white/30">
                             Active Sessions
                         </h3>
-                        <p className="text-2xl font-bold text-[#0071e3] mt-2">
+                        <p className="text-2xl font-bold text-blue-400 mt-2">
                             {stats.active}
                         </p>
                     </div>
                 </div>
 
                 {/* Actions */}
-                <div className="bg-amber-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                <div className="bg-amber-500/[0.06]0/[0.06] border border-yellow-200 rounded-lg p-4 mb-6">
                     <div className="flex items-start gap-3">
-                        <AlertTriangle className="w-5 h-5 text-yellow-600 mt-0.5" />
+                        <AlertTriangle className="w-5 h-5 text-amber-400 mt-0.5" />
                         <div className="flex-1">
                             <h3 className="font-semibold text-yellow-900">
                                 Keamanan Akun
                             </h3>
-                            <p className="text-sm text-amber-600 mt-1">
+                            <p className="text-sm text-amber-400 mt-1">
                                 Jika Anda melihat perangkat yang tidak dikenal,
                                 segera hentikan sesi tersebut dan ganti password
                                 Anda.
                             </p>
                             <button
                                 onClick={handleTerminateAll}
-                                className="mt-3 px-4 py-2 bg-yellow-600 text-gray-900 rounded-lg hover:bg-yellow-700 transition text-sm font-medium"
+                                className="mt-3 px-4 py-2 bg-amber-500/[0.06]0/15 text-amber-400 border border-amber-500/20 rounded-lg hover:bg-amber-500/[0.06]0/25 transition text-sm font-medium"
                             >
                                 Logout Semua Perangkat Lain
                             </button>
@@ -199,18 +199,18 @@ const SessionManagement = () => {
                 {/* Sessions List */}
                 <div className="space-y-4">
                     {loading ? (
-                        <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl p-8 text-center text-gray-500">
+                        <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-8 text-center text-white/30">
                             Loading sessions...
                         </div>
                     ) : sessions.length === 0 ? (
-                        <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl p-8 text-center text-gray-500">
+                        <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-8 text-center text-white/30">
                             Tidak ada sesi aktif
                         </div>
                     ) : (
                         sessions.map((session) => (
                             <div
                                 key={session._id}
-                                className={`bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl p-6 ${
+                                className={`rounded-xl bg-white/[0.025] border border-white/[0.06] p-6 ${
                                     session.isCurrent
                                         ? 'ring-2 ring-[#0071e3]'
                                         : ''
@@ -222,8 +222,8 @@ const SessionManagement = () => {
                                         <div
                                             className={`p-3 rounded-lg ${
                                                 session.isCurrent
-                                                    ? 'bg-blue-50 text-[#0071e3]'
-                                                    : 'bg-gray-100 text-gray-600'
+                                                    ? 'bg-blue-500/[0.06]0/[0.06] text-blue-400'
+                                                    : 'bg-white/[0.04] text-white/50'
                                             }`}
                                         >
                                             {getDeviceIcon(
@@ -234,7 +234,7 @@ const SessionManagement = () => {
                                         {/* Session Info */}
                                         <div className="flex-1">
                                             <div className="flex items-center gap-2 mb-2">
-                                                <h3 className="font-semibold text-gray-900">
+                                                <h3 className="font-semibold text-white">
                                                     {session.deviceInfo
                                                         ?.browser ||
                                                         'Unknown Browser'}{' '}
@@ -243,14 +243,14 @@ const SessionManagement = () => {
                                                         'Unknown OS'}
                                                 </h3>
                                                 {session.isCurrent && (
-                                                    <span className="flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded">
+                                                    <span className="flex items-center gap-1 px-2 py-1 bg-blue-500/[0.06]0/15 text-blue-400 text-xs font-semibold rounded">
                                                         <CheckCircle className="w-3 h-3" />
                                                         Current Session
                                                     </span>
                                                 )}
                                             </div>
 
-                                            <div className="space-y-1 text-sm text-gray-600">
+                                            <div className="space-y-1 text-sm text-white/50">
                                                 <div className="flex items-center gap-2">
                                                     <MapPin className="w-4 h-4" />
                                                     <span>
@@ -287,7 +287,7 @@ const SessionManagement = () => {
                                                     session._id
                                                 )
                                             }
-                                            className="flex items-center gap-2 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg transition text-sm font-medium"
+                                            className="flex items-center gap-2 px-3 py-2 text-rose-400 hover:bg-rose-500/[0.06] rounded-lg transition text-sm font-medium"
                                         >
                                             <Trash2 className="w-4 h-4" />
                                             Terminate

@@ -128,8 +128,8 @@ function QRPayment() {
     if (!activeQR) {
         return (
             <div className="max-w-2xl mx-auto p-6">
-                <div className="bg-amber-50 border-l-4 border-yellow-400 p-4 rounded">
-                    <p className="text-amber-600">
+                <div className="bg-amber-500/[0.06]0/[0.06] border-l-4 border-yellow-400 p-4 rounded">
+                    <p className="text-amber-400">
                         QR Code pembayaran belum tersedia. Silakan hubungi
                         bendahara.
                     </p>
@@ -140,17 +140,17 @@ function QRPayment() {
 
     return (
         <div className="max-w-4xl mx-auto p-6">
-            <h1 className="text-3xl font-bold mb-6 text-gray-900">
+            <h1 className="text-3xl font-bold mb-6 text-white">
                 💳 Pembayaran via QR Code
             </h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* QR Code Display */}
-                <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl shadow-apple-sm p-6">
-                    <h2 className="text-xl font-semibold mb-4 text-gray-900">
+                <div className="rounded-xl bg-white/[0.025] border border-white/[0.06]-apple-sm p-6">
+                    <h2 className="text-xl font-semibold mb-4 text-white">
                         QR Code Pembayaran
                     </h2>
-                    <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                    <div className="bg-white/[0.02] rounded-lg p-4 mb-4">
                         <img
                             src={`${import.meta.env.VITE_API_BASE_URL}${
                                 activeQR.imageUrl
@@ -161,27 +161,27 @@ function QRPayment() {
                     </div>
                     <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
-                            <span className="text-gray-600">Metode:</span>
+                            <span className="text-white/50">Metode:</span>
                             <span className="font-semibold uppercase">
                                 {activeQR.paymentMethod}
                             </span>
                         </div>
                         <div className="flex justify-between">
-                            <span className="text-gray-600">Nama Akun:</span>
+                            <span className="text-white/50">Nama Akun:</span>
                             <span className="font-semibold">
                                 {activeQR.accountName}
                             </span>
                         </div>
                         {activeQR.accountNumber && (
                             <div className="flex justify-between">
-                                <span className="text-gray-600">Nomor:</span>
+                                <span className="text-white/50">Nomor:</span>
                                 <span className="font-mono">
                                     {activeQR.accountNumber}
                                 </span>
                             </div>
                         )}
                         {activeQR.notes && (
-                            <div className="mt-3 p-2 bg-blue-50 rounded text-blue-500">
+                            <div className="mt-3 p-2 bg-blue-500/[0.06]0/[0.06] rounded text-blue-400">
                                 💡 {activeQR.notes}
                             </div>
                         )}
@@ -189,20 +189,20 @@ function QRPayment() {
                 </div>
 
                 {/* Confirmation Form */}
-                <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl shadow-apple-sm p-6">
-                    <h2 className="text-xl font-semibold mb-4 text-gray-900">
+                <div className="rounded-xl bg-white/[0.025] border border-white/[0.06]-apple-sm p-6">
+                    <h2 className="text-xl font-semibold mb-4 text-white">
                         Konfirmasi Pembayaran
                     </h2>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-600 mb-1">
+                            <label className="block text-sm font-medium text-white/50 mb-1">
                                 Nama Siswa
                             </label>
                             <select
                                 value={selectedStudent}
                                 onChange={handleStudentChange}
-                                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-blue-500"
+                                className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-blue-500"
                                 required
                             >
                                 <option value="">Pilih Siswa</option>
@@ -218,8 +218,8 @@ function QRPayment() {
                         </div>
 
                         {tunggakan > 0 && (
-                            <div className="bg-red-50 border-l-4 border-red-400 p-3 rounded">
-                                <p className="text-sm text-red-600">
+                            <div className="bg-rose-500/[0.06] border-l-4 border-red-400 p-3 rounded">
+                                <p className="text-sm text-rose-400">
                                     <strong>Tunggakan:</strong> Rp
                                     {tunggakan.toLocaleString('id-ID')}
                                 </p>
@@ -227,14 +227,14 @@ function QRPayment() {
                         )}
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-600 mb-1">
+                            <label className="block text-sm font-medium text-white/50 mb-1">
                                 Jumlah (Rp)
                             </label>
                             <input
                                 type="number"
                                 value={amount}
                                 onChange={(e) => setAmount(e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-blue-500"
+                                className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-blue-500"
                                 placeholder="Contoh: 20000"
                                 required
                                 min="0"
@@ -242,17 +242,17 @@ function QRPayment() {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-600 mb-1">
+                            <label className="block text-sm font-medium text-white/50 mb-1">
                                 Bukti Transfer
                             </label>
                             <input
                                 type="file"
                                 accept="image/jpeg,image/jpg,image/png"
                                 onChange={handleImageChange}
-                                className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-500 hover:file:bg-blue-100"
+                                className="w-full text-sm text-white/30 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-500/[0.06]0/[0.06] file:text-blue-500 hover:file:bg-blue-100"
                                 required
                             />
-                            <p className="text-xs text-gray-500 mt-1">
+                            <p className="text-xs text-white/30 mt-1">
                                 Format: JPG, JPEG, PNG. Max: 5MB
                             </p>
                         </div>
@@ -268,13 +268,13 @@ function QRPayment() {
                         )}
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-600 mb-1">
+                            <label className="block text-sm font-medium text-white/50 mb-1">
                                 Catatan (Opsional)
                             </label>
                             <textarea
                                 value={notes}
                                 onChange={(e) => setNotes(e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-blue-500"
+                                className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-blue-500"
                                 rows="2"
                                 placeholder="Tambahkan catatan jika perlu"
                             />
@@ -283,7 +283,7 @@ function QRPayment() {
                         <button
                             type="submit"
                             disabled={submitting}
-                            className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition font-semibold"
+                            className="w-full bg-blue-500/[0.06]0/15 text-blue-400 border border-blue-500/20 py-2 px-4 rounded-lg hover:bg-blue-500/[0.06]0/25 disabled:bg-white/[0.1] disabled:cursor-not-allowed transition font-semibold"
                         >
                             {submitting ? 'Mengirim...' : '📤 Kirim Konfirmasi'}
                         </button>
@@ -293,8 +293,8 @@ function QRPayment() {
                         <div
                             className={`mt-4 p-3 rounded-lg ${
                                 message.startsWith('✅')
-                                    ? 'bg-blue-50 text-[#0071e3]'
-                                    : 'bg-red-50 text-red-600'
+                                    ? 'bg-blue-500/[0.06]0/[0.06] text-blue-400'
+                                    : 'bg-rose-500/[0.06] text-red-600'
                             }`}
                         >
                             {message}
@@ -304,11 +304,11 @@ function QRPayment() {
             </div>
 
             {/* Instructions */}
-            <div className="mt-6 bg-blue-50 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">
+            <div className="mt-6 bg-blue-500/[0.06]0/[0.06] rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-white mb-3">
                     📋 Cara Pembayaran:
                 </h3>
-                <ol className="list-decimal list-inside space-y-2 text-gray-600">
+                <ol className="list-decimal list-inside space-y-2 text-white/50">
                     <li>Scan QR Code menggunakan aplikasi pembayaran Anda</li>
                     <li>Masukkan jumlah yang ingin dibayar</li>
                     <li>Selesaikan pembayaran</li>

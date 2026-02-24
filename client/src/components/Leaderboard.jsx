@@ -107,10 +107,10 @@ const Leaderboard = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-[#f5f5f7] flex items-center justify-center">
+            <div className="min-h-screen bg-white/[0.04] flex items-center justify-center">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-purple-600 mx-auto mb-4"></div>
-                    <p className="text-gray-600 text-lg">
+                    <p className="text-white/50 text-lg">
                         Memuat leaderboard...
                     </p>
                 </div>
@@ -120,16 +120,16 @@ const Leaderboard = () => {
 
     if (error) {
         return (
-            <div className="min-h-screen bg-[#f5f5f7] flex items-center justify-center p-4">
-                <div className="bg-white border border-gray-200 shadow-apple rounded-2xl shadow-apple-lg p-8 max-w-md w-full text-center">
+            <div className="min-h-screen bg-white/[0.04] flex items-center justify-center p-4">
+                <div className="bg-[#111113] border border-white/[0.08] rounded-2xl p-8 max-w-md w-full text-center">
                     <div className="text-6xl mb-4">😔</div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                    <h2 className="text-2xl font-bold text-white mb-2">
                         Oops!
                     </h2>
-                    <p className="text-gray-600 mb-6">{error}</p>
+                    <p className="text-white/50 mb-6">{error}</p>
                     <button
                         onClick={fetchLeaderboard}
-                        className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-medium"
+                        className="px-6 py-3 bg-violet-500/15 text-violet-400 border border-violet-500/20 rounded-lg hover:bg-violet-500/25 transition font-medium"
                     >
                         Coba Lagi
                     </button>
@@ -139,21 +139,21 @@ const Leaderboard = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#f5f5f7] py-8 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-white/[0.04] py-8 px-4 sm:px-6 lg:px-8">
             <div className="max-w-5xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-12">
                     <div className="flex items-center justify-center gap-3 mb-4">
-                        <Trophy className="w-12 h-12 text-yellow-500 animate-bounce" />
+                        <Trophy className="w-12 h-12 text-amber-400 animate-bounce" />
                         <h1 className="text-4xl sm:text-5xl font-extrabold bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent">
                             LEADERBOARD
                         </h1>
-                        <Trophy className="w-12 h-12 text-yellow-500 animate-bounce" />
+                        <Trophy className="w-12 h-12 text-amber-400 animate-bounce" />
                     </div>
-                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
                         🎯 DONATOR KELAS TERBAIK 🎯
                     </h2>
-                    <p className="text-gray-600 text-sm sm:text-base">
+                    <p className="text-white/50 text-sm sm:text-base">
                         Top 10 siswa dengan kontribusi kas terbesar & tercepat
                     </p>
                 </div>
@@ -165,8 +165,8 @@ const Leaderboard = () => {
                         disabled={refreshingBadges}
                         className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
                             refreshingBadges
-                                ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
-                                : 'bg-[#0071e3] text-white hover:bg-[#0077ED] shadow-apple hover:shadow-apple-lg'
+                                ? 'bg-white/[0.08] text-white/50 cursor-not-allowed'
+                                : 'bg-blue-500/[0.06]0 text-white hover:bg-blue-600  hover:-lg'
                         }`}
                     >
                         <RefreshCw
@@ -182,28 +182,28 @@ const Leaderboard = () => {
 
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                    <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl shadow-apple p-6 flex items-center gap-4">
+                    <div className="rounded-xl bg-white/[0.025] border border-white/[0.06]-apple p-6 flex items-center gap-4">
                         <div className="p-3 bg-purple-100 rounded-full">
                             <Users className="w-6 h-6 text-purple-600" />
                         </div>
                         <div>
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-white/50">
                                 Total Donatur
                             </p>
-                            <p className="text-2xl font-bold text-gray-900">
+                            <p className="text-2xl font-bold text-white">
                                 {stats.totalDonors} Siswa
                             </p>
                         </div>
                     </div>
-                    <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl shadow-apple p-6 flex items-center gap-4">
+                    <div className="rounded-xl bg-white/[0.025] border border-white/[0.06]-apple p-6 flex items-center gap-4">
                         <div className="p-3 bg-blue-100 rounded-full">
-                            <Clock className="w-6 h-6 text-blue-500" />
+                            <Clock className="w-6 h-6 text-blue-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-white/50">
                                 Update Terakhir
                             </p>
-                            <p className="text-lg font-semibold text-gray-900">
+                            <p className="text-lg font-semibold text-white">
                                 {stats.lastUpdated?.toLocaleTimeString(
                                     'id-ID',
                                     {
@@ -218,12 +218,12 @@ const Leaderboard = () => {
 
                 {/* Leaderboard */}
                 {leaderboard.length === 0 ? (
-                    <div className="bg-white border border-gray-200 shadow-apple rounded-2xl shadow-apple-lg p-12 text-center">
+                    <div className="bg-[#111113] border border-white/[0.08] rounded-2xl p-12 text-center">
                         <div className="text-6xl mb-4">📊</div>
-                        <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                        <h3 className="text-2xl font-bold text-white mb-2">
                             Belum Ada Data
                         </h3>
-                        <p className="text-gray-600">
+                        <p className="text-white/50">
                             Leaderboard akan muncul setelah ada pembayaran kas
                         </p>
                     </div>
@@ -237,7 +237,7 @@ const Leaderboard = () => {
                                 <div
                                     key={donor.studentId}
                                     className={`
-                                        bg-white border border-gray-200 shadow-apple rounded-2xl shadow-apple overflow-hidden
+                                        bg-[#111113] border border-white/[0.08] rounded-2xl overflow-hidden
                                         transform transition-all duration-300 hover:scale-102 hover:shadow-2xl
                                         ${
                                             isTopThree
@@ -257,8 +257,8 @@ const Leaderboard = () => {
                                             rounded-full bg-gradient-to-br ${getRankColor(
                                                 rank
                                             )} 
-                                            flex items-center justify-center text-gray-900 
-                                            font-bold text-2xl sm:text-3xl shadow-apple
+                                            flex items-center justify-center text-white 
+                                            font-bold text-2xl sm:text-3xl 
                                             ${isTopThree ? 'animate-pulse' : ''}
                                         `}
                                         >
@@ -271,24 +271,24 @@ const Leaderboard = () => {
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-start justify-between gap-2 mb-2">
                                                 <div className="min-w-0">
-                                                    <h3 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">
+                                                    <h3 className="text-xl sm:text-2xl font-bold text-white truncate">
                                                         {donor.nickname}
                                                     </h3>
-                                                    <p className="text-sm text-gray-500">
+                                                    <p className="text-sm text-white/30">
                                                         Absen {donor.absen} •{' '}
                                                         {donor.paymentCount}x
                                                         bayar
                                                     </p>
                                                 </div>
                                                 {isTopThree && (
-                                                    <Medal className="w-6 h-6 text-yellow-500 flex-shrink-0" />
+                                                    <Medal className="w-6 h-6 text-amber-400 flex-shrink-0" />
                                                 )}
                                             </div>
 
                                             {/* Donation Amount */}
                                             <div className="flex items-center gap-2 mb-2">
-                                                <TrendingUp className="w-5 h-5 text-[#0071e3]" />
-                                                <span className="text-2xl sm:text-3xl font-extrabold text-[#0071e3]">
+                                                <TrendingUp className="w-5 h-5 text-blue-400" />
+                                                <span className="text-2xl sm:text-3xl font-extrabold text-blue-400">
                                                     {formatRupiah(
                                                         donor.totalDonation
                                                     )}
@@ -325,7 +325,7 @@ const Leaderboard = () => {
                                                                     </span>
 
                                                                     {/* Tooltip */}
-                                                                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-gray-900 text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10 shadow-apple">
+                                                                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-white/[0.9] text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10 ">
                                                                         {
                                                                             badge.description
                                                                         }
@@ -341,7 +341,7 @@ const Leaderboard = () => {
 
                                             {/* Earliest Payment Badge */}
                                             {donor.earliestPayment && (
-                                                <div className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 rounded-full text-xs font-medium text-blue-500">
+                                                <div className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 rounded-full text-xs font-medium text-blue-400">
                                                     <Clock className="w-3 h-3" />
                                                     Pertama bayar:{' '}
                                                     {new Date(
@@ -374,12 +374,12 @@ const Leaderboard = () => {
 
                 {/* Footer */}
                 <div className="mt-12 text-center">
-                    <p className="text-gray-500 text-sm">
+                    <p className="text-white/30 text-sm">
                         💪 Ayo semangat bayar kas! Raih posisi teratas! 🚀
                     </p>
                     <button
                         onClick={fetchLeaderboard}
-                        className="mt-4 px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-medium text-sm"
+                        className="mt-4 px-6 py-2 bg-violet-500/15 text-violet-400 border border-violet-500/20 rounded-lg hover:bg-violet-500/25 transition font-medium text-sm"
                     >
                         🔄 Refresh Leaderboard
                     </button>

@@ -59,25 +59,25 @@ const PaymentHeatmap = ({ students, payments }) => {
     }, [students, payments]);
 
     const getStatusColor = (paid) => {
-        if (paid) return 'bg-blue-500';
+        if (paid) return 'bg-blue-500/[0.06]0/[0.06]0';
         return 'bg-red-200';
     };
 
     const getStatusIcon = (paid) => {
-        if (paid) return <CheckCircle className="w-3 h-3 text-gray-900" />;
-        return <XCircle className="w-3 h-3 text-red-500" />;
+        if (paid) return <CheckCircle className="w-3 h-3 text-white" />;
+        return <XCircle className="w-3 h-3 text-rose-400" />;
     };
 
     const getRateColor = (rate) => {
-        if (rate >= 90) return 'text-[#0071e3] bg-blue-50';
-        if (rate >= 70) return 'text-blue-500 bg-blue-50';
-        if (rate >= 50) return 'text-yellow-600 bg-amber-50';
-        return 'text-red-600 bg-red-50';
+        if (rate >= 90) return 'text-blue-400 bg-blue-500/[0.06]0/[0.06]';
+        if (rate >= 70) return 'text-blue-500 bg-blue-500/[0.06]0/[0.06]';
+        if (rate >= 50) return 'text-amber-400 bg-amber-500/[0.06]0/[0.06]';
+        return 'text-rose-400 bg-rose-500/[0.06]';
     };
 
     if (heatmapData.data.length === 0) {
         return (
-            <div className="h-64 flex items-center justify-center text-gray-500">
+            <div className="h-64 flex items-center justify-center text-white/30">
                 <p>Tidak ada data siswa</p>
             </div>
         );
@@ -86,24 +86,24 @@ const PaymentHeatmap = ({ students, payments }) => {
     return (
         <div className="space-y-4">
             {/* Legend */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 p-4 bg-gray-50 rounded-lg">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 p-4 bg-white/[0.02] rounded-lg">
                 <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 bg-blue-500 rounded flex items-center justify-center">
-                        <CheckCircle className="w-4 h-4 text-gray-900" />
+                    <div className="w-6 h-6 bg-blue-500/[0.06]0/[0.06]0 rounded flex items-center justify-center">
+                        <CheckCircle className="w-4 h-4 text-white" />
                     </div>
-                    <span className="text-sm text-gray-600">Sudah Bayar</span>
+                    <span className="text-sm text-white/50">Sudah Bayar</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <div className="w-6 h-6 bg-red-200 rounded flex items-center justify-center">
-                        <XCircle className="w-4 h-4 text-red-500" />
+                        <XCircle className="w-4 h-4 text-rose-400" />
                     </div>
-                    <span className="text-sm text-gray-600">Belum Bayar</span>
+                    <span className="text-sm text-white/50">Belum Bayar</span>
                 </div>
-                <div className="sm:ml-auto text-sm text-gray-600">
+                <div className="sm:ml-auto text-sm text-white/50">
                     Total: {heatmapData.data.length} siswa ×{' '}
                     {heatmapData.maxWeeks} minggu
                 </div>
-                <div className="text-xs text-gray-500 italic">
+                <div className="text-xs text-white/30 italic">
                     💡 Scroll horizontal untuk melihat semua minggu
                 </div>
             </div>
@@ -114,12 +114,12 @@ const PaymentHeatmap = ({ students, payments }) => {
                 style={{ WebkitOverflowScrolling: 'touch' }}
             >
                 <div className="inline-block min-w-full align-middle">
-                    <div className="overflow-hidden rounded-lg border border-gray-200 bg-gray-50 text-gray-900">
-                        <table className="min-w-full divide-y divide-gray-100 table-fixed">
-                            <thead className="bg-gray-50">
+                    <div className="overflow-hidden rounded-lg border border-white/[0.06] bg-white/[0.02] text-white">
+                        <table className="min-w-full divide-y divide-white/[0.04] table-fixed">
+                            <thead className="bg-white/[0.02]">
                                 <tr>
                                     <th
-                                        className="sticky left-0 z-20 bg-gray-50 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase min-w-[200px] border-r-2 border-gray-200 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]"
+                                        className="sticky left-0 z-20 bg-white/[0.02] px-4 py-3 text-left text-xs font-medium text-white/30 uppercase min-w-[200px] border-r-2 border-white/[0.06] shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]"
                                         style={{
                                             willChange: 'transform',
                                             transform: 'translateZ(0)',
@@ -132,30 +132,30 @@ const PaymentHeatmap = ({ students, payments }) => {
                                         (_, i) => (
                                             <th
                                                 key={i}
-                                                className="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase"
+                                                className="px-2 py-3 text-center text-xs font-medium text-white/30 uppercase"
                                             >
                                                 W{i + 1}
                                             </th>
                                         )
                                     )}
-                                    <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">
+                                    <th className="px-4 py-3 text-center text-xs font-medium text-white/30 uppercase">
                                         Rate
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody className="bg-white divide-y divide-gray-100">
+                            <tbody className="divide-y divide-white/[0.04]">
                                 {heatmapData.data.map((row, rowIndex) => {
                                     const bgColor =
                                         rowIndex % 2 === 0
-                                            ? 'bg-white'
-                                            : 'bg-gray-50';
+                                            ? 'bg-transparent'
+                                            : 'bg-white/[0.02]';
                                     return (
                                         <tr
                                             key={row.student._id}
                                             className={bgColor}
                                         >
                                             <td
-                                                className={`sticky left-0 z-10 ${bgColor} px-4 py-3 whitespace-nowrap min-w-[200px] border-r-2 border-gray-200 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]`}
+                                                className={`sticky left-0 z-10 ${bgColor} px-4 py-3 whitespace-nowrap min-w-[200px] border-r-2 border-white/[0.06] shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]`}
                                                 style={{
                                                     willChange: 'transform',
                                                     transform: 'translateZ(0)',
@@ -164,11 +164,11 @@ const PaymentHeatmap = ({ students, payments }) => {
                                                 }}
                                             >
                                                 <div className="flex items-center gap-3">
-                                                    <span className="text-xs text-gray-500 font-semibold bg-gray-100 px-2 py-1 rounded min-w-[40px] text-center">
+                                                    <span className="text-xs text-white/30 font-semibold bg-white/[0.04] px-2 py-1 rounded min-w-[40px] text-center">
                                                         {row.student.absen}
                                                     </span>
                                                     <span
-                                                        className="text-sm font-medium text-gray-900 truncate flex-1"
+                                                        className="text-sm font-medium text-white truncate flex-1"
                                                         title={row.student.name}
                                                     >
                                                         {row.student.name}
@@ -227,25 +227,25 @@ const PaymentHeatmap = ({ students, payments }) => {
 
             {/* Statistics Summary */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="bg-blue-50 p-4 rounded-lg">
-                    <p className="text-sm text-[#0071e3] font-medium">
+                <div className="bg-blue-500/[0.06]0/[0.06] p-4 rounded-lg">
+                    <p className="text-sm text-blue-400 font-medium">
                         Perfect Record
                     </p>
-                    <p className="text-2xl font-bold text-[#0071e3]">
+                    <p className="text-2xl font-bold text-blue-400">
                         {
                             heatmapData.data.filter(
                                 (d) => d.paymentRate === 100
                             ).length
                         }
                     </p>
-                    <p className="text-xs text-[#0071e3]">Siswa 100% bayar</p>
+                    <p className="text-xs text-blue-400">Siswa 100% bayar</p>
                 </div>
 
-                <div className="bg-blue-50 p-4 rounded-lg">
+                <div className="bg-blue-500/[0.06]0/[0.06] p-4 rounded-lg">
                     <p className="text-sm text-blue-500 font-medium">
                         Good Record
                     </p>
-                    <p className="text-2xl font-bold text-blue-500">
+                    <p className="text-2xl font-bold text-blue-400">
                         {
                             heatmapData.data.filter(
                                 (d) =>
@@ -253,34 +253,34 @@ const PaymentHeatmap = ({ students, payments }) => {
                             ).length
                         }
                     </p>
-                    <p className="text-xs text-blue-500">Siswa 70-99% bayar</p>
+                    <p className="text-xs text-blue-400">Siswa 70-99% bayar</p>
                 </div>
 
-                <div className="bg-amber-50 p-4 rounded-lg">
-                    <p className="text-sm text-yellow-600 font-medium">
+                <div className="bg-amber-500/[0.06]0/[0.06] p-4 rounded-lg">
+                    <p className="text-sm text-amber-400 font-medium">
                         Need Improvement
                     </p>
-                    <p className="text-2xl font-bold text-amber-600">
+                    <p className="text-2xl font-bold text-amber-400">
                         {
                             heatmapData.data.filter(
                                 (d) => d.paymentRate >= 50 && d.paymentRate < 70
                             ).length
                         }
                     </p>
-                    <p className="text-xs text-yellow-600">
+                    <p className="text-xs text-amber-400">
                         Siswa 50-69% bayar
                     </p>
                 </div>
 
-                <div className="bg-red-50 p-4 rounded-lg">
-                    <p className="text-sm text-red-600 font-medium">Critical</p>
-                    <p className="text-2xl font-bold text-red-600">
+                <div className="bg-rose-500/[0.06] p-4 rounded-lg">
+                    <p className="text-sm text-rose-400 font-medium">Critical</p>
+                    <p className="text-2xl font-bold text-rose-400">
                         {
                             heatmapData.data.filter((d) => d.paymentRate < 50)
                                 .length
                         }
                     </p>
-                    <p className="text-xs text-red-600">Siswa &lt;50% bayar</p>
+                    <p className="text-xs text-rose-400">Siswa &lt;50% bayar</p>
                 </div>
             </div>
         </div>

@@ -4,15 +4,15 @@ import {
     Wallet,
     TrendingUp,
     TrendingDown,
-    Calendar,
     Users,
     LogIn,
-    Eye,
-    EyeOff,
     Gift,
     Trophy,
     Medal,
     Award,
+    ArrowRight,
+    BarChart3,
+    ChevronRight,
 } from 'lucide-react';
 import axios from 'axios';
 
@@ -28,7 +28,6 @@ const PublicDashboard = () => {
         totalTransactions: 0,
     });
     const [events, setEvents] = useState([]);
-    const [recentPayments, setRecentPayments] = useState([]);
     const [leaderboard, setLeaderboard] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -39,9 +38,6 @@ const PublicDashboard = () => {
     const fetchPublicData = async () => {
         try {
             setLoading(true);
-
-            // Use axios directly without auth interceptor for public access
-            // Only fetch payments, expenses, and students (no users endpoint needed)
             const [paymentsRes, expensesRes, studentsRes] = await Promise.all([
                 axios.get(`${API_URL}/payments`),
                 axios.get(`${API_URL}/expenses`),
@@ -57,45 +53,22 @@ const PublicDashboard = () => {
                 0
             );
 
-            // Get events from payments (unique event IDs)
             const eventPayments = paymentsRes.data.filter((p) => p.event);
-            console.log('📅 Event Payments:', eventPayments);
-
             const uniqueEvents = {};
             eventPayments.forEach((p) => {
                 const eventId = p.event._id || p.event;
-                const eventName = p.event?.name || p.event?.title || 'Unknown';
-
                 if (!uniqueEvents[eventId]) {
                     uniqueEvents[eventId] = {
                         ...p.event,
                         totalPaid: 0,
                         paidCount: 0,
-                        payments: [], // Track individual payments for debugging
                     };
                 }
                 uniqueEvents[eventId].totalPaid += p.amount;
                 uniqueEvents[eventId].paidCount += 1;
-                uniqueEvents[eventId].payments.push({
-                    id: p._id,
-                    student: p.student?.name || p.student?.nama || 'Unknown',
-                    amount: p.amount,
-                    date: p.date,
-                });
             });
 
-            // Debug: log each event calculation
-            Object.values(uniqueEvents).forEach((event) => {
-                console.log(`🎯 Event: ${event.name || event.title}`);
-                console.log(`   Total Paid: ${event.totalPaid}`);
-                console.log(`   Paid Count: ${event.paidCount}`);
-                console.log(`   Payments:`, event.payments);
-            });
-
-            // Calculate leaderboard based on students and their payments
-            // Group payments by student
             const studentPaymentMap = {};
-
             paymentsRes.data.forEach((payment) => {
                 const studentId = payment.student?._id || payment.student;
                 if (studentId) {
@@ -105,13 +78,11 @@ const PublicDashboard = () => {
                             paymentCount: 0,
                         };
                     }
-                    studentPaymentMap[studentId].totalPaid +=
-                        payment.amount || 0;
+                    studentPaymentMap[studentId].totalPaid += payment.amount || 0;
                     studentPaymentMap[studentId].paymentCount += 1;
                 }
             });
 
-            // Create leaderboard from students with payments
             const leaderboardData = studentsRes.data
                 .filter((student) => studentPaymentMap[student._id])
                 .map((student) => {
@@ -125,41 +96,21 @@ const PublicDashboard = () => {
                     };
                 })
                 .sort((a, b) => b.totalPaid - a.totalPaid)
-                .slice(0, 10); // Top 10 contributors
-
-            console.log('🏆 Public Leaderboard (Top 10):', leaderboardData);
+                .slice(0, 10);
 
             setStats({
                 totalIncome,
                 totalExpenses,
                 balance: totalIncome - totalExpenses,
                 totalStudents: studentsRes.data.length,
-                totalTransactions:
-                    paymentsRes.data.length + expensesRes.data.length,
+                totalTransactions: paymentsRes.data.length + expensesRes.data.length,
             });
-
-            console.log('💰 Public Stats:', {
-                totalIncome,
-                totalExpenses,
-                balance: totalIncome - totalExpenses,
-                totalStudents: studentsRes.data.length,
-            });
-
             setEvents(Object.values(uniqueEvents));
-            setRecentPayments(paymentsRes.data.slice(0, 5));
             setLeaderboard(leaderboardData);
         } catch (error) {
             console.error('Error fetching public data:', error);
-            // Set default values on error
-            setStats({
-                totalIncome: 0,
-                totalExpenses: 0,
-                balance: 0,
-                totalStudents: 0,
-                totalTransactions: 0,
-            });
+            setStats({ totalIncome: 0, totalExpenses: 0, balance: 0, totalStudents: 0, totalTransactions: 0 });
             setEvents([]);
-            setRecentPayments([]);
             setLeaderboard([]);
         } finally {
             setLoading(false);
@@ -176,314 +127,218 @@ const PublicDashboard = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center">
-                <div className="text-gray-900 text-xl">Loading...</div>
+            <div className="min-h-screen bg-[#09090b] flex items-center justify-center">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="w-10 h-10 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                    <p className="text-white/40 text-sm">Memuat data...</p>
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
-            {/* Header with Login Button */}
-            <div className="bg-gray-100 backdrop-blur-md border-b border-white/20">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
-                    <div>
-                        <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
-                            💰 Kas Kelas
-                        </h1>
-                        <p className="text-sm text-gray-900/80 hidden sm:block">
-                            Transparansi Keuangan Kelas
-                        </p>
-                    </div>
-                    <div className="flex items-center gap-2 sm:gap-3">
-                        <button
-                            onClick={() => navigate('/leaderboard')}
-                            className="flex items-center gap-2 bg-yellow-400 text-gray-900 px-3 sm:px-4 py-2 rounded-lg hover:bg-yellow-300 transition-all shadow-apple text-sm sm:text-base font-medium"
-                        >
-                            <Trophy className="w-4 h-4" />
-                            <span className="hidden sm:inline">
-                                Leaderboard
+        <div className="min-h-screen bg-[#09090b] text-white selection:bg-blue-500/30">
+            {/* Sticky Nav */}
+            <nav className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#09090b]/80 backdrop-blur-2xl">
+                <div className="px-5 sm:px-8 lg:px-12">
+                    <div className="flex items-center justify-between h-14 sm:h-16">
+                        <div className="flex items-center gap-2.5">
+                            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                                <Wallet className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
+                            </div>
+                            <span className="font-semibold text-white text-sm sm:text-[15px] tracking-tight">
+                                Kas Kelas
                             </span>
-                        </button>
-                        <button
-                            onClick={() => navigate('/login')}
-                            className="flex items-center gap-2 bg-white text-[#0071e3] px-3 sm:px-4 py-2 rounded-lg hover:bg-white/90 transition-all shadow-apple text-sm sm:text-base"
-                        >
-                            <LogIn className="w-4 h-4" />
-                            <span className="hidden sm:inline">Login</span>
-                        </button>
+                            <span className="hidden sm:inline text-[13px] text-white/30 font-medium">
+                                TRIFORCE
+                            </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => navigate('/leaderboard')}
+                                className="flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.06] text-white/60 hover:text-white/90 transition-all text-[13px]"
+                            >
+                                <Trophy className="w-3.5 h-3.5 text-amber-400" />
+                                <span className="hidden sm:inline">Leaderboard</span>
+                            </button>
+                            <button
+                                onClick={() => navigate('/login')}
+                                className="flex items-center gap-1.5 px-4 py-1.5 sm:px-5 sm:py-2 rounded-full bg-white text-[#09090b] hover:bg-white/90 transition-all text-[13px] font-semibold"
+                            >
+                                <LogIn className="w-3.5 h-3.5" />
+                                <span>Login</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </nav>
 
-            {/* Main Content */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-12">
-                {/* Hero Stats */}
-                <div className="text-center mb-8 sm:mb-12">
-                    <h2 className="text-3xl sm:text-5xl font-bold text-gray-900 mb-3 sm:mb-4">
-                        {formatCurrency(stats.balance)}
-                    </h2>
-                    <p className="text-base sm:text-xl text-gray-900/90">
-                        Total Saldo Kas Kelas
+            {/* Hero */}
+            <section className="relative overflow-hidden">
+                {/* Ambient glow */}
+                <div className="absolute top-0 left-1/4 w-[600px] h-[400px] bg-blue-600/[0.04] blur-[120px] rounded-full pointer-events-none" />
+                <div className="absolute top-20 right-1/4 w-[400px] h-[300px] bg-violet-600/[0.03] blur-[100px] rounded-full pointer-events-none" />
+
+                <div className="relative px-5 sm:px-8 lg:px-12 pt-20 sm:pt-28 pb-16 sm:pb-20">
+                    <p className="text-blue-400 text-[13px] font-semibold mb-4 tracking-widest uppercase">
+                        Transparansi Keuangan
                     </p>
-                    <div className="flex items-center justify-center gap-4 sm:gap-6 mt-4 sm:mt-6 text-gray-900/80 text-sm sm:text-base">
+                    <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tighter text-white leading-[0.95] mb-5">
+                        {formatCurrency(stats.balance)}
+                    </h1>
+                    <p className="text-base sm:text-lg text-white/35 mb-10 max-w-lg leading-relaxed">
+                        Total saldo kas kelas saat ini. Semua transaksi tercatat transparan dan real-time.
+                    </p>
+                    <div className="flex flex-wrap gap-5 sm:gap-8 text-[13px] text-white/30">
                         <div className="flex items-center gap-2">
-                            <Users className="w-4 h-4 sm:w-5 sm:h-5" />
+                            <Users className="w-4 h-4" />
                             <span>{stats.totalStudents} Siswa</span>
                         </div>
                         <div className="flex items-center gap-2">
-                            <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
+                            <BarChart3 className="w-4 h-4" />
                             <span>{stats.totalTransactions} Transaksi</span>
                         </div>
                     </div>
                 </div>
+            </section>
 
-                {/* Stats Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
-                    {/* Total Income */}
-                    <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-apple-lg p-6 sm:p-8">
-                        <div className="flex items-center gap-4 mb-4">
-                            <div className="bg-green-100 p-3 sm:p-4 rounded-xl">
-                                <TrendingUp className="w-6 h-6 sm:w-8 sm:h-8 text-[#0071e3]" />
-                            </div>
-                            <div>
-                                <p className="text-sm sm:text-base text-gray-500 font-medium">
-                                    Total Pemasukan
-                                </p>
-                                <p className="text-2xl sm:text-3xl font-bold text-gray-900">
-                                    {formatCurrency(stats.totalIncome)}
-                                </p>
-                            </div>
+            {/* Stats */}
+            <section className="px-5 sm:px-8 lg:px-12 pb-14">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Income */}
+                    <div className="rounded-2xl bg-white/[0.025] border border-white/[0.06] p-6 sm:p-8 hover:bg-white/[0.04] hover:border-white/[0.09] transition-all duration-300 group">
+                        <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/15 w-fit mb-5">
+                            <TrendingUp className="w-5 h-5 text-emerald-400" />
                         </div>
-                        <div className="text-xs sm:text-sm text-gray-600">
-                            Dari pembayaran kas kelas & event
-                        </div>
+                        <p className="text-[13px] text-white/35 mb-1 font-medium">Total Pemasukan</p>
+                        <p className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+                            {formatCurrency(stats.totalIncome)}
+                        </p>
+                        <p className="text-xs text-white/20 mt-4">Dari pembayaran kas kelas & event</p>
                     </div>
-
-                    {/* Total Expenses */}
-                    <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-apple-lg p-6 sm:p-8">
-                        <div className="flex items-center gap-4 mb-4">
-                            <div className="bg-red-100 p-3 sm:p-4 rounded-xl">
-                                <TrendingDown className="w-6 h-6 sm:w-8 sm:h-8 text-red-600" />
-                            </div>
-                            <div>
-                                <p className="text-sm sm:text-base text-gray-500 font-medium">
-                                    Total Pengeluaran
-                                </p>
-                                <p className="text-2xl sm:text-3xl font-bold text-gray-900">
-                                    {formatCurrency(stats.totalExpenses)}
-                                </p>
-                            </div>
+                    {/* Expenses */}
+                    <div className="rounded-2xl bg-white/[0.025] border border-white/[0.06] p-6 sm:p-8 hover:bg-white/[0.04] hover:border-white/[0.09] transition-all duration-300 group">
+                        <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/15 w-fit mb-5">
+                            <TrendingDown className="w-5 h-5 text-rose-400" />
                         </div>
-                        <div className="text-xs sm:text-sm text-gray-600">
-                            Untuk keperluan kelas
-                        </div>
+                        <p className="text-[13px] text-white/35 mb-1 font-medium">Total Pengeluaran</p>
+                        <p className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+                            {formatCurrency(stats.totalExpenses)}
+                        </p>
+                        <p className="text-xs text-white/20 mt-4">Untuk keperluan kelas</p>
                     </div>
                 </div>
+            </section>
 
-                {/* Events Section */}
-                {events.length > 0 && (
-                    <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-apple-lg p-6 sm:p-8 mb-6 sm:mb-8">
-                        <div className="flex items-center gap-3 mb-6">
-                            <Gift className="w-6 h-6 sm:w-7 sm:h-7 text-purple-600" />
-                            <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
-                                Event Kelas
-                            </h3>
-                        </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {events.map((event, idx) => (
-                                <div
-                                    key={idx}
-                                    className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 sm:p-5 border border-purple-200"
-                                >
-                                    <h4 className="font-bold text-base sm:text-lg text-gray-900 mb-2">
-                                        {event.name || 'Event'}
-                                    </h4>
-                                    <div className="space-y-1 text-sm text-gray-600">
-                                        <p>
-                                            Target:{' '}
-                                            <span className="font-semibold">
-                                                {formatCurrency(
-                                                    event.targetAmount || 0
-                                                )}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Terkumpul:{' '}
-                                            <span className="font-semibold text-[#0071e3]">
-                                                {formatCurrency(
-                                                    event.totalPaid || 0
-                                                )}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Peserta:{' '}
-                                            <span className="font-semibold">
-                                                {event.paidCount || 0} siswa
-                                            </span>
-                                        </p>
+            {/* Events */}
+            {events.length > 0 && (
+                <section className="px-5 sm:px-8 lg:px-12 pb-14">
+                    <div className="flex items-center gap-2.5 mb-5">
+                        <Gift className="w-[18px] h-[18px] text-violet-400" />
+                        <h2 className="text-[15px] font-semibold text-white">Event Kelas</h2>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {events.map((event, idx) => {
+                            const progress = Math.min(100, ((event.totalPaid || 0) / (event.targetAmount || 1)) * 100);
+                            return (
+                                <div key={idx} className="rounded-2xl bg-white/[0.025] border border-white/[0.06] p-5 sm:p-6 hover:bg-white/[0.04] transition-all">
+                                    <h3 className="font-semibold text-white text-[15px] mb-4">{event.name || 'Event'}</h3>
+                                    <div className="space-y-2.5 text-[13px]">
+                                        <div className="flex justify-between">
+                                            <span className="text-white/30">Target</span>
+                                            <span className="text-white/60 font-medium">{formatCurrency(event.targetAmount || 0)}</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span className="text-white/30">Terkumpul</span>
+                                            <span className="text-blue-400 font-medium">{formatCurrency(event.totalPaid || 0)}</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span className="text-white/30">Peserta</span>
+                                            <span className="text-white/60 font-medium">{event.paidCount || 0} siswa</span>
+                                        </div>
                                     </div>
-                                    <div className="mt-3 bg-white border border-gray-200 shadow-apple rounded-lg overflow-hidden">
-                                        <div
-                                            className="bg-gradient-to-r from-purple-500 to-pink-500 h-2"
-                                            style={{
-                                                width: `${Math.min(
-                                                    100,
-                                                    ((event.totalPaid || 0) /
-                                                        (event.targetAmount ||
-                                                            1)) *
-                                                        100
-                                                )}%`,
-                                            }}
-                                        />
+                                    <div className="mt-4 h-1 bg-white/[0.06] rounded-full overflow-hidden">
+                                        <div className="h-full bg-gradient-to-r from-violet-500 to-blue-500 rounded-full transition-all duration-700" style={{ width: `${progress}%` }} />
                                     </div>
+                                    <p className="text-[11px] text-white/20 mt-2 text-right">{progress.toFixed(0)}%</p>
                                 </div>
-                            ))}
-                        </div>
+                            );
+                        })}
                     </div>
-                )}
+                </section>
+            )}
 
-                {/* Leaderboard Section */}
-                {leaderboard.length > 0 && (
-                    <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-apple-lg p-6 sm:p-8 mb-6 sm:mb-8">
-                        <div className="flex items-center gap-3 mb-6">
-                            <Trophy className="w-6 h-6 sm:w-7 sm:h-7 text-yellow-600" />
-                            <div>
-                                <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
-                                    🏆 Top Contributors
-                                </h3>
-                                <p className="text-xs sm:text-sm text-gray-600 mt-1">
-                                    Siswa dengan kontribusi pembayaran kas
-                                    terbesar
-                                </p>
-                            </div>
+            {/* Leaderboard */}
+            {leaderboard.length > 0 && (
+                <section className="px-5 sm:px-8 lg:px-12 pb-14">
+                    <div className="flex items-center justify-between mb-5">
+                        <div className="flex items-center gap-2.5">
+                            <Trophy className="w-[18px] h-[18px] text-amber-400" />
+                            <h2 className="text-[15px] font-semibold text-white">Top Contributors</h2>
                         </div>
-
-                        <div className="space-y-2 sm:space-y-3">
-                            {leaderboard.map((member, index) => {
-                                const rankColor =
-                                    index === 0
-                                        ? 'from-yellow-400 to-yellow-600'
-                                        : index === 1
-                                        ? 'from-gray-300 to-gray-500'
-                                        : index === 2
-                                        ? 'from-orange-400 to-orange-600'
-                                        : 'from-gray-200 to-gray-300';
-
-                                const RankIcon =
-                                    index === 0
-                                        ? Trophy
-                                        : index === 1
-                                        ? Medal
-                                        : index === 2
-                                        ? Award
-                                        : null;
-
-                                return (
-                                    <div
-                                        key={member.studentId}
-                                        className="flex items-center justify-between p-3 sm:p-4 rounded-xl bg-gradient-to-r from-gray-50 to-white border border-gray-200 bg-gray-50 text-gray-900 hover:shadow-apple-sm transition-shadow"
-                                    >
-                                        <div className="flex items-center gap-3 flex-1 min-w-0">
-                                            {/* Rank Badge */}
-                                            <div
-                                                className={`flex-shrink-0 w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center ${
-                                                    index < 3
-                                                        ? `bg-gradient-to-br ${rankColor} text-gray-900 shadow-apple-sm`
-                                                        : 'bg-gray-100 text-gray-600'
-                                                }`}
-                                            >
-                                                {RankIcon ? (
-                                                    <RankIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-                                                ) : (
-                                                    <span className="text-xs sm:text-sm font-bold">
-                                                        {index + 1}
-                                                    </span>
-                                                )}
-                                            </div>
-
-                                            {/* Student Info */}
-                                            <div className="flex-1 min-w-0">
-                                                <h4 className="font-bold text-sm sm:text-base text-gray-900 truncate">
-                                                    {member.studentName}
-                                                </h4>
-                                                <p className="text-xs sm:text-sm text-gray-500">
-                                                    {member.paymentCount}{' '}
-                                                    transaksi
-                                                </p>
-                                            </div>
+                        <button onClick={() => navigate('/leaderboard')} className="flex items-center gap-1 text-[13px] text-white/30 hover:text-white/60 transition">
+                            Selengkapnya <ChevronRight className="w-3.5 h-3.5" />
+                        </button>
+                    </div>
+                    <div className="rounded-2xl bg-white/[0.025] border border-white/[0.06] overflow-hidden">
+                        {leaderboard.map((member, index) => {
+                            const rankColors = ['text-amber-400', 'text-white/20', 'text-orange-400'];
+                            const rankBg = ['bg-amber-400/10 border-amber-400/20', 'bg-white/[0.1]/10 border-white/[0.1]/20', 'bg-orange-400/10 border-orange-400/20'];
+                            const RankIcon = index === 0 ? Trophy : index === 1 ? Medal : index === 2 ? Award : null;
+                            return (
+                                <div key={member.studentId} className={`flex items-center justify-between px-5 sm:px-6 py-3.5 hover:bg-white/[0.015] transition-colors ${index !== leaderboard.length - 1 ? 'border-b border-white/[0.04]' : ''}`}>
+                                    <div className="flex items-center gap-3.5 min-w-0">
+                                        <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center border ${index < 3 ? rankBg[index] : 'bg-white/[0.03] border-white/[0.06]'}`}>
+                                            {RankIcon ? <RankIcon className={`w-3.5 h-3.5 ${rankColors[index]}`} /> : <span className="text-[11px] font-semibold text-white/40">{index + 1}</span>}
                                         </div>
-
-                                        {/* Total Amount */}
-                                        <div className="text-right flex-shrink-0 ml-3">
-                                            <p
-                                                className={`font-bold text-sm sm:text-base ${
-                                                    index === 0
-                                                        ? 'text-yellow-600'
-                                                        : index === 1
-                                                        ? 'text-gray-600'
-                                                        : index === 2
-                                                        ? 'text-orange-600'
-                                                        : 'text-gray-900'
-                                                }`}
-                                            >
-                                                {formatCurrency(
-                                                    member.totalPaid
-                                                )}
-                                            </p>
-                                            {index < 3 && (
-                                                <p className="text-xs text-gray-500 mt-0.5">
-                                                    {index === 0
-                                                        ? '👑 #1'
-                                                        : index === 1
-                                                        ? '🥈 #2'
-                                                        : '🥉 #3'}
-                                                </p>
-                                            )}
+                                        <div className="min-w-0">
+                                            <p className="text-[13px] font-medium text-white/90 truncate">{member.studentName}</p>
+                                            <p className="text-[11px] text-white/25">{member.paymentCount} transaksi</p>
                                         </div>
                                     </div>
-                                );
-                            })}
-                        </div>
-
-                        <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-200">
-                            <p className="text-xs sm:text-sm text-center text-indigo-900 font-medium">
-                                💪 Yuk, tingkatkan kontribusimu untuk masuk
-                                leaderboard!
-                            </p>
-                        </div>
+                                    <p className={`text-[13px] font-semibold flex-shrink-0 ml-4 ${index < 3 ? rankColors[index] : 'text-white/50'}`}>
+                                        {formatCurrency(member.totalPaid)}
+                                    </p>
+                                </div>
+                            );
+                        })}
                     </div>
-                )}
+                </section>
+            )}
 
-                {/* Call to Action */}
-                <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-apple-lg p-6 sm:p-8 text-center">
-                    <Wallet className="w-12 h-12 sm:w-16 sm:h-16 text-[#0071e3] mx-auto mb-4" />
-                    <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">
-                        Ingin Lihat Detail Pembayaran Anda?
-                    </h3>
-                    <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
-                        Login untuk melihat riwayat pembayaran, total
-                        kontribusi, dan informasi keuangan pribadi Anda
-                    </p>
+            {/* CTA */}
+            <section className="px-5 sm:px-8 lg:px-12 pb-20">
+                <div className="rounded-2xl bg-gradient-to-br from-blue-500/[0.08] to-violet-500/[0.06] border border-blue-500/[0.08] p-8 sm:p-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+                    <div>
+                        <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 tracking-tight">
+                            Lihat Detail Pembayaranmu
+                        </h3>
+                        <p className="text-white/30 text-sm max-w-md leading-relaxed">
+                            Login untuk melihat riwayat pembayaran, total kontribusi, dan status keuanganmu.
+                        </p>
+                    </div>
                     <button
                         onClick={() => navigate('/login')}
-                        className="bg-[#0071e3] text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl hover:bg-[#0077ED] transition-all shadow-apple text-sm sm:text-base font-semibold"
+                        className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-white text-[#09090b] hover:bg-white/90 transition-all text-sm font-semibold flex-shrink-0 shadow-lg shadow-white/5"
                     >
                         Login Sekarang
+                        <ArrowRight className="w-4 h-4" />
                     </button>
                 </div>
-            </div>
+            </section>
 
             {/* Footer */}
-            <div className="bg-gray-100 backdrop-blur-md border-t border-white/20 mt-8 sm:mt-12">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 text-center text-gray-900/80 text-xs sm:text-sm">
-                    <p>💰 Sistem Kas Kelas - Transparan & Terpercaya</p>
-                    <p className="mt-2">
-                        Data diperbarui secara realtime • Login untuk akses
-                        lengkap
-                    </p>
+            <footer className="border-t border-white/[0.04]">
+                <div className="px-5 sm:px-8 lg:px-12 py-6 sm:py-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <div className="flex items-center gap-2">
+                        <div className="w-5 h-5 rounded bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center">
+                            <Wallet className="w-2.5 h-2.5 text-white" />
+                        </div>
+                        <span className="text-[13px] text-white/20">Kas Kelas TRIFORCE</span>
+                    </div>
+                    <p className="text-[11px] text-white/15">Data diperbarui secara real-time</p>
                 </div>
-            </div>
+            </footer>
         </div>
     );
 };

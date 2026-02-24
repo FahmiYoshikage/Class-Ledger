@@ -53,24 +53,24 @@ const ChangePassword = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#f5f5f7] flex items-center justify-center p-4">
+        <div className="min-h-screen bg-white/[0.04] flex items-center justify-center p-4">
             <div className="max-w-md w-full">
-                <div className="bg-white border border-gray-200 shadow-apple rounded-2xl shadow-apple-lg p-8">
+                <div className="bg-[#111113] border border-white/[0.08] rounded-2xl p-8">
                     {/* Header */}
                     <div className="text-center mb-6">
-                        <div className="bg-blue-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <Lock className="w-8 h-8 text-[#0071e3]" />
+                        <div className="bg-blue-500/[0.06]0/[0.06] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <Lock className="w-8 h-8 text-blue-400" />
                         </div>
-                        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                        <h2 className="text-2xl font-bold text-white mb-2">
                             {isFirstLogin
                                 ? 'Set Password Baru'
                                 : 'Ubah Password'}
                         </h2>
                         {isFirstLogin && (
-                            <div className="bg-amber-50 border-l-4 border-yellow-400 p-3 rounded text-left">
+                            <div className="bg-amber-500/[0.06]0/[0.06] border-l-4 border-yellow-400 p-3 rounded text-left">
                                 <div className="flex items-start">
                                     <AlertCircle className="w-5 h-5 text-yellow-400 mr-2 mt-0.5" />
-                                    <p className="text-sm text-amber-600">
+                                    <p className="text-sm text-amber-400">
                                         Untuk keamanan, silakan ubah password
                                         default Anda.
                                     </p>
@@ -81,10 +81,10 @@ const ChangePassword = () => {
 
                     {/* Error Alert */}
                     {error && (
-                        <div className="mb-4 bg-red-50 border-l-4 border-red-400 p-4 rounded">
+                        <div className="mb-4 bg-rose-500/[0.06] border-l-4 border-red-400 p-4 rounded">
                             <div className="flex items-center">
                                 <AlertCircle className="w-5 h-5 text-red-400 mr-2" />
-                                <p className="text-red-600 text-sm">{error}</p>
+                                <p className="text-rose-400 text-sm">{error}</p>
                             </div>
                         </div>
                     )}
@@ -92,7 +92,7 @@ const ChangePassword = () => {
                     <form onSubmit={handleSubmit} className="space-y-5">
                         {/* Current Password */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-600 mb-2">
+                            <label className="block text-sm font-medium text-white/50 mb-2">
                                 Password Saat Ini
                             </label>
                             <div className="relative">
@@ -102,14 +102,14 @@ const ChangePassword = () => {
                                     onChange={(e) =>
                                         setCurrentPassword(e.target.value)
                                     }
-                                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#0071e3] focus:border-transparent pr-12"
+                                    className="w-full px-4 py-3 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-blue-500/40 focus:border-transparent pr-12"
                                     placeholder="Masukkan password saat ini"
                                     required
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowCurrent(!showCurrent)}
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-600"
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/30 hover:text-white/50"
                                 >
                                     {showCurrent ? (
                                         <EyeOff className="w-5 h-5" />
@@ -122,7 +122,7 @@ const ChangePassword = () => {
 
                         {/* New Password */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-600 mb-2">
+                            <label className="block text-sm font-medium text-white/50 mb-2">
                                 Password Baru
                             </label>
                             <div className="relative">
@@ -132,14 +132,14 @@ const ChangePassword = () => {
                                     onChange={(e) =>
                                         setNewPassword(e.target.value)
                                     }
-                                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#0071e3] focus:border-transparent pr-12"
+                                    className="w-full px-4 py-3 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-blue-500/40 focus:border-transparent pr-12"
                                     placeholder="Minimal 6 karakter"
                                     required
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowNew(!showNew)}
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-600"
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/30 hover:text-white/50"
                                 >
                                     {showNew ? (
                                         <EyeOff className="w-5 h-5" />
@@ -148,14 +148,14 @@ const ChangePassword = () => {
                                     )}
                                 </button>
                             </div>
-                            <p className="text-xs text-gray-500 mt-1">
+                            <p className="text-xs text-white/30 mt-1">
                                 Minimal 6 karakter
                             </p>
                         </div>
 
                         {/* Confirm Password */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-600 mb-2">
+                            <label className="block text-sm font-medium text-white/50 mb-2">
                                 Konfirmasi Password Baru
                             </label>
                             <div className="relative">
@@ -165,14 +165,14 @@ const ChangePassword = () => {
                                     onChange={(e) =>
                                         setConfirmPassword(e.target.value)
                                     }
-                                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#0071e3] focus:border-transparent pr-12"
+                                    className="w-full px-4 py-3 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-blue-500/40 focus:border-transparent pr-12"
                                     placeholder="Ketik ulang password baru"
                                     required
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowConfirm(!showConfirm)}
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-600"
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/30 hover:text-white/50"
                                 >
                                     {showConfirm ? (
                                         <EyeOff className="w-5 h-5" />
@@ -188,7 +188,7 @@ const ChangePassword = () => {
                             <div
                                 className={`flex items-center gap-2 text-sm ${
                                     newPassword === confirmPassword
-                                        ? 'text-[#0071e3]'
+                                        ? 'text-blue-400'
                                         : 'text-red-600'
                                 }`}
                             >
@@ -210,7 +210,7 @@ const ChangePassword = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-[#0071e3] text-white py-3 rounded-lg hover:bg-[#0077ED] transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full bg-blue-500/[0.06]0 text-white py-3 rounded-lg hover:bg-blue-600 transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {loading ? (
                                 <div className="flex items-center justify-center gap-2">
@@ -226,7 +226,7 @@ const ChangePassword = () => {
                             <button
                                 type="button"
                                 onClick={() => navigate('/dashboard')}
-                                className="w-full bg-gray-100 text-gray-600 py-3 rounded-lg hover:bg-gray-100 transition font-medium"
+                                className="w-full bg-white/[0.04] text-white/50 py-3 rounded-lg hover:bg-white/[0.04] transition font-medium"
                             >
                                 Batal
                             </button>

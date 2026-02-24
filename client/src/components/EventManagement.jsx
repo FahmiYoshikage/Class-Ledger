@@ -249,24 +249,24 @@ const EventManagement = () => {
     return (
         <div className="space-y-6">
             {/* Header */}
-            <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl p-6">
+            <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-6">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="bg-purple-600 p-3 rounded-lg">
-                            <Calendar className="w-6 h-6 text-gray-900" />
+                            <Calendar className="w-6 h-6 text-white" />
                         </div>
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900">
+                            <h2 className="text-2xl font-bold text-white">
                                 Event Management
                             </h2>
-                            <p className="text-gray-500">
+                            <p className="text-white/30">
                                 Kelola iuran event & kegiatan kelas
                             </p>
                         </div>
                     </div>
                     <button
                         onClick={() => setShowCreateEvent(true)}
-                        className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition flex items-center gap-2"
+                        className="bg-violet-500/15 text-violet-400 border border-violet-500/20 px-4 py-2 rounded-lg hover:bg-violet-500/25 transition flex items-center gap-2"
                     >
                         <Plus className="w-4 h-4" />
                         Buat Event Baru
@@ -287,7 +287,7 @@ const EventManagement = () => {
                         return (
                             <div
                                 key={event._id}
-                                className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl hover:shadow-apple transition cursor-pointer"
+                                className="rounded-xl bg-white/[0.025] border border-white/[0.06] hover: transition cursor-pointer"
                                 onClick={() => {
                                     setActiveEvent(event);
                                     loadEventPayments(event._id);
@@ -295,14 +295,14 @@ const EventManagement = () => {
                             >
                                 <div className="p-4 border-b">
                                     <div className="flex items-start justify-between mb-2">
-                                        <h3 className="font-bold text-lg text-gray-900">
+                                        <h3 className="font-bold text-lg text-white">
                                             {event.name}
                                         </h3>
-                                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-700">
+                                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-500/[0.06]0/15 text-blue-400">
                                             Aktif
                                         </span>
                                     </div>
-                                    <p className="text-sm text-gray-500">
+                                    <p className="text-sm text-white/30">
                                         {event.description}
                                     </p>
                                 </div>
@@ -311,14 +311,14 @@ const EventManagement = () => {
                                     {/* Progress Bar */}
                                     <div>
                                         <div className="flex justify-between text-sm mb-1">
-                                            <span className="text-gray-600">
+                                            <span className="text-white/50">
                                                 Progress
                                             </span>
                                             <span className="font-semibold text-purple-600">
                                                 {progress.toFixed(1)}%
                                             </span>
                                         </div>
-                                        <div className="w-full bg-gray-200 rounded-full h-2">
+                                        <div className="w-full bg-white/[0.06] rounded-full h-2">
                                             <div
                                                 className="bg-purple-600 h-2 rounded-full transition-all"
                                                 style={{
@@ -331,7 +331,7 @@ const EventManagement = () => {
                                     {/* Stats */}
                                     <div className="grid grid-cols-2 gap-2 text-sm">
                                         <div>
-                                            <p className="text-gray-500">
+                                            <p className="text-white/30">
                                                 Target
                                             </p>
                                             <p className="font-semibold">
@@ -339,15 +339,15 @@ const EventManagement = () => {
                                             </p>
                                         </div>
                                         <div>
-                                            <p className="text-gray-500">
+                                            <p className="text-white/30">
                                                 Terkumpul
                                             </p>
-                                            <p className="font-semibold text-[#0071e3]">
+                                            <p className="font-semibold text-blue-400">
                                                 {formatRp(event.totalCollected)}
                                             </p>
                                         </div>
                                         <div>
-                                            <p className="text-gray-500">
+                                            <p className="text-white/30">
                                                 Per Siswa
                                             </p>
                                             <p className="font-semibold">
@@ -357,7 +357,7 @@ const EventManagement = () => {
                                             </p>
                                         </div>
                                         <div>
-                                            <p className="text-gray-500">
+                                            <p className="text-white/30">
                                                 Sudah Bayar
                                             </p>
                                             <p className="font-semibold">
@@ -369,11 +369,11 @@ const EventManagement = () => {
 
                                     {/* Surplus Info */}
                                     {surplus > 0 && (
-                                        <div className="bg-blue-50 border border-green-200 rounded p-2 text-sm">
-                                            <p className="text-[#0071e3] font-semibold">
+                                        <div className="bg-blue-500/[0.06]0/[0.06] border border-green-200 rounded p-2 text-sm">
+                                            <p className="text-blue-400 font-semibold">
                                                 Surplus: {formatRp(surplus)}
                                             </p>
-                                            <p className="text-xs text-[#0071e3]">
+                                            <p className="text-xs text-blue-400">
                                                 Akan masuk ke kas saat event
                                                 selesai
                                             </p>
@@ -382,8 +382,8 @@ const EventManagement = () => {
 
                                     {/* Unpaid Count */}
                                     {unpaid.length > 0 && (
-                                        <div className="bg-amber-50 border border-yellow-200 rounded p-2">
-                                            <p className="text-xs text-amber-600">
+                                        <div className="bg-amber-500/[0.06]0/[0.06] border border-yellow-200 rounded p-2">
+                                            <p className="text-xs text-amber-400">
                                                 <AlertCircle className="w-3 h-3 inline mr-1" />
                                                 {unpaid.length} siswa belum
                                                 bayar
@@ -398,9 +398,9 @@ const EventManagement = () => {
 
             {/* Completed Events */}
             {events.filter((e) => e.status === 'selesai').length > 0 && (
-                <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl shadow">
+                <div className="rounded-xl bg-white/[0.025] border border-white/[0.06]">
                     <div className="p-4 border-b">
-                        <h3 className="font-bold text-gray-900">
+                        <h3 className="font-bold text-white">
                             Event Selesai
                         </h3>
                     </div>
@@ -410,13 +410,13 @@ const EventManagement = () => {
                             .map((event) => (
                                 <div
                                     key={event._id}
-                                    className="flex items-center justify-between p-3 bg-gray-50 rounded"
+                                    className="flex items-center justify-between p-3 bg-white/[0.02] rounded"
                                 >
                                     <div>
-                                        <p className="font-semibold text-gray-900">
+                                        <p className="font-semibold text-white">
                                             {event.name}
                                         </p>
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-sm text-white/30">
                                             Terkumpul:{' '}
                                             {formatRp(event.totalCollected)} •
                                             Surplus:{' '}
@@ -426,7 +426,7 @@ const EventManagement = () => {
                                             )}
                                         </p>
                                     </div>
-                                    <CheckCircle className="w-5 h-5 text-[#0071e3]" />
+                                    <CheckCircle className="w-5 h-5 text-blue-400" />
                                 </div>
                             ))}
                     </div>
@@ -435,22 +435,22 @@ const EventManagement = () => {
 
             {/* Event Detail Modal */}
             {activeEvent && (
-                <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
-                    <div className="bg-white border border-gray-200 shadow-apple rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50">
+                    <div className="bg-[#111113] border border-white/[0.08] rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
                         {/* Modal Header */}
-                        <div className="p-6 border-b sticky top-0 bg-white border border-gray-200 shadow-apple">
+                        <div className="p-6 border-b border-white/[0.06] sticky top-0 bg-[#111113] ">
                             <div className="flex items-start justify-between">
                                 <div>
-                                    <h3 className="text-2xl font-bold text-gray-900">
+                                    <h3 className="text-2xl font-bold text-white">
                                         {activeEvent.name}
                                     </h3>
-                                    <p className="text-gray-500 mt-1">
+                                    <p className="text-white/30 mt-1">
                                         {activeEvent.description}
                                     </p>
                                 </div>
                                 <button
                                     onClick={() => setActiveEvent(null)}
-                                    className="p-2 hover:bg-gray-100 rounded"
+                                    className="p-2 hover:bg-white/[0.04] rounded"
                                 >
                                     <X className="w-5 h-5" />
                                 </button>
@@ -466,15 +466,15 @@ const EventManagement = () => {
                                         {formatRp(activeEvent.targetAmount)}
                                     </p>
                                 </div>
-                                <div className="bg-blue-50 p-3 rounded">
-                                    <p className="text-xs text-[#0071e3] mb-1">
+                                <div className="bg-blue-500/[0.06]0/[0.06] p-3 rounded">
+                                    <p className="text-xs text-blue-400 mb-1">
                                         Terkumpul
                                     </p>
                                     <p className="font-bold text-green-900">
                                         {formatRp(activeEvent.totalCollected)}
                                     </p>
                                 </div>
-                                <div className="bg-blue-50 p-3 rounded">
+                                <div className="bg-blue-500/[0.06]0/[0.06] p-3 rounded">
                                     <p className="text-xs text-blue-500 mb-1">
                                         Per Siswa
                                     </p>
@@ -482,8 +482,8 @@ const EventManagement = () => {
                                         {formatRp(activeEvent.perStudentAmount)}
                                     </p>
                                 </div>
-                                <div className="bg-amber-50 p-3 rounded">
-                                    <p className="text-xs text-yellow-600 mb-1">
+                                <div className="bg-amber-500/[0.06]0/[0.06] p-3 rounded">
+                                    <p className="text-xs text-amber-400 mb-1">
                                         Sudah Bayar
                                     </p>
                                     <p className="font-bold text-yellow-900">
@@ -500,7 +500,7 @@ const EventManagement = () => {
                             <div className="flex gap-2">
                                 <button
                                     onClick={() => setShowPaymentModal(true)}
-                                    className="flex-1 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition flex items-center justify-center gap-2"
+                                    className="flex-1 bg-violet-500/15 text-violet-400 border border-violet-500/20 px-4 py-2 rounded-lg hover:bg-violet-500/25 transition flex items-center justify-center gap-2"
                                 >
                                     <Plus className="w-4 h-4" />
                                     Tambah Pembayaran
@@ -511,7 +511,7 @@ const EventManagement = () => {
                                         onClick={() =>
                                             handleCompleteEvent(activeEvent._id)
                                         }
-                                        className="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition flex items-center justify-center gap-2"
+                                        className="flex-1 bg-emerald-500/15 text-emerald-400 border border-emerald-500/20 px-4 py-2 rounded-lg hover:bg-emerald-500/25 transition flex items-center justify-center gap-2"
                                     >
                                         <CheckCircle className="w-4 h-4" />
                                         Selesaikan Event
@@ -521,7 +521,7 @@ const EventManagement = () => {
                                     onClick={() =>
                                         handleDeleteEvent(activeEvent._id)
                                     }
-                                    className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
+                                    className="bg-rose-500/15 text-rose-400 border border-rose-500/20 px-4 py-2 rounded-lg hover:bg-rose-500/25 transition"
                                 >
                                     <Trash2 className="w-4 h-4" />
                                 </button>
@@ -529,7 +529,7 @@ const EventManagement = () => {
 
                             {/* Paid Students */}
                             {getPaidStudents(activeEvent).length > 0 && (
-                                <div className="bg-blue-50 border border-green-200 rounded-lg p-4">
+                                <div className="bg-blue-500/[0.06]0/[0.06] border border-green-200 rounded-lg p-4">
                                     <h4 className="font-semibold text-green-900 mb-2">
                                         Siswa Sudah Bayar (
                                         {getPaidStudents(activeEvent).length})
@@ -540,7 +540,7 @@ const EventManagement = () => {
                                             .map((student) => (
                                                 <span
                                                     key={student._id}
-                                                    className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-sm"
+                                                    className="px-2 py-1 bg-blue-500/[0.06]0/15 text-blue-400 rounded text-sm"
                                                 >
                                                     {student.absen}.{' '}
                                                     {student.name}
@@ -552,7 +552,7 @@ const EventManagement = () => {
 
                             {/* Unpaid Students */}
                             {getUnpaidStudents(activeEvent).length > 0 && (
-                                <div className="bg-amber-50 border border-yellow-200 rounded-lg p-4">
+                                <div className="bg-amber-500/[0.06]0/[0.06] border border-yellow-200 rounded-lg p-4">
                                     <h4 className="font-semibold text-yellow-900 mb-2">
                                         Siswa Belum Bayar (
                                         {getUnpaidStudents(activeEvent).length})
@@ -563,7 +563,7 @@ const EventManagement = () => {
                                             .map((student) => (
                                                 <span
                                                     key={student._id}
-                                                    className="px-2 py-1 bg-amber-100 text-amber-700 rounded text-sm"
+                                                    className="px-2 py-1 bg-amber-500/[0.06]0/15 text-amber-400 rounded text-sm"
                                                 >
                                                     {student.absen}.{' '}
                                                     {student.name}
@@ -575,26 +575,26 @@ const EventManagement = () => {
 
                             {/* Payment History */}
                             <div>
-                                <h4 className="font-semibold text-gray-900 mb-3">
+                                <h4 className="font-semibold text-white mb-3">
                                     Riwayat Pembayaran
                                 </h4>
                                 <div className="border rounded-lg overflow-hidden">
                                     <table className="w-full">
-                                        <thead className="bg-gray-50">
+                                        <thead className="bg-white/[0.02]">
                                             <tr>
-                                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">
+                                                <th className="px-4 py-2 text-left text-xs font-medium text-white/30">
                                                     Tanggal
                                                 </th>
-                                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">
+                                                <th className="px-4 py-2 text-left text-xs font-medium text-white/30">
                                                     Nama
                                                 </th>
-                                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">
+                                                <th className="px-4 py-2 text-left text-xs font-medium text-white/30">
                                                     Jumlah
                                                 </th>
-                                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">
+                                                <th className="px-4 py-2 text-left text-xs font-medium text-white/30">
                                                     Metode
                                                 </th>
-                                                <th className="px-4 py-2 text-center text-xs font-medium text-gray-500">
+                                                <th className="px-4 py-2 text-center text-xs font-medium text-white/30">
                                                     Aksi
                                                 </th>
                                             </tr>
@@ -604,7 +604,7 @@ const EventManagement = () => {
                                                 <tr>
                                                     <td
                                                         colSpan="5"
-                                                        className="px-4 py-8 text-center text-gray-500"
+                                                        className="px-4 py-8 text-center text-white/30"
                                                     >
                                                         Belum ada riwayat
                                                         pembayaran
@@ -634,8 +634,8 @@ const EventManagement = () => {
                                                                 className={`px-2 py-1 text-xs rounded-full ${
                                                                     payment.method ===
                                                                     'Tunai'
-                                                                        ? 'bg-blue-100 text-blue-700'
-                                                                        : 'bg-blue-100 text-blue-700'
+                                                                        ? 'bg-blue-500/[0.06]0/15 text-blue-400'
+                                                                        : 'bg-blue-500/[0.06]0/15 text-blue-400'
                                                                 }`}
                                                             >
                                                                 {payment.method}
@@ -660,7 +660,7 @@ const EventManagement = () => {
                                                                             payment._id
                                                                         )
                                                                     }
-                                                                    className="text-red-600 hover:text-red-600 p-1"
+                                                                    className="text-rose-400 hover:text-rose-400 p-1"
                                                                     title="Hapus"
                                                                 >
                                                                     <Trash2 className="w-4 h-4" />
@@ -681,8 +681,8 @@ const EventManagement = () => {
 
             {/* Create Event Modal */}
             {showCreateEvent && (
-                <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
-                    <div className="bg-white border border-gray-200 shadow-apple rounded-lg max-w-2xl w-full p-6">
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50">
+                    <div className="bg-[#111113] border border-white/[0.08] rounded-2xl max-w-2xl w-full p-6">
                         <h3 className="text-xl font-bold mb-4">
                             Buat Event Baru
                         </h3>
@@ -691,7 +691,7 @@ const EventManagement = () => {
                             className="space-y-4"
                         >
                             <div>
-                                <label className="block text-sm font-medium text-gray-600 mb-1">
+                                <label className="block text-sm font-medium text-white/50 mb-1">
                                     Nama Event
                                 </label>
                                 <input
@@ -699,25 +699,25 @@ const EventManagement = () => {
                                     name="name"
                                     required
                                     placeholder="Contoh: Study Tour"
-                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-600 mb-1">
+                                <label className="block text-sm font-medium text-white/50 mb-1">
                                     Deskripsi
                                 </label>
                                 <textarea
                                     name="description"
                                     rows="2"
                                     placeholder="Deskripsi singkat event"
-                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                 />
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 mb-1">
+                                    <label className="block text-sm font-medium text-white/50 mb-1">
                                         Target Iuran Total
                                     </label>
                                     <input
@@ -750,12 +750,12 @@ const EventManagement = () => {
                                                     : 'Belum ada data siswa. Silakan tambahkan siswa terlebih dahulu.';
                                         }}
                                         placeholder="100000"
-                                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                        className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 mb-1">
+                                    <label className="block text-sm font-medium text-white/50 mb-1">
                                         Iuran Per Siswa
                                     </label>
                                     <input
@@ -764,14 +764,14 @@ const EventManagement = () => {
                                         required
                                         id="perStudentAmount"
                                         placeholder="3500"
-                                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                        className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                     />
                                 </div>
                             </div>
 
-                            <div className="bg-blue-50 border border-blue-200 rounded p-3 text-sm">
+                            <div className="bg-blue-500/[0.06]0/[0.06] border border-blue-200 rounded p-3 text-sm">
                                 <p
-                                    className="text-blue-500"
+                                    className="text-blue-400"
                                     id="calculatedInfo"
                                 >
                                     Masukkan target iuran untuk kalkulasi
@@ -781,7 +781,7 @@ const EventManagement = () => {
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 mb-1">
+                                    <label className="block text-sm font-medium text-white/50 mb-1">
                                         Tanggal Mulai
                                     </label>
                                     <input
@@ -793,19 +793,19 @@ const EventManagement = () => {
                                                 .toISOString()
                                                 .split('T')[0]
                                         }
-                                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                        className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 mb-1">
+                                    <label className="block text-sm font-medium text-white/50 mb-1">
                                         Tanggal Selesai
                                     </label>
                                     <input
                                         type="date"
                                         name="endDate"
                                         required
-                                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                        className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                     />
                                 </div>
                             </div>
@@ -814,13 +814,13 @@ const EventManagement = () => {
                                 <button
                                     type="button"
                                     onClick={() => setShowCreateEvent(false)}
-                                    className="flex-1 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
+                                    className="flex-1 px-4 py-2 border border-white/[0.06] rounded-lg hover:bg-white/[0.02] transition"
                                 >
                                     Batal
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition"
+                                    className="flex-1 px-4 py-2 bg-violet-500/15 text-violet-400 border border-violet-500/20 rounded-lg hover:bg-violet-500/25 transition"
                                 >
                                     Buat Event
                                 </button>
@@ -832,20 +832,20 @@ const EventManagement = () => {
 
             {/* Add Payment Modal */}
             {showPaymentModal && activeEvent && (
-                <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
-                    <div className="bg-white border border-gray-200 shadow-apple rounded-lg max-w-md w-full p-6">
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50">
+                    <div className="bg-[#111113] border border-white/[0.08] rounded-2xl max-w-md w-full p-6">
                         <h3 className="text-xl font-bold mb-4">
                             Tambah Pembayaran Event
                         </h3>
                         <form onSubmit={handleAddPayment} className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-600 mb-1">
+                                <label className="block text-sm font-medium text-white/50 mb-1">
                                     Siswa
                                 </label>
                                 <select
                                     name="studentId"
                                     required
-                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                 >
                                     <option value="">Pilih Siswa</option>
                                     {students
@@ -862,7 +862,7 @@ const EventManagement = () => {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-600 mb-1">
+                                <label className="block text-sm font-medium text-white/50 mb-1">
                                     Jumlah
                                 </label>
                                 <input
@@ -870,16 +870,16 @@ const EventManagement = () => {
                                     name="amount"
                                     defaultValue={activeEvent.perStudentAmount}
                                     required
-                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                 />
-                                <p className="text-xs text-gray-500 mt-1">
+                                <p className="text-xs text-white/30 mt-1">
                                     Default:{' '}
                                     {formatRp(activeEvent.perStudentAmount)}
                                 </p>
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-600 mb-1">
+                                <label className="block text-sm font-medium text-white/50 mb-1">
                                     Tanggal
                                 </label>
                                 <input
@@ -889,17 +889,17 @@ const EventManagement = () => {
                                         new Date().toISOString().split('T')[0]
                                     }
                                     required
-                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-600 mb-1">
+                                <label className="block text-sm font-medium text-white/50 mb-1">
                                     Metode
                                 </label>
                                 <select
                                     name="method"
-                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                 >
                                     <option>Tunai</option>
                                     <option>Transfer</option>
@@ -907,13 +907,13 @@ const EventManagement = () => {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-600 mb-1">
+                                <label className="block text-sm font-medium text-white/50 mb-1">
                                     Catatan (opsional)
                                 </label>
                                 <input
                                     type="text"
                                     name="note"
-                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                 />
                             </div>
 
@@ -921,13 +921,13 @@ const EventManagement = () => {
                                 <button
                                     type="button"
                                     onClick={() => setShowPaymentModal(false)}
-                                    className="flex-1 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
+                                    className="flex-1 px-4 py-2 border border-white/[0.06] rounded-lg hover:bg-white/[0.02] transition"
                                 >
                                     Batal
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition"
+                                    className="flex-1 px-4 py-2 bg-violet-500/15 text-violet-400 border border-violet-500/20 rounded-lg hover:bg-violet-500/25 transition"
                                 >
                                     Simpan
                                 </button>
@@ -939,8 +939,8 @@ const EventManagement = () => {
 
             {/* Edit Payment Modal */}
             {showEditPaymentModal && activeEvent && editingPayment && (
-                <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
-                    <div className="bg-white border border-gray-200 shadow-apple rounded-lg max-w-md w-full p-6">
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50">
+                    <div className="bg-[#111113] border border-white/[0.08] rounded-2xl max-w-md w-full p-6">
                         <h3 className="text-xl font-bold mb-4">
                             Edit Pembayaran Event
                         </h3>
@@ -949,14 +949,14 @@ const EventManagement = () => {
                             className="space-y-4"
                         >
                             <div>
-                                <label className="block text-sm font-medium text-gray-600 mb-1">
+                                <label className="block text-sm font-medium text-white/50 mb-1">
                                     Siswa
                                 </label>
                                 <select
                                     name="studentId"
                                     required
                                     defaultValue={editingPayment.studentId?._id}
-                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                 >
                                     <option value="">Pilih Siswa</option>
                                     {students
@@ -973,7 +973,7 @@ const EventManagement = () => {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-600 mb-1">
+                                <label className="block text-sm font-medium text-white/50 mb-1">
                                     Jumlah
                                 </label>
                                 <input
@@ -981,12 +981,12 @@ const EventManagement = () => {
                                     name="amount"
                                     defaultValue={editingPayment.amount}
                                     required
-                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-600 mb-1">
+                                <label className="block text-sm font-medium text-white/50 mb-1">
                                     Tanggal
                                 </label>
                                 <input
@@ -998,18 +998,18 @@ const EventManagement = () => {
                                             .split('T')[0]
                                     }
                                     required
-                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-600 mb-1">
+                                <label className="block text-sm font-medium text-white/50 mb-1">
                                     Metode
                                 </label>
                                 <select
                                     name="method"
                                     defaultValue={editingPayment.method}
-                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                 >
                                     <option>Tunai</option>
                                     <option>Transfer</option>
@@ -1017,14 +1017,14 @@ const EventManagement = () => {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-600 mb-1">
+                                <label className="block text-sm font-medium text-white/50 mb-1">
                                     Catatan (opsional)
                                 </label>
                                 <input
                                     type="text"
                                     name="note"
                                     defaultValue={editingPayment.note || ''}
-                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                 />
                             </div>
 
@@ -1035,13 +1035,13 @@ const EventManagement = () => {
                                         setShowEditPaymentModal(false);
                                         setEditingPayment(null);
                                     }}
-                                    className="flex-1 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
+                                    className="flex-1 px-4 py-2 border border-white/[0.06] rounded-lg hover:bg-white/[0.02] transition"
                                 >
                                     Batal
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                                    className="flex-1 px-4 py-2 bg-blue-500/[0.06]0/15 text-blue-400 border border-blue-500/20 rounded-lg hover:bg-blue-500/[0.06]0/25 transition"
                                 >
                                     Update
                                 </button>

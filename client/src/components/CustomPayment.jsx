@@ -68,7 +68,7 @@ const CustomPayment = ({ onPaymentAdded }) => {
             {/* Trigger Button */}
             <button
                 onClick={() => setShowModal(true)}
-                className="w-full bg-emerald-600 text-white px-6 py-4 rounded-xl hover:bg-emerald-700 transition flex items-center justify-center gap-3 shadow-apple"
+                className="w-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/20 px-6 py-4 rounded-xl hover:bg-emerald-500/25 transition flex items-center justify-center gap-3 "
             >
                 <Gift className="w-5 h-5" />
                 <span className="font-semibold">Tambah Pemasukan Custom</span>
@@ -79,20 +79,20 @@ const CustomPayment = ({ onPaymentAdded }) => {
 
             {/* Modal */}
             {showModal && (
-                <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
-                    <div className="bg-white border border-gray-200 shadow-apple rounded-lg max-w-md w-full">
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50">
+                    <div className="bg-[#111113] border border-white/[0.08] rounded-2xl max-w-md w-full">
                         {/* Header */}
                         <div className="p-6 border-b">
                             <div className="flex items-start justify-between">
                                 <div className="flex items-center gap-3">
-                                    <div className="bg-[#0071e3] p-2 rounded-lg">
-                                        <Gift className="w-5 h-5 text-gray-900" />
+                                    <div className="bg-blue-500 p-2 rounded-lg">
+                                        <Gift className="w-5 h-5 text-white" />
                                     </div>
                                     <div>
-                                        <h3 className="text-xl font-bold text-gray-900">
+                                        <h3 className="text-xl font-bold text-white">
                                             Pemasukan Custom
                                         </h3>
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-sm text-white/30">
                                             Sumber pemasukan lain untuk kas
                                             kelas
                                         </p>
@@ -100,7 +100,7 @@ const CustomPayment = ({ onPaymentAdded }) => {
                                 </div>
                                 <button
                                     onClick={() => setShowModal(false)}
-                                    className="p-1 hover:bg-gray-100 rounded"
+                                    className="p-1 hover:bg-white/[0.04] rounded"
                                 >
                                     <X className="w-5 h-5" />
                                 </button>
@@ -111,9 +111,9 @@ const CustomPayment = ({ onPaymentAdded }) => {
                         <form onSubmit={handleSubmit} className="p-6 space-y-4">
                             {/* Source Name */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-600 mb-1">
+                                <label className="block text-sm font-medium text-white/50 mb-1">
                                     Sumber Pemasukan{' '}
-                                    <span className="text-red-500">*</span>
+                                    <span className="text-rose-400">*</span>
                                 </label>
                                 <input
                                     type="text"
@@ -121,26 +121,26 @@ const CustomPayment = ({ onPaymentAdded }) => {
                                     required
                                     placeholder="Contoh: Sumbangan Dosen Wali"
                                     list="sourceExamples"
-                                    className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                    className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
                                 />
                                 <datalist id="sourceExamples">
                                     {sourceExamples.map((example, idx) => (
                                         <option key={idx} value={example} />
                                     ))}
                                 </datalist>
-                                <p className="text-xs text-gray-500 mt-1">
+                                <p className="text-xs text-white/30 mt-1">
                                     Nama/deskripsi sumber pemasukan
                                 </p>
                             </div>
 
                             {/* Amount */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-600 mb-1">
+                                <label className="block text-sm font-medium text-white/50 mb-1">
                                     Jumlah{' '}
-                                    <span className="text-red-500">*</span>
+                                    <span className="text-rose-400">*</span>
                                 </label>
                                 <div className="relative">
-                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30">
                                         Rp
                                     </span>
                                     <input
@@ -150,19 +150,19 @@ const CustomPayment = ({ onPaymentAdded }) => {
                                         min="1000"
                                         step="500"
                                         placeholder="50000"
-                                        className="w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#0071e3] focus:border-transparent"
+                                        className="w-full pl-10 pr-3 py-2 border border-white/[0.06] rounded-lg focus:ring-2 focus:ring-blue-500/40 focus:border-transparent"
                                     />
                                 </div>
-                                <p className="text-xs text-gray-500 mt-1">
+                                <p className="text-xs text-white/30 mt-1">
                                     Jumlah uang yang masuk ke kas
                                 </p>
                             </div>
 
                             {/* Date */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-600 mb-1">
+                                <label className="block text-sm font-medium text-white/50 mb-1">
                                     Tanggal{' '}
-                                    <span className="text-red-500">*</span>
+                                    <span className="text-rose-400">*</span>
                                 </label>
                                 <input
                                     type="date"
@@ -171,19 +171,19 @@ const CustomPayment = ({ onPaymentAdded }) => {
                                     defaultValue={
                                         new Date().toISOString().split('T')[0]
                                     }
-                                    className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                    className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
                                 />
                             </div>
 
                             {/* Method */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-600 mb-1">
+                                <label className="block text-sm font-medium text-white/50 mb-1">
                                     Metode Pembayaran{' '}
-                                    <span className="text-red-500">*</span>
+                                    <span className="text-rose-400">*</span>
                                 </label>
                                 <select
                                     name="method"
-                                    className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                    className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
                                 >
                                     <option value="Tunai">Tunai</option>
                                     <option value="Transfer">Transfer</option>
@@ -192,20 +192,20 @@ const CustomPayment = ({ onPaymentAdded }) => {
 
                             {/* Note */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-600 mb-1">
+                                <label className="block text-sm font-medium text-white/50 mb-1">
                                     Catatan (Opsional)
                                 </label>
                                 <textarea
                                     name="note"
                                     rows="3"
                                     placeholder="Keterangan tambahan..."
-                                    className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                    className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
                                 />
                             </div>
 
                             {/* Info Box */}
-                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                                <p className="text-xs text-blue-500">
+                            <div className="bg-blue-500/[0.06]0/[0.06] border border-blue-200 rounded-lg p-3">
+                                <p className="text-xs text-blue-400">
                                     <strong>ℹ️ Catatan:</strong> Pemasukan ini
                                     akan langsung masuk ke kas kelas dan
                                     ditampilkan di tab Pembayaran dengan label
@@ -219,14 +219,14 @@ const CustomPayment = ({ onPaymentAdded }) => {
                                     type="button"
                                     onClick={() => setShowModal(false)}
                                     disabled={loading}
-                                    className="flex-1 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition disabled:opacity-50"
+                                    className="flex-1 px-4 py-2 border border-white/[0.06] rounded-lg hover:bg-white/[0.02] transition disabled:opacity-50"
                                 >
                                     Batal
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={loading}
-                                    className="flex-1 px-4 py-2 bg-[#0071e3] text-white rounded-lg hover:bg-cyan-700 transition flex items-center justify-center gap-2 disabled:opacity-50"
+                                    className="flex-1 px-4 py-2 bg-blue-500/[0.06]0 text-white rounded-lg hover:bg-cyan-700 transition flex items-center justify-center gap-2 disabled:opacity-50"
                                 >
                                     {loading ? (
                                         <>

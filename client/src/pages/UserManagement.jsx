@@ -124,7 +124,7 @@ const UserManagement = () => {
             <div className="flex items-center justify-center min-h-screen">
                 <div className="text-center">
                     <div className="w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-gray-600">Loading users...</p>
+                    <p className="text-white/50">Loading users...</p>
                 </div>
             </div>
         );
@@ -133,20 +133,20 @@ const UserManagement = () => {
     return (
         <div className="max-w-7xl mx-auto p-3 sm:p-6">
             {/* Header */}
-            <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl shadow-apple p-4 sm:p-6 mb-4 sm:mb-6">
+            <div className="rounded-xl bg-white/[0.025] border border-white/[0.06]-apple p-4 sm:p-6 mb-4 sm:mb-6">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
-                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
-                            <Users className="w-6 h-6 sm:w-8 sm:h-8 text-[#0071e3]" />
+                        <h1 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-2 sm:gap-3">
+                            <Users className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400" />
                             User Management
                         </h1>
-                        <p className="text-sm sm:text-base text-gray-500 mt-1 sm:mt-2">
+                        <p className="text-sm sm:text-base text-white/30 mt-1 sm:mt-2">
                             Kelola akun pengguna sistem
                         </p>
                     </div>
                     <button
                         onClick={() => setShowAddUser(true)}
-                        className="w-full sm:w-auto bg-[#0071e3] text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-[#0077ED] transition flex items-center justify-center gap-2 font-semibold text-sm sm:text-base"
+                        className="w-full sm:w-auto bg-blue-500/[0.06]0 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-blue-600 transition flex items-center justify-center gap-2 font-semibold text-sm sm:text-base"
                     >
                         <Plus className="w-5 h-5" />
                         Tambah User
@@ -155,53 +155,53 @@ const UserManagement = () => {
             </div>
 
             {error && (
-                <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded mb-6">
+                <div className="bg-rose-500/[0.06] border-l-4 border-red-400 p-4 rounded mb-6">
                     <div className="flex items-center">
                         <AlertCircle className="w-5 h-5 text-red-400 mr-2" />
-                        <p className="text-red-600">{error}</p>
+                        <p className="text-rose-400">{error}</p>
                     </div>
                 </div>
             )}
 
             {/* Users Table */}
-            <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl shadow-apple overflow-hidden">
+            <div className="rounded-xl bg-white/[0.025] border border-white/[0.06]-apple overflow-hidden">
                 <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-100">
+                    <table className="min-w-full divide-y divide-white/[0.04]">
                         <thead className="bg-gradient-to-r from-indigo-50 to-purple-50">
                             <tr>
-                                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
+                                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase whitespace-nowrap">
                                     User
                                 </th>
-                                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
+                                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase whitespace-nowrap">
                                     Role
                                 </th>
-                                <th className="hidden md:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
+                                <th className="hidden md:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase whitespace-nowrap">
                                     Linked Student
                                 </th>
-                                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
+                                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase whitespace-nowrap">
                                     Status
                                 </th>
-                                <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
+                                <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase whitespace-nowrap">
                                     Last Login
                                 </th>
-                                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
+                                <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase whitespace-nowrap">
                                     Actions
                                 </th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-100">
+                        <tbody className="divide-y divide-white/[0.04]">
                             {users.map((user) => (
-                                <tr key={user._id} className="hover:bg-gray-50">
+                                <tr key={user._id} className="hover:bg-white/[0.02]">
                                     <td className="px-3 sm:px-6 py-3 sm:py-4">
                                         <div>
-                                            <p className="font-semibold text-gray-900 text-sm sm:text-base">
+                                            <p className="font-semibold text-white text-sm sm:text-base">
                                                 {user.fullName}
                                             </p>
-                                            <p className="text-xs sm:text-sm text-gray-500">
+                                            <p className="text-xs sm:text-sm text-white/30">
                                                 @{user.username}
                                             </p>
                                             {user.email && (
-                                                <p className="text-xs text-gray-400">
+                                                <p className="text-xs text-white/20">
                                                     {user.email}
                                                 </p>
                                             )}
@@ -213,8 +213,8 @@ const UserManagement = () => {
                                                 user.role === 'admin'
                                                     ? 'bg-violet-500/30 text-violet-200'
                                                     : user.role === 'member'
-                                                    ? 'bg-blue-100 text-blue-700'
-                                                    : 'bg-gray-100 text-gray-900'
+                                                    ? 'bg-blue-500/[0.06]0/15 text-blue-400'
+                                                    : 'bg-white/[0.04] text-white'
                                             }`}
                                         >
                                             {user.role === 'admin' ? (
@@ -225,7 +225,7 @@ const UserManagement = () => {
                                             {user.role}
                                         </span>
                                     </td>
-                                    <td className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-gray-600">
+                                    <td className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-white/50">
                                         {user.studentId
                                             ? `${user.studentId.absen} - ${user.studentId.name}`
                                             : '-'}
@@ -237,8 +237,8 @@ const UserManagement = () => {
                                             }
                                             className={`inline-flex items-center gap-1 px-2 sm:px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap ${
                                                 user.isActive
-                                                    ? 'bg-blue-100 text-blue-700'
-                                                    : 'bg-red-100 text-red-700'
+                                                    ? 'bg-blue-500/[0.06]0/15 text-blue-400'
+                                                    : 'bg-rose-500/15 text-rose-400'
                                             }`}
                                         >
                                             {user.isActive ? (
@@ -258,7 +258,7 @@ const UserManagement = () => {
                                             )}
                                         </button>
                                     </td>
-                                    <td className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-gray-600 whitespace-nowrap">
+                                    <td className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-white/50 whitespace-nowrap">
                                         {user.lastLogin
                                             ? new Date(
                                                   user.lastLogin
@@ -271,7 +271,7 @@ const UserManagement = () => {
                                                 onClick={() =>
                                                     handleResetPassword(user)
                                                 }
-                                                className="text-blue-500 hover:text-blue-500"
+                                                className="text-blue-500 hover:text-blue-400"
                                                 title="Reset Password"
                                             >
                                                 <Key className="w-4 h-4" />
@@ -280,7 +280,7 @@ const UserManagement = () => {
                                                 onClick={() =>
                                                     handleDeleteUser(user._id)
                                                 }
-                                                className="text-red-600 hover:text-red-600"
+                                                className="text-rose-400 hover:text-rose-400"
                                                 title="Delete user"
                                             >
                                                 <Trash2 className="w-4 h-4" />
@@ -296,46 +296,46 @@ const UserManagement = () => {
 
             {/* Add User Modal */}
             {showAddUser && (
-                <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
-                    <div className="bg-white/95 backdrop-blur-xl border border-gray-200 shadow-apple rounded-xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50">
+                    <div className="bg-[#111113]/95 backdrop-blur-xl border border-white/[0.06]  rounded-xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
                         <h3 className="text-xl font-bold mb-4">
                             Tambah User Baru
                         </h3>
                         <form onSubmit={handleAddUser} className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-600 mb-1">
+                                <label className="block text-sm font-medium text-white/50 mb-1">
                                     Full Name *
                                 </label>
                                 <input
                                     type="text"
                                     name="fullName"
                                     required
-                                    className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                    className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-600 mb-1">
+                                <label className="block text-sm font-medium text-white/50 mb-1">
                                     Username *
                                 </label>
                                 <input
                                     type="text"
                                     name="username"
                                     required
-                                    className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                    className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-600 mb-1">
+                                <label className="block text-sm font-medium text-white/50 mb-1">
                                     Email (Optional)
                                 </label>
                                 <input
                                     type="email"
                                     name="email"
-                                    className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                    className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-600 mb-1">
+                                <label className="block text-sm font-medium text-white/50 mb-1">
                                     Password *
                                 </label>
                                 <input
@@ -343,32 +343,32 @@ const UserManagement = () => {
                                     name="password"
                                     required
                                     minLength={6}
-                                    className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                    className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
                                 />
-                                <p className="text-xs text-gray-500 mt-1">
+                                <p className="text-xs text-white/30 mt-1">
                                     Minimal 6 karakter
                                 </p>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-600 mb-1">
+                                <label className="block text-sm font-medium text-white/50 mb-1">
                                     Role *
                                 </label>
                                 <select
                                     name="role"
                                     required
-                                    className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                    className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
                                 >
                                     <option value="member">Member</option>
                                     <option value="admin">Admin</option>
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-600 mb-1">
+                                <label className="block text-sm font-medium text-white/50 mb-1">
                                     Link to Student (Optional)
                                 </label>
                                 <select
                                     name="studentId"
-                                    className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                    className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
                                 >
                                     <option value="">None</option>
                                     {students.map((student) => (
@@ -385,13 +385,13 @@ const UserManagement = () => {
                                 <button
                                     type="button"
                                     onClick={() => setShowAddUser(false)}
-                                    className="flex-1 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
+                                    className="flex-1 px-4 py-2 border border-white/[0.06] rounded-lg hover:bg-white/[0.02] transition"
                                 >
                                     Batal
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex-1 px-4 py-2 bg-[#0071e3] text-white rounded-lg hover:bg-[#0077ED] transition"
+                                    className="flex-1 px-4 py-2 bg-blue-500/[0.06]0 text-white rounded-lg hover:bg-blue-600 transition"
                                 >
                                     Simpan
                                 </button>
@@ -403,23 +403,23 @@ const UserManagement = () => {
 
             {/* Password Reset Modal */}
             {showPasswordModal && resetPasswordData && (
-                <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
-                    <div className="bg-white/95 backdrop-blur-xl border border-gray-200 shadow-apple rounded-xl max-w-md w-full p-6">
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50">
+                    <div className="bg-[#111113]/95 backdrop-blur-xl border border-white/[0.06]  rounded-xl max-w-md w-full p-6">
                         <div className="text-center mb-6">
                             <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <CheckCircle className="w-8 h-8 text-[#0071e3]" />
+                                <CheckCircle className="w-8 h-8 text-blue-400" />
                             </div>
-                            <h3 className="text-xl font-bold text-gray-900 mb-2">
+                            <h3 className="text-xl font-bold text-white mb-2">
                                 Password Berhasil Direset!
                             </h3>
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-white/50">
                                 Berikan informasi ini kepada user
                             </p>
                         </div>
 
-                        <div className="space-y-4 bg-gray-50 rounded-lg p-4 mb-6">
+                        <div className="space-y-4 bg-white/[0.02] rounded-lg p-4 mb-6">
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase block mb-2">
+                                <label className="text-xs font-semibold text-white/30 uppercase block mb-2">
                                     Username
                                 </label>
                                 <div className="flex items-center gap-2">
@@ -427,7 +427,7 @@ const UserManagement = () => {
                                         type="text"
                                         value={resetPasswordData.username}
                                         readOnly
-                                        className="flex-1 px-3 py-2 bg-white border border-gray-200 rounded-lg font-mono text-sm"
+                                        className="flex-1 px-3 py-2 rounded-xl bg-white/[0.025] border border-white/[0.06] font-mono text-sm"
                                     />
                                     <button
                                         onClick={() =>
@@ -435,7 +435,7 @@ const UserManagement = () => {
                                                 resetPasswordData.username
                                             )
                                         }
-                                        className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition"
+                                        className="p-2 text-white/50 hover:text-white hover:bg-white/[0.04] rounded-lg transition"
                                         title="Copy username"
                                     >
                                         <Copy className="w-4 h-4" />
@@ -444,7 +444,7 @@ const UserManagement = () => {
                             </div>
 
                             <div>
-                                <label className="text-xs font-semibold text-gray-500 uppercase block mb-2">
+                                <label className="text-xs font-semibold text-white/30 uppercase block mb-2">
                                     Password Baru
                                 </label>
                                 <div className="flex items-center gap-2">
@@ -452,7 +452,7 @@ const UserManagement = () => {
                                         type="text"
                                         value={resetPasswordData.password}
                                         readOnly
-                                        className="flex-1 px-3 py-2 bg-white border border-gray-200 rounded-lg font-mono text-sm font-bold text-[#0071e3]"
+                                        className="flex-1 px-3 py-2 rounded-xl bg-white/[0.025] border border-white/[0.06] font-mono text-sm font-bold text-blue-400"
                                     />
                                     <button
                                         onClick={() =>
@@ -460,7 +460,7 @@ const UserManagement = () => {
                                                 resetPasswordData.password
                                             )
                                         }
-                                        className="p-2 text-[#0071e3] hover:text-indigo-800 hover:bg-blue-50 rounded-lg transition"
+                                        className="p-2 text-blue-400 hover:text-indigo-800 hover:bg-blue-500/[0.06]0/[0.06] rounded-lg transition"
                                         title="Copy password"
                                     >
                                         <Copy className="w-4 h-4" />
@@ -469,10 +469,10 @@ const UserManagement = () => {
                             </div>
                         </div>
 
-                        <div className="bg-amber-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                        <div className="bg-amber-500/[0.06]0/[0.06] border border-yellow-200 rounded-lg p-4 mb-6">
                             <div className="flex gap-3">
-                                <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-                                <div className="text-sm text-amber-600">
+                                <AlertCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+                                <div className="text-sm text-amber-400">
                                     <p className="font-semibold mb-1">
                                         Penting:
                                     </p>
@@ -498,7 +498,7 @@ const UserManagement = () => {
                                 setShowPasswordModal(false);
                                 setResetPasswordData(null);
                             }}
-                            className="w-full px-4 py-3 bg-[#0071e3] text-white rounded-lg hover:bg-[#0077ED] transition font-semibold"
+                            className="w-full px-4 py-3 bg-blue-500/[0.06]0 text-white rounded-lg hover:bg-blue-600 transition font-semibold"
                         >
                             Tutup
                         </button>

@@ -18,47 +18,47 @@ body {
         sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: #f5f5f7;
-    color: #1d1d1f;
+    background-color: #09090b;
+    color: #fafafa;
     min-height: 100vh;
     letter-spacing: -0.01em;
 }
 
-/* Apple-style scrollbar */
+/* Dark scrollbar */
 ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
 }
 ::-webkit-scrollbar-track {
     background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-    background: #c7c7cc;
-    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: #a1a1a6;
+    background: rgba(255, 255, 255, 0.15);
 }
 
 /* Selection */
 ::selection {
-    background-color: #0071e3;
+    background-color: rgba(96, 165, 250, 0.3);
     color: white;
 }
 
 /* Glass morphism utility */
 .glass {
-    background: rgba(255, 255, 255, 0.72);
+    background: rgba(255, 255, 255, 0.025);
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
 }
 
-/* Apple card style */
+/* Dark card style */
 .apple-card {
-    background: #ffffff;
+    background: rgba(255, 255, 255, 0.025);
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.06);
-    border: 1px solid rgba(0, 0, 0, 0.04);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 /* Smooth transitions */
@@ -66,7 +66,7 @@ body {
     transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
-/* Apple button pressed state */
+/* Button pressed state */
 .btn-apple:active {
     transform: scale(0.98);
 }
@@ -76,6 +76,17 @@ input:focus,
 select:focus,
 textarea:focus {
     outline: none;
-    box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15);
+    box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.15);
+}
+
+/* Dark theme select options */
+select option {
+    background-color: #111113;
+    color: #fafafa;
+}
+
+/* Dark date input icon */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(0.6);
 }
 

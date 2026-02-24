@@ -960,140 +960,145 @@ const App = () => {
 
     if (loading && students.length === 0) {
         return (
-            <div className="min-h-screen bg-[#f5f5f7] flex items-center justify-center">
+            <div className="min-h-screen bg-[#09090b] flex items-center justify-center">
                 <div className="text-center">
-                    <RefreshCw className="w-12 h-12 text-[#0071e3] animate-spin mx-auto mb-4" />
-                    <p className="text-gray-600">Memuat data...</p>
+                    <RefreshCw className="w-12 h-12 text-blue-400 animate-spin mx-auto mb-4" />
+                    <p className="text-white/50">Memuat data...</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-[#f5f5f7]">
-            <div className="max-w-7xl mx-auto p-4 md:p-6">
+        <div className="min-h-screen bg-[#09090b] text-white selection:bg-blue-500/30">
+            <div className="px-4 sm:px-6 lg:px-8 py-6">
                 {/* Header */}
-                <div className="bg-white/95 backdrop-blur-xl border border-gray-200 shadow-apple rounded-xl p-6 mb-6">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="bg-[#0071e3] p-3 rounded-xl">
-                                <Wallet className="w-8 h-8 text-white" />
-                            </div>
-                            <div>
-                                <h1 className="text-3xl font-bold text-gray-900">
-                                    Kas Kelas
-                                </h1>
-                                <p className="text-gray-500">
-                                    Sistem Pencatatan Kas TRIFORCE Rp
-                                    2.000/minggu
-                                </p>
-                            </div>
+                <div className="flex items-center justify-between mb-8">
+                    <div className="flex items-center gap-3.5">
+                        <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                            <Wallet className="w-5 h-5 text-white" />
                         </div>
-                        <div className="flex items-center gap-3">
-                            <div className="text-right">
-                                <p className="text-sm text-gray-500">
-                                    Minggu ke-
-                                </p>
-                                <p className="text-2xl font-bold text-[#0071e3]">
-                                    {currentWeek}
-                                </p>
-                            </div>
-                            <button
-                                onClick={loadAllData}
-                                className="p-2 hover:bg-gray-100 rounded-lg transition"
-                                title="Refresh data"
-                            >
-                                <RefreshCw
-                                    className={`w-5 h-5 text-gray-600 ${
-                                        loading ? 'animate-spin' : ''
-                                    }`}
-                                />
-                            </button>
+                        <div>
+                            <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                                Kas Kelas
+                            </h1>
+                            <p className="text-[13px] text-white/30">
+                                Sistem Pencatatan Kas TRIFORCE Rp 2.000/minggu
+                            </p>
                         </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <div className="text-right">
+                            <p className="text-[11px] text-white/30 uppercase tracking-wider">
+                                Minggu ke-
+                            </p>
+                            <p className="text-2xl font-bold text-blue-400 tabular-nums">
+                                {currentWeek}
+                            </p>
+                        </div>
+                        <button
+                            onClick={loadAllData}
+                            className="p-2 hover:bg-white/[0.04] rounded-lg transition"
+                            title="Refresh data"
+                        >
+                            <RefreshCw
+                                className={`w-4 h-4 text-white/40 ${
+                                    loading ? 'animate-spin' : ''
+                                }`}
+                            />
+                        </button>
                     </div>
                 </div>
 
                 {/* Error Alert */}
                 {error && (
-                    <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded mb-6">
+                    <div className="bg-red-500/10 border border-red-500/20 p-4 rounded-xl mb-6">
                         <div className="flex items-center">
-                            <AlertCircle className="w-5 h-5 text-red-400 mr-2" />
-                            <p className="text-red-600">{error}</p>
+                            <AlertCircle className="w-4 h-4 text-red-400 mr-2" />
+                            <p className="text-red-400 text-sm">{error}</p>
                         </div>
                     </div>
                 )}
 
                 {/* Stats Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                    <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl p-5">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
+                    <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-4 sm:p-5 hover:bg-white/[0.04] transition-all">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-gray-500">
+                                <p className="text-[11px] sm:text-[13px] text-white/30 font-medium">
                                     Total Siswa
                                 </p>
-                                <p className="text-2xl font-bold text-gray-900">
+                                <p className="text-xl sm:text-2xl font-bold text-white mt-1 tabular-nums">
                                     {students.length}
                                 </p>
                             </div>
-                            <Users className="w-10 h-10 text-blue-500" />
+                            <div className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/15">
+                                <Users className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
+                            </div>
                         </div>
                     </div>
-                    <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl p-5">
+                    <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-4 sm:p-5 hover:bg-white/[0.04] transition-all">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-gray-500">
+                                <p className="text-[11px] sm:text-[13px] text-white/30 font-medium">
                                     Kas Masuk
                                 </p>
-                                <p className="text-xl font-bold text-[#0071e3]">
+                                <p className="text-lg sm:text-xl font-bold text-emerald-400 mt-1">
                                     {formatRp(totalKasMasuk)}
                                 </p>
                             </div>
-                            <TrendingUp className="w-10 h-10 text-green-500" />
+                            <div className="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/15">
+                                <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />
+                            </div>
                         </div>
                     </div>
-                    <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl p-5">
+                    <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-4 sm:p-5 hover:bg-white/[0.04] transition-all">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-gray-500">
+                                <p className="text-[11px] sm:text-[13px] text-white/30 font-medium">
                                     Kas Keluar
                                 </p>
-                                <p className="text-xl font-bold text-red-600">
+                                <p className="text-lg sm:text-xl font-bold text-rose-400 mt-1">
                                     {formatRp(totalKasKeluar)}
                                 </p>
                             </div>
-                            <TrendingDown className="w-10 h-10 text-red-500" />
+                            <div className="p-2 rounded-lg bg-rose-500/10 border border-rose-500/15">
+                                <TrendingDown className="w-4 h-4 sm:w-5 sm:h-5 text-rose-400" />
+                            </div>
                         </div>
                     </div>
-                    <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl p-5">
+                    <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-4 sm:p-5 hover:bg-white/[0.04] transition-all">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-gray-500">
+                                <p className="text-[11px] sm:text-[13px] text-white/30 font-medium">
                                     Saldo Kas
                                 </p>
-                                <p className="text-xl font-bold text-[#0071e3]">
+                                <p className="text-lg sm:text-xl font-bold text-blue-400 mt-1">
                                     {formatRp(saldoKas)}
                                 </p>
                             </div>
-                            <Wallet className="w-10 h-10 text-[#0071e3]" />
+                            <div className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/15">
+                                <Wallet className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Export Complete Report Button */}
-                <div className="mb-6 grid grid-cols-2 gap-4">
+                {/* Export Buttons */}
+                <div className="mb-6 grid grid-cols-2 gap-3">
                     <button
                         onClick={exportCompleteReport}
-                        className="bg-emerald-600 text-white px-6 py-4 rounded-lg hover:bg-emerald-700 transition flex items-center justify-center gap-3 shadow-apple"
+                        className="bg-emerald-500/10 hover:bg-emerald-500/15 border border-emerald-500/20 text-emerald-400 px-5 py-3 rounded-xl transition-all flex items-center justify-center gap-2.5 text-sm font-medium"
                     >
-                        <FileText className="w-5 h-5" />
-                        <span className="font-semibold">Excel</span>
+                        <FileText className="w-4 h-4" />
+                        <span>Excel</span>
                     </button>
                     <button
                         onClick={exportCompleteReportPDF}
-                        className="bg-red-600 text-white px-6 py-4 rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-3 shadow-apple"
+                        className="bg-rose-500/10 hover:bg-rose-500/15 border border-rose-500/20 text-rose-400 px-5 py-3 rounded-xl transition-all flex items-center justify-center gap-2.5 text-sm font-medium"
                     >
-                        <FileText className="w-5 h-5" />
-                        <span className="font-semibold">PDF</span>
+                        <FileText className="w-4 h-4" />
+                        <span>PDF</span>
                     </button>
                 </div>
 
@@ -1103,8 +1108,8 @@ const App = () => {
                 </div>
 
                 {/* Tabs */}
-                <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl mb-6">
-                    <div className="flex border-b overflow-x-auto">
+                <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] mb-6">
+                    <div className="flex border-b border-white/[0.06] overflow-x-auto">
                         {[
                             'dashboard',
                             'analytics',
@@ -1120,10 +1125,10 @@ const App = () => {
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
                                 className={
-                                    'px-6 py-3 font-medium capitalize whitespace-nowrap flex items-center gap-2 ' +
+                                    'px-5 py-3 text-[13px] font-medium capitalize whitespace-nowrap flex items-center gap-2 transition-colors ' +
                                     (activeTab === tab
-                                        ? 'border-b-2 border-[#0071e3] text-[#0071e3]'
-                                        : 'text-gray-500 hover:text-gray-600')
+                                        ? 'text-blue-400 border-b-2 border-blue-400'
+                                        : 'text-white/30 hover:text-white/50')
                                 }
                             >
                                 {tab === 'notifikasi' && (
@@ -1140,11 +1145,11 @@ const App = () => {
                     activeTab === 'pembayaran' ||
                     activeTab === 'pengeluaran' ||
                     activeTab === 'tunggakan') && (
-                    <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl p-4 mb-6">
+                    <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] p-4 mb-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                             {/* Search Bar */}
                             <div className="relative">
-                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/20" />
                                 <input
                                     type="text"
                                     placeholder="Cari nama atau absen..."
@@ -1152,7 +1157,7 @@ const App = () => {
                                     onChange={(e) =>
                                         setSearchQuery(e.target.value)
                                     }
-                                    className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#0071e3] focus:border-transparent"
+                                    className="w-full pl-10 pr-4 py-2 bg-white/[0.04] border border-white/[0.08] rounded-lg focus:ring-2 focus:ring-blue-500/40 focus:border-transparent text-white placeholder-white/20"
                                 />
                             </div>
 
@@ -1163,7 +1168,7 @@ const App = () => {
                                     onChange={(e) =>
                                         setFilterStatus(e.target.value)
                                     }
-                                    className="px-4 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                    className="px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
                                 >
                                     <option value="Semua">Semua Status</option>
                                     <option value="Aktif">Aktif</option>
@@ -1181,7 +1186,7 @@ const App = () => {
                                     onChange={(e) =>
                                         setFilterMethod(e.target.value)
                                     }
-                                    className="px-4 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                    className="px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
                                 >
                                     <option value="Semua">Semua Metode</option>
                                     <option value="Tunai">Tunai</option>
@@ -1196,7 +1201,7 @@ const App = () => {
                                     onChange={(e) =>
                                         setFilterCategory(e.target.value)
                                     }
-                                    className="px-4 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                    className="px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
                                 >
                                     <option value="Semua">
                                         Semua Kategori
@@ -1222,7 +1227,7 @@ const App = () => {
                                         setDateFrom(e.target.value)
                                     }
                                     placeholder="Dari tanggal"
-                                    className="px-4 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                    className="px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
                                 />
                             )}
 
@@ -1234,7 +1239,7 @@ const App = () => {
                                     value={dateTo}
                                     onChange={(e) => setDateTo(e.target.value)}
                                     placeholder="Sampai tanggal"
-                                    className="px-4 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                    className="px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white"
                                 />
                             )}
 
@@ -1248,7 +1253,7 @@ const App = () => {
                                     setDateFrom('');
                                     setDateTo('');
                                 }}
-                                className="px-4 py-2 bg-gray-100 hover:bg-gray-100 text-gray-600 rounded-lg transition flex items-center justify-center gap-2"
+                                className="px-4 py-2 bg-white/[0.04] hover:bg-white/[0.06] text-white/40 rounded-lg transition flex items-center justify-center gap-2 border border-white/[0.06]"
                             >
                                 <RefreshCw className="w-4 h-4" />
                                 Reset Filter
@@ -1261,10 +1266,10 @@ const App = () => {
                 {activeTab === 'dashboard' && (
                     <div className="space-y-6">
                         {studentsWithTunggakan > 0 && (
-                            <div className="bg-amber-50 border-l-4 border-yellow-400 p-4 rounded">
+                            <div className="bg-amber-500/10 border border-amber-500/20 p-4 rounded-xl">
                                 <div className="flex items-center">
                                     <AlertCircle className="w-5 h-5 text-yellow-400 mr-2" />
-                                    <p className="text-amber-600">
+                                    <p className="text-amber-400">
                                         <strong>{studentsWithTunggakan}</strong>{' '}
                                         siswa memiliki tunggakan
                                     </p>
@@ -1272,37 +1277,37 @@ const App = () => {
                             </div>
                         )}
 
-                        <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl overflow-hidden">
-                            <div className="p-4 sm:p-6 border-b">
-                                <h2 className="text-lg sm:text-xl font-bold text-gray-900">
+                        <div className="rounded-xl bg-white/[0.025] border border-white/[0.06] overflow-hidden">
+                            <div className="p-4 sm:p-6 border-b border-white/[0.06] border-white/[0.06]">
+                                <h2 className="text-lg sm:text-xl font-bold text-white">
                                     Status Pembayaran Siswa
                                 </h2>
                             </div>
                             <div className="overflow-x-auto">
-                                <table className="min-w-full divide-y divide-gray-100">
-                                    <thead className="bg-gray-50">
+                                <table className="min-w-full divide-y divide-white/[0.04]">
+                                    <thead className="bg-white/[0.02]">
                                         <tr>
-                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase tracking-wider">
                                                 Absen
                                             </th>
-                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase tracking-wider">
                                                 Nama
                                             </th>
-                                            <th className="hidden md:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            <th className="hidden md:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase tracking-wider">
                                                 Total Bayar
                                             </th>
-                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase tracking-wider">
                                                 Tunggakan
                                             </th>
-                                            <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase tracking-wider">
                                                 Status
                                             </th>
-                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase tracking-wider">
                                                 Aksi
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-gray-100">
+                                    <tbody className="divide-y divide-white/[0.04]">
                                         {students
                                             .sort((a, b) => a.absen - b.absen)
                                             .map((student) => {
@@ -1317,19 +1322,19 @@ const App = () => {
                                                         key={student._id}
                                                         className={
                                                             late
-                                                                ? 'bg-red-50 hover:bg-red-100'
-                                                                : 'hover:bg-gray-50'
+                                                                ? 'bg-rose-500/[0.06] hover:bg-rose-500/[0.1]'
+                                                                : 'hover:bg-white/[0.02]'
                                                         }
                                                     >
-                                                        <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 font-medium">
+                                                        <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-white font-medium">
                                                             {student.absen}
                                                         </td>
-                                                        <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium text-gray-900">
+                                                        <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium text-white">
                                                             <div className="max-w-[120px] sm:max-w-none truncate">
                                                                 {student.name}
                                                             </div>
                                                         </td>
-                                                        <td className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                                                        <td className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-white">
                                                             {formatRp(
                                                                 getTotalPaid(
                                                                     student._id
@@ -1341,8 +1346,8 @@ const App = () => {
                                                                 className={
                                                                     tunggakan >
                                                                     0
-                                                                        ? 'text-red-600 font-semibold'
-                                                                        : 'text-[#0071e3] font-semibold'
+                                                                        ? 'text-rose-400 font-semibold'
+                                                                        : 'text-blue-400 font-semibold'
                                                                 }
                                                             >
                                                                 {formatRp(
@@ -1352,18 +1357,18 @@ const App = () => {
                                                         </td>
                                                         <td className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                             {late ? (
-                                                                <span className="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-700 inline-flex items-center gap-1">
+                                                                <span className="px-2 py-1 text-xs font-semibold rounded-full bg-rose-500/15 text-rose-400 inline-flex items-center gap-1">
                                                                     <AlertCircle className="w-3 h-3" />{' '}
                                                                     Telat
                                                                 </span>
                                                             ) : tunggakan <=
                                                               0 ? (
-                                                                <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-700 inline-flex items-center gap-1">
+                                                                <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-500/15 text-blue-400 inline-flex items-center gap-1">
                                                                     <CheckCircle className="w-3 h-3" />{' '}
                                                                     Lunas
                                                                 </span>
                                                             ) : (
-                                                                <span className="px-2 py-1 text-xs font-semibold rounded-full bg-amber-100 text-amber-700">
+                                                                <span className="px-2 py-1 text-xs font-semibold rounded-full bg-amber-500/15 text-amber-400">
                                                                     Aktif
                                                                 </span>
                                                             )}
@@ -1375,7 +1380,7 @@ const App = () => {
                                                                         student._id
                                                                     )
                                                                 }
-                                                                className="bg-[#0071e3] text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-[#0077ED] transition text-xs sm:text-sm font-medium w-full sm:w-auto"
+                                                                className="bg-blue-500/15 text-blue-400 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-blue-500/25 transition text-xs sm:text-sm font-medium w-full sm:w-auto border border-blue-500/20"
                                                             >
                                                                 💰 Bayar
                                                             </button>
@@ -1395,16 +1400,16 @@ const App = () => {
 
                 {/* Siswa Tab */}
                 {activeTab === 'siswa' && (
-                    <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl shadow">
-                        <div className="p-4 sm:p-6 border-b">
+                    <div className="rounded-xl bg-white/[0.025] border border-white/[0.06]">
+                        <div className="p-4 sm:p-6 border-b border-white/[0.06] border-white/[0.06]">
                             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
-                                <h2 className="text-lg sm:text-xl font-bold text-gray-900">
+                                <h2 className="text-lg sm:text-xl font-bold text-white">
                                     Data Siswa
                                 </h2>
                                 <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                                     <button
                                         onClick={exportStudentsToExcel}
-                                        className="flex-1 sm:flex-none bg-green-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-green-700 transition flex items-center justify-center gap-2 text-sm"
+                                        className="flex-1 sm:flex-none bg-emerald-500/10 text-emerald-400 px-3 sm:px-4 py-2 rounded-lg hover:bg-emerald-500/20 transition flex items-center justify-center gap-2 text-sm border border-emerald-500/20"
                                     >
                                         <Download className="w-4 h-4" />
                                         <span className="hidden sm:inline">
@@ -1413,7 +1418,7 @@ const App = () => {
                                     </button>
                                     <button
                                         onClick={exportStudentsToPDF}
-                                        className="flex-1 sm:flex-none bg-red-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-2 text-sm"
+                                        className="flex-1 sm:flex-none bg-rose-500/10 text-rose-400 px-3 sm:px-4 py-2 rounded-lg hover:bg-rose-500/20 transition flex items-center justify-center gap-2 text-sm border border-rose-500/20"
                                     >
                                         <FileText className="w-4 h-4" />
                                         <span className="hidden sm:inline">
@@ -1422,7 +1427,7 @@ const App = () => {
                                     </button>
                                     <button
                                         onClick={() => setShowAddStudent(true)}
-                                        className="w-full sm:w-auto bg-[#0071e3] text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-[#0077ED] transition flex items-center justify-center gap-2 text-sm font-medium"
+                                        className="w-full sm:w-auto bg-blue-500/15 text-blue-400 px-3 sm:px-4 py-2 rounded-lg hover:bg-blue-500/25 transition flex items-center justify-center gap-2 text-sm font-medium border border-blue-500/20"
                                     >
                                         <Plus className="w-4 h-4" />
                                         <span className="hidden sm:inline">
@@ -1436,35 +1441,35 @@ const App = () => {
                             </div>
                         </div>
                         <div className="overflow-x-auto">
-                            <table className="min-w-full divide-y divide-gray-100">
-                                <thead className="bg-gray-50">
+                            <table className="min-w-full divide-y divide-white/[0.04]">
+                                <thead className="bg-white/[0.02]">
                                     <tr>
-                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase tracking-wider">
                                             Absen
                                         </th>
-                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase tracking-wider">
                                             Nama
                                         </th>
-                                        <th className="hidden md:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th className="hidden md:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase tracking-wider">
                                             WhatsApp
                                         </th>
-                                        <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase tracking-wider">
                                             Status
                                         </th>
-                                        <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase tracking-wider">
                                             Notifikasi
                                         </th>
-                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase tracking-wider">
                                             Aksi
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-100">
+                                <tbody className="divide-y divide-white/[0.04]">
                                     {filteredStudents.length === 0 ? (
                                         <tr>
                                             <td
                                                 colSpan="6"
-                                                className="px-3 sm:px-6 py-8 text-center text-gray-500 text-xs sm:text-sm"
+                                                className="px-3 sm:px-6 py-8 text-center text-white/30 text-xs sm:text-sm"
                                             >
                                                 Tidak ada data siswa yang sesuai
                                             </td>
@@ -1475,17 +1480,17 @@ const App = () => {
                                             .map((student) => (
                                                 <tr
                                                     key={student._id}
-                                                    className="hover:bg-gray-50"
+                                                    className="hover:bg-white/[0.02]"
                                                 >
-                                                    <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 font-medium">
+                                                    <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-white font-medium">
                                                         {student.absen}
                                                     </td>
-                                                    <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium text-gray-900">
+                                                    <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium text-white">
                                                         <div className="max-w-[120px] sm:max-w-none truncate">
                                                             {student.name}
                                                         </div>
                                                     </td>
-                                                    <td className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-600">
+                                                    <td className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-white/50">
                                                         {student.phoneNumber ? (
                                                             <span className="flex items-center gap-1">
                                                                 📱{' '}
@@ -1494,7 +1499,7 @@ const App = () => {
                                                                 }
                                                             </span>
                                                         ) : (
-                                                            <span className="text-gray-400 italic">
+                                                            <span className="text-white/20 italic">
                                                                 Belum diset
                                                             </span>
                                                         )}
@@ -1504,11 +1509,11 @@ const App = () => {
                                                             className={`px-2 py-1 text-xs font-semibold rounded-full ${
                                                                 student.status ===
                                                                 'Aktif'
-                                                                    ? 'bg-blue-100 text-blue-700'
+                                                                    ? 'bg-blue-500/15 text-blue-400'
                                                                     : student.status ===
                                                                       'Alumni'
-                                                                    ? 'bg-blue-100 text-blue-700'
-                                                                    : 'bg-gray-100 text-gray-900'
+                                                                    ? 'bg-blue-500/15 text-blue-400'
+                                                                    : 'bg-white/[0.06] text-white/60'
                                                             }`}
                                                         >
                                                             {student.status}
@@ -1517,11 +1522,11 @@ const App = () => {
                                                     <td className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                         {student.enableNotification !==
                                                         false ? (
-                                                            <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-700">
+                                                            <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-500/15 text-blue-400">
                                                                 ✓ Aktif
                                                             </span>
                                                         ) : (
-                                                            <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-900">
+                                                            <span className="px-2 py-1 text-xs font-semibold rounded-full bg-white/[0.06] text-white/60">
                                                                 ✗ Non-aktif
                                                             </span>
                                                         )}
@@ -1534,7 +1539,7 @@ const App = () => {
                                                                         student
                                                                     )
                                                                 }
-                                                                className="bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700 transition font-medium text-xs sm:text-sm"
+                                                                className="bg-blue-500/15 text-blue-400 px-3 py-1.5 rounded-lg hover:bg-blue-500/25 transition font-medium border border-blue-500/20 text-xs sm:text-sm"
                                                             >
                                                                 ✏️ Edit
                                                             </button>
@@ -1544,7 +1549,7 @@ const App = () => {
                                                                         student._id
                                                                     )
                                                                 }
-                                                                className="text-red-600 hover:text-red-600 p-1"
+                                                                className="text-rose-400/60 hover:text-rose-400 p-1 transition-colors"
                                                                 title="Hapus"
                                                             >
                                                                 <Trash2 className="w-4 h-4" />
@@ -1562,14 +1567,14 @@ const App = () => {
 
                 {/* Pembayaran Tab */}
                 {activeTab === 'pembayaran' && (
-                    <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl shadow">
-                        <div className="p-4 sm:p-6 border-b">
+                    <div className="rounded-xl bg-white/[0.025] border border-white/[0.06]">
+                        <div className="p-4 sm:p-6 border-b border-white/[0.06] border-white/[0.06]">
                             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
                                 <div>
-                                    <h2 className="text-lg sm:text-xl font-bold text-gray-900">
+                                    <h2 className="text-lg sm:text-xl font-bold text-white">
                                         Riwayat Pembayaran
                                     </h2>
-                                    <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                                    <p className="text-xs sm:text-sm text-white/30 mt-1">
                                         Total: {filteredPayments.length}{' '}
                                         pembayaran
                                     </p>
@@ -1577,7 +1582,7 @@ const App = () => {
                                 <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                                     <button
                                         onClick={exportPaymentsToExcel}
-                                        className="flex-1 sm:flex-none bg-green-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-green-700 transition flex items-center justify-center gap-2 text-sm"
+                                        className="flex-1 sm:flex-none bg-emerald-500/10 text-emerald-400 px-3 sm:px-4 py-2 rounded-lg hover:bg-emerald-500/20 transition flex items-center justify-center gap-2 text-sm border border-emerald-500/20"
                                     >
                                         <Download className="w-4 h-4" />
                                         <span className="hidden sm:inline">
@@ -1586,7 +1591,7 @@ const App = () => {
                                     </button>
                                     <button
                                         onClick={exportPaymentsToPDF}
-                                        className="flex-1 sm:flex-none bg-red-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-2 text-sm"
+                                        className="flex-1 sm:flex-none bg-rose-500/10 text-rose-400 px-3 sm:px-4 py-2 rounded-lg hover:bg-rose-500/20 transition flex items-center justify-center gap-2 text-sm border border-rose-500/20"
                                     >
                                         <Download className="w-4 h-4" />
                                         <span className="hidden sm:inline">
@@ -1595,7 +1600,7 @@ const App = () => {
                                     </button>
                                     <button
                                         onClick={() => setShowPayment(true)}
-                                        className="w-full sm:w-auto bg-[#0071e3] text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-[#0077ED] transition flex items-center justify-center gap-2 text-sm font-medium"
+                                        className="w-full sm:w-auto bg-blue-500/15 text-blue-400 px-3 sm:px-4 py-2 rounded-lg hover:bg-blue-500/25 transition flex items-center justify-center gap-2 text-sm font-medium border border-blue-500/20"
                                     >
                                         <Plus className="w-4 h-4" />
                                         <span className="hidden sm:inline">
@@ -1609,33 +1614,33 @@ const App = () => {
                             </div>
                         </div>
                         <div className="overflow-x-auto">
-                            <table className="min-w-full divide-y divide-gray-100">
-                                <thead className="bg-gray-50">
+                            <table className="min-w-full divide-y divide-white/[0.04]">
+                                <thead className="bg-white/[0.02]">
                                     <tr>
-                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase tracking-wider">
                                             Tanggal
                                         </th>
-                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase tracking-wider">
                                             Nama/Sumber
                                         </th>
-                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase tracking-wider">
                                             Jumlah
                                         </th>
-                                        <th className="hidden md:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th className="hidden md:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase tracking-wider">
                                             Metode
                                         </th>
-                                        <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase tracking-wider">
                                             Tipe
                                         </th>
-                                        <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase tracking-wider">
                                             Catatan
                                         </th>
-                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase tracking-wider">
                                             Aksi
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody className="bg-white divide-y divide-gray-100">
+                                <tbody className="divide-y divide-white/[0.04]">
                                     {filteredPayments.map((payment) => {
                                         const studentId =
                                             payment.studentId?._id ||
@@ -1646,7 +1651,7 @@ const App = () => {
 
                                         return (
                                             <tr key={payment._id}>
-                                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-white">
                                                     {new Date(
                                                         payment.date
                                                     ).toLocaleDateString(
@@ -1658,7 +1663,7 @@ const App = () => {
                                                         }
                                                     )}
                                                 </td>
-                                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium text-gray-900">
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium text-white">
                                                     <div className="max-w-[150px] sm:max-w-none truncate">
                                                         {payment.source ===
                                                             'custom' ||
@@ -1669,16 +1674,16 @@ const App = () => {
                                                               'Siswa tidak ditemukan'}
                                                     </div>
                                                 </td>
-                                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-semibold text-gray-900">
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-semibold text-white">
                                                     {formatRp(payment.amount)}
                                                 </td>
-                                                <td className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                                                <td className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-white">
                                                     <span
                                                         className={`px-2 py-1 text-xs font-semibold rounded-full ${
                                                             payment.method ===
                                                             'Tunai'
-                                                                ? 'bg-blue-100 text-blue-700'
-                                                                : 'bg-blue-100 text-blue-700'
+                                                                ? 'bg-blue-500/15 text-blue-400'
+                                                                : 'bg-blue-500/15 text-blue-400'
                                                         }`}
                                                     >
                                                         {payment.method}
@@ -1687,7 +1692,7 @@ const App = () => {
                                                 <td className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm">
                                                     {payment.source ===
                                                         'custom' && (
-                                                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-800">
+                                                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-emerald-500/15 text-emerald-400">
                                                             Custom
                                                         </span>
                                                     )}
@@ -1699,12 +1704,12 @@ const App = () => {
                                                     )}
                                                     {payment.source ===
                                                         'regular' && (
-                                                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-900">
+                                                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-white/[0.06] text-white/60">
                                                             Kas Reguler
                                                         </span>
                                                     )}
                                                 </td>
-                                                <td className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-gray-500">
+                                                <td className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-white/30">
                                                     <div className="max-w-[200px] truncate">
                                                         {payment.note || '-'}
                                                     </div>
@@ -1716,7 +1721,7 @@ const App = () => {
                                                                 payment._id
                                                             )
                                                         }
-                                                        className="text-red-600 hover:text-red-600 p-1"
+                                                        className="text-rose-400/60 hover:text-rose-400 p-1 transition-colors"
                                                         title="Hapus"
                                                     >
                                                         <Trash2 className="w-4 h-4" />
@@ -1733,16 +1738,16 @@ const App = () => {
 
                 {/* Pengeluaran Tab */}
                 {activeTab === 'pengeluaran' && (
-                    <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl shadow">
-                        <div className="p-4 sm:p-6 border-b">
+                    <div className="rounded-xl bg-white/[0.025] border border-white/[0.06]">
+                        <div className="p-4 sm:p-6 border-b border-white/[0.06] border-white/[0.06]">
                             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
-                                <h2 className="text-lg sm:text-xl font-bold text-gray-900">
+                                <h2 className="text-lg sm:text-xl font-bold text-white">
                                     Riwayat Pengeluaran
                                 </h2>
                                 <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                                     <button
                                         onClick={exportExpensesToExcel}
-                                        className="flex-1 sm:flex-none bg-green-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-green-700 transition flex items-center justify-center gap-2 text-sm"
+                                        className="flex-1 sm:flex-none bg-emerald-500/10 text-emerald-400 px-3 sm:px-4 py-2 rounded-lg hover:bg-emerald-500/20 transition flex items-center justify-center gap-2 text-sm border border-emerald-500/20"
                                     >
                                         <Download className="w-4 h-4" />
                                         <span className="hidden sm:inline">
@@ -1751,7 +1756,7 @@ const App = () => {
                                     </button>
                                     <button
                                         onClick={exportExpensesToPDF}
-                                        className="flex-1 sm:flex-none bg-red-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-2 text-sm"
+                                        className="flex-1 sm:flex-none bg-rose-500/10 text-rose-400 px-3 sm:px-4 py-2 rounded-lg hover:bg-rose-500/20 transition flex items-center justify-center gap-2 text-sm border border-rose-500/20"
                                     >
                                         <Download className="w-4 h-4" />
                                         <span className="hidden sm:inline">
@@ -1760,7 +1765,7 @@ const App = () => {
                                     </button>
                                     <button
                                         onClick={() => setShowExpense(true)}
-                                        className="w-full sm:w-auto bg-[#0071e3] text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-[#0077ED] transition flex items-center justify-center gap-2 text-sm font-medium"
+                                        className="w-full sm:w-auto bg-blue-500/15 text-blue-400 px-3 sm:px-4 py-2 rounded-lg hover:bg-blue-500/25 transition flex items-center justify-center gap-2 text-sm font-medium border border-blue-500/20"
                                     >
                                         <Plus className="w-4 h-4" />
                                         <span className="hidden sm:inline">
@@ -1774,35 +1779,35 @@ const App = () => {
                             </div>
                         </div>
                         <div className="overflow-x-auto">
-                            <table className="min-w-full divide-y divide-gray-100">
-                                <thead className="bg-gray-50">
+                            <table className="min-w-full divide-y divide-white/[0.04]">
+                                <thead className="bg-white/[0.02]">
                                     <tr>
-                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase tracking-wider">
                                             Tanggal
                                         </th>
-                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase tracking-wider">
                                             Keperluan
                                         </th>
-                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase tracking-wider">
                                             Jumlah
                                         </th>
-                                        <th className="hidden md:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th className="hidden md:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase tracking-wider">
                                             Kategori
                                         </th>
-                                        <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase tracking-wider">
                                             Disetujui
                                         </th>
-                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-white/30 uppercase tracking-wider">
                                             Aksi
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-100">
+                                <tbody className="divide-y divide-white/[0.04]">
                                     {filteredExpenses.length === 0 ? (
                                         <tr>
                                             <td
                                                 colSpan="6"
-                                                className="px-3 sm:px-6 py-8 text-center text-gray-500 text-xs sm:text-sm"
+                                                className="px-3 sm:px-6 py-8 text-center text-white/30 text-xs sm:text-sm"
                                             >
                                                 Tidak ada data pengeluaran yang
                                                 sesuai
@@ -1812,9 +1817,9 @@ const App = () => {
                                         filteredExpenses.map((expense) => (
                                             <tr
                                                 key={expense._id}
-                                                className="hover:bg-gray-50"
+                                                className="hover:bg-white/[0.02]"
                                             >
-                                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-white">
                                                     {new Date(
                                                         expense.date
                                                     ).toLocaleDateString(
@@ -1826,7 +1831,7 @@ const App = () => {
                                                         }
                                                     )}
                                                 </td>
-                                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium text-gray-900">
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium text-white">
                                                     <div className="max-w-[150px] sm:max-w-none truncate">
                                                         {expense.purpose}
                                                     </div>
@@ -1839,20 +1844,20 @@ const App = () => {
                                                         className={`px-2 py-1 text-xs font-semibold rounded-full ${
                                                             expense.category ===
                                                             'Kebersihan'
-                                                                ? 'bg-blue-100 text-blue-700'
+                                                                ? 'bg-blue-500/15 text-blue-400'
                                                                 : expense.category ===
                                                                   'Acara'
                                                                 ? 'bg-violet-500/30 text-violet-200'
                                                                 : expense.category ===
                                                                   'Perlengkapan'
-                                                                ? 'bg-blue-100 text-blue-700'
-                                                                : 'bg-gray-100 text-gray-900'
+                                                                ? 'bg-blue-500/15 text-blue-400'
+                                                                : 'bg-white/[0.06] text-white/60'
                                                         }`}
                                                     >
                                                         {expense.category}
                                                     </span>
                                                 </td>
-                                                <td className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500">
+                                                <td className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-white/30">
                                                     {expense.approvedBy}
                                                 </td>
                                                 <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm">
@@ -1862,7 +1867,7 @@ const App = () => {
                                                                 expense._id
                                                             )
                                                         }
-                                                        className="text-red-600 hover:text-red-600 p-1"
+                                                        className="text-rose-400/60 hover:text-rose-400 p-1 transition-colors"
                                                         title="Hapus"
                                                     >
                                                         <Trash2 className="w-4 h-4" />
@@ -1879,20 +1884,20 @@ const App = () => {
 
                 {/* Tunggakan Tab - NEW FEATURE */}
                 {activeTab === 'tunggakan' && (
-                    <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl shadow">
-                        <div className="p-6 border-b">
+                    <div className="rounded-xl bg-white/[0.025] border border-white/[0.06]">
+                        <div className="p-6 border-b border-white/[0.06]">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <h2 className="text-xl font-bold text-gray-900">
+                                    <h2 className="text-xl font-bold text-white">
                                         Daftar Tunggakan
                                     </h2>
-                                    <p className="text-sm text-gray-500 mt-1">
+                                    <p className="text-sm text-white/30 mt-1">
                                         Siswa yang belum bayar minggu ke-{' '}
                                         {currentWeek}
                                     </p>
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-sm text-gray-500">
+                                    <p className="text-sm text-white/30">
                                         Total Tunggakan
                                     </p>
                                     <p className="text-2xl font-bold text-red-600">
@@ -1904,37 +1909,37 @@ const App = () => {
                         <div className="overflow-x-auto">
                             {getUnpaidStudents().length === 0 ? (
                                 <div className="p-12 text-center">
-                                    <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-                                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                                    <CheckCircle className="w-16 h-16 text-emerald-400 mx-auto mb-4" />
+                                    <h3 className="text-xl font-semibold text-white mb-2">
                                         Semua Sudah Bayar! 🎉
                                     </h3>
-                                    <p className="text-gray-500">
+                                    <p className="text-white/30">
                                         Tidak ada siswa yang memiliki tunggakan
                                         minggu ini
                                     </p>
                                 </div>
                             ) : (
                                 <table className="w-full">
-                                    <thead className="bg-gray-50">
+                                    <thead className="bg-white/[0.02]">
                                         <tr>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-white/30 uppercase">
                                                 Absen
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-white/30 uppercase">
                                                 Nama
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-white/30 uppercase">
                                                 Status
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-white/30 uppercase">
                                                 Tunggakan
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-white/30 uppercase">
                                                 Aksi
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-gray-100">
+                                    <tbody className="divide-y divide-white/[0.04]">
                                         {getUnpaidStudents()
                                             .sort((a, b) => a.absen - b.absen)
                                             .map((student) => {
@@ -1944,18 +1949,18 @@ const App = () => {
                                                 );
                                                 return (
                                                     <tr key={student._id}>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
                                                             {student.absen}
                                                         </td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">
                                                             {student.name}
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap">
-                                                            <span className="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-700">
+                                                            <span className="px-2 py-1 text-xs font-semibold rounded-full bg-rose-500/15 text-rose-400">
                                                                 Belum Bayar
                                                             </span>
                                                         </td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600 font-semibold">
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-rose-400 font-semibold">
                                                             {formatRp(
                                                                 tunggakan
                                                             )}
@@ -1967,7 +1972,7 @@ const App = () => {
                                                                         student._id
                                                                     )
                                                                 }
-                                                                className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition text-xs"
+                                                                className="bg-emerald-500/15 text-emerald-400 px-3 py-1.5 rounded-lg hover:bg-emerald-500/25 transition text-xs border border-emerald-500/20"
                                                             >
                                                                 Bayar Sekarang
                                                             </button>
@@ -2000,59 +2005,59 @@ const App = () => {
                 {/* Modal Add Student */}
                 {showAddStudent && (
                     <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
-                        <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
+                        <div className="bg-[#111113] border border-white/[0.08] rounded-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
                             <h3 className="text-xl font-bold mb-4">
                                 Tambah Siswa Baru
                             </h3>
                             <form onSubmit={addStudent} className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 mb-1">
+                                    <label className="block text-sm font-medium text-white/50 mb-1">
                                         Nomor Absen
                                     </label>
                                     <input
                                         type="number"
                                         name="absen"
                                         required
-                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                        className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/20"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 mb-1">
+                                    <label className="block text-sm font-medium text-white/50 mb-1">
                                         Nama Lengkap
                                     </label>
                                     <input
                                         type="text"
                                         name="name"
                                         required
-                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                        className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/20"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 mb-1">
+                                    <label className="block text-sm font-medium text-white/50 mb-1">
                                         Nama Panggilan (Opsional)
                                     </label>
                                     <input
                                         type="text"
                                         name="nickname"
                                         placeholder="Contoh: Budi, Andi, Siti"
-                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                        className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/20"
                                     />
-                                    <p className="text-xs text-gray-500 mt-1">
+                                    <p className="text-xs text-white/30 mt-1">
                                         Nama panggilan untuk ditampilkan di
                                         leaderboard
                                     </p>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 mb-1">
+                                    <label className="block text-sm font-medium text-white/50 mb-1">
                                         Nomor WhatsApp (Opsional)
                                     </label>
                                     <input
                                         type="text"
                                         name="phoneNumber"
                                         placeholder="08xxxxxxxxxx atau 628xxxxxxxxxx"
-                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                        className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/20"
                                     />
-                                    <p className="text-xs text-gray-500 mt-1">
+                                    <p className="text-xs text-white/30 mt-1">
                                         Format: 08xxx atau 628xxx (tanpa
                                         spasi/strip)
                                     </p>
@@ -2063,11 +2068,11 @@ const App = () => {
                                         name="enableNotification"
                                         id="enableNotification"
                                         defaultChecked
-                                        className="w-4 h-4 text-[#0071e3] rounded"
+                                        className="w-4 h-4 text-blue-500 rounded bg-white/[0.04] border-white/[0.1]"
                                     />
                                     <label
                                         htmlFor="enableNotification"
-                                        className="text-sm text-gray-600"
+                                        className="text-sm text-white/50"
                                     >
                                         Aktifkan notifikasi WhatsApp
                                     </label>
@@ -2076,13 +2081,13 @@ const App = () => {
                                     <button
                                         type="button"
                                         onClick={() => setShowAddStudent(false)}
-                                        className="flex-1 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
+                                        className="flex-1 px-4 py-2 border border-white/[0.08] rounded-lg hover:bg-white/[0.04] transition text-white/60"
                                     >
                                         Batal
                                     </button>
                                     <button
                                         type="submit"
-                                        className="flex-1 px-4 py-2 bg-[#0071e3] text-white rounded-lg hover:bg-[#0077ED] transition"
+                                        className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
                                     >
                                         Simpan
                                     </button>
@@ -2095,7 +2100,7 @@ const App = () => {
                 {/* Modal Edit Student */}
                 {showEditStudent && editingStudent && (
                     <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
-                        <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
+                        <div className="bg-[#111113] border border-white/[0.08] rounded-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
                             <h3 className="text-xl font-bold mb-4">
                                 Edit Data Siswa
                             </h3>
@@ -2104,7 +2109,7 @@ const App = () => {
                                 className="space-y-4"
                             >
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 mb-1">
+                                    <label className="block text-sm font-medium text-white/50 mb-1">
                                         Nomor Absen
                                     </label>
                                     <input
@@ -2112,11 +2117,11 @@ const App = () => {
                                         name="absen"
                                         defaultValue={editingStudent.absen}
                                         required
-                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                        className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/20"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 mb-1">
+                                    <label className="block text-sm font-medium text-white/50 mb-1">
                                         Nama Lengkap
                                     </label>
                                     <input
@@ -2124,11 +2129,11 @@ const App = () => {
                                         name="name"
                                         defaultValue={editingStudent.name}
                                         required
-                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                        className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/20"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 mb-1">
+                                    <label className="block text-sm font-medium text-white/50 mb-1">
                                         Nama Panggilan (Opsional)
                                     </label>
                                     <input
@@ -2138,15 +2143,15 @@ const App = () => {
                                             editingStudent.nickname || ''
                                         }
                                         placeholder="Contoh: Budi, Andi, Siti"
-                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                        className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/20"
                                     />
-                                    <p className="text-xs text-gray-500 mt-1">
+                                    <p className="text-xs text-white/30 mt-1">
                                         Nama panggilan untuk ditampilkan di
                                         leaderboard
                                     </p>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 mb-1">
+                                    <label className="block text-sm font-medium text-white/50 mb-1">
                                         Nomor WhatsApp
                                     </label>
                                     <input
@@ -2156,21 +2161,21 @@ const App = () => {
                                             editingStudent.phoneNumber || ''
                                         }
                                         placeholder="08xxxxxxxxxx atau 628xxxxxxxxxx"
-                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                        className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/20"
                                     />
-                                    <p className="text-xs text-gray-500 mt-1">
+                                    <p className="text-xs text-white/30 mt-1">
                                         Format: 08xxx atau 628xxx (tanpa
                                         spasi/strip)
                                     </p>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 mb-1">
+                                    <label className="block text-sm font-medium text-white/50 mb-1">
                                         Status
                                     </label>
                                     <select
                                         name="status"
                                         defaultValue={editingStudent.status}
-                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                        className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/20"
                                     >
                                         <option value="Aktif">Aktif</option>
                                         <option value="Tidak Aktif">
@@ -2188,17 +2193,17 @@ const App = () => {
                                             editingStudent.enableNotification !==
                                             false
                                         }
-                                        className="w-4 h-4 text-[#0071e3] rounded"
+                                        className="w-4 h-4 text-blue-500 rounded bg-white/[0.04] border-white/[0.1]"
                                     />
                                     <label
                                         htmlFor="enableNotificationEdit"
-                                        className="text-sm text-gray-600"
+                                        className="text-sm text-white/50"
                                     >
                                         Aktifkan notifikasi WhatsApp
                                     </label>
                                 </div>
-                                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                                    <p className="text-xs text-blue-500">
+                                <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
+                                    <p className="text-xs text-blue-400">
                                         💡 <strong>Tips:</strong> Pastikan nomor
                                         WhatsApp valid agar siswa bisa menerima
                                         reminder pembayaran kas.
@@ -2211,13 +2216,13 @@ const App = () => {
                                             setShowEditStudent(false);
                                             setEditingStudent(null);
                                         }}
-                                        className="flex-1 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
+                                        className="flex-1 px-4 py-2 border border-white/[0.08] rounded-lg hover:bg-white/[0.04] transition text-white/60"
                                     >
                                         Batal
                                     </button>
                                     <button
                                         type="submit"
-                                        className="flex-1 px-4 py-2 bg-[#0071e3] text-white rounded-lg hover:bg-[#0077ED] transition"
+                                        className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
                                     >
                                         Update
                                     </button>
@@ -2230,19 +2235,19 @@ const App = () => {
                 {/* Modal Add Payment */}
                 {showPayment && (
                     <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
-                        <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl max-w-md w-full p-6">
+                        <div className="bg-[#111113] border border-white/[0.08] rounded-2xl max-w-md w-full p-6">
                             <h3 className="text-xl font-bold mb-4">
                                 Tambah Pembayaran
                             </h3>
                             <form onSubmit={addPayment} className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 mb-1">
+                                    <label className="block text-sm font-medium text-white/50 mb-1">
                                         Siswa
                                     </label>
                                     <select
                                         name="student"
                                         required
-                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                        className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/20"
                                     >
                                         <option value="">Pilih Siswa</option>
                                         {students
@@ -2259,7 +2264,7 @@ const App = () => {
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 mb-1">
+                                    <label className="block text-sm font-medium text-white/50 mb-1">
                                         Jumlah
                                     </label>
                                     <input
@@ -2267,11 +2272,11 @@ const App = () => {
                                         name="amount"
                                         defaultValue="2000"
                                         required
-                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                        className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/20"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 mb-1">
+                                    <label className="block text-sm font-medium text-white/50 mb-1">
                                         Tanggal
                                     </label>
                                     <input
@@ -2283,42 +2288,42 @@ const App = () => {
                                                 .split('T')[0]
                                         }
                                         required
-                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                        className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/20"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 mb-1">
+                                    <label className="block text-sm font-medium text-white/50 mb-1">
                                         Metode
                                     </label>
                                     <select
                                         name="method"
-                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                        className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/20"
                                     >
                                         <option>Tunai</option>
                                         <option>Transfer</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 mb-1">
+                                    <label className="block text-sm font-medium text-white/50 mb-1">
                                         Catatan (opsional)
                                     </label>
                                     <input
                                         type="text"
                                         name="note"
-                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                        className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/20"
                                     />
                                 </div>
                                 <div className="flex gap-3">
                                     <button
                                         type="button"
                                         onClick={() => setShowPayment(false)}
-                                        className="flex-1 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
+                                        className="flex-1 px-4 py-2 border border-white/[0.08] rounded-lg hover:bg-white/[0.04] transition text-white/60"
                                     >
                                         Batal
                                     </button>
                                     <button
                                         type="submit"
-                                        className="flex-1 px-4 py-2 bg-[#0071e3] text-white rounded-lg hover:bg-[#0077ED] transition"
+                                        className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
                                     >
                                         Simpan
                                     </button>
@@ -2331,35 +2336,35 @@ const App = () => {
                 {/* Modal Add Expense */}
                 {showExpense && (
                     <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
-                        <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl max-w-md w-full p-6">
+                        <div className="bg-[#111113] border border-white/[0.08] rounded-2xl max-w-md w-full p-6">
                             <h3 className="text-xl font-bold mb-4">
                                 Tambah Pengeluaran
                             </h3>
                             <form onSubmit={addExpense} className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 mb-1">
+                                    <label className="block text-sm font-medium text-white/50 mb-1">
                                         Keperluan
                                     </label>
                                     <input
                                         type="text"
                                         name="purpose"
                                         required
-                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                        className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/20"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 mb-1">
+                                    <label className="block text-sm font-medium text-white/50 mb-1">
                                         Jumlah
                                     </label>
                                     <input
                                         type="number"
                                         name="amount"
                                         required
-                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                        className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/20"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 mb-1">
+                                    <label className="block text-sm font-medium text-white/50 mb-1">
                                         Tanggal
                                     </label>
                                     <input
@@ -2371,16 +2376,16 @@ const App = () => {
                                                 .split('T')[0]
                                         }
                                         required
-                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                        className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/20"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 mb-1">
+                                    <label className="block text-sm font-medium text-white/50 mb-1">
                                         Kategori
                                     </label>
                                     <select
                                         name="category"
-                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                        className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/20"
                                     >
                                         <option>Kebersihan</option>
                                         <option>Acara</option>
@@ -2389,27 +2394,27 @@ const App = () => {
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 mb-1">
+                                    <label className="block text-sm font-medium text-white/50 mb-1">
                                         Disetujui Oleh
                                     </label>
                                     <input
                                         type="text"
                                         name="approvedBy"
                                         required
-                                        className="w-full px-3 py-2.5 bg-[#f5f5f7] border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0071e3] focus:border-transparent transition-all duration-200 text-gray-900"
+                                        className="w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200 text-white placeholder-white/20"
                                     />
                                 </div>
                                 <div className="flex gap-3">
                                     <button
                                         type="button"
                                         onClick={() => setShowExpense(false)}
-                                        className="flex-1 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
+                                        className="flex-1 px-4 py-2 border border-white/[0.08] rounded-lg hover:bg-white/[0.04] transition text-white/60"
                                     >
                                         Batal
                                     </button>
                                     <button
                                         type="submit"
-                                        className="flex-1 px-4 py-2 bg-[#0071e3] text-white rounded-lg hover:bg-[#0077ED] transition"
+                                        className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
                                     >
                                         Simpan
                                     </button>

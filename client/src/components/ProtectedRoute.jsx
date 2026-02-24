@@ -7,10 +7,10 @@ const ProtectedRoute = ({ children, requiredRole }) => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-[#f5f5f7] flex items-center justify-center">
+            <div className="min-h-screen bg-white/[0.04] flex items-center justify-center">
                 <div className="text-center">
                     <div className="w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-gray-600">Loading...</p>
+                    <p className="text-white/50">Loading...</p>
                 </div>
             </div>
         );
@@ -27,18 +27,18 @@ const ProtectedRoute = ({ children, requiredRole }) => {
             : [requiredRole];
         if (!roles.includes(user.role)) {
             return (
-                <div className="min-h-screen bg-[#f5f5f7] flex items-center justify-center p-4">
-                    <div className="bg-white backdrop-blur-xl border border-gray-200 shadow-apple-sm rounded-xl shadow-apple p-8 max-w-md text-center">
+                <div className="min-h-screen bg-white/[0.04] flex items-center justify-center p-4">
+                    <div className="rounded-xl bg-white/[0.025] border border-white/[0.06]-apple p-8 max-w-md text-center">
                         <div className="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                             <span className="text-3xl">🚫</span>
                         </div>
-                        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                        <h2 className="text-2xl font-bold text-white mb-2">
                             Access Denied
                         </h2>
-                        <p className="text-gray-600 mb-4">
+                        <p className="text-white/50 mb-4">
                             You don't have permission to access this page.
                         </p>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-white/30">
                             Required role: <strong>{roles.join(' or ')}</strong>
                             <br />
                             Your role: <strong>{user.role}</strong>

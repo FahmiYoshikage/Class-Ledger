@@ -66,18 +66,18 @@ const WeeklyPaymentBarChart = ({ payments }) => {
         if (active && payload && payload.length) {
             const data = payload[0].payload;
             return (
-                <div className="bg-white/95 backdrop-blur-xl p-4 rounded-lg shadow-apple border border-gray-200 bg-gray-50 text-gray-900">
-                    <p className="font-semibold text-gray-900 mb-2">
+                <div className="bg-[#111113]/95 backdrop-blur-xl p-4 rounded-lg  border border-white/[0.06] bg-white/[0.02] text-white">
+                    <p className="font-semibold text-white mb-2">
                         {data.week}
                     </p>
                     <div className="space-y-1">
-                        <p className="text-sm text-[#0071e3]">
+                        <p className="text-sm text-blue-400">
                             Total: {formatCurrency(data.amount)}
                         </p>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-white/50">
                             Transaksi: {data.count}
                         </p>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-white/30">
                             Rata-rata:{' '}
                             {formatCurrency(
                                 data.count > 0 ? data.amount / data.count : 0
@@ -100,7 +100,7 @@ const WeeklyPaymentBarChart = ({ payments }) => {
 
     if (chartData.length === 0) {
         return (
-            <div className="h-64 flex items-center justify-center text-gray-500">
+            <div className="h-64 flex items-center justify-center text-white/30">
                 <p>Tidak ada data pembayaran</p>
             </div>
         );
@@ -113,15 +113,15 @@ const WeeklyPaymentBarChart = ({ payments }) => {
                     data={chartData}
                     margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
                 >
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
                     <XAxis
                         dataKey="week"
                         tick={{ fontSize: 12 }}
-                        stroke="#6b7280"
+                        stroke="rgba(255,255,255,0.15)"
                     />
                     <YAxis
                         tick={{ fontSize: 12 }}
-                        stroke="#6b7280"
+                        stroke="rgba(255,255,255,0.15)"
                         tickFormatter={(value) =>
                             `${(value / 1000).toFixed(0)}k`
                         }
@@ -146,20 +146,20 @@ const WeeklyPaymentBarChart = ({ payments }) => {
             {/* Legend for colors */}
             <div className="flex items-center justify-center gap-4 mt-4 text-sm">
                 <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 rounded bg-gray-300" />
-                    <span className="text-gray-600">Tidak ada</span>
+                    <div className="w-4 h-4 rounded bg-white/[0.08]" />
+                    <span className="text-white/50">Tidak ada</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <div className="w-4 h-4 rounded bg-yellow-400" />
-                    <span className="text-gray-600">&lt; 30k</span>
+                    <span className="text-white/50">&lt; 30k</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <div className="w-4 h-4 rounded bg-blue-400" />
-                    <span className="text-gray-600">30k - 50k</span>
+                    <span className="text-white/50">30k - 50k</span>
                 </div>
                 <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 rounded bg-blue-500" />
-                    <span className="text-gray-600">&gt; 50k</span>
+                    <div className="w-4 h-4 rounded bg-blue-500/[0.06]0/[0.06]0" />
+                    <span className="text-white/50">&gt; 50k</span>
                 </div>
             </div>
         </div>

@@ -86,18 +86,18 @@ const IncomeVsExpenseChart = ({ payments, expenses, timeRange }) => {
     const CustomTooltip = ({ active, payload }) => {
         if (active && payload && payload.length) {
             return (
-                <div className="bg-white/95 backdrop-blur-xl p-4 rounded-lg shadow-apple border border-gray-200 bg-gray-50 text-gray-900">
-                    <p className="font-semibold text-gray-900 mb-2">
+                <div className="bg-[#111113]/95 backdrop-blur-xl p-4 rounded-lg  border border-white/[0.06] bg-white/[0.02] text-white">
+                    <p className="font-semibold text-white mb-2">
                         {payload[0].payload.date}
                     </p>
                     <div className="space-y-1">
-                        <p className="text-sm text-[#0071e3]">
+                        <p className="text-sm text-blue-400">
                             Pemasukan: {formatCurrency(payload[0].value)}
                         </p>
-                        <p className="text-sm text-red-600">
+                        <p className="text-sm text-rose-400">
                             Pengeluaran: {formatCurrency(payload[1].value)}
                         </p>
-                        <p className="text-sm font-semibold text-gray-600 border-t pt-1">
+                        <p className="text-sm font-semibold text-white/50 border-t pt-1">
                             Selisih:{' '}
                             {formatCurrency(
                                 payload[0].value - payload[1].value
@@ -112,7 +112,7 @@ const IncomeVsExpenseChart = ({ payments, expenses, timeRange }) => {
 
     if (chartData.length === 0) {
         return (
-            <div className="h-64 flex items-center justify-center text-gray-500">
+            <div className="h-64 flex items-center justify-center text-white/30">
                 <p>Tidak ada data untuk ditampilkan</p>
             </div>
         );
@@ -124,15 +124,15 @@ const IncomeVsExpenseChart = ({ payments, expenses, timeRange }) => {
                 data={chartData}
                 margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
             >
-                <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
                 <XAxis
                     dataKey="date"
                     tick={{ fontSize: 12 }}
-                    stroke="#6b7280"
+                    stroke="rgba(255,255,255,0.15)"
                 />
                 <YAxis
                     tick={{ fontSize: 12 }}
-                    stroke="#6b7280"
+                    stroke="rgba(255,255,255,0.15)"
                     tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`}
                 />
                 <Tooltip content={<CustomTooltip />} />
