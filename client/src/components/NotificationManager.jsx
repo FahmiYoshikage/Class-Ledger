@@ -682,7 +682,7 @@ const NotificationManager = () => {
                     <button
                         onClick={loadData}
                         disabled={loading}
-                        className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-white border-2 border-white/[0.1] rounded-lg hover:bg-white/[0.04] transition-colors"
+                        className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-white/[0.05] border border-white/[0.1] rounded-lg hover:bg-white/[0.08] transition-colors"
                     >
                         <RefreshCw
                             className={`w-4 h-4 ${
@@ -698,10 +698,10 @@ const NotificationManager = () => {
                     <div
                         className={`flex items-center gap-2 p-3 rounded-lg ${
                             apiStatus.testMode
-                                ? 'bg-amber-500/[0.06] border border-yellow-200'
+                                ? 'bg-amber-500/[0.06] border border-amber-500/15'
                                 : apiStatus.connected
-                                ? 'bg-indigo-500/[0.05]0/[0.06] border border-green-200'
-                                : 'bg-rose-500/[0.05] border border-red-200'
+                                ? 'bg-teal-500/[0.06] border border-teal-500/15'
+                                : 'bg-rose-500/[0.05] border border-rose-500/15'
                         }`}
                     >
                         {apiStatus.testMode ? (
@@ -714,8 +714,8 @@ const NotificationManager = () => {
                             </>
                         ) : apiStatus.connected ? (
                             <>
-                                <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400 flex-shrink-0" />
-                                <span className="text-xs sm:text-sm text-indigo-400">
+                                <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-teal-300 flex-shrink-0" />
+                                <span className="text-xs sm:text-sm text-teal-300">
                                     WhatsApp API Connected • Device:{' '}
                                     {apiStatus.device}
                                 </span>
@@ -778,7 +778,7 @@ const NotificationManager = () => {
                         </div>
                     </div>
 
-                    <div className="bg-[#1e1e22]/98 backdrop-blur-xl p-3 sm:p-4 rounded-lg shadow border-l-4 border-yellow-500">
+                    <div className="bg-[#1e1e22]/98 backdrop-blur-xl p-3 sm:p-4 rounded-lg shadow border-l-2 border-amber-400/50">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-white/60 text-xs sm:text-sm">
@@ -801,7 +801,7 @@ const NotificationManager = () => {
                         onClick={() => setActiveTab('send')}
                         className={`flex items-center gap-2 px-4 sm:px-6 py-3 font-medium transition-colors whitespace-nowrap text-sm sm:text-base ${
                             activeTab === 'send'
-                                ? 'text-blue-500 border-b-2 border-blue-600'
+                                ? 'text-indigo-400 border-b-2 border-indigo-400'
                                 : 'text-white/60 hover:text-white'
                         }`}
                     >
@@ -816,7 +816,7 @@ const NotificationManager = () => {
                         onClick={() => setActiveTab('group')}
                         className={`flex items-center gap-2 px-4 sm:px-6 py-3 font-medium transition-colors whitespace-nowrap text-sm sm:text-base ${
                             activeTab === 'group'
-                                ? 'text-blue-500 border-b-2 border-blue-600'
+                                ? 'text-indigo-400 border-b-2 border-indigo-400'
                                 : 'text-white/60 hover:text-white'
                         }`}
                     >
@@ -829,7 +829,7 @@ const NotificationManager = () => {
                         onClick={() => setActiveTab('event')}
                         className={`flex items-center gap-2 px-4 sm:px-6 py-3 font-medium transition-colors whitespace-nowrap text-sm sm:text-base ${
                             activeTab === 'event'
-                                ? 'text-blue-500 border-b-2 border-blue-600'
+                                ? 'text-indigo-400 border-b-2 border-indigo-400'
                                 : 'text-white/60 hover:text-white'
                         }`}
                     >
@@ -842,7 +842,7 @@ const NotificationManager = () => {
                         onClick={() => setActiveTab('custom')}
                         className={`flex items-center gap-2 px-4 sm:px-6 py-3 font-medium transition-colors whitespace-nowrap text-sm sm:text-base ${
                             activeTab === 'custom'
-                                ? 'text-violet-400 border-b-2 border-purple-600'
+                                ? 'text-violet-400 border-b-2 border-violet-400'
                                 : 'text-white/60 hover:text-white'
                         }`}
                     >
@@ -855,7 +855,7 @@ const NotificationManager = () => {
                         onClick={() => setActiveTab('history')}
                         className={`flex items-center gap-2 px-4 sm:px-6 py-3 font-medium transition-colors whitespace-nowrap text-sm sm:text-base ${
                             activeTab === 'history'
-                                ? 'text-blue-500 border-b-2 border-blue-600'
+                                ? 'text-indigo-400 border-b-2 border-indigo-400'
                                 : 'text-white/60 hover:text-white'
                         }`}
                     >
@@ -867,7 +867,7 @@ const NotificationManager = () => {
                         onClick={() => setActiveTab('settings')}
                         className={`flex items-center gap-2 px-4 sm:px-6 py-3 font-medium transition-colors whitespace-nowrap text-sm sm:text-base ${
                             activeTab === 'settings'
-                                ? 'text-blue-500 border-b-2 border-blue-600'
+                                ? 'text-indigo-400 border-b-2 border-indigo-400'
                                 : 'text-white/60 hover:text-white'
                         }`}
                     >
@@ -893,7 +893,7 @@ const NotificationManager = () => {
                                             setMinWeeks(Number(e.target.value));
                                             setTimeout(loadData, 100);
                                         }}
-                                        className="w-full px-4 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-sky-500"
+                                        className="w-full px-4 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-indigo-500/30"
                                     >
                                         <option value="1">≥ 1 Minggu</option>
                                         <option value="2">≥ 2 Minggu</option>
@@ -911,7 +911,7 @@ const NotificationManager = () => {
                                         onChange={(e) =>
                                             setMessageCategory(e.target.value)
                                         }
-                                        className="w-full px-4 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-sky-500"
+                                        className="w-full px-4 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-indigo-500/30"
                                     >
                                         {categories.map((cat) => (
                                             <option
@@ -938,7 +938,7 @@ const NotificationManager = () => {
                                 <div className="flex gap-2 sm:gap-3">
                                     <button
                                         onClick={selectAll}
-                                        className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-indigo-500/[0.05]0/[0.06] text-blue-500 rounded-lg hover:bg-blue-100 transition-colors text-sm sm:text-base"
+                                        className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-indigo-500/[0.06] text-indigo-400 rounded-lg hover:bg-indigo-500/10 transition-colors text-sm sm:text-base"
                                     >
                                         Pilih Semua
                                     </button>
@@ -954,7 +954,7 @@ const NotificationManager = () => {
                                 <button
                                     onClick={handleSendBulk}
                                     disabled={sending}
-                                    className="w-full sm:w-auto sm:ml-auto flex items-center justify-center gap-2 px-4 sm:px-6 py-2 bg-indigo-500/[0.05]0 text-white rounded-xl hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm sm:text-base"
+                                    className="w-full sm:w-auto sm:ml-auto flex items-center justify-center gap-2 px-4 sm:px-6 py-2 bg-indigo-500 text-white rounded-xl hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm sm:text-base"
                                 >
                                     {sending ? (
                                         <>
@@ -975,7 +975,7 @@ const NotificationManager = () => {
 
                             {/* Preview Modal */}
                             {showPreview && (
-                                <div className="bg-gradient-to-br from-green-50 to-blue-50 p-6 rounded-lg border-2 border-blue-200">
+                                <div className="bg-white/[0.03] p-6 rounded-xl border border-white/[0.1]">
                                     <div className="flex items-start justify-between mb-3">
                                         <h3 className="font-bold text-lg text-white flex items-center gap-2">
                                             <MessageSquare className="w-5 h-5 text-indigo-400" />
@@ -1020,8 +1020,8 @@ const NotificationManager = () => {
                                                     selectedStudents.includes(
                                                         item.student._id
                                                     )
-                                                        ? 'border-blue-500 bg-indigo-500/[0.05]0/[0.06]'
-                                                        : 'border-indigo-500/25 bg-indigo-500/8 text-indigo-400'
+                                                        ? 'border-indigo-500/40 bg-indigo-500/[0.06]'
+                                                        : 'border-white/[0.1] bg-white/[0.035]'
                                                 }`}
                                             >
                                                 <div className="flex items-center gap-3 sm:gap-4 flex-1 w-full">
@@ -1035,7 +1035,7 @@ const NotificationManager = () => {
                                                                 item.student._id
                                                             )
                                                         }
-                                                        className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 rounded flex-shrink-0"
+                                                        className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400 rounded flex-shrink-0"
                                                     />
 
                                                     <div className="flex-1 min-w-0">
@@ -1084,7 +1084,7 @@ const NotificationManager = () => {
                                                             !item.student
                                                                 .phoneNumber
                                                         }
-                                                        className="px-3 py-1.5 sm:py-1 bg-indigo-500/[0.05]0/15 text-indigo-400 border border-indigo-500/15 rounded-lg hover:bg-indigo-500/[0.05]0/25 disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm flex-shrink-0"
+                                                        className="px-3 py-1.5 sm:py-1 bg-indigo-500/15 text-indigo-400 border border-indigo-500/15 rounded-lg hover:bg-indigo-500/25 disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm flex-shrink-0"
                                                     >
                                                         Kirim
                                                     </button>
@@ -1099,8 +1099,8 @@ const NotificationManager = () => {
 
                     {activeTab === 'group' && (
                         <div className="space-y-6">
-                            <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-lg border-2 border-purple-200">
-                                <h3 className="font-bold text-lg mb-3 text-purple-900 flex items-center gap-2">
+                            <div className="bg-white/[0.03] p-6 rounded-xl border border-white/[0.1]">
+                                <h3 className="font-bold text-lg mb-3 text-white flex items-center gap-2">
                                     <Users className="w-6 h-6" />
                                     Kirim Reminder ke Grup WhatsApp
                                 </h3>
@@ -1109,7 +1109,7 @@ const NotificationManager = () => {
                                     WhatsApp dengan <strong>mention (@)</strong>{' '}
                                     semua siswa yang belum bayar.
                                 </p>
-                                <div className="bg-white/[0.04] p-3 rounded border border-purple-200">
+                                <div className="bg-white/[0.04] p-3 rounded border border-white/[0.1]">
                                     <p className="text-sm text-white/60">
                                         <strong>Keunggulan:</strong>
                                     </p>
@@ -1142,7 +1142,7 @@ const NotificationManager = () => {
                                             setGroupId(e.target.value)
                                         }
                                         placeholder="628xxxxxxxxxx-xxxxxxxxx@g.us"
-                                        className="w-full px-4 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-sky-500"
+                                        className="w-full px-4 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-indigo-500/30"
                                     />
                                     <p className="text-xs text-white/60 mt-1">
                                         Format: 628xxx-xxx@g.us (lihat cara
@@ -1160,7 +1160,7 @@ const NotificationManager = () => {
                                             setMinWeeks(Number(e.target.value));
                                             setTimeout(loadData, 100);
                                         }}
-                                        className="w-full px-4 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-sky-500"
+                                        className="w-full px-4 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-indigo-500/30"
                                     >
                                         <option value="1">≥ 1 Minggu</option>
                                         <option value="2">≥ 2 Minggu</option>
@@ -1179,7 +1179,7 @@ const NotificationManager = () => {
                                     onChange={(e) =>
                                         setMessageCategory(e.target.value)
                                     }
-                                    className="w-full px-4 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-sky-500"
+                                    className="w-full px-4 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-indigo-500/30"
                                 >
                                     {categories.map((cat) => (
                                         <option
@@ -1205,7 +1205,7 @@ const NotificationManager = () => {
                                 <button
                                     onClick={handleSendToGroup}
                                     disabled={sending || !groupId.trim()}
-                                    className="flex items-center gap-2 px-6 py-2 bg-indigo-500/[0.05]0 text-white rounded-xl hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all ml-auto"
+                                    className="flex items-center gap-2 px-6 py-2 bg-indigo-500 text-white rounded-xl hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all ml-auto"
                                 >
                                     {sending ? (
                                         <>
@@ -1224,7 +1224,7 @@ const NotificationManager = () => {
 
                             {/* Preview */}
                             {showPreview && groupPreview && (
-                                <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-lg border-2 border-purple-200">
+                                <div className="bg-white/[0.03] p-6 rounded-xl border border-white/[0.1]">
                                     <div className="flex items-start justify-between mb-3">
                                         <h3 className="font-bold text-lg text-white flex items-center gap-2">
                                             <MessageSquare className="w-5 h-5 text-violet-400" />
@@ -1250,8 +1250,8 @@ const NotificationManager = () => {
                             )}
 
                             {/* Cara Dapatkan Group ID */}
-                            <div className="bg-indigo-500/[0.05]0/[0.06] p-6 rounded-lg border border-blue-200">
-                                <h4 className="font-bold text-blue-900 mb-3">
+                            <div className="bg-indigo-500/[0.04] p-6 rounded-xl border border-indigo-500/15">
+                                <h4 className="font-bold text-white mb-3">
                                     📱 Cara Mendapatkan Group ID WhatsApp
                                 </h4>
                                 <ol className="space-y-2 text-sm text-white/60">
@@ -1275,7 +1275,7 @@ const NotificationManager = () => {
                                         </span>
                                         <div>
                                             <strong>Via API Test:</strong>
-                                            <pre className="bg-white/[0.8] text-emerald-600 p-2 rounded mt-1 text-xs overflow-x-auto">
+                                            <pre className="bg-white/[0.04] text-teal-300 p-2 rounded mt-1 text-xs overflow-x-auto">
                                                 curl -X POST
                                                 https://api.fonnte.com/get-devices
                                                 \<br />
@@ -1340,8 +1340,8 @@ const NotificationManager = () => {
 
                     {activeTab === 'event' && (
                         <div className="space-y-6">
-                            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg border-2 border-blue-200">
-                                <h3 className="font-bold text-lg mb-3 text-blue-900 flex items-center gap-2">
+                            <div className="bg-white/[0.03] p-6 rounded-xl border border-white/[0.1]">
+                                <h3 className="font-bold text-lg mb-3 text-white flex items-center gap-2">
                                     <Calendar className="w-6 h-6" />
                                     Reminder Pembayaran Event
                                 </h3>
@@ -1349,7 +1349,7 @@ const NotificationManager = () => {
                                     Kirim reminder khusus untuk pembayaran event
                                     (bukan kas mingguan).
                                 </p>
-                                <div className="bg-white/[0.04] p-3 rounded border border-blue-200">
+                                <div className="bg-white/[0.04] p-3 rounded border border-white/[0.1]">
                                     <p className="text-sm text-white/60">
                                         <strong>Fitur:</strong>
                                     </p>
@@ -1380,7 +1380,7 @@ const NotificationManager = () => {
                                     onChange={(e) =>
                                         handleEventSelect(e.target.value)
                                     }
-                                    className="w-full px-4 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-sky-500"
+                                    className="w-full px-4 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-indigo-500/30"
                                 >
                                     <option value="">-- Pilih Event --</option>
                                     {events.map((event) => (
@@ -1405,7 +1405,7 @@ const NotificationManager = () => {
                             {selectedEvent && (
                                 <>
                                     {/* Event Info */}
-                                    <div className="bg-gradient-to-r from-green-50 to-teal-50 p-4 rounded-lg border">
+                                    <div className="bg-white/[0.03] p-4 rounded-xl border border-white/[0.1]">
                                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                             <div>
                                                 <p className="text-sm text-white/60">
@@ -1462,7 +1462,7 @@ const NotificationManager = () => {
                                             </div>
                                             <div className="w-full bg-white/[0.06] rounded-full h-2">
                                                 <div
-                                                    className="bg-green-600 h-2 rounded-full transition-all"
+                                                    className="bg-teal-500 h-2 rounded-full transition-all"
                                                     style={{
                                                         width: `${
                                                             selectedEvent
@@ -1624,7 +1624,7 @@ const NotificationManager = () => {
                                                                     disabled={
                                                                         sending
                                                                     }
-                                                                    className="flex items-center gap-2 px-3 py-1 bg-indigo-500/[0.05]0/15 text-indigo-400 border border-indigo-500/15 rounded-lg hover:bg-indigo-500/[0.05]0/25 disabled:bg-white/[0.08]"
+                                                                    className="flex items-center gap-2 px-3 py-1 bg-indigo-500/15 text-indigo-400 border border-indigo-500/15 rounded-lg hover:bg-indigo-500/25 disabled:bg-white/[0.08]"
                                                                 >
                                                                     <Send className="w-4 h-4" />
                                                                     Kirim
@@ -1658,7 +1658,7 @@ const NotificationManager = () => {
                                                     eventUnpaidStudents.length ===
                                                         0
                                                 }
-                                                className="flex items-center justify-center gap-2 px-4 py-3 bg-indigo-500/[0.05]0/15 text-indigo-400 border border-indigo-500/15 rounded-lg hover:bg-indigo-500/[0.05]0/25 disabled:bg-white/[0.08] transition-colors"
+                                                className="flex items-center justify-center gap-2 px-4 py-3 bg-indigo-500/15 text-indigo-400 border border-indigo-500/15 rounded-lg hover:bg-indigo-500/25 disabled:bg-white/[0.08] transition-colors"
                                             >
                                                 <Send className="w-5 h-5" />
                                                 {sending
@@ -1708,7 +1708,7 @@ const NotificationManager = () => {
                                                                     )
                                                                 }
                                                                 placeholder="628xxxxxxxxxx-xxxxxxxxx@g.us"
-                                                                className="w-full px-4 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-sky-500"
+                                                                className="w-full px-4 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-indigo-500/30"
                                                             />
                                                         </div>
 
@@ -1783,14 +1783,14 @@ const NotificationManager = () => {
                     {/* Custom Message Tab */}
                     {activeTab === 'custom' && (
                         <div className="space-y-6">
-                            <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                            <div className="bg-white/[0.03] border border-white/[0.1] rounded-xl p-4">
                                 <div className="flex items-start gap-3">
                                     <MessageSquare className="w-5 h-5 text-violet-400 flex-shrink-0 mt-0.5" />
                                     <div>
-                                        <h3 className="font-semibold text-purple-900 mb-1">
+                                        <h3 className="font-semibold text-white mb-1">
                                             💌 Pesan Custom
                                         </h3>
-                                        <p className="text-sm text-purple-800">
+                                        <p className="text-sm text-white/55">
                                             Kirim pesan kustom untuk urusan
                                             personal. Pesan akan otomatis
                                             ditambahkan informasi pembayaran di
@@ -1934,11 +1934,11 @@ const NotificationManager = () => {
                             )}
 
                             {/* Info */}
-                            <div className="bg-indigo-500/[0.05]0/[0.06] border border-blue-200 rounded-lg p-4">
-                                <h4 className="font-semibold text-blue-900 mb-2">
+                            <div className="bg-indigo-500/[0.06] border border-white/[0.1] rounded-lg p-4">
+                                <h4 className="font-semibold text-white mb-2">
                                     💡 Tips Penggunaan:
                                 </h4>
-                                <ul className="text-sm text-blue-500 space-y-1">
+                                <ul className="text-sm text-indigo-400/80 space-y-1">
                                     <li>
                                         • Pesan bisa untuk urusan
                                         personal/individual
@@ -1989,7 +1989,7 @@ const NotificationManager = () => {
                                                 <span
                                                     className={`px-3 py-1 rounded-full text-xs font-medium ${
                                                         notif.status === 'sent'
-                                                            ? 'bg-indigo-500/[0.05]0/15 text-indigo-400'
+                                                            ? 'bg-indigo-500/15 text-indigo-400'
                                                             : notif.status ===
                                                               'failed'
                                                             ? 'bg-rose-500/10 text-rose-300'
@@ -2020,8 +2020,8 @@ const NotificationManager = () => {
 
                     {activeTab === 'settings' && (
                         <div className="space-y-6">
-                            <div className="bg-indigo-500/[0.05]0/[0.06] p-6 rounded-lg border border-blue-200">
-                                <h3 className="font-bold text-lg mb-4 text-blue-900">
+                            <div className="bg-indigo-500/[0.04] p-6 rounded-xl border border-indigo-500/15">
+                                <h3 className="font-bold text-lg mb-4 text-white">
                                     🚀 Cara Setup WhatsApp Bot
                                 </h3>
 
@@ -2035,7 +2035,7 @@ const NotificationManager = () => {
                                             <a
                                                 href="https://fonnte.com"
                                                 target="_blank"
-                                                className="text-blue-500 underline"
+                                                className="text-indigo-400 underline"
                                             >
                                                 https://fonnte.com
                                             </a>
@@ -2064,7 +2064,7 @@ const NotificationManager = () => {
                                         <p className="font-semibold mb-2">
                                             3. Set di File .env
                                         </p>
-                                        <pre className="ml-4 bg-white/[0.8] text-emerald-600 p-3 rounded mt-2 font-mono text-xs overflow-x-auto">
+                                        <pre className="ml-4 bg-white/[0.04] text-teal-300 p-3 rounded mt-2 font-mono text-xs overflow-x-auto">
                                             {`FONNTE_API_TOKEN=your_token_here
 WA_TEST_MODE=false
 AUTO_REMINDER_ENABLED=true`}
@@ -2103,7 +2103,7 @@ AUTO_REMINDER_ENABLED=true`}
                                 </div>
                             </div>
 
-                            <div className="bg-amber-500/[0.06] p-6 rounded-lg border border-yellow-200">
+                            <div className="bg-amber-500/[0.04] p-6 rounded-xl border border-amber-500/15">
                                 <h3 className="font-bold text-lg mb-3 text-amber-300">
                                     ⏰ Auto-Reminder Schedule
                                 </h3>
