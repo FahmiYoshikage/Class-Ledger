@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
     Bell,
     Send,
@@ -15,6 +15,8 @@ import {
     Zap,
     Calendar,
     Target,
+    Loader2,
+    Radio,
 } from 'lucide-react';
 import axios from 'axios';
 import EventReminderTab from './EventReminderTab';
@@ -57,6 +59,10 @@ const NotificationManager = () => {
     const [selectedStudentForCustom, setSelectedStudentForCustom] =
         useState('');
 
+    // Background job tracking
+    const [activeJobs, setActiveJobs] = useState([]);
+    const jobPollRef = useRef(null);
+
     const [activeTab, setActiveTab] = useState('send'); // send, history, stats, group, event, custom
 
     const categories = [
@@ -66,6 +72,7 @@ const NotificationManager = () => {
         { value: 'energetic', label: '⚡ Energetik', color: 'yellow' },
         { value: 'humorous', label: '😄 Humor', color: 'pink' },
         { value: 'gentle', label: '🌸 Gentle', color: 'purple' },
+        { value: 'casual', label: '🤙 Casual', color: 'orange' },
     ];
 
     const eventCategories = [
@@ -113,6 +120,51 @@ const NotificationManager = () => {
             setApiStatus({ connected: false, error: error.message });
         }
     };
+
+    // ==========================================
+    // 📋 Background job polling
+    // ==========================================
+    const pollActiveJobs = useCallback(async () => {
+        try {
+            const response = await axios.get(
+                `${API_URL}/notifications/send-jobs/active`
+            );
+            const jobs = response.data;
+            setActiveJobs(jobs);
+
+            // Jika semua job selesai, stop polling & reload data
+            const hasRunning = jobs.some((j) => j.status === 'running');
+            if (!hasRunning && jobs.length > 0) {
+                // Refresh data setelah semua selesai
+                loadData();
+            }
+            return hasRunning;
+        } catch {
+            return false;
+        }
+    }, []);
+
+    const startJobPolling = useCallback(() => {
+        // Jangan dobel polling
+        if (jobPollRef.current) return;
+        jobPollRef.current = setInterval(async () => {
+            const hasRunning = await pollActiveJobs();
+            if (!hasRunning && jobPollRef.current) {
+                clearInterval(jobPollRef.current);
+                jobPollRef.current = null;
+            }
+        }, 3000); // poll setiap 3 detik
+    }, [pollActiveJobs]);
+
+    // Cek job aktif saat pertama kali load (jika ada job dari sebelumnya)
+    useEffect(() => {
+        pollActiveJobs().then((hasRunning) => {
+            if (hasRunning) startJobPolling();
+        });
+        return () => {
+            if (jobPollRef.current) clearInterval(jobPollRef.current);
+        };
+    }, [pollActiveJobs, startJobPolling]);
 
     const handlePreview = async () => {
         try {
@@ -166,16 +218,13 @@ const NotificationManager = () => {
                 }
             );
 
-            alert(
-                `Pengiriman selesai!\n\n` +
-                    `✅ Berhasil: ${response.data.summary.success}\n` +
-                    `❌ Gagal: ${response.data.summary.failed}\n` +
-                    `⏭️  Dilewati: ${response.data.summary.skipped}`
-            );
-
-            // Reload data
-            await loadData();
-            setSelectedStudents([]);
+            if (response.data.jobId) {
+                // Job dimulai di background — start polling
+                startJobPolling();
+                setSelectedStudents([]);
+            } else {
+                alert(response.data.message);
+            }
         } catch (error) {
             alert('Error mengirim reminder: ' + error.message);
         } finally {
@@ -478,15 +527,13 @@ const NotificationManager = () => {
                 }
             );
 
-            alert(
-                `Pengiriman selesai!\n\n` +
-                    `✅ Berhasil: ${response.data.summary.success}\n` +
-                    `❌ Gagal: ${response.data.summary.failed}\n` +
-                    `⏭️  Dilewati: ${response.data.summary.skipped}`
-            );
-
-            setSelectedEventStudents([]);
-            await handleEventSelect(selectedEvent._id);
+            if (response.data.jobId) {
+                // Job dimulai di background — start polling
+                startJobPolling();
+                setSelectedEventStudents([]);
+            } else {
+                alert(response.data.message);
+            }
         } catch (error) {
             alert('❌ Error: ' + error.message);
         } finally {
@@ -733,6 +780,150 @@ const NotificationManager = () => {
                 )}
             </div>
 
+            {/* 🔔 Background Job Banner */}
+            {activeJobs.length > 0 && (
+                <div className="mb-4 sm:mb-6 space-y-3">
+                    {activeJobs.map((job) => (
+                        <div
+                            key={job.id}
+                            className={`relative overflow-hidden rounded-xl border ${
+                                job.status === 'running'
+                                    ? 'bg-indigo-500/[0.06] border-indigo-500/20'
+                                    : job.status === 'completed'
+                                    ? 'bg-teal-500/[0.06] border-teal-500/20'
+                                    : 'bg-rose-500/[0.05] border-rose-500/20'
+                            }`}
+                        >
+                            {/* Animated shimmer bar for running jobs */}
+                            {job.status === 'running' && (
+                                <div className="absolute inset-0 overflow-hidden">
+                                    <div
+                                        className="absolute inset-y-0 left-0 bg-indigo-500/10 transition-all duration-1000 ease-out"
+                                        style={{
+                                            width: job.total > 0
+                                                ? `${(job.progress / job.total) * 100}%`
+                                                : '0%',
+                                        }}
+                                    />
+                                    <div
+                                        className="absolute inset-0"
+                                        style={{
+                                            background:
+                                                'linear-gradient(90deg, transparent, rgba(99,102,241,0.08), transparent)',
+                                            backgroundSize: '200% 100%',
+                                            animation: 'shimmer 2s infinite linear',
+                                        }}
+                                    />
+                                </div>
+                            )}
+
+                            <div className="relative p-4">
+                                <div className="flex items-start gap-3">
+                                    {/* Icon */}
+                                    <div className="flex-shrink-0 mt-0.5">
+                                        {job.status === 'running' ? (
+                                            <div className="relative">
+                                                <Radio className="w-5 h-5 text-indigo-400 animate-pulse" />
+                                                <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-indigo-400 rounded-full animate-ping" />
+                                            </div>
+                                        ) : job.status === 'completed' ? (
+                                            <CheckCircle className="w-5 h-5 text-teal-400" />
+                                        ) : (
+                                            <XCircle className="w-5 h-5 text-rose-400" />
+                                        )}
+                                    </div>
+
+                                    {/* Content */}
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                            <h4 className={`text-sm font-semibold ${
+                                                job.status === 'running'
+                                                    ? 'text-indigo-300'
+                                                    : job.status === 'completed'
+                                                    ? 'text-teal-300'
+                                                    : 'text-rose-300'
+                                            }`}>
+                                                {job.status === 'running'
+                                                    ? '📡 Sedang mengirim pesan...'
+                                                    : job.status === 'completed'
+                                                    ? '✅ Pengiriman selesai!'
+                                                    : '❌ Pengiriman gagal'}
+                                            </h4>
+                                            {job.meta?.type === 'event' && job.meta?.eventName && (
+                                                <span className="text-xs px-2 py-0.5 bg-violet-500/15 text-violet-300 rounded-full">
+                                                    {job.meta.eventName}
+                                                </span>
+                                            )}
+                                            {job.meta?.type === 'weekly' && (
+                                                <span className="text-xs px-2 py-0.5 bg-indigo-500/15 text-indigo-300 rounded-full">
+                                                    Kas Mingguan
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        {/* Progress info */}
+                                        <div className="mt-1.5 flex items-center gap-3 text-xs text-white/50">
+                                            <span>
+                                                {job.progress}/{job.total} pesan
+                                            </span>
+                                            {job.success > 0 && (
+                                                <span className="text-teal-400">
+                                                    ✓ {job.success} berhasil
+                                                </span>
+                                            )}
+                                            {job.failed > 0 && (
+                                                <span className="text-rose-400">
+                                                    ✗ {job.failed} gagal
+                                                </span>
+                                            )}
+                                            {job.skipped > 0 && (
+                                                <span className="text-yellow-400">
+                                                    ↷ {job.skipped} dilewati
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        {/* Current activity */}
+                                        {job.status === 'running' && job.currentStudent && (
+                                            <p className="mt-1.5 text-xs text-white/40 truncate">
+                                                {job.currentStudent.startsWith('⏸️') || job.currentStudent.startsWith('⏳')
+                                                    ? job.currentStudent
+                                                    : `→ ${job.currentStudent}`}
+                                            </p>
+                                        )}
+
+                                        {/* Subtitle for running */}
+                                        {job.status === 'running' && (
+                                            <p className="mt-2 text-xs text-white/30 italic">
+                                                Proses berjalan di latar belakang dengan delay acak antar pesan untuk perlindungan anti-ban. Kamu bisa meninggalkan halaman ini.
+                                            </p>
+                                        )}
+
+                                        {/* Progress bar */}
+                                        {job.total > 0 && (
+                                            <div className="mt-2.5 h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
+                                                <div
+                                                    className={`h-full rounded-full transition-all duration-1000 ease-out ${
+                                                        job.status === 'running'
+                                                            ? 'bg-indigo-500/60'
+                                                            : job.status === 'completed'
+                                                            ? 'bg-teal-500/60'
+                                                            : 'bg-rose-500/60'
+                                                    }`}
+                                                    style={{
+                                                        width: `${(job.progress / job.total) * 100}%`,
+                                                    }}
+                                                />
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+
             {/* Stats Cards */}
             {stats && (
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
@@ -953,13 +1144,18 @@ const NotificationManager = () => {
 
                                 <button
                                     onClick={handleSendBulk}
-                                    disabled={sending}
+                                    disabled={sending || activeJobs.some(j => j.status === 'running')}
                                     className="w-full sm:w-auto sm:ml-auto flex items-center justify-center gap-2 px-4 sm:px-6 py-2 bg-indigo-500 text-white rounded-xl hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm sm:text-base"
                                 >
                                     {sending ? (
                                         <>
-                                            <RefreshCw className="w-4 h-4 animate-spin" />
-                                            Mengirim...
+                                            <Loader2 className="w-4 h-4 animate-spin" />
+                                            Memulai...
+                                        </>
+                                    ) : activeJobs.some(j => j.status === 'running') ? (
+                                        <>
+                                            <Radio className="w-4 h-4 animate-pulse" />
+                                            Sedang Berjalan...
                                         </>
                                     ) : (
                                         <>
@@ -1655,6 +1851,7 @@ const NotificationManager = () => {
                                                 onClick={handleSendEventBulk}
                                                 disabled={
                                                     sending ||
+                                                    activeJobs.some(j => j.status === 'running') ||
                                                     eventUnpaidStudents.length ===
                                                         0
                                                 }
@@ -1662,7 +1859,9 @@ const NotificationManager = () => {
                                             >
                                                 <Send className="w-5 h-5" />
                                                 {sending
-                                                    ? 'Mengirim...'
+                                                    ? 'Memulai...'
+                                                    : activeJobs.some(j => j.status === 'running')
+                                                    ? 'Sedang Berjalan...'
                                                     : selectedEventStudents.length >
                                                       0
                                                     ? `Kirim ke ${selectedEventStudents.length} Siswa`

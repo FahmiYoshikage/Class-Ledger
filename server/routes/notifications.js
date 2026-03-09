@@ -265,8 +265,16 @@ router.post('/send-bulk-reminder', async (req, res) => {
             recipients.push({ student, weeksLate, amountOwed });
         }
 
-        // 🛡️ Gunakan anti-ban orchestrator
-        const results = await antiBanService.sendWithProtection(
+        if (recipients.length === 0) {
+            return res.json({
+                message: 'Tidak ada siswa yang perlu dikirimi reminder',
+                jobId: null,
+                summary: { total: 0, queued: 0, skipped: skipped.length },
+            });
+        }
+
+        // 🛡️ Start background job — langsung return, proses di belakang
+        const jobId = antiBanService.startBackgroundJob(
             recipients,
             async (student, weeksLate, amountOwed, category) => {
                 return await whatsappService.sendPaymentReminder(
@@ -275,17 +283,17 @@ router.post('/send-bulk-reminder', async (req, res) => {
                     amountOwed,
                     category
                 );
-            }
+            },
+            { type: 'weekly', minWeeks }
         );
 
         res.json({
-            message: 'Pengiriman selesai (anti-ban active)',
+            message: 'Pengiriman dimulai di latar belakang (anti-ban active)',
+            jobId,
             summary: {
                 total: students.length,
-                success: results.success,
-                failed: results.failed,
-                skipped: results.skipped + skipped.length,
-                rateLimited: results.rateLimited,
+                queued: recipients.length,
+                skipped: skipped.length,
             },
             antiBanStatus: antiBanService.getRateLimitStatus(),
             skippedDetails: skipped,
@@ -676,52 +684,42 @@ router.post('/send-event-reminder-bulk/:eventId', async (req, res) => {
             );
         }
 
-        const results = {
-            success: [],
-            failed: [],
-            skipped: [],
-        };
-
-        for (const student of studentsToRemind) {
-            try {
-                const result = await whatsappService.sendEventReminder(
-                    student,
-                    event,
-                    category
-                );
-
-                if (result.success) {
-                    results.success.push({
-                        student: student.name,
-                        phone: student.phoneNumber,
-                        notificationId: result.notification._id,
-                    });
-                } else {
-                    results.failed.push({
-                        student: student.name,
-                        error: 'Gagal mengirim',
-                    });
-                }
-
-                // Delay to avoid rate limit
-                await new Promise((resolve) => setTimeout(resolve, 1000));
-            } catch (error) {
-                results.failed.push({
-                    student: student.name,
-                    error: error.message,
-                });
-            }
+        if (studentsToRemind.length === 0) {
+            return res.json({
+                message: 'Tidak ada siswa yang perlu dikirimi reminder event',
+                jobId: null,
+                summary: { total: 0, queued: 0 },
+            });
         }
 
+        // Build recipients compatible with sendWithProtection format
+        const recipients = studentsToRemind.map((s) => ({
+            student: s,
+            weeksLate: 0,
+            amountOwed: event.amount || 0,
+        }));
+
+        // 🛡️ Start background job
+        const jobId = antiBanService.startBackgroundJob(
+            recipients,
+            async (student, _weeksLate, _amountOwed, cat) => {
+                return await whatsappService.sendEventReminder(
+                    student,
+                    event,
+                    cat
+                );
+            },
+            { type: 'event', eventName: event.name }
+        );
+
         res.json({
-            message: 'Pengiriman event reminder selesai',
+            message: `Pengiriman reminder "${event.name}" dimulai di latar belakang`,
+            jobId,
             event: event.name,
             summary: {
                 total: studentsToRemind.length,
-                success: results.success.length,
-                failed: results.failed.length,
+                queued: studentsToRemind.length,
             },
-            results,
         });
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -1143,7 +1141,30 @@ router.get('/broadcast-preview', async (req, res) => {
 });
 
 // ==============================================
-// 🛡️ ANTI-BAN STATUS & CONFIG
+// � BACKGROUND JOB STATUS
+// ==============================================
+router.get('/send-job/:jobId', async (req, res) => {
+    try {
+        const job = antiBanService.getJobStatus(req.params.jobId);
+        if (!job) {
+            return res.status(404).json({ error: 'Job tidak ditemukan' });
+        }
+        res.json(job);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.get('/send-jobs/active', async (req, res) => {
+    try {
+        res.json(antiBanService.getActiveJobs());
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// ==============================================
+// �🛡️ ANTI-BAN STATUS & CONFIG
 // ==============================================
 router.get('/anti-ban/status', async (req, res) => {
     try {

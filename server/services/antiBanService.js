@@ -20,6 +20,9 @@ class AntiBanService {
         this.lastResetDay = new Date().getDate();
         this.lastResetHour = new Date().getHours();
 
+        // --- Background job tracker ---
+        this.activeJobs = new Map(); // jobId -> { status, progress, total, ... }
+
         // --- Configurable limits ---
         this.config = {
             // Maksimal pesan per hari (semua tipe)
@@ -494,6 +497,181 @@ class AntiBanService {
         console.log(`   Sisa kuota jam ini: ${status.remainingThisHour}`);
 
         return results;
+    }
+
+    // =====================
+    // 📋 BACKGROUND JOB TRACKER
+    // =====================
+
+    /**
+     * Buat job ID unik
+     */
+    _generateJobId() {
+        return `job_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+    }
+
+    /**
+     * Mulai background job — langsung return jobId,
+     * proses kirim berjalan di background.
+     */
+    startBackgroundJob(recipients, sendFn, meta = {}) {
+        const jobId = this._generateJobId();
+
+        this.activeJobs.set(jobId, {
+            id: jobId,
+            status: 'running',       // running | completed | failed
+            progress: 0,
+            total: recipients.length,
+            success: 0,
+            failed: 0,
+            skipped: 0,
+            rateLimited: 0,
+            currentStudent: null,
+            startedAt: new Date(),
+            completedAt: null,
+            meta, // e.g. { type: 'weekly' | 'event', eventName }
+        });
+
+        // Jalankan di background (tidak di-await)
+        this._runBackgroundJob(jobId, recipients, sendFn).catch((err) => {
+            console.error(`❌ Background job ${jobId} error:`, err.message);
+            const job = this.activeJobs.get(jobId);
+            if (job) {
+                job.status = 'failed';
+                job.error = err.message;
+                job.completedAt = new Date();
+            }
+        });
+
+        return jobId;
+    }
+
+    /**
+     * Internal: eksekusi job di background
+     */
+    async _runBackgroundJob(jobId, recipients, sendFn) {
+        const job = this.activeJobs.get(jobId);
+        if (!job) return;
+
+        const shuffled = this.shuffleArray(recipients);
+        let batchCount = 0;
+
+        for (let i = 0; i < shuffled.length; i++) {
+            const { student, weeksLate, amountOwed } = shuffled[i];
+
+            job.progress = i;
+            job.currentStudent = student.name;
+
+            // Cek rate limit
+            if (!this.canSendMessage()) {
+                console.log(
+                    `🚫 [${jobId}] Rate limit tercapai. Sisa ${shuffled.length - i} pesan ditunda.`
+                );
+                job.rateLimited += shuffled.length - i;
+                break;
+            }
+
+            // Anti-spam: skip jika sudah dikirim < 3 hari
+            if (student.lastNotificationSent) {
+                const daysSince = Math.floor(
+                    (Date.now() - student.lastNotificationSent.getTime()) /
+                        (24 * 60 * 60 * 1000)
+                );
+                if (daysSince < 3) {
+                    job.skipped++;
+                    job.progress = i + 1;
+                    continue;
+                }
+            }
+
+            try {
+                const category = this.getRandomCategory();
+                console.log(
+                    `📤 [${jobId}] [${i + 1}/${shuffled.length}] → ${student.name} (${category})`
+                );
+
+                const result = await sendFn(student, weeksLate, amountOwed, category);
+
+                if (result.success) {
+                    this.recordMessageSent();
+                    job.success++;
+                } else {
+                    job.failed++;
+                }
+            } catch (error) {
+                job.failed++;
+                console.error(
+                    `❌ [${jobId}] Error → ${student.name}:`, error.message
+                );
+            }
+
+            job.progress = i + 1;
+            batchCount++;
+
+            // Batch pause?
+            if (batchCount >= this.config.batchSize && i < shuffled.length - 1) {
+                const pauseMs = this.calculateBatchPause();
+                job.currentStudent = `⏸️ Istirahat ${(pauseMs / 60000).toFixed(1)} menit...`;
+                await this.sleep(pauseMs);
+                batchCount = 0;
+            } else if (i < shuffled.length - 1) {
+                const delayMs = this.calculateMessageDelay();
+                job.currentStudent = `⏳ Delay ${(delayMs / 1000).toFixed(0)}s...`;
+                await this.sleep(delayMs);
+            }
+        }
+
+        job.status = 'completed';
+        job.completedAt = new Date();
+        job.currentStudent = null;
+
+        const status = this.getRateLimitStatus();
+        console.log(`\n📊 [${jobId}] Background Job Selesai:`);
+        console.log(`   Terkirim: ${job.success}/${job.total}`);
+        console.log(`   Gagal: ${job.failed}`);
+        console.log(`   Skipped: ${job.skipped}`);
+        console.log(`   Rate-limited: ${job.rateLimited}`);
+        console.log(`   Sisa kuota: ${status.remainingToday}`);
+
+        // Auto-cleanup setelah 1 jam
+        setTimeout(() => this.activeJobs.delete(jobId), 60 * 60 * 1000);
+    }
+
+    /**
+     * Ambil status job
+     */
+    getJobStatus(jobId) {
+        const job = this.activeJobs.get(jobId);
+        if (!job) return null;
+
+        return {
+            ...job,
+            rateLimit: this.getRateLimitStatus(),
+        };
+    }
+
+    /**
+     * Ambil semua active jobs
+     */
+    getActiveJobs() {
+        const jobs = [];
+        for (const [id, job] of this.activeJobs) {
+            jobs.push({
+                id,
+                status: job.status,
+                progress: job.progress,
+                total: job.total,
+                success: job.success,
+                failed: job.failed,
+                skipped: job.skipped,
+                rateLimited: job.rateLimited,
+                currentStudent: job.currentStudent,
+                startedAt: job.startedAt,
+                completedAt: job.completedAt,
+                meta: job.meta,
+            });
+        }
+        return jobs;
     }
 
     /**
