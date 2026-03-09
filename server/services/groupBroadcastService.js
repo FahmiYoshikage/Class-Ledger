@@ -4,6 +4,7 @@ import Student from '../models/Student.js';
 import Payment from '../models/Payment.js';
 import Expense from '../models/Expense.js';
 import pdfReportService from './pdfReportService.js';
+import antiBanService from './antiBanService.js';
 
 class GroupBroadcastService {
     constructor() {
@@ -368,9 +369,12 @@ _Terima kasih atas partisipasinya!_ 🙏
 
             console.log(`📤 Sending broadcast to group: ${this.groupId}`);
 
+            // 🛡️ Humanisasi pesan grup (anti-ban)
+            const humanizedMessage = antiBanService.humanizeMessage(message);
+
             const payload = {
                 target: this.groupId,
-                message: message,
+                message: humanizedMessage,
                 countryCode: '62',
             };
 

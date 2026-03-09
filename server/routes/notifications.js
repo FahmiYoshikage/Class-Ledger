@@ -4,6 +4,7 @@ import Payment from '../models/Payment.js';
 import Notification from '../models/Notification.js';
 import Setting from '../models/Setting.js';
 import whatsappService from '../services/whatsappService.js';
+import antiBanService from '../services/antiBanService.js';
 
 const router = express.Router();
 
@@ -12,18 +13,24 @@ const router = express.Router();
 // ==============================================
 async function getCurrentWeek() {
     try {
-        const [semesterStatusSetting, pausedWeekSetting, startDateSetting, accumulatedWeeksSetting] =
-            await Promise.all([
-                Setting.findOne({ key: 'semester_status' }),
-                Setting.findOne({ key: 'paused_week' }),
-                Setting.findOne({ key: 'start_date' }),
-                Setting.findOne({ key: 'accumulated_weeks' }),
-            ]);
+        const [
+            semesterStatusSetting,
+            pausedWeekSetting,
+            startDateSetting,
+            accumulatedWeeksSetting,
+        ] = await Promise.all([
+            Setting.findOne({ key: 'semester_status' }),
+            Setting.findOne({ key: 'paused_week' }),
+            Setting.findOne({ key: 'start_date' }),
+            Setting.findOne({ key: 'accumulated_weeks' }),
+        ]);
 
         const semesterStatus = semesterStatusSetting?.value || 'active';
         const pausedWeek = pausedWeekSetting?.value;
         // Default 7 = semester 1 had 7 weeks (hardcoded initial carry-over)
-        const accumulatedWeeks = accumulatedWeeksSetting ? parseInt(accumulatedWeeksSetting.value) : 7;
+        const accumulatedWeeks = accumulatedWeeksSetting
+            ? parseInt(accumulatedWeeksSetting.value)
+            : 7;
         const startDate = startDateSetting?.value
             ? new Date(startDateSetting.value)
             : new Date(process.env.START_DATE || '2025-10-27');
@@ -200,29 +207,17 @@ router.post('/send-reminder/:studentId', async (req, res) => {
 });
 
 // ==============================================
-// 📤 SEND REMINDER TO MULTIPLE STUDENTS
+// 📤 SEND REMINDER TO MULTIPLE STUDENTS (Anti-Ban)
 // ==============================================
 router.post('/send-bulk-reminder', async (req, res) => {
     try {
-        const {
-            studentIds,
-            category = 'friendly',
-            minWeeks = 1,
-            maxWeeks = null,
-        } = req.body;
-
-        const results = {
-            success: [],
-            failed: [],
-            skipped: [],
-        };
+        const { studentIds, minWeeks = 1, maxWeeks = null } = req.body;
 
         // Get students
         let students;
         if (studentIds && studentIds.length > 0) {
             students = await Student.find({ _id: { $in: studentIds } });
         } else {
-            // Send to all who need reminder
             students = await Student.find({
                 status: 'Aktif',
                 phoneNumber: { $exists: true, $ne: '' },
@@ -236,82 +231,64 @@ router.post('/send-bulk-reminder', async (req, res) => {
         // Get current week (respects semester pause)
         const currentWeek = await getCurrentWeek();
 
-        // Send to each student
+        // Build recipients list with weeksLate filtering
+        const recipients = [];
+        const skipped = [];
+
         for (const student of students) {
-            try {
-                // Calculate weeks late
-                const studentPayments = payments.filter(
-                    (p) => p.studentId?.toString() === student._id.toString()
-                );
+            const studentPayments = payments.filter(
+                (p) => p.studentId?.toString() === student._id.toString()
+            );
+            const totalPaid = studentPayments.reduce(
+                (sum, p) => sum + p.amount,
+                0
+            );
+            const weeksPaid = Math.floor(totalPaid / 2000);
+            const weeksLate = currentWeek - weeksPaid;
+            const amountOwed = weeksLate * 2000;
 
-                const totalPaid = studentPayments.reduce(
-                    (sum, p) => sum + p.amount,
-                    0
-                );
-                const weeksPaid = Math.floor(totalPaid / 2000);
-                const weeksLate = currentWeek - weeksPaid;
-                const amountOwed = weeksLate * 2000;
+            if (weeksLate < minWeeks) {
+                skipped.push({
+                    student: student.name,
+                    reason: 'Belum mencapai minimum weeks',
+                });
+                continue;
+            }
+            if (maxWeeks && weeksLate > maxWeeks) {
+                skipped.push({
+                    student: student.name,
+                    reason: 'Melebihi maximum weeks',
+                });
+                continue;
+            }
 
-                // Check if within range
-                if (weeksLate < minWeeks) {
-                    results.skipped.push({
-                        student: student.name,
-                        reason: 'Belum mencapai minimum weeks',
-                    });
-                    continue;
-                }
+            recipients.push({ student, weeksLate, amountOwed });
+        }
 
-                if (maxWeeks && weeksLate > maxWeeks) {
-                    results.skipped.push({
-                        student: student.name,
-                        reason: 'Melebihi maximum weeks',
-                    });
-                    continue;
-                }
-
-                // Send reminder
-                const result = await whatsappService.sendPaymentReminder(
+        // 🛡️ Gunakan anti-ban orchestrator
+        const results = await antiBanService.sendWithProtection(
+            recipients,
+            async (student, weeksLate, amountOwed, category) => {
+                return await whatsappService.sendPaymentReminder(
                     student,
                     weeksLate,
                     amountOwed,
                     category
                 );
-
-                if (result.success) {
-                    results.success.push({
-                        student: student.name,
-                        phone: student.phoneNumber,
-                        weeksLate,
-                        amount: amountOwed,
-                        notificationId: result.notification._id,
-                    });
-                } else {
-                    results.failed.push({
-                        student: student.name,
-                        phone: student.phoneNumber,
-                        error: 'Gagal mengirim pesan',
-                    });
-                }
-
-                // Delay to avoid rate limit
-                await new Promise((resolve) => setTimeout(resolve, 1000));
-            } catch (error) {
-                results.failed.push({
-                    student: student.name,
-                    error: error.message,
-                });
             }
-        }
+        );
 
         res.json({
-            message: 'Pengiriman selesai',
+            message: 'Pengiriman selesai (anti-ban active)',
             summary: {
                 total: students.length,
-                success: results.success.length,
-                failed: results.failed.length,
-                skipped: results.skipped.length,
+                success: results.success,
+                failed: results.failed,
+                skipped: results.skipped + skipped.length,
+                rateLimited: results.rateLimited,
             },
-            results,
+            antiBanStatus: antiBanService.getRateLimitStatus(),
+            skippedDetails: skipped,
         });
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -1162,6 +1139,20 @@ router.get('/broadcast-preview', async (req, res) => {
             success: false,
             error: error.message,
         });
+    }
+});
+
+// ==============================================
+// 🛡️ ANTI-BAN STATUS & CONFIG
+// ==============================================
+router.get('/anti-ban/status', async (req, res) => {
+    try {
+        res.json({
+            rateLimit: antiBanService.getRateLimitStatus(),
+            config: antiBanService.getConfig(),
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 });
 

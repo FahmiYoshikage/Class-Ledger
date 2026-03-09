@@ -1,5 +1,6 @@
 import axios from 'axios';
 import Notification from '../models/Notification.js';
+import antiBanService from './antiBanService.js';
 
 // ==============================================
 // 💳 INFORMASI PEMBAYARAN
@@ -368,6 +369,9 @@ class WhatsAppService {
                 };
             }
 
+            // 🛡️ Humanisasi pesan agar setiap pesan unik (anti-ban)
+            const humanizedMessage = antiBanService.humanizeMessage(message);
+
             // Kirim via Fonnte API
             console.log(`📡 Calling Fonnte API...`);
             console.log(
@@ -383,7 +387,7 @@ class WhatsAppService {
                 this.apiUrl,
                 {
                     target: normalizedPhone,
-                    message: message,
+                    message: humanizedMessage,
                     countryCode: '62',
                     ...options,
                 },

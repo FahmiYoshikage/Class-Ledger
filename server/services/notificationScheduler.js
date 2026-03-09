@@ -4,6 +4,7 @@ import Payment from '../models/Payment.js';
 import Setting from '../models/Setting.js';
 import whatsappService from './whatsappService.js';
 import groupBroadcastService from './groupBroadcastService.js';
+import antiBanService from './antiBanService.js';
 
 class NotificationScheduler {
     constructor() {
@@ -14,22 +15,30 @@ class NotificationScheduler {
     // Hitung current week (respects semester pause) — includes accumulated weeks
     async getCurrentWeek() {
         try {
-            const [semesterStatusSetting, pausedWeekSetting, startDateSetting, accumulatedWeeksSetting] =
-                await Promise.all([
-                    Setting.findOne({ key: 'semester_status' }),
-                    Setting.findOne({ key: 'paused_week' }),
-                    Setting.findOne({ key: 'start_date' }),
-                    Setting.findOne({ key: 'accumulated_weeks' }),
-                ]);
+            const [
+                semesterStatusSetting,
+                pausedWeekSetting,
+                startDateSetting,
+                accumulatedWeeksSetting,
+            ] = await Promise.all([
+                Setting.findOne({ key: 'semester_status' }),
+                Setting.findOne({ key: 'paused_week' }),
+                Setting.findOne({ key: 'start_date' }),
+                Setting.findOne({ key: 'accumulated_weeks' }),
+            ]);
 
             const semesterStatus = semesterStatusSetting?.value || 'active';
             const pausedWeek = pausedWeekSetting?.value;
             // Default 7 = semester 1 had 7 weeks (hardcoded initial carry-over)
-            const accumulatedWeeks = accumulatedWeeksSetting ? parseInt(accumulatedWeeksSetting.value) : 7;
+            const accumulatedWeeks = accumulatedWeeksSetting
+                ? parseInt(accumulatedWeeksSetting.value)
+                : 7;
 
             // If paused, return total weeks (accumulated + paused week)
             if (semesterStatus === 'paused' && pausedWeek) {
-                console.log(`⏸️ Semester PAUSED at Week ${pausedWeek} (total: ${accumulatedWeeks + pausedWeek})`);
+                console.log(
+                    `⏸️ Semester PAUSED at Week ${pausedWeek} (total: ${accumulatedWeeks + pausedWeek})`
+                );
                 return accumulatedWeeks + pausedWeek;
             }
 
@@ -119,14 +128,15 @@ class NotificationScheduler {
         }
     }
 
-    // Kirim reminder otomatis
+    // Kirim reminder otomatis — menggunakan anti-ban protection
     async sendAutomaticReminders(minWeeks = 2) {
         try {
-            console.log('🤖 Starting automatic reminder process...');
-
-            const studentsToRemind = await this.getStudentsNeedingReminder(
-                minWeeks
+            console.log(
+                '🤖 Starting automatic reminder process (with anti-ban protection)...'
             );
+
+            const studentsToRemind =
+                await this.getStudentsNeedingReminder(minWeeks);
 
             if (studentsToRemind.length === 0) {
                 console.log('✅ No students need reminders at this time');
@@ -138,79 +148,30 @@ class NotificationScheduler {
             }
 
             console.log(
-                `📱 Sending reminders to ${studentsToRemind.length} students...`
+                `📱 Preparing reminders for ${studentsToRemind.length} students (anti-ban active)...`
             );
 
-            let successCount = 0;
-            let failedCount = 0;
-
-            // Tentukan kategori berdasarkan hari
-            const dayOfWeek = new Date().getDay();
-            const categories = [
-                'friendly',
-                'motivational',
-                'gentle',
-                'energetic',
-                'humorous',
-            ];
-            const selectedCategory = categories[dayOfWeek % categories.length];
-
-            for (const { student, weeksLate, amountOwed } of studentsToRemind) {
-                try {
-                    // Hindari spam: cek apakah sudah dikirim dalam 3 hari terakhir
-                    if (student.lastNotificationSent) {
-                        const daysSinceLastSent = Math.floor(
-                            (Date.now() -
-                                student.lastNotificationSent.getTime()) /
-                                (24 * 60 * 60 * 1000)
-                        );
-
-                        if (daysSinceLastSent < 3) {
-                            console.log(
-                                `⏭️  Skipping ${student.name} (last sent ${daysSinceLastSent} days ago)`
-                            );
-                            continue;
-                        }
-                    }
-
-                    const result = await whatsappService.sendPaymentReminder(
+            // Gunakan anti-ban orchestrator
+            const results = await antiBanService.sendWithProtection(
+                studentsToRemind,
+                async (student, weeksLate, amountOwed, category) => {
+                    return await whatsappService.sendPaymentReminder(
                         student,
                         weeksLate,
                         amountOwed,
-                        selectedCategory
-                    );
-
-                    if (result.success) {
-                        successCount++;
-                        console.log(
-                            `✅ Sent to ${student.name} (${weeksLate} weeks late)`
-                        );
-                    } else {
-                        failedCount++;
-                        console.log(`❌ Failed to send to ${student.name}`);
-                    }
-
-                    // Delay 2 detik antar pesan untuk avoid rate limit
-                    await new Promise((resolve) => setTimeout(resolve, 2000));
-                } catch (error) {
-                    failedCount++;
-                    console.error(
-                        `Error sending to ${student.name}:`,
-                        error.message
+                        category
                     );
                 }
-            }
+            );
 
             console.log(`\n📊 Reminder Summary:`);
-            console.log(`   Total: ${studentsToRemind.length}`);
-            console.log(`   Success: ${successCount}`);
-            console.log(`   Failed: ${failedCount}`);
+            console.log(`   Total: ${results.total}`);
+            console.log(`   Success: ${results.success}`);
+            console.log(`   Failed: ${results.failed}`);
+            console.log(`   Skipped: ${results.skipped}`);
+            console.log(`   Rate-limited: ${results.rateLimited}`);
 
-            return {
-                total: studentsToRemind.length,
-                success: successCount,
-                failed: failedCount,
-            };
+            return results;
         } catch (error) {
             console.error('Error in automatic reminder:', error.message);
             return {
@@ -230,7 +191,8 @@ class NotificationScheduler {
 
         const isWithinGracePeriod = () => {
             if (!this.startedAt) return true;
-            const minutesSinceStart = (Date.now() - this.startedAt) / (1000 * 60);
+            const minutesSinceStart =
+                (Date.now() - this.startedAt) / (1000 * 60);
             return minutesSinceStart < STARTUP_GRACE_MINUTES;
         };
 
@@ -241,13 +203,17 @@ class NotificationScheduler {
             '0 7 * * 1',
             async () => {
                 if (isWithinGracePeriod()) {
-                    console.log('⏳ [MONDAY REMINDER] Skipped — container just started');
+                    console.log(
+                        '⏳ [MONDAY REMINDER] Skipped — container just started'
+                    );
                     return;
                 }
                 console.log(
                     '\n⏰ [MONDAY REMINDER] Running Monday morning reminder...'
                 );
-                await this.sendAutomaticReminders(1); // Kirim ke yang telat ≥ 1 minggu
+                // 🛡️ Terapkan jitter agar tidak selalu jam 07:00 tepat
+                await antiBanService.applyCronJitter('MONDAY REMINDER');
+                await this.sendAutomaticReminders(1);
             },
             {
                 scheduled: false,
@@ -262,13 +228,17 @@ class NotificationScheduler {
             '0 15 * * 5',
             async () => {
                 if (isWithinGracePeriod()) {
-                    console.log('⏳ [FRIDAY REMINDER] Skipped — container just started');
+                    console.log(
+                        '⏳ [FRIDAY REMINDER] Skipped — container just started'
+                    );
                     return;
                 }
                 console.log(
                     '\n⏰ [FRIDAY REMINDER] Running Friday afternoon reminder...'
                 );
-                await this.sendAutomaticReminders(2); // Kirim ke yang telat ≥ 2 minggu
+                // 🛡️ Terapkan jitter
+                await antiBanService.applyCronJitter('FRIDAY REMINDER');
+                await this.sendAutomaticReminders(2);
             },
             {
                 scheduled: false,
@@ -283,13 +253,17 @@ class NotificationScheduler {
             '0 10 * * *',
             async () => {
                 if (isWithinGracePeriod()) {
-                    console.log('⏳ [DAILY CHECK] Skipped — container just started');
+                    console.log(
+                        '⏳ [DAILY CHECK] Skipped — container just started'
+                    );
                     return;
                 }
                 console.log(
                     '\n⏰ [DAILY CHECK] Checking for urgent reminders...'
                 );
-                await this.sendAutomaticReminders(4); // Hanya yang telat ≥ 4 minggu
+                // 🛡️ Terapkan jitter
+                await antiBanService.applyCronJitter('DAILY CHECK');
+                await this.sendAutomaticReminders(4);
             },
             {
                 scheduled: false,
@@ -304,7 +278,9 @@ class NotificationScheduler {
             '0 18 * * 0',
             async () => {
                 if (isWithinGracePeriod()) {
-                    console.log('⏳ [BI-WEEKLY BROADCAST] Skipped — container just started');
+                    console.log(
+                        '⏳ [BI-WEEKLY BROADCAST] Skipped — container just started'
+                    );
                     return;
                 }
                 const weekNumber = Math.floor(
@@ -315,6 +291,8 @@ class NotificationScheduler {
                     console.log(
                         '\n📊 [BI-WEEKLY BROADCAST] Sending group summary report...'
                     );
+                    // 🛡️ Terapkan jitter
+                    await antiBanService.applyCronJitter('BI-WEEKLY BROADCAST');
                     await groupBroadcastService.sendBiWeeklyReport();
                 }
             },
