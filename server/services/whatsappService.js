@@ -24,7 +24,7 @@ Semua atas nama: *Fahmi Ilham Bagaskara*
 _Mohon konfirmasi setelah transfer ya!_ ✅
 
 🏆 *Cek Leaderboard Donatur Kelas:*
-https://triforce.fahmi.app/leaderboard
+https://triforce.deepkernel.site/leaderboard
 _Raih posisi teratas dan jadi donatur terbaik!_ 🚀`;
 
 // ==============================================
@@ -58,6 +58,24 @@ const CREATIVE_TEMPLATES = {
             `${weeks} minggu = Rp ${amount.toLocaleString('id-ID')}\n\n` +
             `Yuk dibayar, jangan lupa ya! 💪` +
             PAYMENT_INFO,
+
+        (name, weeks, amount) =>
+            `Woi ${name}! 🫡\n\n` +
+            `Kabar kas kelas nih..\n` +
+            `Kamu masih ada tunggakan ${weeks} minggu lho\n` +
+            `Totalnya Rp ${amount.toLocaleString('id-ID')}\n\n` +
+            `Kapan nih mau bayar? 😁\n` +
+            `Kutunggu yaa~ 💕` +
+            PAYMENT_INFO,
+
+        (name, weeks, amount) =>
+            `Hei hei ${name}! 🤗\n\n` +
+            `Bendahara lagi keliling nagih nih hehe\n` +
+            `Giliran kamu sekarang 😄\n\n` +
+            `${weeks} minggu belum bayar\n` +
+            `= Rp ${amount.toLocaleString('id-ID')}\n\n` +
+            `Yuk bayar biar gak kepikiran terus 🙌` +
+            PAYMENT_INFO,
     ],
 
     // Template motivasi
@@ -79,6 +97,24 @@ const CREATIVE_TEMPLATES = {
                 'id-ID'
             )})\n\n` +
             `Yuk jadi yang terdepan! 🎯` +
+            PAYMENT_INFO,
+
+        (name, weeks, amount) =>
+            `${name}! 🌟\n\n` +
+            `Tau gak sih? Kelas kita makin solid\n` +
+            `karena kontribusi teman-teman yang bayar kas 💪\n\n` +
+            `Kamu juga bisa jadi bagian itu!\n` +
+            `Tinggal lunasin ${weeks} minggu (Rp ${amount.toLocaleString('id-ID')})\n\n` +
+            `Ayo kita raih yang terbaik bareng! 🏅` +
+            PAYMENT_INFO,
+
+        (name, weeks, amount) =>
+            `Hey ${name} 🔥\n\n` +
+            `"Disiplin adalah jembatan antara\n` +
+            `tujuan dan pencapaian"\n\n` +
+            `Tunggakan kas: ${weeks} minggu\n` +
+            `Total: Rp ${amount.toLocaleString('id-ID')}\n\n` +
+            `Ayo buktiin kalau kamu bisa! 🚀` +
             PAYMENT_INFO,
     ],
 
@@ -103,6 +139,30 @@ const CREATIVE_TEMPLATES = {
             `Dimohon untuk segera melakukan pembayaran.\n` +
             `Salam hormat, Bendahara Kelas 🙏` +
             PAYMENT_INFO,
+
+        (name, weeks, amount) =>
+            `Pemberitahuan Kas Kelas 🔔\n\n` +
+            `Yth. ${name},\n\n` +
+            `Dengan ini kami sampaikan bahwa\n` +
+            `pembayaran kas kelas Anda tercatat\n` +
+            `memiliki tunggakan sebagai berikut:\n\n` +
+            `Durasi : ${weeks} minggu\n` +
+            `Jumlah : Rp ${amount.toLocaleString('id-ID')}\n\n` +
+            `Mohon kerjasamanya untuk segera\n` +
+            `menyelesaikan pembayaran. Terima kasih.` +
+            PAYMENT_INFO,
+
+        (name, weeks, amount) =>
+            `📌 Notifikasi Kas Kelas\n\n` +
+            `Sdr/i ${name},\n\n` +
+            `Berdasarkan catatan bendahara,\n` +
+            `Anda memiliki kewajiban pembayaran\n` +
+            `kas yang belum terpenuhi.\n\n` +
+            `Detail:\n` +
+            `- Minggu tertunggak: ${weeks}\n` +
+            `- Total: Rp ${amount.toLocaleString('id-ID')}\n\n` +
+            `Atas perhatiannya, terima kasih. 🙏` +
+            PAYMENT_INFO,
     ],
 
     // Template dengan emoji & energi tinggi
@@ -124,6 +184,25 @@ const CREATIVE_TEMPLATES = {
             `📌 Tunggakan: ${weeks} minggu\n` +
             `💵 Amount: Rp ${amount.toLocaleString('id-ID')}\n\n` +
             `Bayar sekarang = Auto sultan! 👑` +
+            PAYMENT_INFO,
+
+        (name, weeks, amount) =>
+            `💥 BOOM! ${name}! 💥\n\n` +
+            `Bendahara memanggil! 📣\n` +
+            `Ada misi penting untukmu nih!\n\n` +
+            `🎯 Misi: Bayar kas ${weeks} minggu\n` +
+            `💰 Reward: Hati tenang & nama bersih\n` +
+            `📊 Total: Rp ${amount.toLocaleString('id-ID')}\n\n` +
+            `Accept mission? LFG! 🔥🔥` +
+            PAYMENT_INFO,
+
+        (name, weeks, amount) =>
+            `🚨 REMINDER ALERT 🚨\n\n` +
+            `${name}! Jangan skip yang satu ini!\n\n` +
+            `Kas kelas butuh kontribusimu!\n` +
+            `${weeks} minggu x Rp 2.000\n` +
+            `= Rp ${amount.toLocaleString('id-ID')}\n\n` +
+            `Action sekarang! Kamu pasti bisa! 💪🔥` +
             PAYMENT_INFO,
     ],
 
@@ -149,6 +228,36 @@ const CREATIVE_TEMPLATES = {
             )}\n\n` +
             `Gaskeun biar viral positif! 📈` +
             PAYMENT_INFO,
+
+        (name, weeks, amount) =>
+            `${name}, fun fact: 🤓\n\n` +
+            `Tahukah kamu bahwa ${weeks} minggu itu\n` +
+            `sama dengan ${weeks * 7} hari tanpa bayar kas? 😱\n\n` +
+            `Totalnya udah Rp ${amount.toLocaleString('id-ID')} lho!\n\n` +
+            `Mending bayar sekarang daripada\n` +
+            `angkanya makin gede kan? 😂\n` +
+            `Hidup hemat, bayar kas! 💸` +
+            PAYMENT_INFO,
+
+        (name, weeks, amount) =>
+            `Psst.. ${name}! 🤫\n\n` +
+            `Aku punya rahasia nih..\n` +
+            `*bisik-bisik*\n\n` +
+            `Kamu belum bayar kas ${weeks} minggu 😂\n` +
+            `Totalnya Rp ${amount.toLocaleString('id-ID')}\n\n` +
+            `Rahasia ini bakal hilang\n` +
+            `kalau kamu bayar sekarang! 🤐✨` +
+            PAYMENT_INFO,
+
+        (name, weeks, amount) =>
+            `⚠️ PERINGATAN PENTING ⚠️\n\n` +
+            `${name}, jangan panik dulu..\n` +
+            `Ini cuma reminder kas kok 😆\n\n` +
+            `Tunggakan: ${weeks} minggu\n` +
+            `Total: Rp ${amount.toLocaleString('id-ID')}\n\n` +
+            `Bayar sekarang, free dari rasa bersalah!\n` +
+            `Deal? 🤝😄` +
+            PAYMENT_INFO,
     ],
 
     // Template gentle reminder
@@ -173,6 +282,63 @@ const CREATIVE_TEMPLATES = {
             `Whenever you're ready ya!\n` +
             `Thank you! 🙏💖` +
             PAYMENT_INFO,
+
+        (name, weeks, amount) =>
+            `${name} 🫶\n\n` +
+            `Maaf ganggu waktunya yaa\n` +
+            `Cuma mau kasih tau kalau kas kelas\n` +
+            `kamu belum lunas ${weeks} minggu 😊\n\n` +
+            `Totalnya Rp ${amount.toLocaleString('id-ID')}\n\n` +
+            `Kalau sempat, tolong dibayar ya~\n` +
+            `Terima kasih banyak! 🙏💫` +
+            PAYMENT_INFO,
+
+        (name, weeks, amount) =>
+            `Hi ${name}~ 🌷\n\n` +
+            `Semoga harimu menyenangkan!\n` +
+            `Oh iya, sekalian mau remind\n` +
+            `soal kas kelas ya..\n\n` +
+            `Tunggakan: ${weeks} minggu\n` +
+            `Nominal: Rp ${amount.toLocaleString('id-ID')}\n\n` +
+            `Gak buru-buru sih, tapi jangan\n` +
+            `sampai lupa ya 😊✨` +
+            PAYMENT_INFO,
+    ],
+
+    // Template chat casual (baru)
+    casual: [
+        (name, weeks, amount) =>
+            `oi ${name} 😗\n\n` +
+            `kas nya kapan dibayar bre\n` +
+            `udah ${weeks} minggu ni\n` +
+            `Rp ${amount.toLocaleString('id-ID')}\n\n` +
+            `jangan lupa yak 🙏` +
+            PAYMENT_INFO,
+
+        (name, weeks, amount) =>
+            `${name} gasss bayar kas dong 😤\n\n` +
+            `udah numpuk ${weeks} minggu\n` +
+            `totalnya Rp ${amount.toLocaleString('id-ID')}\n\n` +
+            `ayolah masa harus ditagih terus 😭\n` +
+            `thx ya kalau udah bayar! 🫡` +
+            PAYMENT_INFO,
+
+        (name, weeks, amount) =>
+            `eh ${name}\n\n` +
+            `gua ingetin ya kas nya\n` +
+            `${weeks} minggu belom dibayar\n` +
+            `Rp ${amount.toLocaleString('id-ID')}\n\n` +
+            `tolong ya dibayar 🙏\n` +
+            `makasih!` +
+            PAYMENT_INFO,
+
+        (name, weeks, amount) =>
+            `${name}! cek ini dong 👇\n\n` +
+            `Kas kelas kamu belum lunas\n` +
+            `${weeks} minggu = Rp ${amount.toLocaleString('id-ID')}\n\n` +
+            `bayar sekarang biar tenang~\n` +
+            `ok? ok! 😎👍` +
+            PAYMENT_INFO,
     ],
 };
 
@@ -195,6 +361,24 @@ const THANK_YOU_TEMPLATES = [
         `Pembayaran berhasil diterima!\n` +
         `Saldo kas kelas bertambah nih! 📈\n\n` +
         `Thanks a million! 🙏✨`,
+
+    (name) =>
+        `Wah ${name} udah bayar! 🥳\n\n` +
+        `Terima kasih banyak ya!\n` +
+        `Kas kelas makin sehat berkat kamu 💰\n\n` +
+        `Semoga rezekinya makin lancar! 🤲✨`,
+
+    (name) =>
+        `${name}! Pembayaran diterima 🫡\n\n` +
+        `Mantap! Kamu sudah berkontribusi\n` +
+        `untuk kelas kita. Respect! 🔥\n\n` +
+        `Terima kasih banyak ya 🙏`,
+
+    (name) =>
+        `Cie ${name} udah bayar 😏\n\n` +
+        `Sip banget! Pembayaran tercatat.\n` +
+        `Kamu teman kelas yang top! 👑\n\n` +
+        `Thank you! 💜`,
 ];
 
 // ==============================================

@@ -351,6 +351,7 @@ class AntiBanService {
             'energetic',
             'humorous',
             'formal',
+            'casual',
         ];
         return this.pickRandom(categories);
     }

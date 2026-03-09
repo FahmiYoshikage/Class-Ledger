@@ -302,7 +302,7 @@ Semua atas nama: *Fahmi Ilham Bagaskara*
 ━━━━━━━━━━━━━━━━━━━━
 
 🏆 Cek Leaderboard Lengkap:
-https://triforce.fahmi.app/leaderboard
+https://triforce.deepkernel.site/leaderboard
 
 💡 _Keterangan:_
 _• Data hanya menghitung pembayaran siswa_
