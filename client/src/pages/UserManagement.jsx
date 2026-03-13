@@ -460,7 +460,7 @@ const UserManagement = () => {
                                                 resetPasswordData.password
                                             )
                                         }
-                                        className="p-2 text-indigo-400 hover:text-indigo-800 hover:bg-indigo-500/[0.05]0/[0.06] rounded-lg transition"
+                                        className="p-2 text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/[0.05]0/[0.06] rounded-lg transition"
                                         title="Copy password"
                                     >
                                         <Copy className="w-4 h-4" />
@@ -469,7 +469,7 @@ const UserManagement = () => {
                             </div>
                         </div>
 
-                        <div className="bg-amber-500/[0.06] border border-yellow-200 rounded-lg p-4 mb-6">
+                        <div className="bg-amber-500/[0.06] border border-amber-500/20 rounded-lg p-4 mb-6">
                             <div className="flex gap-3">
                                 <AlertCircle className="w-5 h-5 text-amber-300 flex-shrink-0 mt-0.5" />
                                 <div className="text-sm text-amber-300">

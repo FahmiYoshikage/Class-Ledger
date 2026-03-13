@@ -149,8 +149,8 @@ const DebtTrendChart = ({ students, payments }) => {
             <div
                 className={`p-4 rounded-lg ${
                     isImproving
-                        ? 'bg-indigo-500/[0.05]0/[0.06] border border-green-200'
-                        : 'bg-rose-500/[0.05] border border-red-200'
+                        ? 'bg-indigo-500/[0.05]0/[0.06] border border-emerald-500/20'
+                        : 'bg-rose-500/[0.05] border border-rose-500/20'
                 }`}
             >
                 <div className="flex items-center justify-between">
@@ -309,8 +309,8 @@ const DebtTrendChart = ({ students, payments }) => {
             </div>
 
             {/* Insights */}
-            <div className="bg-indigo-500/[0.05]0/[0.06] p-4 rounded-lg border border-blue-200">
-                <p className="text-sm font-medium text-blue-900 mb-2">
+            <div className="bg-blue-500/[0.06] p-4 rounded-lg border border-blue-500/20">
+                <p className="text-sm font-medium text-blue-300 mb-2">
                     💡 Insight & Rekomendasi
                 </p>
                 <ul className="text-sm text-blue-500 space-y-1">

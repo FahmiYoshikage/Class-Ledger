@@ -204,7 +204,7 @@ const CustomPayment = ({ onPaymentAdded }) => {
                             </div>
 
                             {/* Info Box */}
-                            <div className="bg-indigo-500/[0.05]0/[0.06] border border-blue-200 rounded-lg p-3">
+                            <div className="bg-indigo-500/[0.05]0/[0.06] border border-blue-500/20 rounded-lg p-3">
                                 <p className="text-xs text-indigo-400">
                                     <strong>ℹ️ Catatan:</strong> Pemasukan ini
                                     akan langsung masuk ke kas kelas dan

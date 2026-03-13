@@ -26,8 +26,8 @@ const EventReminderTab = ({
 }) => {
     return (
         <div className="space-y-6">
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg border-2 border-blue-200">
-                <h3 className="font-bold text-lg mb-3 text-blue-900 flex items-center gap-2">
+            <div className="bg-gradient-to-r from-blue-500/10 to-indigo-500/10 p-6 rounded-lg border-2 border-blue-500/20">
+                <h3 className="font-bold text-lg mb-3 text-blue-300 flex items-center gap-2">
                     <Calendar className="w-6 h-6" />
                     Reminder Pembayaran Event ke Grup
                 </h3>
@@ -35,7 +35,7 @@ const EventReminderTab = ({
                     Kirim reminder khusus untuk pembayaran event ke grup
                     WhatsApp dengan mention semua yang belum bayar.
                 </p>
-                <div className="bg-white/[0.04] p-3 rounded border border-blue-200">
+                <div className="bg-white/[0.04] p-3 rounded border border-blue-500/20">
                     <p className="text-sm text-white/60">
                         <strong>Keunggulan:</strong>
                     </p>
@@ -79,7 +79,7 @@ const EventReminderTab = ({
             {selectedEvent && (
                 <>
                     {/* Event Info */}
-                    <div className="bg-gradient-to-r from-green-50 to-teal-50 p-4 rounded-lg border">
+                    <div className="bg-gradient-to-r from-emerald-500/10 to-teal-500/10 p-4 rounded-lg border border-emerald-500/20">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
                                 <p className="text-sm text-white/60">
@@ -196,7 +196,7 @@ const EventReminderTab = ({
                                 </div>
                             ) : (
                                 <div>
-                                    <div className="bg-amber-500/[0.06] border border-yellow-200 rounded-lg p-3 mb-3">
+                                    <div className="bg-amber-500/[0.06] border border-amber-500/20 rounded-lg p-3 mb-3">
                                         <p className="text-sm text-amber-300">
                                             <strong>Info:</strong>{' '}
                                             {eventUnpaidStudents.length} siswa
@@ -231,8 +231,8 @@ const EventReminderTab = ({
 
                     {/* Group ID Input and Send */}
                     {eventUnpaidStudents.length > 0 && (
-                        <div className="bg-purple-50 rounded-lg border-2 border-purple-200 p-6">
-                            <h4 className="font-semibold text-purple-900 mb-4 flex items-center gap-2">
+                        <div className="bg-purple-500/10 rounded-lg border-2 border-purple-500/20 p-6">
+                            <h4 className="font-semibold text-purple-300 mb-4 flex items-center gap-2">
                                 <Users className="w-5 h-5" />
                                 Kirim ke Grup WhatsApp
                             </h4>
@@ -261,7 +261,7 @@ const EventReminderTab = ({
                                     <button
                                         onClick={handlePreviewEventGroup}
                                         disabled={loading || !groupId.trim()}
-                                        className="flex items-center justify-center gap-2 px-4 py-3 bg-white border-2 border-purple-300 text-purple-700 rounded-lg hover:bg-purple-50 disabled:bg-white/[0.04] disabled:text-white/55 disabled:border-white/[0.1] transition-colors"
+                                        className="flex items-center justify-center gap-2 px-4 py-3 bg-purple-500/15 border-2 border-purple-500/25 text-purple-300 rounded-lg hover:bg-purple-500/25 disabled:bg-white/[0.04] disabled:text-white/55 disabled:border-white/[0.1] transition-colors"
                                     >
                                         <Eye className="w-5 h-5" />
                                         Preview Pesan

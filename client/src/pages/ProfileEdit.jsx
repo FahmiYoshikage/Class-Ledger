@@ -77,7 +77,7 @@ const ProfileEdit = () => {
                 <div className="rounded-xl bg-white/[0.035] border border-white/[0.1]-apple p-6 sm:p-8">
                     {/* Alert Messages */}
                     {error && (
-                        <div className="mb-6 bg-rose-500/[0.05] border border-red-200 rounded-lg p-4">
+                        <div className="mb-6 bg-rose-500/[0.05] border border-rose-500/20 rounded-lg p-4">
                             <div className="flex items-center gap-3">
                                 <AlertCircle className="w-5 h-5 text-rose-300 flex-shrink-0" />
                                 <p className="text-sm text-rose-300">{error}</p>
@@ -86,7 +86,7 @@ const ProfileEdit = () => {
                     )}
 
                     {success && (
-                        <div className="mb-6 bg-indigo-500/[0.05]0/[0.06] border border-green-200 rounded-lg p-4">
+                        <div className="mb-6 bg-indigo-500/[0.05]0/[0.06] border border-emerald-500/20 rounded-lg p-4">
                             <div className="flex items-center gap-3">
                                 <AlertCircle className="w-5 h-5 text-indigo-400 flex-shrink-0" />
                                 <p className="text-sm text-indigo-400">
@@ -217,7 +217,7 @@ const ProfileEdit = () => {
                 </div>
 
                 {/* Info Note */}
-                <div className="mt-6 bg-indigo-500/[0.05]0/[0.06] border border-blue-200 rounded-lg p-4">
+                <div className="mt-6 bg-indigo-500/[0.05]0/[0.06] border border-blue-500/20 rounded-lg p-4">
                     <div className="flex gap-3">
                         <AlertCircle className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
                         <div className="text-sm text-indigo-400">
@@ -236,7 +236,7 @@ const ProfileEdit = () => {
                                         onClick={() =>
                                             navigate('/app/change-password')
                                         }
-                                        className="font-semibold underline hover:text-blue-900"
+                                        className="font-semibold underline hover:text-blue-300"
                                     >
                                         Change Password
                                     </button>

@@ -181,7 +181,7 @@ const MemberDashboard = () => {
         return (
             <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-6">
                 <div className="max-w-4xl mx-auto">
-                    <div className="bg-amber-500/[0.06] border border-yellow-200 rounded-lg p-6">
+                    <div className="bg-amber-500/[0.06] border border-amber-500/20 rounded-lg p-6">
                         <div className="flex items-center gap-3">
                             <AlertCircle className="w-6 h-6 text-amber-300" />
                             <div>

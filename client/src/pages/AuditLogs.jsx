@@ -272,7 +272,7 @@ const AuditLogs = () => {
                     <div className="mt-4">
                         <button
                             onClick={clearFilters}
-                            className="text-sm text-indigo-400 hover:text-indigo-800"
+                            className="text-sm text-indigo-400 hover:text-indigo-300"
                         >
                             Clear Filters
                         </button>

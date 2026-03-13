@@ -249,7 +249,7 @@ function QRPayment() {
                                 type="file"
                                 accept="image/jpeg,image/jpg,image/png"
                                 onChange={handleImageChange}
-                                className="w-full text-sm text-white/60 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-500/[0.05]0/[0.06] file:text-blue-500 hover:file:bg-blue-100"
+                                className="w-full text-sm text-white/60 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-500/[0.05]0/[0.06] file:text-blue-500 hover:file:bg-blue-500/15"
                                 required
                             />
                             <p className="text-xs text-white/60 mt-1">

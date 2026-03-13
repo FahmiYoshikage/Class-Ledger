@@ -369,7 +369,7 @@ const EventManagement = () => {
 
                                     {/* Surplus Info */}
                                     {surplus > 0 && (
-                                        <div className="bg-indigo-500/[0.05]0/[0.06] border border-green-200 rounded p-2 text-sm">
+                                        <div className="bg-emerald-500/[0.06] border border-emerald-500/20 rounded p-2 text-sm">
                                             <p className="text-indigo-400 font-semibold">
                                                 Surplus: {formatRp(surplus)}
                                             </p>
@@ -382,7 +382,7 @@ const EventManagement = () => {
 
                                     {/* Unpaid Count */}
                                     {unpaid.length > 0 && (
-                                        <div className="bg-amber-500/[0.06] border border-yellow-200 rounded p-2">
+                                        <div className="bg-amber-500/[0.06] border border-amber-500/20 rounded p-2">
                                             <p className="text-xs text-amber-300">
                                                 <AlertCircle className="w-3 h-3 inline mr-1" />
                                                 {unpaid.length} siswa belum
@@ -458,27 +458,27 @@ const EventManagement = () => {
 
                             {/* Progress Summary */}
                             <div className="mt-4 grid grid-cols-4 gap-4">
-                                <div className="bg-purple-50 p-3 rounded">
+                                <div className="bg-purple-500/10 p-3 rounded">
                                     <p className="text-xs text-violet-400 mb-1">
                                         Target
                                     </p>
-                                    <p className="font-bold text-purple-900">
+                                    <p className="font-bold text-purple-300">
                                         {formatRp(activeEvent.targetAmount)}
                                     </p>
                                 </div>
-                                <div className="bg-indigo-500/[0.05]0/[0.06] p-3 rounded">
-                                    <p className="text-xs text-indigo-400 mb-1">
+                                <div className="bg-emerald-500/[0.06] p-3 rounded">
+                                    <p className="text-xs text-emerald-400 mb-1">
                                         Terkumpul
                                     </p>
-                                    <p className="font-bold text-green-900">
+                                    <p className="font-bold text-emerald-300">
                                         {formatRp(activeEvent.totalCollected)}
                                     </p>
                                 </div>
-                                <div className="bg-indigo-500/[0.05]0/[0.06] p-3 rounded">
-                                    <p className="text-xs text-blue-500 mb-1">
+                                <div className="bg-blue-500/[0.06] p-3 rounded">
+                                    <p className="text-xs text-blue-400 mb-1">
                                         Per Siswa
                                     </p>
-                                    <p className="font-bold text-blue-900">
+                                    <p className="font-bold text-blue-300">
                                         {formatRp(activeEvent.perStudentAmount)}
                                     </p>
                                 </div>
@@ -529,8 +529,8 @@ const EventManagement = () => {
 
                             {/* Paid Students */}
                             {getPaidStudents(activeEvent).length > 0 && (
-                                <div className="bg-indigo-500/[0.05]0/[0.06] border border-green-200 rounded-lg p-4">
-                                    <h4 className="font-semibold text-green-900 mb-2">
+                                <div className="bg-emerald-500/[0.06] border border-emerald-500/20 rounded-lg p-4">
+                                    <h4 className="font-semibold text-emerald-300 mb-2">
                                         Siswa Sudah Bayar (
                                         {getPaidStudents(activeEvent).length})
                                     </h4>
@@ -552,7 +552,7 @@ const EventManagement = () => {
 
                             {/* Unpaid Students */}
                             {getUnpaidStudents(activeEvent).length > 0 && (
-                                <div className="bg-amber-500/[0.06] border border-yellow-200 rounded-lg p-4">
+                                <div className="bg-amber-500/[0.06] border border-amber-500/20 rounded-lg p-4">
                                     <h4 className="font-semibold text-amber-300 mb-2">
                                         Siswa Belum Bayar (
                                         {getUnpaidStudents(activeEvent).length})
@@ -769,7 +769,7 @@ const EventManagement = () => {
                                 </div>
                             </div>
 
-                            <div className="bg-indigo-500/[0.05]0/[0.06] border border-blue-200 rounded p-3 text-sm">
+                            <div className="bg-blue-500/[0.06] border border-blue-500/20 rounded p-3 text-sm">
                                 <p
                                     className="text-indigo-400"
                                     id="calculatedInfo"

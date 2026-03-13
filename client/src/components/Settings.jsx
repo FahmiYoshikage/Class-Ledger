@@ -335,8 +335,8 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
                         <div
                             className={`p-4 rounded-lg mb-4 ${
                                 semesterStatus === 'active'
-                                    ? 'bg-indigo-500/[0.05]0/[0.06] border border-green-200'
-                                    : 'bg-amber-500/[0.06] border border-yellow-200'
+                                    ? 'bg-indigo-500/[0.05]0/[0.06] border border-emerald-500/20'
+                                    : 'bg-amber-500/[0.06] border border-amber-500/20'
                             }`}
                         >
                             <div className="flex items-center justify-between">
@@ -345,7 +345,7 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
                                         <>
                                             <Play className="w-6 h-6 text-indigo-400" />
                                             <div>
-                                                <p className="font-semibold text-green-900">
+                                                <p className="font-semibold text-emerald-300">
                                                     Semester Aktif
                                                 </p>
                                                 <p className="text-sm text-indigo-400">
@@ -399,7 +399,7 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
                         </div>
 
                         {/* Info Box for Semester */}
-                        <div className="mt-4 bg-indigo-500/[0.05]0/[0.06] border border-blue-200 rounded-lg p-3">
+                        <div className="mt-4 bg-blue-500/[0.06] border border-blue-500/20 rounded-lg p-3">
                             <p className="text-xs text-blue-500 font-medium mb-2">
                                 ℹ️ Cara Kerja Semester Control:
                             </p>
@@ -578,8 +578,8 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
             </form>
 
             {/* Info Box */}
-            <div className="bg-indigo-500/[0.05]0/[0.06] border border-blue-200 rounded-lg p-4">
-                <h4 className="font-semibold text-blue-900 mb-2">
+            <div className="bg-blue-500/[0.06] border border-blue-500/20 rounded-lg p-4">
+                <h4 className="font-semibold text-blue-300 mb-2">
                     ℹ️ Informasi Penting:
                 </h4>
                 <ul className="text-sm text-blue-500 space-y-1 list-disc list-inside">

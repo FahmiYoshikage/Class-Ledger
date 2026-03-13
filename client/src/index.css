@@ -241,6 +241,19 @@ select option {
     color: #fafafa;
 }
 
+/* Dark theme form elements - prevent white-on-white text */
+input,
+select,
+textarea {
+    background-color: rgba(255, 255, 255, 0.06);
+    color: #fafafa;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
 /* Dark date input icon */
 input[type="date"]::-webkit-calendar-picker-indicator {
     filter: invert(1) brightness(0.6);
