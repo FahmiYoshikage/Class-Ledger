@@ -105,14 +105,21 @@ class PDFReportService {
 
             // Filter data (EXACT DASHBOARD LOGIC)
             const students = allStudents.filter((s) => s.status === 'Aktif');
-            const payments = allPayments.filter((p) => {
-                if (!p.date || new Date(p.date) < startDate) return false;
+
+            // ALL payments in semester (for income total — includes custom payments)
+            const allSemesterPayments = allPayments.filter(
+                (p) => p.date && new Date(p.date) >= startDate
+            );
+
+            // Student-only payments (for tunggakan calculations)
+            const studentPayments = allSemesterPayments.filter((p) => {
                 if (!p.studentId || !p.studentId._id) return false;
                 const student = students.find(
                     (s) => s._id.toString() === p.studentId._id.toString()
                 );
                 return student != null;
             });
+
             const expenses = allExpenses.filter(
                 (e) => new Date(e.date) >= startDate
             );
@@ -120,7 +127,7 @@ class PDFReportService {
             // Calculate totals
             const currentWeek = await this.getCurrentWeek();
             const weeklyAmount = 2000;
-            const totalIncome = payments.reduce((sum, p) => sum + p.amount, 0);
+            const totalIncome = allSemesterPayments.reduce((sum, p) => sum + p.amount, 0);
             const totalExpenses = expenses.reduce(
                 (sum, e) => sum + e.amount,
                 0
@@ -133,16 +140,28 @@ class PDFReportService {
 
             // Get helper functions
             const getTotalPaid = (studentId) => {
-                const studentPayments = payments.filter((p) => {
+                const filtered = studentPayments.filter((p) => {
                     const pStudentId = p.studentId?._id || p.studentId;
                     return pStudentId?.toString() === studentId.toString();
                 });
-                return studentPayments.reduce((sum, p) => sum + p.amount, 0);
+                return filtered.reduce((sum, p) => sum + p.amount, 0);
             };
+
+            // Get accumulatedWeeks from previous semesters (MATCH DASHBOARD)
+            let accumulatedWeeks = 7; // default
+            try {
+                const accRes = await Setting.findOne({ key: 'accumulated_weeks' });
+                if (accRes?.value != null) {
+                    accumulatedWeeks = parseInt(accRes.value);
+                }
+            } catch (e) {
+                // Use default
+            }
 
             const getTunggakan = (studentId) => {
                 const totalPaid = getTotalPaid(studentId);
-                const shouldPay = currentWeek * weeklyAmount;
+                const totalWeeks = accumulatedWeeks + currentWeek;
+                const shouldPay = totalWeeks * weeklyAmount;
                 return shouldPay - totalPaid;
             };
 
