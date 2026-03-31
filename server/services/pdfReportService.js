@@ -63,11 +63,11 @@ class PDFReportService {
                 : new Date(process.env.START_DATE || '2025-10-27');
 
             const now = new Date();
-            const days = Math.floor((now - startDate) / (24 * 60 * 60 * 1000));
-            const weeks = Math.ceil(days / 7);
+            const diffTime = Math.abs(now - startDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const currentWeek = Math.max(1, Math.ceil(diffDays / 7));
 
-            if (weeks < 0) return 0;
-            return weeks + 1;
+            return currentWeek;
         } catch (error) {
             return 1;
         }
@@ -104,15 +104,14 @@ class PDFReportService {
             ]);
 
             // Filter data (EXACT DASHBOARD LOGIC)
+            // Dashboard uses ALL data without date filtering for totals
             const students = allStudents.filter((s) => s.status === 'Aktif');
 
-            // ALL payments in semester (for income total — includes custom payments)
-            const allSemesterPayments = allPayments.filter(
-                (p) => p.date && new Date(p.date) >= startDate
-            );
+            // ALL payments (NO date filter — dashboard sums everything)
+            const allPaymentsList = allPayments;
 
-            // Student-only payments (for tunggakan calculations)
-            const studentPayments = allSemesterPayments.filter((p) => {
+            // Student-only payments from active students (for tunggakan)
+            const studentPayments = allPaymentsList.filter((p) => {
                 if (!p.studentId || !p.studentId._id) return false;
                 const student = students.find(
                     (s) => s._id.toString() === p.studentId._id.toString()
@@ -120,14 +119,13 @@ class PDFReportService {
                 return student != null;
             });
 
-            const expenses = allExpenses.filter(
-                (e) => new Date(e.date) >= startDate
-            );
+            // ALL expenses (NO date filter — dashboard sums everything)
+            const expenses = allExpenses;
 
             // Calculate totals
             const currentWeek = await this.getCurrentWeek();
             const weeklyAmount = 2000;
-            const totalIncome = allSemesterPayments.reduce((sum, p) => sum + p.amount, 0);
+            const totalIncome = allPaymentsList.reduce((sum, p) => sum + (p.amount || 0), 0);
             const totalExpenses = expenses.reduce(
                 (sum, e) => sum + e.amount,
                 0

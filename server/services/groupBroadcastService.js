@@ -47,18 +47,19 @@ class GroupBroadcastService {
 
             // ============================================================
             // FILTER LOGIC - MATCH DASHBOARD EXACTLY
+            // Dashboard uses ALL data without date filtering for totals
             // ============================================================
 
             // 1. Filter ACTIVE students only
             const students = allStudents.filter((s) => s.status === 'Aktif');
 
-            // 2. ALL payments in semester (for income total — includes custom payments)
-            const allSemesterPayments = allPayments.filter(
-                (p) => p.date && new Date(p.date) >= startDate
-            );
+            // 2. ALL payments (NO date filter — dashboard sums everything)
+            //    Dashboard: totalKasMasuk = payments.reduce((sum, p) => sum + p.amount, 0)
+            const allPaymentsList = allPayments;
 
-            // 3. Student-only payments (for tunggakan/contributor calculations)
-            const studentPayments = allSemesterPayments.filter((p) => {
+            // 3. Student-only payments from active students (for tunggakan/contributor)
+            //    Dashboard getTotalPaid also uses ALL payments, no date filter
+            const studentPayments = allPaymentsList.filter((p) => {
                 if (!p.studentId || !p.studentId._id) return false;
                 const student = students.find(
                     (s) => s._id.toString() === p.studentId._id.toString()
@@ -66,10 +67,8 @@ class GroupBroadcastService {
                 return student != null;
             });
 
-            // 4. Filter expenses for semester
-            const expenses = allExpenses.filter(
-                (e) => new Date(e.date) >= startDate
-            );
+            // 4. ALL expenses (NO date filter — dashboard sums everything)
+            const expenses = allExpenses;
 
             console.log('  Total Students (All):', allStudents.length);
             console.log('  Total Students (Aktif):', students.length);
@@ -77,16 +76,17 @@ class GroupBroadcastService {
                 '  Inactive Students:',
                 allStudents.length - students.length
             );
-            console.log('  All Semester Payments (incl custom):', allSemesterPayments.length);
+            console.log('  All Payments (incl custom):', allPaymentsList.length);
             console.log('  Student Payments Only:', studentPayments.length);
-            console.log('  Total Expenses (semester):', expenses.length);
+            console.log('  Total Expenses:', expenses.length);
 
             const semesterName =
                 semesterNameSetting?.value || 'Semester 2024/2025';
             const className = classNameSetting?.value || 'Kelas';
 
-            // Calculate statistics (semester only) — ALL payments including custom
-            const totalIncome = allSemesterPayments.reduce(
+            // Calculate statistics — ALL data, no date filter (MATCH DASHBOARD)
+            // Dashboard: totalKasMasuk = payments.reduce((sum, p) => sum + p.amount, 0)
+            const totalIncome = allPaymentsList.reduce(
                 (sum, p) => sum + (p.amount || 0),
                 0
             );
@@ -100,11 +100,11 @@ class GroupBroadcastService {
             console.log('  Total Expenses:', totalExpenses);
             console.log('  Balance:', balance);
 
-            // Get recent 2 weeks payments (ALL including custom)
+            // Get recent 2 weeks payments (this section IS date-filtered by design)
             const twoWeeksAgo = new Date();
             twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
-            const recentPayments = allSemesterPayments.filter(
-                (p) => new Date(p.date) >= twoWeeksAgo
+            const recentPayments = allPaymentsList.filter(
+                (p) => p.date && new Date(p.date) >= twoWeeksAgo
             );
             const recentIncome = recentPayments.reduce(
                 (sum, p) => sum + p.amount,
@@ -299,12 +299,11 @@ _Terima kasih atas partisipasinya!_ 🙏
                 : new Date(process.env.START_DATE || '2025-10-27');
 
             const now = new Date();
-            const days = Math.floor((now - startDate) / (24 * 60 * 60 * 1000));
-            const weeks = Math.ceil(days / 7);
+            const diffTime = Math.abs(now - startDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const currentWeek = Math.max(1, Math.ceil(diffDays / 7));
 
-            // MATCH DASHBOARD FORMULA: weeks + 1
-            if (weeks < 0) return 0;
-            return weeks + 1;
+            return currentWeek;
         } catch (error) {
             return 1;
         }
