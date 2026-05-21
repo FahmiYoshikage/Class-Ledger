@@ -15,7 +15,7 @@ services:
             - ./server/public/reports:/app/public/reports
             - ./server/uploads:/app/uploads
         networks:
-            - kas-kelas-network
+            - omnigrid-net
         healthcheck:
             test: ['CMD', 'curl', '-f', 'http://localhost:5000/api/health']
             interval: 30s
@@ -50,7 +50,7 @@ services:
             api:
                 condition: service_healthy
         networks:
-            - kas-kelas-network
+            - omnigrid-net
         healthcheck:
             test: ['CMD', 'curl', '-f', 'http://localhost:80']
             interval: 30s
@@ -72,5 +72,5 @@ services:
                 max-file: '3'
 
 networks:
-    kas-kelas-network:
-        driver: bridge
+    omnigrid-net:
+        external: true
