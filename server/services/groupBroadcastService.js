@@ -47,28 +47,27 @@ class GroupBroadcastService {
 
             // ============================================================
             // FILTER LOGIC - MATCH DASHBOARD EXACTLY
-            // Dashboard uses ALL data without date filtering for totals
             // ============================================================
 
             // 1. Filter ACTIVE students only
             const students = allStudents.filter((s) => s.status === 'Aktif');
 
-            // 2. ALL payments (NO date filter — dashboard sums everything)
-            //    Dashboard: totalKasMasuk = payments.reduce((sum, p) => sum + p.amount, 0)
-            const allPaymentsList = allPayments;
-
-            // 3. Student-only payments from active students (for tunggakan/contributor)
-            //    Dashboard getTotalPaid also uses ALL payments, no date filter
-            const studentPayments = allPaymentsList.filter((p) => {
+            // 2. Filter payments: semester only + has studentId + student is ACTIVE
+            const payments = allPayments.filter((p) => {
+                if (!p.date || new Date(p.date) < startDate) return false;
                 if (!p.studentId || !p.studentId._id) return false;
+
+                // Check if student is active
                 const student = students.find(
                     (s) => s._id.toString() === p.studentId._id.toString()
                 );
                 return student != null;
             });
 
-            // 4. ALL expenses (NO date filter — dashboard sums everything)
-            const expenses = allExpenses;
+            // 3. Filter expenses for semester
+            const expenses = allExpenses.filter(
+                (e) => new Date(e.date) >= startDate
+            );
 
             console.log('  Total Students (All):', allStudents.length);
             console.log('  Total Students (Aktif):', students.length);
@@ -76,17 +75,20 @@ class GroupBroadcastService {
                 '  Inactive Students:',
                 allStudents.length - students.length
             );
-            console.log('  All Payments (incl custom):', allPaymentsList.length);
-            console.log('  Student Payments Only:', studentPayments.length);
-            console.log('  Total Expenses:', expenses.length);
+            console.log('  Student Payments Only:', payments.length);
+            console.log(
+                '  All Payments (incl custom):',
+                allPayments.filter((p) => new Date(p.date) >= startDate).length
+            );
+            console.log('  Total Payments (semester):', payments.length);
+            console.log('  Total Expenses (semester):', expenses.length);
 
             const semesterName =
                 semesterNameSetting?.value || 'Semester 2024/2025';
             const className = classNameSetting?.value || 'Kelas';
 
-            // Calculate statistics — ALL data, no date filter (MATCH DASHBOARD)
-            // Dashboard: totalKasMasuk = payments.reduce((sum, p) => sum + p.amount, 0)
-            const totalIncome = allPaymentsList.reduce(
+            // Calculate statistics (semester only)
+            const totalIncome = payments.reduce(
                 (sum, p) => sum + (p.amount || 0),
                 0
             );
@@ -100,11 +102,11 @@ class GroupBroadcastService {
             console.log('  Total Expenses:', totalExpenses);
             console.log('  Balance:', balance);
 
-            // Get recent 2 weeks payments (this section IS date-filtered by design)
+            // Get recent 2 weeks payments
             const twoWeeksAgo = new Date();
             twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
-            const recentPayments = allPaymentsList.filter(
-                (p) => p.date && new Date(p.date) >= twoWeeksAgo
+            const recentPayments = payments.filter(
+                (p) => new Date(p.date) >= twoWeeksAgo
             );
             const recentIncome = recentPayments.reduce(
                 (sum, p) => sum + p.amount,
@@ -117,35 +119,75 @@ class GroupBroadcastService {
             const currentWeek = await this.getCurrentWeek();
             const weeklyAmount = 2000;
 
-            // Get accumulatedWeeks from previous semesters (MATCH DASHBOARD)
-            let accumulatedWeeks = 7; // default
-            try {
-                const accRes = await Setting.findOne({ key: 'accumulated_weeks' });
-                if (accRes?.value != null) {
-                    accumulatedWeeks = parseInt(accRes.value);
-                }
-            } catch (e) {
-                // Use default
-            }
-
-            console.log('  Accumulated Weeks:', accumulatedWeeks);
-
             // Helper function: getTotalPaid (match dashboard)
             const getTotalPaid = (studentId) => {
                 const studentIdStr = studentId.toString();
-                const filtered = studentPayments.filter((p) => {
+                const studentPayments = payments.filter((p) => {
+                    // Handle populated studentId (p.studentId is full object)
                     const pStudentId = p.studentId?._id || p.studentId;
-                    return pStudentId?.toString() === studentIdStr;
+                    const pStudentIdStr = pStudentId?.toString();
+
+                    // Debug first match
+                    if (
+                        studentIdStr === students[0]?._id.toString() &&
+                        payments.indexOf(p) === 0
+                    ) {
+                        console.log('  DEBUG getTotalPaid:', {
+                            studentId: studentIdStr,
+                            pStudentId: pStudentIdStr,
+                            match: pStudentIdStr === studentIdStr,
+                            amount: p.amount,
+                        });
+                    }
+
+                    return pStudentIdStr === studentIdStr;
                 });
-                return filtered.reduce((sum, p) => sum + p.amount, 0);
+
+                const total = studentPayments.reduce(
+                    (sum, p) => sum + p.amount,
+                    0
+                );
+
+                // Debug first student result
+                if (studentIdStr === students[0]?._id.toString()) {
+                    console.log(
+                        '  First student total paid:',
+                        total,
+                        'from',
+                        studentPayments.length,
+                        'payments'
+                    );
+                }
+
+                return total;
             };
 
-            // Helper function: getTunggakan (EXACT DASHBOARD FORMULA)
+            // Helper function: getTunggakan (match dashboard)
             const getTunggakan = (studentId) => {
                 const totalPaid = getTotalPaid(studentId);
-                const totalWeeks = accumulatedWeeks + currentWeek;
-                const shouldPay = totalWeeks * weeklyAmount;
-                return shouldPay - totalPaid;
+                const shouldPay = currentWeek * weeklyAmount;
+                const tunggakan = shouldPay - totalPaid;
+
+                // SOLUSI BUG MINGGU: Jika sudah bayar sebelum 4 minggu dari sekarang, anggap LUNAS
+                // Check apakah ada pembayaran sebelum cutoff date (4 minggu yang lalu)
+                const fourWeeksAgo = new Date();
+                fourWeeksAgo.setDate(fourWeeksAgo.getDate() - 28); // 4 minggu = 28 hari
+
+                const studentPayments = payments.filter((p) => {
+                    const pStudentId = p.studentId?._id || p.studentId;
+                    return pStudentId?.toString() === studentId.toString();
+                });
+
+                const hasOldPayment = studentPayments.some(
+                    (p) => new Date(p.date) < fourWeeksAgo
+                );
+
+                // Jika punya payment lama DAN total bayar >= 4 minggu (Rp 8k), anggap lunas
+                if (hasOldPayment && totalPaid >= 4 * weeklyAmount) {
+                    return 0; // LUNAS
+                }
+
+                return tunggakan;
             };
 
             const studentsWithStatus = students.map((student) => {
@@ -260,7 +302,7 @@ Semua atas nama: *Fahmi Ilham Bagaskara*
 ━━━━━━━━━━━━━━━━━━━━
 
 🏆 Cek Leaderboard Lengkap:
-https://triforce.deepkernel.site/leaderboard
+https://triforce.crud.my.id/leaderboard
 
 💡 _Keterangan:_
 _• Data hanya menghitung pembayaran siswa_
@@ -299,11 +341,12 @@ _Terima kasih atas partisipasinya!_ 🙏
                 : new Date(process.env.START_DATE || '2025-10-27');
 
             const now = new Date();
-            const diffTime = Math.abs(now - startDate);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            const currentWeek = Math.max(1, Math.ceil(diffDays / 7));
+            const days = Math.floor((now - startDate) / (24 * 60 * 60 * 1000));
+            const weeks = Math.ceil(days / 7);
 
-            return currentWeek;
+            // MATCH DASHBOARD FORMULA: weeks + 1
+            if (weeks < 0) return 0;
+            return weeks + 1;
         } catch (error) {
             return 1;
         }

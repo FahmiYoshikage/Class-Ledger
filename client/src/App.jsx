@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { jsPDF } from 'jspdf';
@@ -68,6 +68,8 @@ const App = () => {
     const [filterCategory, setFilterCategory] = useState('Semua');
     const [dateFrom, setDateFrom] = useState('');
     const [dateTo, setDateTo] = useState('');
+    const [paymentPage, setPaymentPage] = useState(1);
+    const PAYMENTS_PER_PAGE = 15;
 
     // Save activeTab to localStorage whenever it changes
     useEffect(() => {
@@ -344,6 +346,41 @@ const App = () => {
 
         return matchSearch && matchMethod && matchDate;
     });
+
+    // Group payments by student + date + amount (e.g. "Nyla Rp 2.000 × 10")
+    const groupedPayments = useMemo(() => {
+        const groups = {};
+        filteredPayments.forEach((payment) => {
+            const studentId = payment.studentId?._id || payment.studentId || 'custom';
+            const dateStr = new Date(payment.date).toLocaleDateString('id-ID');
+            const key = `${studentId}_${dateStr}_${payment.amount}_${payment.source || 'regular'}`;
+            if (!groups[key]) {
+                groups[key] = {
+                    ...payment,
+                    count: 1,
+                    totalAmount: payment.amount,
+                    paymentIds: [payment._id],
+                };
+            } else {
+                groups[key].count += 1;
+                groups[key].totalAmount += payment.amount;
+                groups[key].paymentIds.push(payment._id);
+            }
+        });
+        return Object.values(groups);
+    }, [filteredPayments]);
+
+    // Pagination for grouped payments
+    const totalPaymentPages = Math.ceil(groupedPayments.length / PAYMENTS_PER_PAGE);
+    const paginatedPayments = groupedPayments.slice(
+        (paymentPage - 1) * PAYMENTS_PER_PAGE,
+        paymentPage * PAYMENTS_PER_PAGE
+    );
+
+    // Reset page when filters change
+    useEffect(() => {
+        setPaymentPage(1);
+    }, [searchQuery, filterMethod, dateFrom, dateTo]);
 
     // Filter expenses by search, category, and date
     const filteredExpenses = expenses.filter((expense) => {
@@ -1652,16 +1689,22 @@ const App = () => {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-white/[0.04]">
-                                    {filteredPayments.map((payment) => {
+                                    {paginatedPayments.map((payment, idx) => {
                                         const studentId =
                                             payment.studentId?._id ||
                                             payment.studentId;
                                         const student = students.find(
                                             (s) => s._id === studentId
                                         );
+                                        const displayName =
+                                            payment.source === 'custom' ||
+                                            payment.source === 'event'
+                                                ? payment.sourceName
+                                                : student?.name ||
+                                                  'Siswa tidak ditemukan';
 
                                         return (
-                                            <tr key={payment._id}>
+                                            <tr key={`group-${idx}-${payment._id}`}>
                                                 <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-white">
                                                     {new Date(
                                                         payment.date
@@ -1675,49 +1718,45 @@ const App = () => {
                                                     )}
                                                 </td>
                                                 <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium text-white">
-                                                    <div className="max-w-[150px] sm:max-w-none truncate">
-                                                        {payment.source ===
-                                                            'custom' ||
-                                                        payment.source ===
-                                                            'event'
-                                                            ? payment.sourceName
-                                                            : student?.name ||
-                                                              'Siswa tidak ditemukan'}
+                                                    <div className="max-w-[200px] sm:max-w-none">
+                                                        <span>{displayName}</span>
+                                                        {payment.count > 1 && (
+                                                            <span className="ml-1.5 text-indigo-400 font-semibold">
+                                                                ×{payment.count}
+                                                            </span>
+                                                        )}
                                                     </div>
                                                 </td>
-                                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-semibold text-white">
-                                                    {formatRp(payment.amount)}
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-white">
+                                                    {payment.count > 1 ? (
+                                                        <div>
+                                                            <span className="text-white/50 text-xs">
+                                                                {formatRp(payment.amount)} × {payment.count}
+                                                            </span>
+                                                            <span className="block font-semibold text-teal-300">
+                                                                = {formatRp(payment.totalAmount)}
+                                                            </span>
+                                                        </div>
+                                                    ) : (
+                                                        <span className="font-semibold">
+                                                            {formatRp(payment.amount)}
+                                                        </span>
+                                                    )}
                                                 </td>
                                                 <td className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-white">
-                                                    <span
-                                                        className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                                                            payment.method ===
-                                                            'Tunai'
-                                                                ? 'bg-indigo-500/10 text-indigo-400'
-                                                                : 'bg-indigo-500/10 text-indigo-400'
-                                                        }`}
-                                                    >
+                                                    <span className="px-2 py-1 text-xs font-semibold rounded-full bg-indigo-500/10 text-indigo-400">
                                                         {payment.method}
                                                     </span>
                                                 </td>
                                                 <td className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm">
-                                                    {payment.source ===
-                                                        'custom' && (
-                                                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-teal-500/10 text-teal-300">
-                                                            Custom
-                                                        </span>
+                                                    {payment.source === 'custom' && (
+                                                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-teal-500/10 text-teal-300">Custom</span>
                                                     )}
-                                                    {payment.source ===
-                                                        'event' && (
-                                                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-violet-500/30 text-violet-200">
-                                                            Event
-                                                        </span>
+                                                    {payment.source === 'event' && (
+                                                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-violet-500/30 text-violet-200">Event</span>
                                                     )}
-                                                    {payment.source ===
-                                                        'regular' && (
-                                                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-white/[0.06] text-white/60">
-                                                            Kas Reguler
-                                                        </span>
+                                                    {payment.source === 'regular' && (
+                                                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-white/[0.06] text-white/60">Kas Reguler</span>
                                                     )}
                                                 </td>
                                                 <td className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-white/60">
@@ -1727,13 +1766,17 @@ const App = () => {
                                                 </td>
                                                 <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm">
                                                     <button
-                                                        onClick={() =>
-                                                            deletePayment(
-                                                                payment._id
-                                                            )
-                                                        }
+                                                        onClick={() => {
+                                                            if (payment.count > 1) {
+                                                                if (window.confirm(`Hapus semua ${payment.count} pembayaran ini?`)) {
+                                                                    payment.paymentIds.forEach((id) => deletePayment(id));
+                                                                }
+                                                            } else {
+                                                                deletePayment(payment._id);
+                                                            }
+                                                        }}
                                                         className="text-rose-300/60 hover:text-rose-300 p-1 transition-colors"
-                                                        title="Hapus"
+                                                        title={payment.count > 1 ? `Hapus ${payment.count} pembayaran` : 'Hapus'}
                                                     >
                                                         <Trash2 className="w-4 h-4" />
                                                     </button>
@@ -1744,6 +1787,70 @@ const App = () => {
                                 </tbody>
                             </table>
                         </div>
+
+                        {/* Pagination Controls */}
+                        {totalPaymentPages > 1 && (
+                            <div className="p-4 border-t border-white/[0.06] flex items-center justify-between">
+                                <p className="text-xs text-white/40">
+                                    Hal. {paymentPage}/{totalPaymentPages} · {groupedPayments.length} grup dari {filteredPayments.length} pembayaran
+                                </p>
+                                <div className="flex items-center gap-1">
+                                    <button
+                                        onClick={() => setPaymentPage(1)}
+                                        disabled={paymentPage === 1}
+                                        className="px-2.5 py-1.5 text-xs rounded-lg bg-white/[0.04] text-white/50 hover:bg-white/[0.08] disabled:opacity-30 disabled:cursor-not-allowed transition"
+                                    >
+                                        «
+                                    </button>
+                                    <button
+                                        onClick={() => setPaymentPage((p) => Math.max(1, p - 1))}
+                                        disabled={paymentPage === 1}
+                                        className="px-2.5 py-1.5 text-xs rounded-lg bg-white/[0.04] text-white/50 hover:bg-white/[0.08] disabled:opacity-30 disabled:cursor-not-allowed transition"
+                                    >
+                                        ‹
+                                    </button>
+                                    {Array.from({ length: Math.min(5, totalPaymentPages) }, (_, i) => {
+                                        let page;
+                                        if (totalPaymentPages <= 5) {
+                                            page = i + 1;
+                                        } else if (paymentPage <= 3) {
+                                            page = i + 1;
+                                        } else if (paymentPage >= totalPaymentPages - 2) {
+                                            page = totalPaymentPages - 4 + i;
+                                        } else {
+                                            page = paymentPage - 2 + i;
+                                        }
+                                        return (
+                                            <button
+                                                key={page}
+                                                onClick={() => setPaymentPage(page)}
+                                                className={`px-3 py-1.5 text-xs rounded-lg transition font-medium ${
+                                                    paymentPage === page
+                                                        ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30'
+                                                        : 'bg-white/[0.04] text-white/50 hover:bg-white/[0.08]'
+                                                }`}
+                                            >
+                                                {page}
+                                            </button>
+                                        );
+                                    })}
+                                    <button
+                                        onClick={() => setPaymentPage((p) => Math.min(totalPaymentPages, p + 1))}
+                                        disabled={paymentPage === totalPaymentPages}
+                                        className="px-2.5 py-1.5 text-xs rounded-lg bg-white/[0.04] text-white/50 hover:bg-white/[0.08] disabled:opacity-30 disabled:cursor-not-allowed transition"
+                                    >
+                                        ›
+                                    </button>
+                                    <button
+                                        onClick={() => setPaymentPage(totalPaymentPages)}
+                                        disabled={paymentPage === totalPaymentPages}
+                                        className="px-2.5 py-1.5 text-xs rounded-lg bg-white/[0.04] text-white/50 hover:bg-white/[0.08] disabled:opacity-30 disabled:cursor-not-allowed transition"
+                                    >
+                                        »
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
 

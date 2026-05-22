@@ -24,7 +24,7 @@ Semua atas nama: *Fahmi Ilham Bagaskara*
 _Mohon konfirmasi setelah transfer ya!_ ✅
 
 🏆 *Cek Leaderboard Donatur Kelas:*
-https://triforce.deepkernel.site/leaderboard
+https://triforce.crud.my.id/leaderboard
 _Raih posisi teratas dan jadi donatur terbaik!_ 🚀`;
 
 // ==============================================

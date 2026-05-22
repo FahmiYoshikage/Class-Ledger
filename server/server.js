@@ -43,7 +43,7 @@ app.use(
             'http://127.0.0.1:8767',
             'http://10.252.146.203:3000',
             'http://10.252.146.203:3001',
-            process.env.CORS_ORIGIN || 'https://triforce.deepkernel.site',
+            process.env.CORS_ORIGIN || 'https://triforce.crud.my.id',
         ],
         credentials: true,
     })
