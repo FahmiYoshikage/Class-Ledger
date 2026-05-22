@@ -1765,21 +1765,36 @@ const App = () => {
                                                     </div>
                                                 </td>
                                                 <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm">
-                                                    <button
-                                                        onClick={() => {
-                                                            if (payment.count > 1) {
-                                                                if (window.confirm(`Hapus semua ${payment.count} pembayaran ini?`)) {
-                                                                    payment.paymentIds.forEach((id) => deletePayment(id));
-                                                                }
-                                                            } else {
-                                                                deletePayment(payment._id);
-                                                            }
-                                                        }}
-                                                        className="text-rose-300/60 hover:text-rose-300 p-1 transition-colors"
-                                                        title={payment.count > 1 ? `Hapus ${payment.count} pembayaran` : 'Hapus'}
-                                                    >
-                                                        <Trash2 className="w-4 h-4" />
-                                                    </button>
+                                                    {payment.count > 1 ? (
+                                                        <div className="flex items-center gap-1">
+                                                            <button
+                                                                onClick={() => deletePayment(payment.paymentIds[payment.paymentIds.length - 1])}
+                                                                className="px-2 py-1 rounded-md bg-rose-500/10 text-rose-300 hover:bg-rose-500/20 transition-colors text-xs font-medium"
+                                                                title="Hapus 1 pembayaran"
+                                                            >
+                                                                −1
+                                                            </button>
+                                                            <button
+                                                                onClick={() => {
+                                                                    if (window.confirm(`Hapus SEMUA ${payment.count} pembayaran ini?`)) {
+                                                                        payment.paymentIds.forEach((id) => deletePayment(id));
+                                                                    }
+                                                                }}
+                                                                className="text-rose-300/40 hover:text-rose-300 p-1 transition-colors"
+                                                                title={`Hapus semua ${payment.count}`}
+                                                            >
+                                                                <Trash2 className="w-3.5 h-3.5" />
+                                                            </button>
+                                                        </div>
+                                                    ) : (
+                                                        <button
+                                                            onClick={() => deletePayment(payment._id)}
+                                                            className="text-rose-300/60 hover:text-rose-300 p-1 transition-colors"
+                                                            title="Hapus"
+                                                        >
+                                                            <Trash2 className="w-4 h-4" />
+                                                        </button>
+                                                    )}
                                                 </td>
                                             </tr>
                                         );
