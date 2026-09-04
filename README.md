@@ -292,8 +292,124 @@ Jika ada masalah:
 
 ---
 
-## 📚 Resources
+## 🛠️ Tools (Automation Scripts)
 
--   [PM2 Documentation](https://pm2.keymetrics.io/docs/)
--   [Nginx Documentation](https://nginx.org/en/docs/)
--   [Cloudflare Tunnel Docs](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/)
+Setiap kali ada update atau perlu operasi operational, gunakan script di bawah ini:
+
+### 1. `vps-setup.sh` - Initial VPS Setup
+Setup awal VPS dengan install semua dependencies yang diperlukan.
+- Install Node.js 20.x, PM2, Nginx, Git, cloudflared
+- Configure Nginx (port 8012), firewall (UFW), PM2 log rotation
+```bash
+# Di VPS sebagai root
+wget https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/master/scripts/vps-setup.sh
+chmod +x vps-setup.sh
+sudo ./vps-setup.sh
+```
+
+### 2. `cloudflare-setup.sh` - Cloudflare Tunnel Setup
+Setup Cloudflare Tunnel untuk expose aplikasi ke internet.
+- Login ke Cloudflare, create tunnel, generate config file
+- Create DNS record, install tunnel sebagai system service
+```bash
+# Di VPS
+cd /var/www/kas-kelas/scripts
+chmod +x cloudflare-setup.sh
+sudo ./cloudflare-setup.sh
+```
+Ikuti prompt: Enter tunnel name (default: kas-kelas), Enter domain
+
+### 3. `deploy.sh` - Deploy/Update Application
+Deploy atau update aplikasi (pull code, build, restart services).
+- Pull latest code dari Git, install dependencies, build frontend
+- Copy frontend files ke Nginx directory, restart PM2 dan Nginx
+```bash
+# Di VPS
+cd /var/www/kas-kelas/scripts
+chmod +x deploy.sh
+./deploy.sh
+```
+
+### 4. `vps-deploy.sh` - VPS Deploy Script
+Script deploy alternatif untuk VPS dengan fitur clean redeploy.
+```bash
+cd /var/www/kas-kelas/scripts
+./vps-deploy.sh
+```
+
+### 5. `vps-clean-redeploy.sh` - Clean Redeploy
+Membersihkan dan redeploy aplikasi ke VPS.
+```bash
+cd /var/www/kas-kelas/scripts
+sudo ./vps-clean-redeploy.sh
+```
+
+### 6. `vps-setup.sh` - VPS Setup (Lain)
+Setup awal VPS dengan konfigurasi khusus.
+```bash
+cd /var/www/kas-kelas/scripts
+sudo ./vps-setup.sh
+```
+
+### 7. `migrate-to-atlas.sh` - MongoDB Atlas Migration
+Migrasi database ke MongoDB Atlas.
+```bash
+cd /var/www/kas-kelas/scripts
+sudo ./migrate-to-atlas.sh
+```
+
+### 8. `fix-permissions.sh` - Permission Fix
+Memperbaiki permission file dan direktori.
+```bash
+cd /var/www/kas-kelas/scripts
+sudo ./fix-permissions.sh
+```
+
+### 9. `fix-localhost-settings.sh` - Localhost Settings Fix
+Mengatur settingan localhost untuk development.
+```bash
+cd /var/www/kas-kelas/scripts
+sudo ./fix-localhost-settings.sh
+```
+
+### 10. `vps-precheck.sh` - Pre-deploy Check
+Check persiapan sebelum deploy ke VPS.
+```bash
+cd /var/www/kas-kelas/scripts
+./vps-precheck.sh
+```
+
+### 11. `vps-github-auth.sh` - GitHub Auth Setup
+Setup authentikasi GitHub untuk VPS.
+```bash
+cd /var/www/kas-kelas/scripts
+sudo ./vps-github-auth.sh
+```
+
+### 12. `vps-verify-deployment.sh` - Deployment Verification
+Verifikasi deployment ke VPS.
+```bash
+cd /var/www/kas-kelas/scripts
+./vps-verify-deployment.sh
+```
+
+### 13. `test-sessions.sh` - Test Sessions
+Menguji fitur pause/sessions aplikasi.
+```bash
+cd /var/www/kas-kelas/scripts
+./test-sessions.sh
+```
+
+### 14. `verify-pause.sh` - Pause Feature Verification
+Verifikasi fitur pause dalam aplikasi.
+```bash
+cd /var/www/kas-kelas/scripts
+./verify-pause.sh
+```
+
+### 15. `restyle-app.py` - App Restyling
+Script restyle/renovasi tampilan aplikasi.
+```bash
+cd /var/www/kas-kelas/scripts
+python3 restyle-app.py
+```
