@@ -1,0 +1,115 @@
+#!/bin/bash
+# Kas Kelas CLI - Automation Scripts Management
+# Usage: kas <command> [args]
+#
+# Available commands:
+#   vps-setup           - Initial VPS Setup
+#   cloudflare-setup    - Cloudflare Tunnel Setup
+#   deploy              - Deploy/Update Application
+#   vps-deploy          - Deploy to VPS
+#   clean-redeploy      - Clean Redeploy
+#   migrate-atlas       - MongoDB Atlas Migration
+#   fix-permissions     - Fix Permissions
+#   fix-localhost       - Fix Localhost Settings
+#   precheck            - Pre-deployment Check
+#   github-auth         - GitHub Auth Setup
+#   verify-deploy       - Verify Deployment
+#   test-sessions       - Test Sessions
+#   verify-pause        - Verify Pause Feature
+#   restyle-app         - Restyle App
+#   help                - Show this help message
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/scripts"
+
+case "${1:-help}" in
+  vps-setup)
+    echo "🚀 Running VPS Setup..."
+    bash "$SCRIPT_DIR/vps-setup.sh"
+    ;;
+  cloudflare-setup)
+    echo "☁️ Running Cloudflare Tunnel Setup..."
+    bash "$SCRIPT_DIR/cloudflare-setup.sh"
+    ;;
+  deploy)
+    echo "🚀 Running Deployment..."
+    bash "$SCRIPT_DIR/deploy.sh" "${2:-production}"
+    ;;
+  vps-deploy)
+    echo "🚀 Running VPS Deploy..."
+    bash "$SCRIPT_DIR/vps-deploy.sh"
+    ;;
+  clean-redeploy)
+    echo "🧹 Running Clean Redeploy..."
+    bash "$SCRIPT_DIR/vps-clean-redeploy.sh"
+    ;;
+  migrate-atlas)
+    echo "📦 Running MongoDB Atlas Migration..."
+    bash "$SCRIPT_DIR/migrate-to-atlas.sh"
+    ;;
+  fix-permissions)
+    echo "🔧 Fixing Permissions..."
+    bash "$SCRIPT_DIR/fix-permissions.sh"
+    ;;
+  fix-localhost)
+    echo "🔧 Fixing Localhost Settings..."
+    bash "$SCRIPT_DIR/fix-localhost-settings.sh"
+    ;;
+  precheck)
+    echo "📋 Running Pre-deployment Check..."
+    bash "$SCRIPT_DIR/vps-precheck.sh"
+    ;;
+  github-auth)
+    echo "🔐 Setting up GitHub Authentication..."
+    bash "$SCRIPT_DIR/vps-github-auth.sh"
+    ;;
+  verify-deploy)
+    echo "🔍 Verifying Deployment..."
+    bash "$SCRIPT_DIR/vps-verify-deployment.sh"
+    ;;
+  test-sessions)
+    echo "🧪 Testing Sessions..."
+    bash "$SCRIPT_DIR/test-sessions.sh"
+    ;;
+  verify-pause)
+    echo "⏸️ Verifying Pause Feature..."
+    bash "$SCRIPT_DIR/verify-pause.sh"
+    ;;
+  restyle-app)
+    echo "🎨 Restyling App..."
+    python3 "$SCRIPT_DIR/restyle-app.py"
+    ;;
+  help|--help|-h)
+    echo "🤖 Kas Kelas CLI - Automation Scripts Management"
+    echo ""
+    echo "Usage: kas <command> [arguments]"
+    echo ""
+    echo "Available commands:"
+    echo "  vps-setup           Initial VPS Setup (install Node, PM2, Nginx, cloudflared)"
+    echo "  cloudflare-setup    Cloudflare Tunnel Setup (login, create tunnel, DNS)"
+    echo "  deploy              Deploy/Update Application (pull, build, restart services)"
+    echo "  vps-deploy          Deploy to VPS (alternative deploy script)"
+    echo "  clean-redeploy      Clean Redeploy (bersih dan redeploy aplikasi)"
+    echo "  migrate-atlas       MongoDB Atlas Migration (migrasi DB ke Atlas)"
+    echo "  fix-permissions     Fix Permissions (perbaiki permission folder)"
+    echo "  fix-localhost       Fix Localhost Settings (setup localhost untuk dev)"
+    echo "  precheck            Pre-deployment Check (cek persiapan sebelum deploy)"
+    echo "  github-auth         GitHub Auth Setup (setup auth GitHub untuk VPS)"
+    echo "  verify-deploy       Verify Deployment (verifikasi deployment ke VPS)"
+    echo "  test-sessions       Test Sessions (test fitur pause/sessions)"
+    echo "  verify-pause        Verify Pause Feature (verifikasi fitur pause)"
+    echo "  restyle-app         Restyle App (script renovasi tampilan aplikasi)"
+    echo ""
+    echo "Examples:"
+    echo "  kas deploy          # Deploy dengan environment production"
+    echo "  kas deploy staging  # Deploy dengan environment staging"
+    echo "  kas vps-setup       # Setup VPS dari nol"
+    echo "  kas help            # Tampilkan bantuan ini"
+    ;;
+  *)
+    echo "❌ Command '$1' not found."
+    echo "Run 'kas help' for available commands."
+    exit 1
+    ;;
+esac
