@@ -1,0 +1,120 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kas-kelas-api
+  namespace: kas-kelas
+  labels:
+    app: kas-kelas-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kas-kelas-api
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: kas-kelas-api
+    spec:
+      containers:
+        - name: api
+          image: fahmi/kas-kelas-api:latest
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: api-config
+            - secretRef:
+                name: api-secrets
+          resources:
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+            requests:
+              cpu: "500m"
+              memory: "256Mi"
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 5000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+          volumeMounts:
+            - name: uploads
+              mountPath: /app/uploads
+            - name: reports
+              mountPath: /app/public/reports
+          env:
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: NODE_ENV
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: PORT
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kas-kelas-api
+  namespace: kas-kelas
+  labels:
+    app: kas-kelas-api
+spec:
+  type: ClusterIP
+  selector:
+    app: kas-kelas-api
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 5000
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 5000
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: uploads-pvc
+  namespace: kas-kelas
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: reports-pvc
+  namespace: kas-kelas
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi

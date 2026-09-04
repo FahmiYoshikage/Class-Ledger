@@ -1,93 +1,109 @@
 #!/bin/bash
-
-# 🔄 Kas Kelas - Deployment/Update Script
-# Jalankan di VPS untuk deploy atau update aplikasi
+# Main deployment script for Kas Kelas
+# Usage: ./deploy.sh [environment]
+# Environment: development | staging | production
 
 set -e
 
-echo "=================================="
-echo "🔄 Kas Kelas Deployment Script"
-echo "=================================="
-echo ""
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+ENVIRONMENT="${1:-production}"
 
-# Colors
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m'
+echo "=== Kas Kelas Deployment Script ==="
+echo "Environment: $ENVIRONMENT"
+echo "Project Directory: $PROJECT_DIR"
 
-PROJECT_DIR="/var/www/kas-kelas"
-NGINX_DIR="/var/www/html/kas-kelas"
+# Validate environment
+case "$ENVIRONMENT" in
+  development|staging|production) ;;
+  *) echo "❌ Invalid environment. Use: development, staging, or production"; exit 1;;
+esac
 
-# Check if project directory exists
-if [ ! -d "$PROJECT_DIR" ]; then
-    echo "❌ Project directory not found: $PROJECT_DIR"
-    echo "Please clone your repository first:"
-    echo "  git clone <your-repo-url> $PROJECT_DIR"
-    exit 1
-fi
+# Check required tools
+check_tools() {
+  local missing=0
+  for tool in kubectl helm docker; do
+    if ! command -v "$tool" &>/dev/null; then
+      echo "⚠️  $tool not found - skipping $tool operations"
+      missing=1
+    fi
+  done
+  return $missing
+}
 
-cd $PROJECT_DIR
+# Set environment-specific values
+set_environment() {
+  case "$ENVIRONMENT" in
+    development)
+      IMAGE_TAG="latest-dev"
+      REPLICAS_API=1
+      REPLICAS_FRONTEND=1
+      NAMESPACE="kas-kelas-dev"
+      INGRESS_HOST="kas-kelas-dev.yourdomain.com"
+      ;;
+    staging)
+      IMAGE_TAG="latest-staging"
+      REPLICAS_API=2
+      REPLICAS_FRONTEND=2
+      NAMESPACE="kas-kelas-staging"
+      INGRESS_HOST="kas-kelas-staging.yourdomain.com"
+      ;;
+    production)
+      IMAGE_TAG="latest"
+      REPLICAS_API=2
+      REPLICAS_FRONTEND=2
+      NAMESPACE="kas-kelas"
+      INGRESS_HOST="kas-kelas.yourdomain.com"
+      ;;
+  esac
+}
 
-# Pull latest code
-echo "📥 Pulling latest code from git..."
-git pull origin master || git pull origin main
+# Deploy to AKS
+deploy_to_aks() {
+  echo "🚀 Deploying to AKS namespace: $NAMESPACE"
 
-# Backend deployment
-echo ""
-echo "🔧 Deploying backend..."
-cd $PROJECT_DIR/server
+  # Set AKS context (requires AZURE_CREDENTIALS secret)
+  if [ -n "${AZURE_CREDENTIALS:-}" ]; then
+    az aks get-credentials --admin \
+      --name "${AKS_NAME:-kas-kelas-aks}" \
+      --resource-group "${AKS_RG:-kas-kelas-rg}" \
+      --overwrite-existing 2>/dev/null || {
+      echo "⚠️  Could not set AKS credentials - assuming already configured"
+    }
+  fi
 
-# Install dependencies
-echo "  📦 Installing backend dependencies..."
-npm install --production
+  # Apply namespace if not exists
+  kubectl get namespace "$NAMESPACE" >/dev/null 2>&1 || \
+    kubectl create namespace "$NAMESPACE"
 
-# Restart PM2
-echo "  🔄 Restarting backend service..."
-pm2 restart kas-kelas-api || pm2 start server.js --name kas-kelas-api
+  # Set image tags in manifests
+  sed -i "|__IMAGE_TAG__|g;s|__IMAGE_TAG__|$IMAGE_TAG|g" k8s/*/*.yml 2>/dev/null || true
 
-pm2 save
+  # Apply ConfigMaps and Secrets (without sensitive values)
+  kubectl apply -f k8s/configmap.yml -n "$NAMESPACE"
+  kubectl apply -f k8s/secret.yml -n "$NAMESPACE"
 
-echo -e "${GREEN}✓ Backend deployed${NC}"
+  # Apply application manifests
+  kubectl apply -f k8s/namespace.yml -n "$NAMESPACE" 2>/dev/null
+  kubectl apply -f k8s/api-deployment.yml -n "$NAMESPACE"
+  kubectl apply -f k8s/api-service.yml -n "$NAMESPACE"
+  kubectl apply -f k8s/frontend-deployment.yml -n "$NAMESPACE"
+  kubectl apply -f k8s/frontend-service.yml -n "$NAMESPACE"
+  kubectl apply -f k8s/ingress.yml -n "$NAMESPACE"
+  kubectl apply -f k8s/hpa.yml -n "$NAMESPACE"
 
-# Frontend deployment
-echo ""
-echo "🎨 Deploying frontend..."
-cd $PROJECT_DIR/client
+  # Wait for rollout
+  echo "⏳ Waiting for API rollout..."
+  kubectl rollout status deployment/kas-kelas-api -n "$NAMESPACE" --timeout=180s
 
-# Install dependencies
-echo "  📦 Installing frontend dependencies..."
-npm install
+  echo "⏳ Waiting for Frontend rollout..."
+  kubectl rollout status deployment/kas-kelas-frontend -n "$NAMESPACE" --timeout=180s
 
-# Build
-echo "  🏗️  Building frontend..."
-npm run build
+  echo "✅ Deployment complete!"
+  echo "🌐 Access via: https://$INGRESS_HOST"
+}
 
-# Copy to nginx directory
-echo "  📋 Copying files to nginx..."
-sudo cp -r dist/* $NGINX_DIR/
-sudo chown -R www-data:www-data $NGINX_DIR
-
-echo -e "${GREEN}✓ Frontend deployed${NC}"
-
-# Restart services
-echo ""
-echo "🔄 Restarting services..."
-sudo systemctl restart nginx
-pm2 restart kas-kelas-api
-
-echo ""
-echo "=================================="
-echo -e "${GREEN}✓ Deployment Complete!${NC}"
-echo "=================================="
-echo ""
-echo "📊 Service Status:"
-pm2 list
-echo ""
-echo "🌐 Application URLs:"
-echo "  Local: http://localhost:8012"
-echo "  Public: https://kas-kelas.yourdomain.com"
-echo ""
-echo "📝 Check logs:"
-echo "  PM2: pm2 logs kas-kelas-api"
-echo "  Nginx: sudo tail -f /var/log/nginx/kas-kelas-access.log"
-echo ""
+# Main execution
+check_tools
+set_environment
+deploy_to_aks
