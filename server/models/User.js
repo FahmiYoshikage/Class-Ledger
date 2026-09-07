@@ -10,28 +10,10 @@ const userSchema = new mongoose.Schema(
             trim: true,
             minlength: 3,
         },
-        email: {
-            type: String,
-            required: false,
-            unique: true,
-            sparse: true, // Allow null/undefined to be non-unique
-            lowercase: true,
-            trim: true,
-        },
         password: {
             type: String,
             required: true,
             minlength: 6,
-        },
-        role: {
-            type: String,
-            enum: ['public', 'member', 'admin'],
-            default: 'member',
-        },
-        studentId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Student',
-            required: false, // Only for members
         },
         fullName: {
             type: String,
@@ -46,7 +28,7 @@ const userSchema = new mongoose.Schema(
         },
         mustChangePassword: {
             type: Boolean,
-            default: true, // Force change password on first login
+            default: true,
         },
     },
     {
@@ -79,6 +61,11 @@ userSchema.methods.toJSON = function () {
     const user = this.toObject();
     delete user.password;
     return user;
+};
+
+// Static method to find user by username (for admin login)
+userSchema.statics.findByUsername = async function (username) {
+    return this.findOne({ username: username.trim() });
 };
 
 export default mongoose.model('User', userSchema);

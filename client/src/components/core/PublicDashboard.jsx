@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
     Wallet,
     TrendingUp,
@@ -20,6 +20,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 const PublicDashboard = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const [stats, setStats] = useState({
         totalIncome: 0,
         totalExpenses: 0,
@@ -38,12 +39,14 @@ const PublicDashboard = () => {
     const fetchPublicData = async () => {
         try {
             setLoading(true);
+            // Use admin endpoints for single-admin mode
             const [paymentsRes, expensesRes, studentsRes] = await Promise.all([
-                axios.get(`${API_URL}/payments`),
-                axios.get(`${API_URL}/expenses`),
-                axios.get(`${API_URL}/students`),
+                axios.get(`${API_URL}/admin/payments`),
+                axios.get(`${API_URL}/admin/expenses`),
+                axios.get(`${API_URL}/admin/students`),
             ]);
 
+            // Calculate stats
             const totalIncome = paymentsRes.data.reduce(
                 (sum, p) => sum + (p.amount || 0),
                 0
@@ -53,6 +56,15 @@ const PublicDashboard = () => {
                 0
             );
 
+            setStats({
+                totalIncome,
+                totalExpenses,
+                balance: totalIncome - totalExpenses,
+                totalStudents: studentsRes.data.length,
+                totalTransactions: paymentsRes.data.length + expensesRes.data.length,
+            });
+
+            // Build events from payments with event field
             const eventPayments = paymentsRes.data.filter((p) => p.event);
             const uniqueEvents = {};
             eventPayments.forEach((p) => {
@@ -98,13 +110,6 @@ const PublicDashboard = () => {
                 .sort((a, b) => b.totalPaid - a.totalPaid)
                 .slice(0, 10);
 
-            setStats({
-                totalIncome,
-                totalExpenses,
-                balance: totalIncome - totalExpenses,
-                totalStudents: studentsRes.data.length,
-                totalTransactions: paymentsRes.data.length + expensesRes.data.length,
-            });
             setEvents(Object.values(uniqueEvents));
             setLeaderboard(leaderboardData);
         } catch (error) {

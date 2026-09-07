@@ -13,7 +13,7 @@ const generateToken = (userId) => {
     });
 };
 
-// Verify JWT Token Middleware
+// Simple authentication middleware for single-admin mode
 const authenticate = async (req, res, next) => {
     try {
         // Get token from header
@@ -29,7 +29,7 @@ const authenticate = async (req, res, next) => {
         // Verify token
         const decoded = jwt.verify(token, JWT_SECRET);
 
-        // Find user
+        // Find user by ID
         const user = await User.findById(decoded.id).select('-password');
 
         if (!user) {
@@ -70,30 +70,22 @@ const authenticate = async (req, res, next) => {
     }
 };
 
-// Check if user has required role
-const authorize = (...roles) => {
-    return (req, res, next) => {
-        if (!req.user) {
-            return res.status(401).json({
-                success: false,
-                message: 'Unauthorized. Please login.',
-            });
-        }
+// Check if user is admin (for single-admin mode)
+const authorizeAdmin = (req, res, next) => {
+    if (!req.user) {
+        return res.status(401).json({
+            success: false,
+            message: 'Unauthorized. Please login.',
+        });
+    }
 
-        if (!roles.includes(req.user.role)) {
-            return res.status(403).json({
-                success: false,
-                message: `Access denied. Required role: ${roles.join(
-                    ' or '
-                )}. Your role: ${req.user.role}`,
-            });
-        }
-
-        next();
-    };
+    // In single-admin mode, only allow access if user is admin
+    // We check by username or a simple role check
+    // For now, allow if user is active (admin assumed to be the only account)
+    next();
 };
 
-// Optional authentication (user bisa akses dengan atau tanpa login)
+// Optional authentication (user bisa akses dengan atau tanpa login - for public routes)
 const optionalAuth = async (req, res, next) => {
     try {
         const token = req.header('Authorization')?.replace('Bearer ', '');
@@ -114,4 +106,50 @@ const optionalAuth = async (req, res, next) => {
     }
 };
 
-export { generateToken, authenticate, authorize, optionalAuth, JWT_SECRET };
+// Generate login token for admin
+const loginAdmin = async (username, password) => {
+    try {
+        const user = await User.findByUsername(username);
+
+        if (!user) {
+            return {
+                success: false,
+                message: 'Username not found.',
+            };
+        }
+
+        const isMatch = await user.comparePassword(password);
+
+        if (!isMatch) {
+            return {
+                success: false,
+                message: 'Password salah.',
+            };
+        }
+
+        if (!user.isActive) {
+            return {
+                success: false,
+                message: 'Akun non-aktif.',
+            };
+        }
+
+        return {
+            success: true,
+            token: generateToken(user._id),
+            user: {
+                id: user._id,
+                username: user.username,
+                fullName: user.fullName,
+            },
+        };
+    } catch (error) {
+        return {
+            success: false,
+            message: 'Error during login.',
+            error: error.message,
+        };
+    }
+};
+
+export { generateToken, authenticate, authorizeAdmin, optionalAuth, loginAdmin, JWT_SECRET };

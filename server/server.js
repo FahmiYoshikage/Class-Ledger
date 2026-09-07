@@ -4,20 +4,15 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import connectDB from './config/database.js';
-import studentRoutes from './routes/student.js';
+import authRoutes from './routes/auth.js';
 import paymentRoutes from './routes/payments.js';
 import expenseRoutes from './routes/expenses.js';
-import settingRoutes from './routes/settings.js';
 import eventRoutes from './routes/events.js';
-import notificationRoutes from './routes/notifications.js';
-import leaderboardRoutes from './routes/leaderboard.js';
-import badgeRoutes from './routes/badges.js';
+import settingRoutes from './routes/settings.js';
 import qrPaymentRoutes from './routes/qrPayment.js';
-import authRoutes from './routes/auth.js';
-import auditLogRoutes from './routes/auditLogs.js';
-import sessionRoutes from './routes/sessions.js';
 import notificationScheduler from './services/notificationScheduler.js';
 import { apiLimiter } from './middleware/rateLimiter.js';
+import { authenticate, loginAdmin, authorizeAdmin } from './middleware/auth.js';
 
 dotenv.config();
 
@@ -41,8 +36,6 @@ app.use(
             'http://127.0.0.1:3000',
             'http://127.0.0.1:3001',
             'http://127.0.0.1:8767',
-            'http://10.252.146.203:3000',
-            'http://10.252.146.203:3001',
             process.env.CORS_ORIGIN || 'https://triforce.crud.my.id',
         ],
         credentials: true,
@@ -57,19 +50,17 @@ connectDB();
 // Apply rate limiting to all API routes
 app.use('/api/', apiLimiter);
 
-// API Routes
+// --- Auth Routes (Public - for admin login) ---
 app.use('/api/auth', authRoutes);
-app.use('/api/audit-logs', auditLogRoutes);
-app.use('/api/sessions', sessionRoutes);
-app.use('/api/students', studentRoutes);
-app.use('/api/payments', paymentRoutes);
-app.use('/api/expenses', expenseRoutes);
-app.use('/api/settings', settingRoutes);
-app.use('/api/events', eventRoutes);
-app.use('/api/notifications', notificationRoutes);
-app.use('/api/leaderboard', leaderboardRoutes);
-app.use('/api/badges', badgeRoutes);
-app.use('/api/qr-payment', qrPaymentRoutes);
+
+// --- Admin Protected Routes ---
+// All routes below require admin authentication
+app.use('/api/admin', authenticate, authorizeAdmin);
+app.use('/api/admin/payments', paymentRoutes);
+app.use('/api/admin/expenses', expenseRoutes);
+app.use('/api/admin/events', eventRoutes);
+app.use('/api/admin/settings', settingRoutes);
+app.use('/api/admin/qr-payment', qrPaymentRoutes);
 
 // Serve uploaded files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -77,7 +68,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Serve PDF reports
 app.use('/reports', express.static(path.join(__dirname, 'public/reports')));
 
-// Health check
+// Health check (public - no auth required)
 app.get('/api/health', (req, res) => {
     res.json({
         status: 'OK',
@@ -86,15 +77,6 @@ app.get('/api/health', (req, res) => {
         timestamp: new Date().toISOString(),
     });
 });
-
-// Serve static files in production (disabled for separate frontend container)
-// Frontend is served by kas-kelas-frontend container on port 8767
-// if (process.env.NODE_ENV === 'production') {
-//     app.use(express.static(path.join(__dirname, '../client/dist')));
-//     app.get('*', (req, res) => {
-//         res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-//     });
-// }
 
 // Error handling middleware
 app.use((err, req, res, next) => {

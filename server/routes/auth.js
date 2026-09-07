@@ -1,107 +1,78 @@
 import express from 'express';
 import User from '../models/User.js';
-import Student from '../models/Student.js';
-import { generateToken, authenticate, authorize } from '../middleware/auth.js';
+import { generateToken, loginAdmin, authenticate } from '../middleware/auth.js';
 import { createAuditLog } from '../middleware/auditLog.js';
 import {
     authLimiter,
-    createUserLimiter,
-    passwordChangeLimiter,
 } from '../middleware/rateLimiter.js';
-import { createSession, invalidateSession } from './sessions.js';
 
 const router = express.Router();
 
-// @route   POST /api/auth/register
-// @desc    Register new user (Admin only)
-// @access  Private (Admin)
-router.post(
-    '/register',
-    authenticate,
-    authorize('admin'),
-    createUserLimiter,
-    async (req, res) => {
-        try {
-            const { username, email, password, role, studentId, fullName } =
-                req.body;
+// @route   POST /api/auth/init-admin
+// @desc    Create initial admin user (Only works if no users exist)
+// @access  Public (One-time only)
+router.post('/init-admin', async (req, res) => {
+    try {
+        // Check if any users exist
+        const userCount = await User.countDocuments();
 
-            // Validation
-            if (!username || !password || !fullName) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Username, password, and full name are required',
-                });
-            }
-
-            // Check if user already exists
-            const existingUser = await User.findOne({
-                $or: [{ username }, { email: email || null }],
-            });
-
-            if (existingUser) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Username or email already exists',
-                });
-            }
-
-            // If role is member and studentId provided, verify student exists
-            if (role === 'member' && studentId) {
-                const student = await Student.findById(studentId);
-                if (!student) {
-                    return res.status(404).json({
-                        success: false,
-                        message: 'Student not found',
-                    });
-                }
-
-                // Check if student already has an account
-                const existingMember = await User.findOne({ studentId });
-                if (existingMember) {
-                    return res.status(400).json({
-                        success: false,
-                        message: 'This student already has an account',
-                    });
-                }
-            }
-
-            // Create user
-            const user = new User({
-                username,
-                email: email || undefined,
-                password,
-                role: role || 'member',
-                studentId: studentId || undefined,
-                fullName,
-                mustChangePassword: true,
-            });
-
-            await user.save();
-
-            res.status(201).json({
-                success: true,
-                message: 'User created successfully',
-                user: user.toJSON(),
-            });
-        } catch (error) {
-            console.error('Register error:', error);
-            res.status(500).json({
+        if (userCount > 0) {
+            return res.status(400).json({
                 success: false,
-                message: 'Failed to register user',
-                error: error.message,
+                message:
+                    'Admin already exists. Use login endpoint instead.',
             });
         }
+
+        const { username, password, fullName } = req.body;
+
+        // Validation
+        if (!username || !password || !fullName) {
+            return res.status(400).json({
+                success: false,
+                message: 'Username, password, and full name are required',
+            });
+        }
+
+        // Create initial admin
+        const admin = new User({
+            username,
+            password,
+            fullName,
+            isActive: true,
+            mustChangePassword: false,
+        });
+
+        await admin.save();
+
+        const token = generateToken(admin._id);
+
+        res.status(201).json({
+            success: true,
+            message: 'Initial admin created successfully',
+            token,
+            user: {
+                id: admin._id,
+                username: admin.username,
+                fullName: admin.fullName,
+            },
+        });
+    } catch (error) {
+        console.error('Init admin error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to create admin',
+            error: error.message,
+        });
     }
-);
+});
 
 // @route   POST /api/auth/login
-// @desc    Login user
+// @desc    Login admin
 // @access  Public
 router.post('/login', authLimiter, async (req, res) => {
     try {
         const { username, password } = req.body;
-
-        console.log(`🔐 Login attempt for user: ${username} from IP: ${req.headers['cf-connecting-ip'] || req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.ip}`);
 
         // Validation
         if (!username || !password) {
@@ -111,8 +82,8 @@ router.post('/login', authLimiter, async (req, res) => {
             });
         }
 
-        // Find user
-        const user = await User.findOne({ username }).populate('studentId');
+        // Find user by username (using static method from simplified User model)
+        const user = await User.findByUsername(username.trim());
 
         if (!user) {
             return res.status(401).json({
@@ -125,7 +96,7 @@ router.post('/login', authLimiter, async (req, res) => {
         if (!user.isActive) {
             return res.status(403).json({
                 success: false,
-                message: 'Account is deactivated. Contact administrator.',
+                message: 'Account is deactivated.',
             });
         }
 
@@ -146,25 +117,15 @@ router.post('/login', authLimiter, async (req, res) => {
         // Generate token
         const token = generateToken(user._id);
 
-        // Create session
-        await createSession(user._id, token, req);
-
-        // Log successful login
-        await createAuditLog({
-            user: user._id,
-            action: 'LOGIN',
-            resource: 'Auth',
-            status: 'SUCCESS',
-            ipAddress: req.ip || req.connection.remoteAddress,
-            userAgent: req.get('user-agent'),
-        });
-
         res.json({
             success: true,
             message: 'Login successful',
             token,
-            user: user.toJSON(),
-            mustChangePassword: user.mustChangePassword,
+            user: {
+                id: user._id,
+                username: user.username,
+                fullName: user.fullName,
+            },
         });
     } catch (error) {
         console.error('Login error:', error);
@@ -178,16 +139,18 @@ router.post('/login', authLimiter, async (req, res) => {
 
 // @route   GET /api/auth/me
 // @desc    Get current user info
-// @access  Private
+// @access  Private (requires auth)
 router.get('/me', authenticate, async (req, res) => {
     try {
-        const user = await User.findById(req.user._id)
-            .populate('studentId')
-            .select('-password');
+        const user = await User.findById(req.user._id).select('-password');
 
         res.json({
             success: true,
-            user,
+            user: {
+                id: user._id,
+                username: user.username,
+                fullName: user.fullName,
+            },
         });
     } catch (error) {
         console.error('Get user error:', error);
@@ -201,11 +164,10 @@ router.get('/me', authenticate, async (req, res) => {
 
 // @route   POST /api/auth/change-password
 // @desc    Change password
-// @access  Private
+// @access  Private (requires auth)
 router.post(
     '/change-password',
     authenticate,
-    passwordChangeLimiter,
     async (req, res) => {
         try {
             const { currentPassword, newPassword } = req.body;
@@ -258,294 +220,11 @@ router.post(
     }
 );
 
-// @route   PATCH /api/auth/profile
-// @desc    Update own profile (email, username)
-// @access  Private (Member & Admin)
-router.patch('/profile', authenticate, async (req, res) => {
-    try {
-        const { email, username } = req.body;
-
-        // Get current user
-        const user = await User.findById(req.user._id);
-
-        if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: 'User not found',
-            });
-        }
-
-        // Check if username is being changed and if it's already taken
-        if (username && username !== user.username) {
-            const existingUser = await User.findOne({ username });
-            if (existingUser) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Username already taken',
-                });
-            }
-            user.username = username;
-        }
-
-        // Update email
-        if (email !== undefined) {
-            // Allow setting null/empty for email
-            user.email = email || undefined;
-        }
-
-        await user.save();
-
-        // Return updated user without password
-        const updatedUser = user.toJSON();
-        delete updatedUser.password;
-
-        res.json({
-            success: true,
-            message: 'Profile updated successfully',
-            user: updatedUser,
-        });
-    } catch (error) {
-        console.error('Update profile error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to update profile',
-            error: error.message,
-        });
-    }
-});
-
-// @route   GET /api/auth/users
-// @desc    Get all users (Admin only)
-// @access  Private (Admin)
-router.get('/users', authenticate, authorize('admin'), async (req, res) => {
-    try {
-        const users = await User.find()
-            .populate('studentId')
-            .select('-password')
-            .sort('-createdAt');
-
-        res.json({
-            success: true,
-            count: users.length,
-            users,
-        });
-    } catch (error) {
-        console.error('Get users error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to get users',
-            error: error.message,
-        });
-    }
-});
-
-// @route   PATCH /api/auth/users/:id
-// @desc    Update user (Admin only)
-// @access  Private (Admin)
-router.patch(
-    '/users/:id',
-    authenticate,
-    authorize('admin'),
-    async (req, res) => {
-        try {
-            const { role, isActive, fullName, email } = req.body;
-
-            const user = await User.findById(req.params.id);
-
-            if (!user) {
-                return res.status(404).json({
-                    success: false,
-                    message: 'User not found',
-                });
-            }
-
-            // Update fields
-            if (role !== undefined) user.role = role;
-            if (isActive !== undefined) user.isActive = isActive;
-            if (fullName !== undefined) user.fullName = fullName;
-            if (email !== undefined) user.email = email || undefined;
-
-            await user.save();
-
-            res.json({
-                success: true,
-                message: 'User updated successfully',
-                user: user.toJSON(),
-            });
-        } catch (error) {
-            console.error('Update user error:', error);
-            res.status(500).json({
-                success: false,
-                message: 'Failed to update user',
-                error: error.message,
-            });
-        }
-    }
-);
-
-// @route   POST /api/auth/users/:id/reset-password
-// @desc    Reset user password to default (Admin only)
-// @access  Private (Admin)
-router.post(
-    '/users/:id/reset-password',
-    authenticate,
-    authorize('admin'),
-    async (req, res) => {
-        try {
-            const user = await User.findById(req.params.id);
-
-            if (!user) {
-                return res.status(404).json({
-                    success: false,
-                    message: 'User not found',
-                });
-            }
-
-            // Generate default password: username123
-            const defaultPassword = `${user.username}123`;
-
-            user.password = defaultPassword;
-            user.mustChangePassword = true; // Force user to change password on next login
-            await user.save();
-
-            res.json({
-                success: true,
-                message: 'Password reset successfully',
-                defaultPassword: defaultPassword, // Return the password so admin can tell user
-                username: user.username,
-            });
-        } catch (error) {
-            console.error('Reset password error:', error);
-            res.status(500).json({
-                success: false,
-                message: 'Failed to reset password',
-                error: error.message,
-            });
-        }
-    }
-);
-
-// @route   DELETE /api/auth/users/:id
-// @desc    Delete user (Admin only)
-// @access  Private (Admin)
-router.delete(
-    '/users/:id',
-    authenticate,
-    authorize('admin'),
-    async (req, res) => {
-        try {
-            const user = await User.findById(req.params.id);
-
-            if (!user) {
-                return res.status(404).json({
-                    success: false,
-                    message: 'User not found',
-                });
-            }
-
-            // Prevent deleting self
-            if (user._id.toString() === req.user._id.toString()) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Cannot delete your own account',
-                });
-            }
-
-            await user.deleteOne();
-
-            res.json({
-                success: true,
-                message: 'User deleted successfully',
-            });
-        } catch (error) {
-            console.error('Delete user error:', error);
-            res.status(500).json({
-                success: false,
-                message: 'Failed to delete user',
-                error: error.message,
-            });
-        }
-    }
-);
-
-// @route   POST /api/auth/init-admin
-// @desc    Create initial admin user (Only works if no users exist)
-// @access  Public (One-time only)
-router.post('/init-admin', async (req, res) => {
-    try {
-        // Check if any users exist
-        const userCount = await User.countDocuments();
-
-        if (userCount > 0) {
-            return res.status(400).json({
-                success: false,
-                message:
-                    'Admin already exists. Use /register endpoint instead.',
-            });
-        }
-
-        const { username, password, fullName } = req.body;
-
-        // Validation
-        if (!username || !password || !fullName) {
-            return res.status(400).json({
-                success: false,
-                message: 'Username, password, and full name are required',
-            });
-        }
-
-        // Create initial admin
-        const admin = new User({
-            username,
-            password,
-            fullName,
-            role: 'admin',
-            mustChangePassword: false,
-            isActive: true,
-        });
-
-        await admin.save();
-
-        const token = generateToken(admin._id);
-
-        res.status(201).json({
-            success: true,
-            message: 'Initial admin created successfully',
-            token,
-            user: admin.toJSON(),
-        });
-    } catch (error) {
-        console.error('Init admin error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to create admin',
-            error: error.message,
-        });
-    }
-});
-
 // @route   POST /api/auth/logout
-// @desc    Logout user (invalidate session)
-// @access  Private
+// @desc    Logout admin
+// @access  Private (requires auth)
 router.post('/logout', authenticate, async (req, res) => {
     try {
-        const token = req.header('Authorization')?.replace('Bearer ', '');
-
-        if (token) {
-            // Invalidate session
-            await invalidateSession(token);
-
-            // Log logout
-            await createAuditLog({
-                user: req.user._id,
-                action: 'LOGOUT',
-                resource: 'Auth',
-                status: 'SUCCESS',
-                ipAddress: req.ip || req.connection.remoteAddress,
-                userAgent: req.get('user-agent'),
-            });
-        }
-
         res.json({
             success: true,
             message: 'Logged out successfully',
@@ -555,6 +234,7 @@ router.post('/logout', authenticate, async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Logout failed',
+            error: error.message,
         });
     }
 });
