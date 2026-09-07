@@ -281,6 +281,135 @@ cat /etc/cloudflared/config.yml
 
 ---
 
+## 🛠️ Tools (CLI Automation)
+
+Kas Kelas menyediakan antarmuka CLI (Command Line Interface) untuk mengelola semua operasi deployment dan maintenance. Gunakan perintah `kas` dari root project:
+
+### Install CLI
+```bash
+chmod +x kas
+```
+
+### Available Commands
+
+| Command | Deskripsi | Contoh |
+|---------|-----------|--------|
+| `kas help` | Tampilkan bantuan lengkap | `kas help` |
+| `kas vps-setup` | Initial VPS Setup | `kas vps-setup` |
+| `kas cloudflare-setup` | Cloudflare Tunnel Setup | `kas cloudflare-setup` |
+| `kas deploy` | Deploy/Update Application | `kas deploy` atau `kas deploy staging` |
+| `kas vps-deploy` | Deploy to VPS (alternatif) | `kas vps-deploy` |
+| `kas clean-redeploy` | Clean Redeploy | `kas clean-redeploy` |
+| `kas migrate-atlas` | MongoDB Atlas Migration | `kas migrate-atlas` |
+| `kas fix-permissions` | Fix Permissions | `kas fix-permissions` |
+| `kas fix-localhost` | Fix Localhost Settings | `kas fix-localhost` |
+| `kas precheck` | Pre-deployment Check | `kas precheck` |
+| `kas github-auth` | GitHub Auth Setup | `kas github-auth` |
+| `kas verify-deploy` | Verify Deployment | `kas verify-deploy` |
+| `kas test-sessions` | Test Sessions | `kas test-sessions` |
+| `kas verify-pause` | Verify Pause Feature | `kas verify-pause` |
+| `kas restyle-app` | Restyle App | `kas restyle-app` |
+
+### Usage Examples
+
+```bash
+# Deploy aplikasi
+kas deploy
+kas deploy staging
+
+# Setup VPS dari nol
+kas vps-setup
+
+# Cloudflare Tunnel Setup
+kas cloudflare-setup
+
+# Migrasi database ke Atlas
+kas migrate-atlas
+
+# Cek persiapan sebelum deploy
+kas precheck
+
+# Lihat bantuan
+kas help
+```
+
+## ⚓ Deployment Methods (Pilih yang Anda Sukini)
+
+Kas Kelas mendukung dua metode deployment yang bisa Anda pilih sesuai kebutuhan:
+
+### opsi 1: Docker Compose (Disarankan untuk VPS/Single Admin)
+
+Cocok untuk: VPS tunggal, admin satu orang, pengsetup yang sederhana
+
+```bash
+# Jalankan dari root project
+docker-compose up -d
+
+# Lihat status container
+docker-compose ps
+
+# Lihat log
+docker-compose logs -f api
+docker-compose logs -f frontend
+
+# Matikan
+docker-compose down
+```
+
+**Komponen:**
+- `api` container: Node.js Express (0.5 CPU / 256 MB limits)
+- `frontend` container: Nginx (0.25 CPU / 128 MB limits)
+- Communication: Same Docker network (`omnigrid-net`)
+- Environment: Dibaca dari `./server/.env.production`
+
+**Cocok untuk:** Pengguna VPS, pengembangan lokal, deployment yang cepat tanpa kompleksitas K8s.
+
+---
+
+### opsi 2: Kubernetes (Untuk AKS/Production)
+
+Cocok untuk: Kluster multi-node, auto-scaling, production environment
+
+```bash
+# Apply manifests
+kubectl apply -f k8s/
+
+# Cek status
+kubectl get pods -n kas-kelas
+kubectl get ingress -n kas-kelas
+
+# Lihat resource
+kubectl describe deployment kas-kelas-api -n kas-kelas
+kubectl get hpa -n kas-kelas
+```
+
+**Komponen:**
+- `kas-kelas-api` Deployment: 2 replicas, 0.5 CPU / 256 MB limits
+- `kas-kelas-frontend` Deployment: 2 replicas, 0.25 CPU / 128 MB limits
+- `kas-kelas-ingress` dengan TLS dari Let's Encrypt
+- `PersistentVolumeClaim` untuk uploads/reports
+- Communication: ClusterIP services + Ingress
+- Environment: ConfigMap + Kubernetes Secrets
+
+**Cocok untuk:** Production deployment, Azure AKS, skala yang bisa di-expand, high availability.
+
+---
+
+### 📖 Langkah Dasar Setiap Metode
+
+**Docker Compose:**
+1. `docker-compose up -d`
+2. Akses via `http://localhost:5001` (API) dan `http://localhost:8767` (Frontend)
+3. Atau gunakan Cloudflare Tunnel untuk domain publik
+
+**Kubernetes:**
+1. `kubectl apply -f k8s/`
+2. Tunggu pod ready: `kubectl get pods -n kas-kelas`
+3. Akses via Ingress URL: `https://kas-kelas.yourdomain.com`
+4. Atau gunakan `kubectl port-forward` untuk local testing
+
+---
+
 ## 📞 Support
 
 Jika ada masalah:
