@@ -41,6 +41,7 @@ dist-ssr
 .env.production.local
 .env.staging
 .env.staging.local
+.env.production.example
 
 # Firebase
 !.firebaserc
