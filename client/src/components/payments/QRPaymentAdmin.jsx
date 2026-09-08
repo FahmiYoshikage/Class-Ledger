@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import api from '../services/api';
+import api from '../../services/api';
 
 function QRPaymentAdmin() {
     const [activeTab, setActiveTab] = useState('pending'); // pending, history, manage

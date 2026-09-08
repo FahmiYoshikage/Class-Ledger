@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import {
     Wallet,
     TrendingUp,
@@ -18,8 +18,8 @@ import {
     eventsAPI,
     studentsAPI,
     settingsAPI,
-} from '../services/api';
-import api from '../services/api';
+} from '../../services/api';
+import api from '../../services/api';
 
 const AdminDashboard = () => {
     const { user } = useAuth();

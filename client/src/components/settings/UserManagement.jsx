@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { authAPI, studentsAPI } from '../services/api';
+import { authAPI, studentsAPI } from '../../services/api';
 import {
     Users,
     Plus,

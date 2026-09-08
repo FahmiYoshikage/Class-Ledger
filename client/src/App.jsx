@@ -26,7 +26,7 @@ import {
     CalendarDays,
     Settings as SettingsIcon,
 } from 'lucide-react';
-import Settings from './components/Settings';
+import Settings from './components/settings/Settings';
 import {
     studentsAPI,
     paymentsAPI,
@@ -34,10 +34,10 @@ import {
     settingsAPI,
     api,
 } from './services/api';
-import EventManagement from './components/EventManagement';
-import CustomPayment from './components/CustomPayment';
-import NotificationManager from './components/NotificationManager';
-import DashboardAnalytics from './components/Analytics/DashboardAnalytics';
+import EventManagement from './components/events/EventManagement';
+import CustomPayment from './components/payments/CustomPayment';
+import NotificationManager from './components/notifications/NotificationManager';
+import DashboardAnalytics from './components/analytics/DashboardAnalytics';
 
 const App = () => {
     const [students, setStudents] = useState([]);

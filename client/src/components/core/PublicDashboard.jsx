@@ -39,11 +39,11 @@ const PublicDashboard = () => {
     const fetchPublicData = async () => {
         try {
             setLoading(true);
-            // Use admin endpoints for single-admin mode
+            // Fetch public data
             const [paymentsRes, expensesRes, studentsRes] = await Promise.all([
-                axios.get(`${API_URL}/admin/payments`),
-                axios.get(`${API_URL}/admin/expenses`),
-                axios.get(`${API_URL}/admin/students`),
+                axios.get(`${API_URL}/payments`),
+                axios.get(`${API_URL}/expenses`),
+                axios.get(`${API_URL}/students`),
             ]);
 
             // Calculate stats

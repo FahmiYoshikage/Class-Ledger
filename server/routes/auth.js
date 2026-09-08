@@ -55,6 +55,7 @@ router.post('/init-admin', async (req, res) => {
                 id: admin._id,
                 username: admin.username,
                 fullName: admin.fullName,
+                role: admin.role || 'admin',
             },
         });
     } catch (error) {
@@ -125,6 +126,7 @@ router.post('/login', authLimiter, async (req, res) => {
                 id: user._id,
                 username: user.username,
                 fullName: user.fullName,
+                role: user.role || 'admin',
             },
         });
     } catch (error) {
@@ -150,6 +152,7 @@ router.get('/me', authenticate, async (req, res) => {
                 id: user._id,
                 username: user.username,
                 fullName: user.fullName,
+                role: user.role || 'admin',
             },
         });
     } catch (error) {

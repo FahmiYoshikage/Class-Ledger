@@ -42,8 +42,7 @@ EXPOSE 5000
 USER nodejs
 
 # Runtime Node flags (dari env di docker-compose, tetap berlaku di runtime)
-# Jika NODE_OPTIONS di-set di docker-compose, gunakannya; kalau tidak, pakai default 256MB
-ENV NODE_OPTIONS="${NODE_OPTIONS:---max-old-space-size=192 --optimize-for-size}"
+ENV NODE_OPTIONS="${NODE_OPTIONS:---max-old-space-size=192}"
 
-# Start application
-CMD ["node", "server.js"]
+# Start application (--optimize-for-size harus di CLI argument, dilarang di NODE_OPTIONS)
+CMD ["node", "--optimize-for-size", "server.js"]

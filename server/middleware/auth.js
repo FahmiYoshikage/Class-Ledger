@@ -85,6 +85,17 @@ const authorizeAdmin = (req, res, next) => {
     next();
 };
 
+// Generic authorize middleware for backward compatibility
+const authorize = (...roles) => (req, res, next) => {
+    if (!req.user) {
+        return res.status(401).json({
+            success: false,
+            message: 'Unauthorized. Please login.',
+        });
+    }
+    next();
+};
+
 // Optional authentication (user bisa akses dengan atau tanpa login - for public routes)
 const optionalAuth = async (req, res, next) => {
     try {
@@ -152,4 +163,4 @@ const loginAdmin = async (username, password) => {
     }
 };
 
-export { generateToken, authenticate, authorizeAdmin, optionalAuth, loginAdmin, JWT_SECRET };
+export { generateToken, authenticate, authorizeAdmin, authorize, optionalAuth, loginAdmin, JWT_SECRET };

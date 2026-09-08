@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { User, Mail, ArrowLeft, Save, AlertCircle } from 'lucide-react';
-import api from '../services/api';
+import api from '../../services/api';
 
 const ProfileEdit = () => {
     const navigate = useNavigate();

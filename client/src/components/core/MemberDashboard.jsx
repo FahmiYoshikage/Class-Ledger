@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import {
     Wallet,
     TrendingUp,
@@ -15,8 +15,8 @@ import {
     Medal,
     Award,
 } from 'lucide-react';
-import { paymentsAPI, expensesAPI, studentsAPI } from '../services/api';
-import api from '../services/api';
+import { paymentsAPI, expensesAPI, studentsAPI } from '../../services/api';
+import api from '../../services/api';
 
 const MemberDashboard = () => {
     const { user } = useAuth();

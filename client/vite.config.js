@@ -99,6 +99,19 @@ export default defineConfig({
             },
         }),
     ],
+    build: {
+        chunkSizeWarningLimit: 1000,
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+                    'vendor-icons': ['lucide-react'],
+                    'vendor-export': ['xlsx', 'jspdf', 'jspdf-autotable', 'file-saver'],
+                    'vendor-charts': ['recharts'],
+                },
+            },
+        },
+    },
     server: {
         port: 3000,
         proxy: {

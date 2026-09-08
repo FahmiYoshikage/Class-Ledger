@@ -9,7 +9,7 @@ import {
     Play,
     BookOpen,
 } from 'lucide-react';
-import { settingsAPI } from '../services/api';
+import { settingsAPI } from '../../services/api';
 
 const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
     const [startDate, setStartDate] = useState('');

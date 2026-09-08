@@ -3,6 +3,10 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
+# Build-time memory control (hindari freeze / OOM di VPS 1GB)
+ARG NODE_OPTIONS_BUILD="--max-old-space-size=512"
+ENV NODE_OPTIONS="${NODE_OPTIONS_BUILD}"
+
 # Copy package files
 COPY package*.json ./
 

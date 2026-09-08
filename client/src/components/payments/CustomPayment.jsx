@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { DollarSign, Plus, X, Gift, TrendingUp } from 'lucide-react';
-import { paymentsAPI } from '../services/api';
+import { paymentsAPI } from '../../services/api';
 
 const CustomPayment = ({ onPaymentAdded }) => {
     const [showModal, setShowModal] = useState(false);

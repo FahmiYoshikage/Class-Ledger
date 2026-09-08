@@ -12,7 +12,7 @@ import {
     X,
     Edit,
 } from 'lucide-react';
-import { eventsAPI, eventPaymentsAPI, studentsAPI } from '../services/api';
+import { eventsAPI, eventPaymentsAPI, studentsAPI } from '../../services/api';
 
 const EventManagement = () => {
     const [events, setEvents] = useState([]);

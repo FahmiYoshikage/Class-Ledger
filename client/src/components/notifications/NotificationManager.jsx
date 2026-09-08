@@ -19,7 +19,7 @@ import {
     Radio,
 } from 'lucide-react';
 import axios from 'axios';
-import EventReminderTab from './EventReminderTab';
+import EventReminderTab from '../events/EventReminderTab';
 
 // Use Vite-provided API url (set in client/.env) with a sensible fallback to 8012
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8012/api';
