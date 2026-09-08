@@ -7,6 +7,8 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies with retry and increased timeout for unstable networks
+# Build-time memory control via ARG NODE_OPTIONS_BUILD (passed from docker-compose)
+ARG NODE_OPTIONS_BUILD="--max-old-space-size=256"
 RUN npm config set fetch-retries 5 && \
     npm config set fetch-retry-mintimeout 60000 && \
     npm config set fetch-retry-maxtimeout 300000 && \
@@ -21,7 +23,7 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Install curl for healthcheck (minimal)
+# Install curl for healthcheck
 RUN apk add --no-cache curl
 
 # Copy from builder
@@ -39,9 +41,9 @@ EXPOSE 5000
 # Run as non-root user
 USER nodejs
 
-# Low-memory Node.js flags for 1GB RAM VPS
-# 192MB heap limit - enough for Express + Mongoose with small pool
-ENV NODE_OPTIONS="--max-old-space-size=192 --optimize-for-size"
+# Runtime Node flags (dari env di docker-compose, tetap berlaku di runtime)
+# Jika NODE_OPTIONS di-set di docker-compose, gunakannya; kalau tidak, pakai default 256MB
+ENV NODE_OPTIONS="${NODE_OPTIONS:---max-old-space-size=192 --optimize-for-size}"
 
 # Start application
 CMD ["node", "server.js"]

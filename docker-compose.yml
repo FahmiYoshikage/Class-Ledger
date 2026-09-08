@@ -4,14 +4,17 @@ services:
         build:
             context: ./server
             dockerfile: Dockerfile
+            # Build-time memory control (hindari freeze di VPS 1GB)
+            args:
+                NODE_OPTIONS_BUILD: "--max-old-space-size=256"
         container_name: kas-kelas-api
         restart: unless-stopped
         ports:
             - '5001:5000'
         env_file:
             - ./server/.env.production
+        # Runtime Node flags (akan menggantikan default di Dockerfile)
         environment:
-            # Low-memory Node.js flags
             NODE_OPTIONS: '--max-old-space-size=192 --optimize-for-size'
         volumes:
             - ./server/public/reports:/app/public/reports
