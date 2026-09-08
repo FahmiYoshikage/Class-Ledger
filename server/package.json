@@ -4,8 +4,12 @@
     "description": "Backend API for Kas Kelas",
     "main": "server.js",
     "type": "module",
+    "engines": {
+        "node": ">=20"
+    },
     "scripts": {
-        "start": "node server.js",
+        "start": "node --max-old-space-size=256 server.js",
+        "start:lowmem": "node --max-old-space-size=192 --optimize-for-size server.js",
         "dev": "nodemon server.js",
         "build": "cd ../client && npm install && npm run build"
     },
@@ -20,8 +24,7 @@
         "mongoose": "^8.0.0",
         "multer": "^2.0.2",
         "node-cron": "^4.2.1",
-        "pdfkit": "^0.17.2",
-        "pm2": "^6.0.13"
+        "pdfkit": "^0.17.2"
     },
     "devDependencies": {
         "nodemon": "^3.0.1"

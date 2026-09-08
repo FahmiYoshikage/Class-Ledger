@@ -2,14 +2,48 @@ import cron from 'node-cron';
 import Student from '../models/Student.js';
 import Payment from '../models/Payment.js';
 import Setting from '../models/Setting.js';
-import whatsappService from './whatsappService.js';
-import groupBroadcastService from './groupBroadcastService.js';
-import antiBanService from './antiBanService.js';
+
+// Heavy services are lazy-loaded to reduce startup memory footprint
+// (important for low-memory VPS: 1GB RAM / 2 vCPU)
 
 class NotificationScheduler {
     constructor() {
         this.jobs = [];
         this.startedAt = null; // Track when scheduler started
+        this._whatsappService = null;
+        this._groupBroadcastService = null;
+        this._antiBanService = null;
+    }
+
+    // Lazy-load heavy services on first use only
+    async _getWhatsappService() {
+        if (!this._whatsappService) {
+            const { default: whatsappService } = await import(
+                './whatsappService.js'
+            );
+            this._whatsappService = whatsappService;
+        }
+        return this._whatsappService;
+    }
+
+    async _getGroupBroadcastService() {
+        if (!this._groupBroadcastService) {
+            const { default: groupBroadcastService } = await import(
+                './groupBroadcastService.js'
+            );
+            this._groupBroadcastService = groupBroadcastService;
+        }
+        return this._groupBroadcastService;
+    }
+
+    async _getAntiBanService() {
+        if (!this._antiBanService) {
+            const { default: antiBanService } = await import(
+                './antiBanService.js'
+            );
+            this._antiBanService = antiBanService;
+        }
+        return this._antiBanService;
     }
 
     // Hitung current week (respects semester pause) — includes accumulated weeks
@@ -128,41 +162,43 @@ class NotificationScheduler {
         }
     }
 
-    // Kirim reminder otomatis — menggunakan anti-ban protection
-    async sendAutomaticReminders(minWeeks = 2) {
-        try {
-            console.log(
-                '🤖 Starting automatic reminder process (with anti-ban protection)...'
-            );
+// Kirim reminder otomatis — menggunakan anti-ban protection
+async sendAutomaticReminders(minWeeks = 2) {
+    try {
+        console.log(
+            '🤖 Starting automatic reminder process (with anti-ban protection)...'
+        );
 
-            const studentsToRemind =
-                await this.getStudentsNeedingReminder(minWeeks);
+        const studentsToRemind =
+            await this.getStudentsNeedingReminder(minWeeks);
 
-            if (studentsToRemind.length === 0) {
-                console.log('✅ No students need reminders at this time');
-                return {
-                    total: 0,
-                    success: 0,
-                    failed: 0,
-                };
+        if (studentsToRemind.length === 0) {
+            console.log('✅ No students need reminders at this time');
+            return {
+                total: 0,
+                success: 0,
+                failed: 0,
+            };
+        }
+
+        console.log(
+            `📱 Preparing reminders for ${studentsToRemind.length} students (anti-ban active)...`
+        );
+
+        // Gunakan anti-ban orchestrator
+        const antiBanService = await this._getAntiBanService();
+        const whatsappService = await this._getWhatsappService();
+        const results = await antiBanService.sendWithProtection(
+            studentsToRemind,
+            async (student, weeksLate, amountOwed, category) => {
+                return await whatsappService.sendPaymentReminder(
+                    student,
+                    weeksLate,
+                    amountOwed,
+                    category
+                );
             }
-
-            console.log(
-                `📱 Preparing reminders for ${studentsToRemind.length} students (anti-ban active)...`
-            );
-
-            // Gunakan anti-ban orchestrator
-            const results = await antiBanService.sendWithProtection(
-                studentsToRemind,
-                async (student, weeksLate, amountOwed, category) => {
-                    return await whatsappService.sendPaymentReminder(
-                        student,
-                        weeksLate,
-                        amountOwed,
-                        category
-                    );
-                }
-            );
+        );
 
             console.log(`\n📊 Reminder Summary:`);
             console.log(`   Total: ${results.total}`);
@@ -211,9 +247,10 @@ class NotificationScheduler {
                 console.log(
                     '\n⏰ [MONDAY REMINDER] Running Monday morning reminder...'
                 );
-                // 🛡️ Terapkan jitter agar tidak selalu jam 07:00 tepat
-                await antiBanService.applyCronJitter('MONDAY REMINDER');
-                await this.sendAutomaticReminders(1);
+// 🛡️ Terapkan jitter
+await this._getAntiBanService().applyCronJitter('MONDAY REMINDER');
+const whatsappService = await this._getWhatsappService();
+await this.sendAutomaticReminders(1);
             },
             {
                 scheduled: false,
@@ -236,9 +273,10 @@ class NotificationScheduler {
                 console.log(
                     '\n⏰ [FRIDAY REMINDER] Running Friday afternoon reminder...'
                 );
-                // 🛡️ Terapkan jitter
-                await antiBanService.applyCronJitter('FRIDAY REMINDER');
-                await this.sendAutomaticReminders(2);
+// 🛡️ Terapkan jitter
+await this._getAntiBanService().applyCronJitter('FRIDAY REMINDER');
+const whatsappService = await this._getWhatsappService();
+await this.sendAutomaticReminders(2);
             },
             {
                 scheduled: false,
@@ -261,9 +299,10 @@ class NotificationScheduler {
                 console.log(
                     '\n⏰ [DAILY CHECK] Checking for urgent reminders...'
                 );
-                // 🛡️ Terapkan jitter
-                await antiBanService.applyCronJitter('DAILY CHECK');
-                await this.sendAutomaticReminders(4);
+// 🛡️ Terapkan jitter
+await this._getAntiBanService().applyCronJitter('DAILY CHECK');
+const whatsappService = await this._getWhatsappService();
+await this.sendAutomaticReminders(4);
             },
             {
                 scheduled: false,
@@ -291,9 +330,10 @@ class NotificationScheduler {
                     console.log(
                         '\n📊 [BI-WEEKLY BROADCAST] Sending group summary report...'
                     );
-                    // 🛡️ Terapkan jitter
-                    await antiBanService.applyCronJitter('BI-WEEKLY BROADCAST');
-                    await groupBroadcastService.sendBiWeeklyReport();
+// 🛡️ Terapkan jitter
+await this._getAntiBanService().applyCronJitter('BI-WEEKLY BROADCAST');
+const groupBroadcastService = await this._getGroupBroadcastService();
+await groupBroadcastService.sendBiWeeklyReport();
                 }
             },
             {

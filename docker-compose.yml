@@ -1,16 +1,18 @@
 services:
-    # Backend API
+    # Backend API (optimized for 1GB RAM / 2 vCPU VPS)
     api:
         build:
             context: ./server
             dockerfile: Dockerfile
         container_name: kas-kelas-api
         restart: unless-stopped
-        # Expose to host on port 5001 (not 5000 to avoid conflict)
         ports:
             - '5001:5000'
         env_file:
             - ./server/.env.production
+        environment:
+            # Low-memory Node.js flags
+            NODE_OPTIONS: '--max-old-space-size=192 --optimize-for-size'
         volumes:
             - ./server/public/reports:/app/public/reports
             - ./server/uploads:/app/uploads
@@ -25,25 +27,24 @@ services:
         deploy:
             resources:
                 limits:
-                    cpus: '0.5'
+                    cpus: '1.0'
                     memory: 256M
                 reservations:
-                    cpus: '0.1'
-                    memory: 64M
+                    cpus: '0.25'
+                    memory: 96M
         logging:
             driver: 'json-file'
             options:
                 max-size: '5m'
-                max-file: '3'
+                max-file: '2'
 
-    # Frontend (Nginx)
+    # Frontend (Nginx, minimal footprint)
     frontend:
         build:
             context: ./client
             dockerfile: Dockerfile
         container_name: kas-kelas-frontend
         restart: unless-stopped
-        # Expose to host on port 8767 (different from nginx host port 8766)
         ports:
             - '8767:80'
         depends_on:
@@ -60,16 +61,16 @@ services:
         deploy:
             resources:
                 limits:
-                    cpus: '0.25'
-                    memory: 128M
+                    cpus: '0.5'
+                    memory: 64M
                 reservations:
-                    cpus: '0.05'
+                    cpus: '0.1'
                     memory: 32M
         logging:
             driver: 'json-file'
             options:
                 max-size: '3m'
-                max-file: '3'
+                max-file: '2'
 
 networks:
     omnigrid-net:
