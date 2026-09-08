@@ -1,17 +1,27 @@
-.PHONY: update pull up down dev dev-stop dev-logs client server server-stop server-restart server-logs server-status
+.PHONY: deploy update pull up down dev dev-stop dev-logs client server server-stop server-restart server-logs status
 
-update: pull up 
+# ── Production (VPS) ──────────────────────────────────
+# Deploy lengkap: build frontend + docker compose build + up
+deploy:
+	./deploy.sh
+
+# Quick update: git pull + deploy
+update: pull deploy
 
 pull:
 	git pull
 
+# Docker compose only (tanpa rebuild frontend - pakai dist/ yang sudah ada)
 up:
 	docker compose up -d --build
 
 down:
 	docker compose down
 
-# Development - run both server and client
+logs:
+	docker compose logs -f --tail=50
+
+# ── Development (lokal) ───────────────────────────────
 dev:
 	pm2 start ecosystem.config.js
 

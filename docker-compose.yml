@@ -42,13 +42,12 @@ services:
                 max-file: '2'
 
     # Frontend (Nginx, minimal footprint)
+    # NOTE: Jalankan ./deploy.sh untuk build frontend terlebih dahulu.
+    # Dockerfile frontend hanya COPY dist/ ke nginx (tanpa Node.js build stage).
     frontend:
         build:
             context: ./client
             dockerfile: Dockerfile
-            # Build-time memory control (hindari freeze di VPS 1GB)
-            args:
-                NODE_OPTIONS_BUILD: "--max-old-space-size=512"
         container_name: kas-kelas-frontend
         restart: unless-stopped
         ports:

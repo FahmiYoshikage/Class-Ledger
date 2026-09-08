@@ -16,7 +16,7 @@ The project has been refactored, optimized, and verified to run smoothly on a lo
 - **Solusi yang Diterapkan**:
   - Memperbaiki semua 28 broken relative imports di `client/src/` (termasuk `App.jsx`, `main.jsx`, `Login.jsx`, `AdminDashboard.jsx`, `PublicDashboard.jsx`, `Settings.jsx`, `EventManagement.jsx`, dll.).
   - Mengimplementasikan **Chunk Splitting / manualChunks** di [client/vite.config.js](file:///home/fahmi/Documents/Class-Ledger/client/vite.config.js) (`vendor-react`, `vendor-icons`, `vendor-charts`, `vendor-export`). Build size terbagi rapi dan build hanya memakan waktu ~5 detik!
-  - Menaikkan build-time memory limit di [client/Dockerfile](file:///home/fahmi/Documents/Class-Ledger/client/Dockerfile) dan [docker-compose.yml](file:///home/fahmi/Documents/Class-Ledger/docker-compose.yml) ke `NODE_OPTIONS_BUILD: "--max-old-space-size=512"`.
+  - Menaikkan build-time memory limit ke `--max-old-space-size=512` dan **memisahkan build frontend dari `docker compose build`** menggunakan [`deploy.sh`](file:///home/fahmi/Documents/Class-Ledger/deploy.sh). Frontend di-build di container Docker terpisah (tanpa memory limit), lalu `dist/` di-copy ke nginx image. Ini menghindari OOM saat build di VPS 1GB.
 
 ### 2. Perbaikan Error Backend API Container Unhealthy (`kas-kelas-api`)
 - **Masalah Utama**:
@@ -85,16 +85,37 @@ Hasil verifikasi langsung dari `docker stats` saat kedua container berjalan:
 
 ## 🛠️ Langkah Menjalankan / Deploy Ulang
 
-Jika ingin deploy ulang atau update di VPS:
+### Deploy di VPS (Recommended — Low Memory Safe)
 ```bash
 # 1. Masuk ke folder project
 cd /opt/Class-Ledger # atau folder project Anda
 
-# 2. Rebuild & start container
-docker compose up -d --build
+# 2. Deploy (build frontend di container terpisah + docker compose)
+./deploy.sh
 
-# 3. Cek status
+# 3. Atau via Makefile:
+make deploy        # sama seperti ./deploy.sh
+make update        # git pull + deploy
+```
+
+### Cara Kerja `deploy.sh`
+1. Build frontend di **container Docker terpisah** (bukan via `docker compose build`)
+   - Ini menghindari masalah OOM karena Vite butuh ~512MB heap
+   - Container build terpisah tidak terkena memory limit dari `docker-compose.yml`
+2. Extract `dist/` dari container ke `client/dist/`
+3. `docker compose build` — frontend Dockerfile hanya COPY `dist/` ke nginx (< 3 detik)
+4. `docker compose up -d`
+5. Cleanup: hapus temporary `dist/` dan builder image
+
+### Quick Restart (tanpa rebuild frontend)
+```bash
+docker compose up -d --build  # atau: make up
+```
+
+### Cek Status
+```bash
 docker compose ps
 docker stats --no-stream
 ```
+
 Semua konfigurasi dan kode telah sinkron dan siap digunakan!
