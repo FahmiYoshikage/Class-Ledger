@@ -137,7 +137,7 @@ const Settings = ({ onStartDateChange, currentStartDate, onWeekChange }) => {
             // Calculate current week before pausing
             const response = await fetch(
                 `${
-                    import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+                    import.meta.env.VITE_API_URL || '/api'
                 }/settings/current-week`
             );
             const data = await response.json();

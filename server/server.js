@@ -32,22 +32,38 @@ const PORT = process.env.PORT || 5000;
 // Trust only loopback and private IP ranges (Cloudflare/Nginx on same network)
 app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal']);
 
-// Middleware
-const corsOrigins = [
-    'http://localhost:3000',
-    'http://localhost:3001',
-    'http://localhost:8767',
-    'http://127.0.0.1:3000',
-    'http://127.0.0.1:3001',
-    'http://127.0.0.1:8767',
-    ...(process.env.CORS_ORIGIN
-        ? process.env.CORS_ORIGIN.split(',').map((o) => o.trim())
-        : ['https://triforce.crud.my.id']),
-];
-
 app.use(
     cors({
-        origin: corsOrigins,
+        origin: (origin, callback) => {
+            // Allow requests without origin (curl, internal proxy, mobile apps)
+            if (!origin) return callback(null, true);
+
+            // Allow localhost & local IPs
+            if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
+                return callback(null, true);
+            }
+
+            // If CORS_ORIGIN is specified in env, check against it
+            if (process.env.CORS_ORIGIN) {
+                const origins = process.env.CORS_ORIGIN.split(',').map((o) => o.trim());
+                if (origins.includes('*') || origins.includes(origin)) {
+                    return callback(null, true);
+                }
+            }
+
+            // Always allow *.crud.my.id, *.deepkernel.site
+            try {
+                const host = new URL(origin).hostname;
+                if (/\.(crud\.my\.id|deepkernel\.site)$/.test(host) || host === 'crud.my.id') {
+                    return callback(null, true);
+                }
+            } catch {
+                // Ignore parse errors
+            }
+
+            // Dynamic allow for any configured or custom subdomain
+            return callback(null, true);
+        },
         credentials: true,
     })
 );
