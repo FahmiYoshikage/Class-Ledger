@@ -21,6 +21,14 @@ down:
 logs:
 	docker compose logs -f --tail=50
 
+# E2E Safety Net Test
+test:
+	node scripts/test-e2e.js
+
+# Build client bundle (lokal/dev)
+build-client:
+	cd client && npm run build
+
 # ── Development (lokal) ───────────────────────────────
 dev:
 	pm2 start ecosystem.config.js

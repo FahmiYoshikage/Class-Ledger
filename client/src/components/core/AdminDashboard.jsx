@@ -8,7 +8,7 @@ import {
     Users,
     Calendar,
     DollarSign,
-    ExclamationCircle,
+    AlertTriangle,
     BarChart3,
     ChevronRight,
 } from 'lucide-react';
@@ -297,7 +297,7 @@ const AdminDashboard = () => {
                 <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] mb-6 sm:mb-8">
                     <div className="p-4 sm:p-6 border-b border-white/[0.1]">
                         <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
-                            <ExclamationCircle className="w-4 h-4 sm:w-5 sm:h-5 text-rose-300" />
+                            <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-rose-300" />
                             Pengeluaran Kelas Terbaru
                         </h2>
                     </div>

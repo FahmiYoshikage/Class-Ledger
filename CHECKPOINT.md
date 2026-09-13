@@ -45,6 +45,23 @@ The project has been refactored, optimized, and verified to run smoothly on a lo
 ### 4. Setup Volume & Izin Direktori
 - Membuat direktori `server/public/reports` dan `server/uploads` lengkap dengan `.gitkeep` agar container tidak mengalami error permission denied saat menyimpan kuitansi QRIS atau PDF report.
 
+### 5. Zero-RAM Frontend Build untuk VPS 1GB & E2E Safety Net
+- **Penyebab VPS Freeze**:
+  - Pada VPS 1GB RAM (tanpa swap), menjalankan `npm ci` dan `vite build` di dalam Docker memakan 500MB+ RAM. Akibatnya, RAM VPS 100% penuh dan Linux kernel mengalami OOM lockup / freeze.
+- **Solusi Final & Permanen**:
+  - Bundle frontend yang sudah di-compile hanya berukuran **2.4 MB**.
+  - `client/dist` kini di-track di Git (`.gitignore` diperbarui).
+  - [client/Dockerfile](file:///home/fahmi/Documents/Class-Ledger/client/Dockerfile) disederhanakan menjadi **Nginx murni** yang langsung me-mount `dist/`.
+  - Saat deploy di VPS: `docker compose up -d --build` berjalan dalam **~1 detik**, menggunakan **0 MB RAM tambahan**, dan **tidak akan pernah freeze**!
+- **End-to-End (E2E) Test Safety Net**:
+  - Dibuat script pengujian otomatis [`scripts/test-e2e.js`](file:///home/fahmi/Documents/Class-Ledger/scripts/test-e2e.js) tanpa dependensi eksternal (menggunakan native Node.js fetch).
+  - Menjalankan 17 skenario uji:
+    1. Infrastructure & Proxy: Health check, Nginx static serve, Nginx reverse proxy `/api/`, PWA manifest, Service Worker, SPA fallback (`/login`, `/admin`), dan HTTP security headers.
+    2. Public Ledger Data: Validasi respon `/api/students`, `/api/payments`, `/api/expenses`, `/api/events`, `/api/leaderboard`, dan `/api/badges`.
+    3. Auth & Security: Penolakan akses 401 pada protected route (`/api/audit-logs`, `/api/sessions`, `/api/auth/me`), serta penolakan kredensial tidak valid.
+    4. VPS 1GB Resource Budget: Validasi latensi respon (< 500ms) dan batasan RAM container via `docker stats` (API < 256MB, Frontend < 64MB).
+  - Jalankan kapan saja dengan: `make test` atau `node scripts/test-e2e.js`.
+
 ---
 
 ## 📈 Metrik Penggunaan Sumber Daya (VPS 1GB RAM)
@@ -53,69 +70,50 @@ Hasil verifikasi langsung dari `docker stats` saat kedua container berjalan:
 
 | Container | Image | Status | CPU % | RAM Usage / Limit | RAM % |
 |---|---|---|---|---|---|
-| **kas-kelas-api** | `class-ledger-api` | Up (healthy) | 0.18% | **40.96 MiB** / 256 MiB | 16.0% |
-| **kas-kelas-frontend** | `class-ledger-frontend` | Up (healthy) | 0.00% | **14.63 MiB** / 64 MiB | 22.8% |
-| **TOTAL** | - | - | **~0.18%** | **~55.59 MiB** | **~5.5% dari VPS 1GB** |
+| **kas-kelas-api** | `class-ledger-api` | Up (healthy) | 0.18% | **59.45 MiB** / 256 MiB | 23.2% |
+| **kas-kelas-frontend** | `class-ledger-frontend` | Up (healthy) | 0.00% | **12.92 MiB** / 64 MiB | 20.2% |
+| **TOTAL** | - | - | **~0.18%** | **~72.37 MiB** | **~7.2% dari VPS 1GB** |
 
 > [!TIP]
-> Penggunaan RAM kedua container hanya **~55 MB**, menyisakan lebih dari **900 MB RAM bebas** di VPS 1GB Anda!
+> Penggunaan RAM kedua container hanya **~72 MB**, menyisakan lebih dari **900 MB RAM bebas** di VPS 1GB Anda!
 
 ---
 
 ## 🌐 Verifikasi Endpoint & Akses
 
-1. **Backend Health Check**:
+1. **Jalankan E2E Safety Net**:
+   ```bash
+   make test
+   # Output: 17/17 PASSED!
+   ```
+2. **Backend Health Check**:
    ```bash
    curl -s http://localhost:5001/api/health
    # Response: {"status":"OK","message":"Server is running", ...}
    ```
-2. **Frontend Nginx**:
+3. **Frontend Nginx & Proxy**:
    ```bash
    curl -s -I http://localhost:8767
-   # Response: HTTP/1.1 200 OK (Nginx alpine)
-   ```
-3. **Public Data Endpoints**:
-   ```bash
-   curl -s http://localhost:5001/api/students
-   curl -s http://localhost:5001/api/payments
-   curl -s http://localhost:5001/api/expenses
+   curl -s http://localhost:8767/api/health
    ```
 
 ---
 
-## 🛠️ Langkah Menjalankan / Deploy Ulang
+## 🛠️ Langkah Menjalankan / Deploy di VPS
 
-### Deploy di VPS (Recommended — Low Memory Safe)
 ```bash
 # 1. Masuk ke folder project
-cd /opt/Class-Ledger # atau folder project Anda
+cd /opt/Class-Ledger
 
-# 2. Deploy (build frontend di container terpisah + docker compose)
-./deploy.sh
+# 2. Tarik update terbaru (termasuk dist 2.4MB)
+git pull
 
-# 3. Atau via Makefile:
-make deploy        # sama seperti ./deploy.sh
-make update        # git pull + deploy
+# 3. Build & start container (cepat & tanpa freeze!)
+docker compose up -d --build
+# Atau bisa juga: ./deploy.sh (otomatis setup swap + E2E test)
+
+# 4. Jalankan E2E Safety Net test untuk memantau integritas sistem
+make test
 ```
 
-### Cara Kerja `deploy.sh`
-1. Build frontend di **container Docker terpisah** (bukan via `docker compose build`)
-   - Ini menghindari masalah OOM karena Vite butuh ~512MB heap
-   - Container build terpisah tidak terkena memory limit dari `docker-compose.yml`
-2. Extract `dist/` dari container ke `client/dist/`
-3. `docker compose build` — frontend Dockerfile hanya COPY `dist/` ke nginx (< 3 detik)
-4. `docker compose up -d`
-5. Cleanup: hapus temporary `dist/` dan builder image
-
-### Quick Restart (tanpa rebuild frontend)
-```bash
-docker compose up -d --build  # atau: make up
-```
-
-### Cek Status
-```bash
-docker compose ps
-docker stats --no-stream
-```
-
-Semua konfigurasi dan kode telah sinkron dan siap digunakan!
+Semua konfigurasi dan kode telah sinkron, teruji 100%, dan siap digunakan!

@@ -1,38 +1,19 @@
-# Stage 1: Build
-FROM node:20-alpine AS builder
-
-WORKDIR /app
-
-# Build-time memory control (VPS 1GB — build sequential via deploy.sh)
-ARG NODE_OPTIONS_BUILD="--max-old-space-size=512"
-ENV NODE_OPTIONS="${NODE_OPTIONS_BUILD}"
-
-# Copy package files
-COPY package*.json ./
-
-# Install dependencies
-RUN npm ci
-
-# Copy source code
-COPY . .
-
-# Build production bundle
-RUN npm run build
-
-# Stage 2: Production with Nginx
+# Production image: Nginx serving pre-built static bundle
+# Pre-built di local / dev machine (~2.4MB) sehingga VPS 1GB RAM tidak perlu
+# menjalankan Node.js & Vite build yang memakan 500MB+ RAM dan membekukan VPS.
 FROM nginx:alpine
 
-# Install curl for healthcheck
+# Install curl for container healthcheck
 RUN apk add --no-cache curl
 
-# Copy built files
-COPY --from=builder /app/dist /usr/share/nginx/html
+# Copy pre-built production files
+COPY dist /usr/share/nginx/html
 
-# Copy nginx configuration
+# Copy optimized nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expose port
+# Expose HTTP port
 EXPOSE 80
 
-# Start nginx
+# Run Nginx foreground
 CMD ["nginx", "-g", "daemon off;"]

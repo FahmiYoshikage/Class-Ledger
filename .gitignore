@@ -13,7 +13,7 @@ pnpm-store
 .yarn
 
 # Production builds
-dist
+/dist
 dist-ssr
 *.local
 

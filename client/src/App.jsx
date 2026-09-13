@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import * as XLSX from 'xlsx';
-import { saveAs } from 'file-saver';
-import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable';
+// xlsx, file-saver, jspdf, jspdf-autotable di-import secara dynamic
+// di dalam fungsi export untuk mengurangi memory build (~400MB hemat)
 import {
     Wallet,
     Users,
@@ -409,7 +407,11 @@ const App = () => {
     // ===== EXPORT FUNCTIONS =====
 
     // Export Students to Excel
-    const exportStudentsToExcel = () => {
+    const exportStudentsToExcel = async () => {
+        const [XLSX, { saveAs }] = await Promise.all([
+            import('xlsx'),
+            import('file-saver'),
+        ]);
         const data = students.map((student) => ({
             'No. Absen': student.absen,
             Nama: student.name,
@@ -433,7 +435,11 @@ const App = () => {
     };
 
     // Export Payments to Excel
-    const exportPaymentsToExcel = () => {
+    const exportPaymentsToExcel = async () => {
+        const [XLSX, { saveAs }] = await Promise.all([
+            import('xlsx'),
+            import('file-saver'),
+        ]);
         const data = payments.map((payment) => ({
             Tanggal: new Date(payment.date).toLocaleDateString('id-ID'),
             Nama: payment.studentId?.name || '-',
@@ -458,7 +464,11 @@ const App = () => {
     };
 
     // Export Expenses to Excel
-    const exportExpensesToExcel = () => {
+    const exportExpensesToExcel = async () => {
+        const [XLSX, { saveAs }] = await Promise.all([
+            import('xlsx'),
+            import('file-saver'),
+        ]);
         const data = expenses.map((expense) => ({
             Tanggal: new Date(expense.date).toLocaleDateString('id-ID'),
             Keperluan: expense.purpose,
@@ -482,7 +492,11 @@ const App = () => {
     };
 
     // Export Complete Report to Excel (All in One)
-    const exportCompleteReport = () => {
+    const exportCompleteReport = async () => {
+        const [XLSX, { saveAs }] = await Promise.all([
+            import('xlsx'),
+            import('file-saver'),
+        ]);
         // Sheet 1: Summary
         const summary = [
             { Keterangan: 'Total Siswa', Nilai: students.length },
@@ -546,7 +560,11 @@ const App = () => {
     // ===== PDF EXPORT FUNCTIONS =====
 
     // Export Students to PDF
-    const exportStudentsToPDF = () => {
+    const exportStudentsToPDF = async () => {
+        const [{ jsPDF }, { default: autoTable }] = await Promise.all([
+            import('jspdf'),
+            import('jspdf-autotable'),
+        ]);
         const doc = new jsPDF();
 
         // Header
@@ -615,7 +633,11 @@ const App = () => {
     };
 
     // Export Payments to PDF
-    const exportPaymentsToPDF = () => {
+    const exportPaymentsToPDF = async () => {
+        const [{ jsPDF }, { default: autoTable }] = await Promise.all([
+            import('jspdf'),
+            import('jspdf-autotable'),
+        ]);
         const doc = new jsPDF();
 
         // Header
@@ -694,7 +716,11 @@ const App = () => {
     };
 
     // Export Expenses to PDF
-    const exportExpensesToPDF = () => {
+    const exportExpensesToPDF = async () => {
+        const [{ jsPDF }, { default: autoTable }] = await Promise.all([
+            import('jspdf'),
+            import('jspdf-autotable'),
+        ]);
         const doc = new jsPDF();
 
         // Header

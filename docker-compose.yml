@@ -42,13 +42,10 @@ services:
                 max-file: '2'
 
     # Frontend (Nginx, minimal footprint)
-    # NOTE: Gunakan ./deploy.sh untuk build sequential (hindari OOM di VPS 1GB)
     frontend:
         build:
             context: ./client
             dockerfile: Dockerfile
-            args:
-                NODE_OPTIONS_BUILD: "--max-old-space-size=512"
         container_name: kas-kelas-frontend
         restart: unless-stopped
         ports:

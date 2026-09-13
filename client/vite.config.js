@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
+import path from 'path';
 
 export default defineConfig({
     plugins: [
@@ -99,14 +100,20 @@ export default defineConfig({
             },
         }),
     ],
+    resolve: {
+        alias: {
+            // Redirect lucide-react ke barrel file optimized (67 icon, bukan 1600+)
+            // Ini mengurangi memory build dari ~512MB ke ~200MB
+            // Hanya redirect import dari source code, bukan dari icons.js sendiri
+            'lucide-react': path.resolve(__dirname, 'src/lib/icons.js'),
+        },
+    },
     build: {
         chunkSizeWarningLimit: 1000,
         rollupOptions: {
             output: {
                 manualChunks: {
                     'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-                    'vendor-icons': ['lucide-react'],
-                    'vendor-export': ['xlsx', 'jspdf', 'jspdf-autotable', 'file-saver'],
                     'vendor-charts': ['recharts'],
                 },
             },

@@ -5,6 +5,10 @@ import Badge from '../models/Badge.js';
 const router = express.Router();
 
 // Get all badge definitions
+router.get('/', (req, res) => {
+    res.json(BADGE_DEFINITIONS);
+});
+
 router.get('/definitions', (req, res) => {
     res.json(BADGE_DEFINITIONS);
 });
