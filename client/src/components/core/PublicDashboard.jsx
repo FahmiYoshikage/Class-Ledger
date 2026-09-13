@@ -16,7 +16,10 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || '/api';
+const API_URL =
+    (typeof window !== 'undefined' && window.__ENV__?.VITE_API_URL) ||
+    import.meta.env.VITE_API_URL ||
+    '/api';
 
 const PublicDashboard = () => {
     const navigate = useNavigate();

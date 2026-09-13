@@ -48,6 +48,8 @@ services:
             dockerfile: Dockerfile
         container_name: kas-kelas-frontend
         restart: unless-stopped
+        environment:
+            - VITE_API_URL=${VITE_API_URL:-/api}
         ports:
             - '8767:80'
         depends_on:

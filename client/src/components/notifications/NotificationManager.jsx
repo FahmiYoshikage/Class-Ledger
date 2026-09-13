@@ -22,7 +22,10 @@ import axios from 'axios';
 import EventReminderTab from '../events/EventReminderTab';
 
 // Use Vite-provided API url (set in client/.env) with a sensible fallback to 8012
-const API_URL = import.meta.env.VITE_API_URL || '/api';
+const API_URL =
+    (typeof window !== 'undefined' && window.__ENV__?.VITE_API_URL) ||
+    import.meta.env.VITE_API_URL ||
+    '/api';
 
 const NotificationManager = () => {
     const [students, setStudents] = useState([]);
