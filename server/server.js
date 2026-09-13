@@ -33,17 +33,21 @@ const PORT = process.env.PORT || 5000;
 app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal']);
 
 // Middleware
+const corsOrigins = [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:8767',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:3001',
+    'http://127.0.0.1:8767',
+    ...(process.env.CORS_ORIGIN
+        ? process.env.CORS_ORIGIN.split(',').map((o) => o.trim())
+        : ['https://triforce.crud.my.id']),
+];
+
 app.use(
     cors({
-        origin: [
-            'http://localhost:3000',
-            'http://localhost:3001',
-            'http://localhost:8767',
-            'http://127.0.0.1:3000',
-            'http://127.0.0.1:3001',
-            'http://127.0.0.1:8767',
-            process.env.CORS_ORIGIN || 'https://triforce.crud.my.id',
-        ],
+        origin: corsOrigins,
         credentials: true,
     })
 );

@@ -262,7 +262,7 @@ Semua atas nama: *Fahmi Ilham Bagaskara*
 ━━━━━━━━━━━━━━━━━━━━
 
 🏆 Cek Leaderboard Lengkap:
-https://triforce.crud.my.id/leaderboard
+${process.env.BASE_URL || 'https://triforce.crud.my.id'}/leaderboard
 
 💡 _Keterangan:_
 _• Data hanya menghitung pembayaran siswa_

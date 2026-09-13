@@ -5,14 +5,14 @@ import antiBanService from './antiBanService.js';
 // ==============================================
 // 💳 INFORMASI PEMBAYARAN
 // ==============================================
-const PAYMENT_INFO = `
+const getPaymentInfo = () => `
 
 ━━━━━━━━━━━━━━━━━━━━
 💳 *INFORMASI PEMBAYARAN*
 Semua atas nama: *Fahmi Ilham Bagaskara*
 
 *E-Wallet:*
-� Gopay: 085646745887
+ Gopay: 085646745887
 💰 Dana: 085646745887
 🛍️ ShopeePay: 085646745887
 
@@ -24,8 +24,18 @@ Semua atas nama: *Fahmi Ilham Bagaskara*
 _Mohon konfirmasi setelah transfer ya!_ ✅
 
 🏆 *Cek Leaderboard Donatur Kelas:*
-https://triforce.crud.my.id/leaderboard
+${process.env.BASE_URL || 'https://triforce.crud.my.id'}/leaderboard
 _Raih posisi teratas dan jadi donatur terbaik!_ 🚀`;
+
+// Backward-compatible object that evaluates dynamic string in template literals
+const PAYMENT_INFO = {
+    toString() {
+        return getPaymentInfo();
+    },
+    [Symbol.toPrimitive]() {
+        return getPaymentInfo();
+    },
+};
 
 // ==============================================
 // 🎨 TEMPLATE PESAN KREATIF & VARIATIF
