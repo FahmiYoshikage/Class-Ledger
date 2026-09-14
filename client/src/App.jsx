@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import Settings from './components/settings/Settings';
 import ReceiptModal from './components/payments/ReceiptModal';
+import SendFinancialReportModal from './components/notifications/SendFinancialReportModal';
 import {
     studentsAPI,
     paymentsAPI,
@@ -60,6 +61,7 @@ const App = () => {
     const [showExpense, setShowExpense] = useState(false);
     const [selectedReceiptPayment, setSelectedReceiptPayment] = useState(null);
     const [showReceiptModal, setShowReceiptModal] = useState(false);
+    const [showGroupReportModal, setShowGroupReportModal] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -1204,8 +1206,8 @@ const App = () => {
                     </div>
                 </div>
 
-                {/* Export Buttons */}
-                <div className="mb-6 grid grid-cols-2 gap-3 animate-slide-up stagger-5">
+                {/* Export & Broadcast Buttons */}
+                <div className="mb-6 grid grid-cols-1 sm:grid-cols-3 gap-3 animate-slide-up stagger-5">
                     <button
                         onClick={exportCompleteReport}
                         className="bg-teal-500/10 hover:bg-teal-500/15 border border-teal-500/25 text-teal-300 px-5 py-3 rounded-xl transition-all flex items-center justify-center gap-2.5 text-sm font-semibold hover:shadow-lg hover:shadow-teal-950/50 active:scale-[0.99]"
@@ -1219,6 +1221,13 @@ const App = () => {
                     >
                         <FileText className="w-4 h-4 text-rose-400" />
                         <span>Ekspor PDF</span>
+                    </button>
+                    <button
+                        onClick={() => setShowGroupReportModal(true)}
+                        className="bg-emerald-500/10 hover:bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 px-5 py-3 rounded-xl transition-all flex items-center justify-center gap-2.5 text-sm font-semibold hover:shadow-lg hover:shadow-emerald-950/50 active:scale-[0.99] group"
+                    >
+                        <MessageCircle className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform" />
+                        <span>Kirim Laporan WA Grup</span>
                     </button>
                 </div>
 
@@ -2690,6 +2699,12 @@ const App = () => {
                               )
                             : null
                     }
+                />
+
+                {/* Send Financial Report to WA Group Modal */}
+                <SendFinancialReportModal
+                    isOpen={showGroupReportModal}
+                    onClose={() => setShowGroupReportModal(false)}
                 />
             </div>
         </div>

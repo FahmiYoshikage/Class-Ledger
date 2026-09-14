@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 import EventReminderTab from '../events/EventReminderTab';
+import SendFinancialReportModal from './SendFinancialReportModal';
 
 // Use Vite-provided API url (set in client/.env) with a sensible fallback to 8012
 const API_URL =
@@ -46,6 +47,7 @@ const NotificationManager = () => {
     const [showGroupModal, setShowGroupModal] = useState(false);
     const [groupId, setGroupId] = useState('');
     const [groupPreview, setGroupPreview] = useState('');
+    const [showFinancialReportModal, setShowFinancialReportModal] = useState(false);
 
     // Event reminder states
     const [events, setEvents] = useState([]);
@@ -1298,6 +1300,35 @@ const NotificationManager = () => {
 
                     {activeTab === 'group' && (
                         <div className="space-y-6">
+                            {/* Broadcast Laporan Kas Card */}
+                            <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-500/15 via-teal-500/10 to-transparent border border-emerald-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-lg shadow-emerald-950/20 glass-cyber-card">
+                                <div className="flex items-center gap-3.5">
+                                    <div className="p-3 rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shadow-md shadow-emerald-500/20 shrink-0">
+                                        <FileText className="w-5 h-5" />
+                                    </div>
+                                    <div>
+                                        <div className="flex items-center gap-2">
+                                            <h4 className="text-sm sm:text-base font-bold text-white">
+                                                Broadcast Laporan Keuangan ke WA Grup
+                                            </h4>
+                                            <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                                                Template & PDF
+                                            </span>
+                                        </div>
+                                        <p className="text-xs text-white/60 mt-0.5">
+                                            Kirim ringkasan kas realtime, saldo, perolehan, top kontributor & lampiran PDF resmi dalam 1 klik
+                                        </p>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={() => setShowFinancialReportModal(true)}
+                                    className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-black font-bold text-xs transition-all shadow-md shadow-emerald-500/25 shrink-0 flex items-center gap-2 active:scale-95"
+                                >
+                                    <Send className="w-3.5 h-3.5 text-black" />
+                                    <span>Buka Laporan WA Grup</span>
+                                </button>
+                            </div>
+
                             <div className="bg-white/[0.03] p-6 rounded-xl border border-white/[0.1]">
                                 <h3 className="font-bold text-lg mb-3 text-white flex items-center gap-2">
                                     <Users className="w-6 h-6" />
@@ -2332,6 +2363,12 @@ AUTO_REMINDER_ENABLED=true`}
                     )}
                 </div>
             </div>
+
+            {/* Financial Report Broadcast Modal */}
+            <SendFinancialReportModal
+                isOpen={showFinancialReportModal}
+                onClose={() => setShowFinancialReportModal(false)}
+            />
         </div>
     );
 };

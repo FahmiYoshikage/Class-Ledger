@@ -14,7 +14,7 @@ class GroupBroadcastService {
     }
 
     // Generate bi-weekly summary report text
-    async generateSummaryReport() {
+    async generateSummaryReport(templateType = 'full') {
         try {
             // ============================================================
             // EXACT DASHBOARD LOGIC - DO NOT MODIFY WITHOUT UPDATING BOTH
@@ -70,18 +70,11 @@ class GroupBroadcastService {
             // 4. ALL expenses (NO date filter — dashboard sums everything)
             const expenses = allExpenses;
 
-            console.log('  Total Students (All):', allStudents.length);
-            console.log('  Total Students (Aktif):', students.length);
-            console.log('  All Payments (incl custom):', allPaymentsList.length);
-            console.log('  Student Payments Only:', studentPayments.length);
-            console.log('  Total Expenses:', expenses.length);
-
             const semesterName =
                 semesterNameSetting?.value || 'Semester 2024/2025';
             const className = classNameSetting?.value || 'Kelas';
 
             // Calculate statistics — ALL data, no date filter (MATCH DASHBOARD)
-            // Dashboard: totalKasMasuk = payments.reduce((sum, p) => sum + p.amount, 0)
             const totalIncome = allPaymentsList.reduce(
                 (sum, p) => sum + (p.amount || 0),
                 0
@@ -91,10 +84,6 @@ class GroupBroadcastService {
                 0
             );
             const balance = totalIncome - totalExpenses;
-
-            console.log('  Total Income:', totalIncome);
-            console.log('  Total Expenses:', totalExpenses);
-            console.log('  Balance:', balance);
 
             // Get recent 2 weeks payments (this section IS date-filtered by design)
             const twoWeeksAgo = new Date();
@@ -109,9 +98,6 @@ class GroupBroadcastService {
 
             // ============================================================
             // TUNGGAKAN CALCULATION - EXACT DASHBOARD FORMULA
-            // Dashboard: shouldPay = (accumulatedWeeks + currentWeek) * 2000
-            //            totalPaid = ALL payments for student (no date filter)
-            //            tunggakan = shouldPay - totalPaid
             // ============================================================
             const currentWeek = await this.getCurrentWeek();
             const weeklyAmount = 2000;
@@ -127,10 +113,6 @@ class GroupBroadcastService {
                 // Use default
             }
 
-            console.log('  Current Week:', currentWeek);
-            console.log('  Accumulated Weeks:', accumulatedWeeks);
-            console.log('  Total Weeks:', accumulatedWeeks + currentWeek);
-
             // Helper function: getTotalPaid (EXACT DASHBOARD)
             const getTotalPaid = (studentId) => {
                 const studentIdStr = studentId.toString();
@@ -142,7 +124,6 @@ class GroupBroadcastService {
             };
 
             // Helper function: getTunggakan (EXACT DASHBOARD FORMULA)
-            // NO 4-week hack, NO special cases — pure math
             const getTunggakan = (studentId) => {
                 const totalPaid = getTotalPaid(studentId);
                 const totalWeeks = accumulatedWeeks + currentWeek;
@@ -164,14 +145,6 @@ class GroupBroadcastService {
             ).length;
             const belumLunasCount = students.length - lunasCount;
 
-            console.log('  Current Week:', currentWeek);
-            console.log(
-                '  Lunas:',
-                lunasCount,
-                '| Belum Lunas:',
-                belumLunasCount
-            );
-
             // ============================================================
             // TOP CONTRIBUTORS - Use getTotalPaid for consistency
             // ============================================================
@@ -191,8 +164,6 @@ class GroupBroadcastService {
                     )}`;
                 });
 
-            console.log('  Top 3 Contributors:', topContributors);
-
             // Students with highest tunggakan
             const topDebtors = studentsWithStatus
                 .filter((s) => s.tunggakan > 0)
@@ -205,9 +176,61 @@ class GroupBroadcastService {
                         )}`
                 );
 
-            console.log('  Top 5 Debtors:', topDebtors);
+            // ============================================================
+            // PRESET TEMPLATES
+            // ============================================================
+            if (templateType === 'summary') {
+                return `
+📊 *UPDATE KAS KELAS (RINGKAS)* 📊
+${className} - ${semesterName}
+━━━━━━━━━━━━━━━━━━━━
 
-            // Build message
+💰 Total Pemasukan: Rp ${totalIncome.toLocaleString('id-ID')}
+💸 Total Pengeluaran: Rp ${totalExpenses.toLocaleString('id-ID')}
+💵 Saldo Kas Saat Ini: *Rp ${balance.toLocaleString('id-ID')}*
+
+📅 *Periode:* Minggu Ke-${currentWeek} (Rp 2.000/minggu)
+👥 *Status Siswa:* ✅ ${lunasCount} Lunas | ⚠️ ${belumLunasCount} Belum Lunas
+
+━━━━━━━━━━━━━━━━━━━━
+💳 *Informasi Pembayaran (a.n Fahmi Ilham Bagaskara):*
+• Dana / Gopay / ShopeePay: 085646745887
+• SeaBank: 901006225290 | BRI: 011001041959536
+
+🏆 Cek Rincian: ${process.env.BASE_URL || 'https://triforce.crud.my.id'}/leaderboard
+_Terima kasih atas kerja samanya!_ 🙏
+                `.trim();
+            }
+
+            if (templateType === 'arrears') {
+                return `
+⚠️ *PENGINGAT KAS & DAFTAR TUNGGAKAN* ⚠️
+${className} - ${semesterName}
+━━━━━━━━━━━━━━━━━━━━
+
+💰 Saldo Kas Saat Ini: *Rp ${balance.toLocaleString('id-ID')}*
+📅 Periode: Minggu Ke-${currentWeek} (Kas: Rp 2.000/minggu)
+👥 Siswa Belum Lunas: *${belumLunasCount} siswa*
+
+${
+    topDebtors.length > 0
+        ? `⚠️ *DAFTAR TUNGGAKAN TERBESAR:*
+${topDebtors.join('\n')}
+
+_Yuk segera dilunasi ya teman-teman agar operasional kas kelas tetap aman!_ 💪`
+        : 'Alhamdulillah semua siswa sudah lunas! 🎉'
+}
+
+━━━━━━━━━━━━━━━━━━━━
+💳 *Informasi Pembayaran (a.n Fahmi Ilham Bagaskara):*
+• Dana / Gopay / ShopeePay: 085646745887
+• SeaBank: 901006225290 | BRI: 011001041959536
+
+🏆 Cek Rincian: ${process.env.BASE_URL || 'https://triforce.crud.my.id'}/leaderboard
+                `.trim();
+            }
+
+            // Build full message (default)
             const message = `
 📊 *LAPORAN KAS KELAS* 📊
 ${className} - ${semesterName}
@@ -312,27 +335,39 @@ _Terima kasih atas partisipasinya!_ 🙏
     }
 
     // Send message to group (with optional PDF attachment)
-    async sendToGroup(message, pdfUrl = null) {
+    async sendToGroup(message, pdfUrl = null, targetGroupId = null) {
         try {
-            if (!this.groupId) {
+            const destGroupId =
+                targetGroupId ||
+                this.groupId ||
+                (await Setting.findOne({ key: 'fonnte_group_id' }))?.value ||
+                process.env.FONNTE_GROUP_ID;
+
+            if (!destGroupId) {
                 console.log(
                     '⚠️ FONNTE_GROUP_ID not set, skipping group broadcast'
                 );
-                return { success: false, error: 'Group ID not configured' };
+                return {
+                    success: false,
+                    error: 'Group ID WhatsApp belum ditentukan. Silakan masukkan Group ID tujuan.',
+                };
             }
 
             if (!this.apiToken) {
                 console.log('⚠️ FONNTE_API_TOKEN not set');
-                return { success: false, error: 'API token not configured' };
+                return {
+                    success: false,
+                    error: 'API token Fonnte belum dikonfigurasi di server (.env).',
+                };
             }
 
-            console.log(`📤 Sending broadcast to group: ${this.groupId}`);
+            console.log(`📤 Sending broadcast to group: ${destGroupId}`);
 
             // 🛡️ Humanisasi pesan grup (anti-ban)
             const humanizedMessage = antiBanService.humanizeMessage(message);
 
             const payload = {
-                target: this.groupId,
+                target: destGroupId,
                 message: humanizedMessage,
                 countryCode: '62',
             };
@@ -349,59 +384,71 @@ _Terima kasih atas partisipasinya!_ 🙏
                 },
             });
 
-            console.log('✅ Group broadcast sent successfully');
+            console.log('✅ Group broadcast response:', response.data);
 
+            const isSuccess = response.data.status === true;
             return {
-                success: response.data.status === true,
+                success: isSuccess,
                 messageId: response.data.id,
                 detail: response.data.detail,
+                target: destGroupId,
+                error: isSuccess ? null : (response.data.reason || response.data.detail || 'Gagal mengirim pesan via Fonnte'),
             };
         } catch (error) {
-            console.error('❌ Error sending group broadcast:', error.message);
+            console.error('❌ Error sending group broadcast:', error.response?.data || error.message);
             return {
                 success: false,
-                error: error.message,
+                error: error.response?.data?.reason || error.response?.data?.detail || error.message,
             };
         }
     }
 
     // Main broadcast function (AUTO-GENERATE PDF)
-    async sendBiWeeklyReport(pdfUrl = null) {
+    async sendBiWeeklyReport(pdfUrl = null, customMessage = null, targetGroupId = null, attachPdf = true) {
         try {
-            console.log('📊 Generating bi-weekly report...');
-            const message = await this.generateSummaryReport();
+            console.log('📊 Generating group report broadcast...');
+            const message = customMessage || (await this.generateSummaryReport());
 
-            // Auto-generate PDF if no URL provided
-            let attachmentUrl = pdfUrl;
-            if (!attachmentUrl) {
-                console.log('📄 Auto-generating PDF report...');
-                const pdfResult =
-                    await pdfReportService.generateFinancialReport();
+            // Auto-generate PDF if requested and no URL provided
+            let attachmentUrl = null;
+            if (attachPdf) {
+                if (pdfUrl) {
+                    attachmentUrl = pdfUrl;
+                } else {
+                    console.log('📄 Auto-generating PDF report...');
+                    try {
+                        const pdfResult =
+                            await pdfReportService.generateFinancialReport();
 
-                // Construct public URL (adjust based on your deployment)
-                const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
-                attachmentUrl = `${baseUrl}${pdfResult.url}`;
-                console.log('✅ PDF Generated:', attachmentUrl);
+                        // Construct public URL
+                        const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
+                        attachmentUrl = `${baseUrl}${pdfResult.url}`;
+                        console.log('✅ PDF Generated:', attachmentUrl);
+                    } catch (pdfErr) {
+                        console.warn('⚠️ Gagal membuat PDF, pesan tetap dikirim tanpa lampiran PDF:', pdfErr.message);
+                        attachmentUrl = null;
+                    }
+                }
             }
 
             console.log('📤 Sending to WhatsApp group...');
-            const result = await this.sendToGroup(message, attachmentUrl);
+            const result = await this.sendToGroup(message, attachmentUrl, targetGroupId);
 
             if (result.success) {
-                console.log('✅ Bi-weekly report broadcast completed!');
+                console.log('✅ Group report broadcast completed successfully!');
                 return result;
             } else {
                 const errorMsg =
                     result.error || result.detail || JSON.stringify(result);
                 console.error(
-                    '❌ Bi-weekly report broadcast failed:',
+                    '❌ Group report broadcast failed:',
                     errorMsg
                 );
                 return result;
             }
         } catch (error) {
             console.error(
-                '❌ Error in bi-weekly report broadcast:',
+                '❌ Error in group report broadcast:',
                 error.message
             );
             console.error('Stack:', error.stack);

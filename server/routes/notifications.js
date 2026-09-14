@@ -1080,27 +1080,49 @@ router.post('/send-group-broadcast', async (req, res) => {
     try {
         console.log('📊 Manual trigger: Bi-weekly group broadcast');
 
-        const { pdfUrl } = req.body; // Accept PDF URL from request body
+        const {
+            pdfUrl,
+            customMessage,
+            groupId,
+            attachPdf = true,
+            saveDefault = false,
+        } = req.body;
 
         const groupBroadcastService = (
             await import('../services/groupBroadcastService.js')
         ).default;
 
-        // Pass PDF URL if provided
-        const result = await groupBroadcastService.sendBiWeeklyReport(pdfUrl);
+        // If groupId is provided and saveDefault is true, persist to Setting
+        if (groupId && groupId.trim() && saveDefault) {
+            await Setting.findOneAndUpdate(
+                { key: 'fonnte_group_id' },
+                { value: groupId.trim() },
+                { upsert: true, new: true }
+            );
+        }
+
+        const targetGroupId = groupId?.trim() || undefined;
+
+        // Pass PDF URL, customMessage, targetGroupId, attachPdf
+        const result = await groupBroadcastService.sendBiWeeklyReport(
+            pdfUrl,
+            customMessage,
+            targetGroupId,
+            attachPdf
+        );
 
         if (result.success) {
             res.json({
                 success: true,
-                message: pdfUrl
-                    ? 'Broadcast dengan lampiran PDF berhasil dikirim!'
-                    : 'Broadcast berhasil dikirim ke group!',
+                message: attachPdf
+                    ? 'Laporan keuangan dan lampiran PDF berhasil dikirim ke grup WhatsApp!'
+                    : 'Laporan keuangan berhasil dikirim ke grup WhatsApp!',
                 detail: result,
             });
         } else {
-            res.json({
+            res.status(400).json({
                 success: false,
-                message: 'Broadcast gagal dikirim',
+                message: result.error || 'Broadcast gagal dikirim ke grup WhatsApp',
                 error: result.error,
             });
         }
@@ -1114,7 +1136,7 @@ router.post('/send-group-broadcast', async (req, res) => {
 });
 
 // ==============================================
-// 🔍 DEBUG: Get broadcast message preview (WITHOUT sending)
+// 🔍 DEBUG: Get broadcast message preview + templates (WITHOUT sending)
 // ==============================================
 router.get('/broadcast-preview', async (req, res) => {
     try {
@@ -1124,11 +1146,31 @@ router.get('/broadcast-preview', async (req, res) => {
             await import('../services/groupBroadcastService.js')
         ).default;
 
-        const message = await groupBroadcastService.generateSummaryReport();
+        const templateType = req.query.template || 'full';
+
+        const [fullMsg, summaryMsg, arrearsMsg, savedGroupSetting] =
+            await Promise.all([
+                groupBroadcastService.generateSummaryReport('full'),
+                groupBroadcastService.generateSummaryReport('summary'),
+                groupBroadcastService.generateSummaryReport('arrears'),
+                Setting.findOne({ key: 'fonnte_group_id' }),
+            ]);
+
+        const defaultGroupId =
+            savedGroupSetting?.value || process.env.FONNTE_GROUP_ID || '';
+
+        const templates = {
+            full: fullMsg,
+            summary: summaryMsg,
+            arrears: arrearsMsg,
+        };
 
         res.json({
             success: true,
-            message: message,
+            message: templates[templateType] || fullMsg,
+            templates,
+            groupId: defaultGroupId,
+            hasToken: !!process.env.FONNTE_API_TOKEN,
             note: 'Preview only - not sent to group',
         });
     } catch (error) {

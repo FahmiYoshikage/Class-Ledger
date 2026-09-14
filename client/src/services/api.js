@@ -145,6 +145,10 @@ export const notificationsAPI = {
         api.post(`/notifications/send-event-reminder-group/${eventId}`, data),
     previewEventReminder: (eventId, data) =>
         api.post(`/notifications/preview-event-reminder/${eventId}`, data),
+    getBroadcastPreview: (template) =>
+        api.get(`/notifications/broadcast-preview${template ? `?template=${template}` : ''}`),
+    sendGroupBroadcast: (data) =>
+        api.post('/notifications/send-group-broadcast', data),
     getStatus: () => api.get('/notifications/status'),
     getStats: () => api.get('/notifications/stats'),
 };
