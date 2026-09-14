@@ -22,7 +22,7 @@ const paymentSchema = new mongoose.Schema(
         },
         method: {
             type: String,
-            enum: ['Tunai', 'Transfer'],
+            enum: ['Tunai', 'Transfer', 'QRIS'],
             default: 'Tunai',
         },
         note: {
@@ -44,5 +44,9 @@ const paymentSchema = new mongoose.Schema(
         timestamps: true,
     }
 );
+
+// Compound indexes for high-speed queries on VPS and Atlas
+paymentSchema.index({ studentId: 1, date: -1 });
+paymentSchema.index({ date: -1 });
 
 export default mongoose.model('Payment', paymentSchema);

@@ -85,8 +85,8 @@ const found = [];
 for (const icon of [...usedIcons].sort()) {
   const filePath = iconMap[icon];
   if (filePath) {
-    // Convert './icons/bell.js' to 'lucide-react/dist/esm/icons/bell.js'
-    const importPath = filePath.replace('./', 'lucide-react/dist/esm/');
+    // Convert './icons/bell.js' to '../../node_modules/lucide-react/dist/esm/icons/bell.js'
+    const importPath = filePath.replace('./', '../../node_modules/lucide-react/dist/esm/');
     lines.push(`export { default as ${icon} } from '${importPath}';`);
     found.push(icon);
   } else {

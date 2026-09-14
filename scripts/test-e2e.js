@@ -188,6 +188,31 @@ async function main() {
         assert(badgesRes.status === 200, `Badges expected HTTP 200, got ${badgesRes.status}`);
     });
 
+    await runTest('Student Arrears / Tunggakan Calculation (GET /api/payments/tunggakan/:studentId)', async () => {
+        const studentsRes = await fetch(`${API_URL}/students`);
+        const students = await studentsRes.json();
+        assert(students.length > 0, 'Need at least 1 student to test tunggakan calculation');
+        
+        const testStudent = students[0];
+        const res = await fetch(`${API_URL}/payments/tunggakan/${testStudent._id}`);
+        assert(res.status === 200, `Expected HTTP 200, got ${res.status}`);
+        const data = await res.json();
+        assert(data.success === true, 'Expected data.success to be true');
+        assert(typeof data.tunggakan === 'number', 'Expected tunggakan amount as number');
+        assert(typeof data.weeksLate === 'number', 'Expected weeksLate as number');
+        assert(typeof data.totalPaid === 'number', 'Expected totalPaid as number');
+        assert(typeof data.totalWeeks === 'number', 'Expected totalWeeks as number');
+        assert(typeof data.weeksPaid === 'number', 'Expected weeksPaid as number');
+    });
+
+    await runTest('Active QRIS Configuration Endpoint (GET /api/qr-payment/active)', async () => {
+        const res = await fetch(`${API_URL}/qr-payment/active`);
+        assert(res.status === 200, `Expected HTTP 200, got ${res.status}`);
+        const data = await res.json();
+        assert(data.success === true, 'Expected success: true');
+        assert('qrCode' in data, 'Expected qrCode property in response');
+    });
+
     // =========================================================================
     // SUITE 3: Authentication & Security Boundaries
     // =========================================================================

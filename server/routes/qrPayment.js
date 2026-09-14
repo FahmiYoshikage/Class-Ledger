@@ -403,9 +403,9 @@ router.post('/approve/:confirmationId', async (req, res) => {
             studentId: confirmation.studentId._id,
             amount: confirmation.amount,
             date: new Date(),
-            method: 'qr_code',
-            notes:
-                notes || `Pembayaran via QR Code - Verified by ${reviewedBy}`,
+            method: 'QRIS',
+            note:
+                notes || `Pembayaran via QRIS - Diverifikasi oleh ${reviewedBy}`,
         });
 
         await payment.save();

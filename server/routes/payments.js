@@ -1,5 +1,7 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import Payment from '../models/Payment.js';
+import Setting from '../models/Setting.js';
 import badgeService from '../services/badgeService.js';
 
 const router = express.Router();
@@ -106,10 +108,11 @@ router.delete('/:id', async (req, res) => {
 // Get total paid by student
 router.get('/total/:studentId', async (req, res) => {
     try {
+        const studentObjectId = new mongoose.Types.ObjectId(req.params.studentId);
         const result = await Payment.aggregate([
             {
                 $match: {
-                    studentId: mongoose.Types.ObjectId(req.params.studentId),
+                    studentId: studentObjectId,
                 },
             },
             { $group: { _id: null, total: { $sum: '$amount' } } },
@@ -117,6 +120,64 @@ router.get('/total/:studentId', async (req, res) => {
         res.json({ total: result.length > 0 ? result[0].total : 0 });
     } catch (error) {
         res.status(500).json({ message: error.message });
+    }
+});
+
+// Get tunggakan by student (used by QR payment and student lookup)
+router.get('/tunggakan/:studentId', async (req, res) => {
+    try {
+        const studentId = req.params.studentId;
+        const payments = await Payment.find({ studentId });
+
+        // Total regular payments
+        const totalPaid = payments.reduce((sum, p) => sum + (p.amount || 0), 0);
+
+        // Fetch settings for weekly fee & current week
+        const [semesterStatusSetting, pausedWeekSetting, startDateSetting, accumulatedWeeksSetting, weeklyFeeSetting] =
+            await Promise.all([
+                Setting.findOne({ key: 'semester_status' }),
+                Setting.findOne({ key: 'paused_week' }),
+                Setting.findOne({ key: 'start_date' }),
+                Setting.findOne({ key: 'accumulated_weeks' }),
+                Setting.findOne({ key: 'weekly_fee' }),
+            ]);
+
+        const weeklyFee = weeklyFeeSetting ? parseInt(weeklyFeeSetting.value) || 2000 : 2000;
+        const accumulatedWeeks = accumulatedWeeksSetting ? parseInt(accumulatedWeeksSetting.value) || 7 : 7;
+        const semesterStatus = semesterStatusSetting?.value || 'active';
+        const pausedWeek = pausedWeekSetting?.value;
+
+        let totalWeeks;
+        if (semesterStatus === 'paused' && pausedWeek) {
+            totalWeeks = accumulatedWeeks + pausedWeek;
+        } else {
+            const startDate = startDateSetting?.value
+                ? new Date(startDateSetting.value)
+                : new Date(process.env.START_DATE || '2025-10-27');
+            const now = new Date();
+            const diffTime = Math.abs(now - startDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const currentSemesterWeek = Math.max(1, Math.ceil(diffDays / 7));
+            totalWeeks = accumulatedWeeks + currentSemesterWeek;
+        }
+
+        const weeksPaid = Math.floor(totalPaid / weeklyFee);
+        const weeksLate = Math.max(0, totalWeeks - weeksPaid);
+        const amountOwed = weeksLate * weeklyFee;
+
+        res.json({
+            success: true,
+            studentId,
+            totalPaid,
+            weeklyFee,
+            totalWeeks,
+            weeksPaid,
+            weeksLate,
+            tunggakan: amountOwed,
+            isLunas: amountOwed <= 0,
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
     }
 });
 

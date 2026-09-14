@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
     Wallet,
     TrendingUp,
@@ -14,6 +14,14 @@ import {
     BarChart3,
     ChevronRight,
     QrCode,
+    Search,
+    CheckCircle2,
+    AlertCircle,
+    Calendar,
+    Sparkles,
+    ShieldCheck,
+    CreditCard,
+    Flame,
 } from 'lucide-react';
 import axios from 'axios';
 
@@ -24,7 +32,6 @@ const API_URL =
 
 const PublicDashboard = () => {
     const navigate = useNavigate();
-    const location = useLocation();
     const [stats, setStats] = useState({
         totalIncome: 0,
         totalExpenses: 0,
@@ -32,8 +39,12 @@ const PublicDashboard = () => {
         totalStudents: 0,
         totalTransactions: 0,
     });
+    const [students, setStudents] = useState([]);
     const [events, setEvents] = useState([]);
     const [leaderboard, setLeaderboard] = useState([]);
+    const [currentWeek, setCurrentWeek] = useState(26);
+    const [weeklyFee, setWeeklyFee] = useState(2000);
+    const [searchStudent, setSearchStudent] = useState('');
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -43,33 +54,74 @@ const PublicDashboard = () => {
     const fetchPublicData = async () => {
         try {
             setLoading(true);
-            // Fetch public data
-            const [paymentsRes, expensesRes, studentsRes] = await Promise.all([
+            const [paymentsRes, expensesRes, studentsRes, weekRes] = await Promise.all([
                 axios.get(`${API_URL}/payments`),
                 axios.get(`${API_URL}/expenses`),
                 axios.get(`${API_URL}/students`),
+                axios.get(`${API_URL}/settings/current-week`).catch(() => ({ data: { totalWeeks: 26 } })),
             ]);
 
-            // Calculate stats
-            const totalIncome = paymentsRes.data.reduce(
-                (sum, p) => sum + (p.amount || 0),
-                0
-            );
-            const totalExpenses = expensesRes.data.reduce(
-                (sum, e) => sum + (e.amount || 0),
-                0
-            );
+            const payments = Array.isArray(paymentsRes.data) ? paymentsRes.data : [];
+            const expenses = Array.isArray(expensesRes.data) ? expensesRes.data : [];
+            const studentList = Array.isArray(studentsRes.data) ? studentsRes.data : [];
+            const activeWeek = weekRes.data?.totalWeeks || 26;
+
+            setCurrentWeek(activeWeek);
+
+            // Calculate totals
+            const totalIncome = payments.reduce((sum, p) => sum + (p.amount || 0), 0);
+            const totalExpenses = expenses.reduce((sum, e) => sum + (e.amount || 0), 0);
 
             setStats({
                 totalIncome,
                 totalExpenses,
                 balance: totalIncome - totalExpenses,
-                totalStudents: studentsRes.data.length,
-                totalTransactions: paymentsRes.data.length + expensesRes.data.length,
+                totalStudents: studentList.length,
+                totalTransactions: payments.length + expenses.length,
             });
 
-            // Build events from payments with event field
-            const eventPayments = paymentsRes.data.filter((p) => p.event);
+            // Map payments per student
+            const studentPaymentMap = {};
+            payments.forEach((payment) => {
+                const sId = payment.studentId?._id || payment.studentId || payment.student?._id || payment.student;
+                if (sId) {
+                    const idStr = sId.toString();
+                    if (!studentPaymentMap[idStr]) {
+                        studentPaymentMap[idStr] = {
+                            totalPaid: 0,
+                            paymentCount: 0,
+                            lastDate: payment.date,
+                        };
+                    }
+                    studentPaymentMap[idStr].totalPaid += payment.amount || 0;
+                    studentPaymentMap[idStr].paymentCount += 1;
+                }
+            });
+
+            // Enriched student data with dues / status
+            const enrichedStudents = studentList.map((s) => {
+                const sId = s._id.toString();
+                const pData = studentPaymentMap[sId] || { totalPaid: 0, paymentCount: 0, lastDate: null };
+                const weeksPaid = Math.floor(pData.totalPaid / 2000);
+                const weeksLate = Math.max(0, activeWeek - weeksPaid);
+                const tunggakan = weeksLate * 2000;
+
+                return {
+                    ...s,
+                    totalPaid: pData.totalPaid,
+                    paymentCount: pData.paymentCount,
+                    lastDate: pData.lastDate,
+                    weeksPaid,
+                    weeksLate,
+                    tunggakan,
+                    isLunas: tunggakan <= 0,
+                };
+            });
+
+            setStudents(enrichedStudents);
+
+            // Build events
+            const eventPayments = payments.filter((p) => p.event);
             const uniqueEvents = {};
             eventPayments.forEach((p) => {
                 const eventId = p.event._id || p.event;
@@ -83,44 +135,17 @@ const PublicDashboard = () => {
                 uniqueEvents[eventId].totalPaid += p.amount;
                 uniqueEvents[eventId].paidCount += 1;
             });
+            setEvents(Object.values(uniqueEvents));
 
-            const studentPaymentMap = {};
-            paymentsRes.data.forEach((payment) => {
-                const studentId = payment.student?._id || payment.student;
-                if (studentId) {
-                    if (!studentPaymentMap[studentId]) {
-                        studentPaymentMap[studentId] = {
-                            totalPaid: 0,
-                            paymentCount: 0,
-                        };
-                    }
-                    studentPaymentMap[studentId].totalPaid += payment.amount || 0;
-                    studentPaymentMap[studentId].paymentCount += 1;
-                }
-            });
-
-            const leaderboardData = studentsRes.data
-                .filter((student) => studentPaymentMap[student._id])
-                .map((student) => {
-                    const paymentData = studentPaymentMap[student._id];
-                    return {
-                        studentId: student._id,
-                        studentName: student.name || student.nama || 'Unknown',
-                        absen: student.absen,
-                        totalPaid: paymentData.totalPaid,
-                        paymentCount: paymentData.paymentCount,
-                    };
-                })
+            // Top 10 Leaderboard
+            const sortedByPaid = [...enrichedStudents]
+                .filter((s) => s.totalPaid > 0)
                 .sort((a, b) => b.totalPaid - a.totalPaid)
                 .slice(0, 10);
 
-            setEvents(Object.values(uniqueEvents));
-            setLeaderboard(leaderboardData);
+            setLeaderboard(sortedByPaid);
         } catch (error) {
             console.error('Error fetching public data:', error);
-            setStats({ totalIncome: 0, totalExpenses: 0, balance: 0, totalStudents: 0, totalTransactions: 0 });
-            setEvents([]);
-            setLeaderboard([]);
         } finally {
             setLoading(false);
         }
@@ -131,55 +156,94 @@ const PublicDashboard = () => {
             style: 'currency',
             currency: 'IDR',
             minimumFractionDigits: 0,
-        }).format(amount);
+        }).format(amount || 0);
     };
+
+    // Filter students for "Cek Kas Saya"
+    const searchedStudents = useMemo(() => {
+        const query = searchStudent.trim().toLowerCase();
+        if (!query) return [];
+        return students.filter(
+            (s) =>
+                s.name?.toLowerCase().includes(query) ||
+                s.nickname?.toLowerCase().includes(query) ||
+                s.absen?.toString().includes(query)
+        ).slice(0, 5);
+    }, [searchStudent, students]);
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-[#18181b] flex items-center justify-center">
+            <div className="min-h-screen bg-[#09090b] flex items-center justify-center">
                 <div className="flex flex-col items-center gap-4">
-                    <div className="w-10 h-10 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                    <p className="text-white/55 text-sm">Memuat data...</p>
+                    <div className="w-12 h-12 rounded-full border-2 border-indigo-500/20 border-t-indigo-500 animate-spin" />
+                    <p className="text-white/60 text-sm font-medium tracking-wide">Sinkronisasi Kas Kelas...</p>
                 </div>
             </div>
         );
     }
 
+    const netRate = stats.totalIncome > 0 ? Math.round((stats.balance / stats.totalIncome) * 100) : 100;
+
     return (
-        <div className="min-h-screen bg-[#18181b] text-white selection:bg-indigo-500/25">
-            {/* Sticky Nav */}
-            <nav className="sticky top-0 z-50 border-b border-white/[0.1] bg-[#18181b]/80 backdrop-blur-2xl">
-                <div className="px-5 sm:px-8 lg:px-12">
-                    <div className="flex items-center justify-between h-14 sm:h-16">
-                        <div className="flex items-center gap-2.5">
-                            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-500/15 animate-pulse-glow">
-                                <Wallet className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
+        <div className="min-h-screen bg-[#09090b] text-white selection:bg-indigo-500/30 overflow-x-hidden relative">
+            {/* Ambient Aurora Orbs (Pure CSS Hardware Accelerated) */}
+            <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+                <div className="absolute top-[-10%] left-[15%] w-[650px] h-[500px] bg-gradient-to-br from-indigo-600/20 via-violet-600/15 to-transparent blur-[130px] rounded-full animate-aurora" />
+                <div className="absolute top-[30%] right-[-5%] w-[550px] h-[450px] bg-gradient-to-bl from-fuchsia-600/15 via-pink-600/10 to-transparent blur-[140px] rounded-full animate-aurora-delayed" />
+                <div className="absolute bottom-[10%] left-[5%] w-[500px] h-[400px] bg-gradient-to-tr from-cyan-600/10 via-indigo-600/15 to-transparent blur-[120px] rounded-full animate-aurora" />
+            </div>
+
+            {/* Sticky Modern Cyber Glass Nav */}
+            <nav className="sticky top-0 z-50 border-b border-white/[0.08] bg-[#09090b]/80 backdrop-blur-2xl">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex items-center justify-between h-16">
+                        {/* Brand Logo & Name */}
+                        <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 via-violet-600 to-pink-500 p-[1.5px] shadow-lg shadow-indigo-500/20">
+                                <div className="w-full h-full bg-[#09090b] rounded-[10px] flex items-center justify-center">
+                                    <ShieldCheck className="w-5 h-5 text-indigo-400" />
+                                </div>
                             </div>
-                            <span className="font-semibold text-white text-sm sm:text-[15px] tracking-tight">
-                                Kas Kelas
-                            </span>
-                            <span className="hidden sm:inline text-[13px] text-white/60 font-medium">
-                                TRIFORCE
-                            </span>
+                            <div>
+                                <div className="flex items-center gap-2">
+                                    <span className="font-bold text-white text-[15px] tracking-tight">
+                                        Kas Kelas TRIFORCE
+                                    </span>
+                                    <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 beacon-live" />
+                                        Minggu {currentWeek}
+                                    </span>
+                                </div>
+                                <p className="text-[11px] text-white/40 hidden sm:block">Transparansi Keuangan Real-Time</p>
+                            </div>
                         </div>
-                        <div className="flex items-center gap-2">
+
+                        {/* Navigation Actions */}
+                        <div className="flex items-center gap-2 sm:gap-3">
+                            <a
+                                href="#cek-kas"
+                                className="hidden md:flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.08] text-white/70 hover:text-white text-xs font-medium transition-all"
+                            >
+                                <Search className="w-3.5 h-3.5 text-indigo-400" />
+                                <span>Cek Kas Saya</span>
+                            </a>
+                            <button
+                                onClick={() => navigate('/qr-payment')}
+                                className="flex items-center gap-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/25 text-indigo-300 text-xs font-semibold transition-all hover:scale-105"
+                            >
+                                <QrCode className="w-3.5 h-3.5" />
+                                <span>Bayar QRIS</span>
+                            </button>
                             <button
                                 onClick={() => navigate('/leaderboard')}
-                                className="flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.1] text-white/60 hover:text-white/90 transition-all text-[13px] btn-press"
+                                className="flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.08] text-white/70 hover:text-white text-xs font-medium transition-all"
                             >
-                                <Trophy className="w-3.5 h-3.5 text-amber-300" />
+                                <Trophy className="w-3.5 h-3.5 text-amber-400" />
                                 <span className="hidden sm:inline">Leaderboard</span>
                             </button>
                             <button
-                                onClick={() => navigate('/qr-payment')}
-                                className="flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.1] text-white/60 hover:text-white/90 transition-all text-[13px] btn-press"
-                            >
-                                <QrCode className="w-3.5 h-3.5 text-indigo-400" />
-                                <span className="hidden sm:inline">Bayar QRIS</span>
-                            </button>
-                            <button
                                 onClick={() => navigate('/login')}
-                                className="flex items-center gap-1.5 px-4 py-1.5 sm:px-5 sm:py-2 rounded-full bg-white/95 text-zinc-900 hover:bg-white transition-all text-[13px] font-semibold btn-press"
+                                className="flex items-center gap-1.5 px-4 py-1.5 sm:px-5 sm:py-2 rounded-full bg-white text-zinc-950 hover:bg-white/90 text-xs font-bold transition-all shadow-md shadow-white/10 hover:scale-105"
                             >
                                 <LogIn className="w-3.5 h-3.5" />
                                 <span>Bendahara</span>
@@ -189,94 +253,293 @@ const PublicDashboard = () => {
                 </div>
             </nav>
 
-            {/* Hero */}
-            <section className="relative overflow-hidden">
-                {/* Ambient glow */}
-                <div className="absolute top-0 left-1/4 w-[600px] h-[400px] bg-indigo-600/[0.04] blur-[120px] rounded-full pointer-events-none animate-gradient-shift" />
-                <div className="absolute top-20 right-1/4 w-[400px] h-[300px] bg-violet-600/[0.03] blur-[100px] rounded-full pointer-events-none animate-gradient-shift stagger-3" />
-
-                <div className="relative px-5 sm:px-8 lg:px-12 pt-20 sm:pt-28 pb-16 sm:pb-20 animate-slide-up">
-                    <p className="text-gradient text-[13px] font-semibold mb-4 tracking-widest uppercase animate-fade-in">
-                        Transparansi Keuangan
-                    </p>
-                    <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tighter text-white leading-[0.95] mb-5 animate-fade-in stagger-1">
-                        {formatCurrency(stats.balance)}
-                    </h1>
-                    <p className="text-base sm:text-lg text-white/35 mb-10 max-w-lg leading-relaxed">
-                        Total saldo kas kelas saat ini. Semua transaksi tercatat transparan dan real-time.
-                    </p>
-                    <div className="flex flex-wrap gap-5 sm:gap-8 text-[13px] text-white/60">
-                        <div className="flex items-center gap-2">
-                            <Users className="w-4 h-4" />
-                            <span>{stats.totalStudents} Siswa</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <BarChart3 className="w-4 h-4" />
-                            <span>{stats.totalTransactions} Transaksi</span>
-                        </div>
+            {/* Continuous Marquee Ticker */}
+            <div className="relative z-10 border-b border-white/[0.06] bg-white/[0.015] py-2.5">
+                <div className="marquee-wrapper">
+                    <div className="marquee-content text-xs text-white/60">
+                        <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
+                            <Sparkles className="w-3.5 h-3.5" /> Saldo Kas: {formatCurrency(stats.balance)}
+                        </span>
+                        <span>•</span>
+                        <span className="flex items-center gap-1.5">
+                            👥 {stats.totalStudents} Mahasiswa Terdaftar
+                        </span>
+                        <span>•</span>
+                        <span className="flex items-center gap-1.5 text-indigo-300">
+                            🛡️ Iuran Kas Rutin Rp 2.000 / Minggu
+                        </span>
+                        <span>•</span>
+                        <span className="flex items-center gap-1.5 text-amber-300">
+                            ⚡ {stats.totalTransactions} Total Transaksi Tercatat
+                        </span>
+                        <span>•</span>
+                        <span className="flex items-center gap-1.5 text-pink-400">
+                            💳 Pembayaran Online via QRIS Terbuka 24/7
+                        </span>
+                        <span>•</span>
+                    </div>
+                    <div className="marquee-content text-xs text-white/60" aria-hidden="true">
+                        <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
+                            <Sparkles className="w-3.5 h-3.5" /> Saldo Kas: {formatCurrency(stats.balance)}
+                        </span>
+                        <span>•</span>
+                        <span className="flex items-center gap-1.5">
+                            👥 {stats.totalStudents} Mahasiswa Terdaftar
+                        </span>
+                        <span>•</span>
+                        <span className="flex items-center gap-1.5 text-indigo-300">
+                            🛡️ Iuran Kas Rutin Rp 2.000 / Minggu
+                        </span>
+                        <span>•</span>
+                        <span className="flex items-center gap-1.5 text-amber-300">
+                            ⚡ {stats.totalTransactions} Total Transaksi Tercatat
+                        </span>
+                        <span>•</span>
+                        <span className="flex items-center gap-1.5 text-pink-400">
+                            💳 Pembayaran Online via QRIS Terbuka 24/7
+                        </span>
+                        <span>•</span>
                     </div>
                 </div>
-            </section>
+            </div>
 
-            {/* Stats */}
-            <section className="px-5 sm:px-8 lg:px-12 pb-14">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-slide-up stagger-2">
-                    {/* Income */}
-                    <div className="rounded-2xl bg-white/[0.035] border border-white/[0.1] p-6 sm:p-8 hover:bg-white/[0.07] hover:border-white/[0.09] transition-all duration-300 group card-hover glow-hover">
-                        <div className="p-2.5 rounded-xl bg-teal-500/8 border border-teal-500/12 w-fit mb-5 icon-container-hover">
-                            <TrendingUp className="w-5 h-5 text-teal-300" />
+            {/* Hero Section */}
+            <section className="relative z-10 pt-12 sm:pt-20 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                <div className="text-center max-w-3xl mx-auto mb-10">
+                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-semibold mb-6 shadow-inner animate-fade-in">
+                        <Flame className="w-3.5 h-3.5 text-indigo-400 animate-pulse" />
+                        <span>Sistem Transparansi Kas Kelas 100% Real-Time</span>
+                    </div>
+                    <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-4 leading-tight">
+                        <span className="text-white">Saldo Kas: </span>
+                        <span className="text-cyber-gradient block sm:inline">
+                            {formatCurrency(stats.balance)}
+                        </span>
+                    </h1>
+                    <p className="text-sm sm:text-base text-white/50 max-w-xl mx-auto leading-relaxed">
+                        Seluruh pemasukan, pengeluaran, dan tunggakan kas tercatat terbuka dan dapat dipantau oleh setiap anggota kelas kapan saja.
+                    </p>
+
+                    {/* Fast Hero CTA */}
+                    <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
+                        <button
+                            onClick={() => navigate('/qr-payment')}
+                            className="btn-cyber-primary px-6 py-3 rounded-xl flex items-center gap-2 text-sm font-semibold shadow-xl"
+                        >
+                            <QrCode className="w-4 h-4" />
+                            <span>Bayar Kas via QRIS</span>
+                            <ArrowRight className="w-4 h-4" />
+                        </button>
+                        <a
+                            href="#cek-kas"
+                            className="px-6 py-3 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.1] text-white text-sm font-semibold transition-all hover:scale-105 flex items-center gap-2"
+                        >
+                            <Search className="w-4 h-4 text-indigo-400" />
+                            <span>Cek Tunggakan Saya</span>
+                        </a>
+                    </div>
+                </div>
+
+                {/* Main Stats Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl mx-auto animate-slide-up">
+                    {/* Income Card */}
+                    <div className="glass-cyber-card rounded-2xl p-6 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all" />
+                        <div className="flex items-center justify-between mb-4">
+                            <span className="text-xs font-semibold text-emerald-400 uppercase tracking-wider">Total Pemasukan</span>
+                            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                                <TrendingUp className="w-4 h-4 text-emerald-400" />
+                            </div>
                         </div>
-                        <p className="text-[13px] text-white/35 mb-1 font-medium">Total Pemasukan</p>
                         <p className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
                             {formatCurrency(stats.totalIncome)}
                         </p>
-                        <p className="text-xs text-white/55 mt-4">Dari pembayaran kas kelas & event</p>
+                        <p className="text-xs text-white/40 mt-2">Iuran mingguan & kontribusi acara</p>
                     </div>
-                    {/* Expenses */}
-                    <div className="rounded-2xl bg-white/[0.035] border border-white/[0.1] p-6 sm:p-8 hover:bg-white/[0.07] hover:border-white/[0.09] transition-all duration-300 group card-hover glow-hover">
-                        <div className="p-2.5 rounded-xl bg-rose-500/8 border border-rose-400/12 w-fit mb-5 icon-container-hover">
-                            <TrendingDown className="w-5 h-5 text-rose-300" />
+
+                    {/* Expense Card */}
+                    <div className="glass-cyber-card rounded-2xl p-6 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-24 h-24 bg-rose-500/10 rounded-full blur-2xl group-hover:bg-rose-500/20 transition-all" />
+                        <div className="flex items-center justify-between mb-4">
+                            <span className="text-xs font-semibold text-rose-400 uppercase tracking-wider">Total Pengeluaran</span>
+                            <div className="w-8 h-8 rounded-lg bg-rose-500/10 border border-rose-500/20 flex items-center justify-center">
+                                <TrendingDown className="w-4 h-4 text-rose-400" />
+                            </div>
                         </div>
-                        <p className="text-[13px] text-white/35 mb-1 font-medium">Total Pengeluaran</p>
                         <p className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
                             {formatCurrency(stats.totalExpenses)}
                         </p>
-                        <p className="text-xs text-white/55 mt-4">Untuk keperluan kelas</p>
+                        <p className="text-xs text-white/40 mt-2">Fotokopi, konsumsi & kegiatan kelas</p>
+                    </div>
+
+                    {/* Class Health Card */}
+                    <div className="glass-cyber-card rounded-2xl p-6 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500/10 rounded-full blur-2xl group-hover:bg-indigo-500/20 transition-all" />
+                        <div className="flex items-center justify-between mb-4">
+                            <span className="text-xs font-semibold text-indigo-400 uppercase tracking-wider">Kesehatan Kas</span>
+                            <div className="w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center">
+                                <BarChart3 className="w-4 h-4 text-indigo-400" />
+                            </div>
+                        </div>
+                        <div className="flex items-baseline gap-2">
+                            <p className="text-2xl sm:text-3xl font-bold text-white tracking-tight">{netRate}%</p>
+                            <span className="text-xs text-emerald-400 font-medium">Cadangan Tersisa</span>
+                        </div>
+                        <div className="w-full bg-white/[0.08] h-1.5 rounded-full mt-3 overflow-hidden">
+                            <div
+                                className="bg-gradient-to-r from-indigo-500 via-violet-500 to-emerald-400 h-full rounded-full transition-all duration-1000"
+                                style={{ width: `${Math.min(100, Math.max(10, netRate))}%` }}
+                            />
+                        </div>
                     </div>
                 </div>
             </section>
 
-            {/* Events */}
+            {/* Interactive "Cek Kas Saya" Widget */}
+            <section id="cek-kas" className="relative z-10 py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+                <div className="glass-cyber-card rounded-3xl p-6 sm:p-10 border border-indigo-500/20 shadow-2xl relative overflow-hidden">
+                    <div className="flex items-center gap-3 mb-2">
+                        <div className="p-2 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400">
+                            <Search className="w-5 h-5" />
+                        </div>
+                        <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                            Cek Status Kas Saya
+                        </h2>
+                    </div>
+                    <p className="text-sm text-white/50 mb-6">
+                        Ketik nama atau nomor absenmu untuk mengecek jumlah minggu lunas dan tunggakan secara instan.
+                    </p>
+
+                    {/* Search Input Box */}
+                    <div className="relative mb-6">
+                        <input
+                            type="text"
+                            value={searchStudent}
+                            onChange={(e) => setSearchStudent(e.target.value)}
+                            placeholder="Ketik nama kamu atau nomor absen (misal: Budi atau 2425...)"
+                            className="input-cyber-glass w-full px-5 py-4 pl-12 rounded-2xl text-sm placeholder:text-white/30"
+                        />
+                        <Search className="w-5 h-5 text-white/40 absolute left-4 top-1/2 -translate-y-1/2" />
+                        {searchStudent && (
+                            <button
+                                onClick={() => setSearchStudent('')}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-xs px-2 py-1 rounded bg-white/10 hover:bg-white/20 text-white/70"
+                            >
+                                Reset
+                            </button>
+                        )}
+                    </div>
+
+                    {/* Search Results Display */}
+                    {searchStudent.trim() !== '' && (
+                        <div className="space-y-3 animate-slide-up">
+                            {searchedStudents.length === 0 ? (
+                                <div className="text-center py-8 rounded-2xl bg-white/[0.02] border border-white/[0.06]">
+                                    <AlertCircle className="w-8 h-8 text-amber-400/60 mx-auto mb-2" />
+                                    <p className="text-sm text-white/70">Nama atau nomor absen tidak ditemukan.</p>
+                                    <p className="text-xs text-white/30 mt-1">Coba gunakan nama panggilan atau cek ejaanmu.</p>
+                                </div>
+                            ) : (
+                                searchedStudents.map((student) => (
+                                    <div
+                                        key={student._id}
+                                        className="rounded-2xl bg-white/[0.03] border border-white/[0.08] hover:border-indigo-500/30 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all card-hover"
+                                    >
+                                        <div className="flex items-start sm:items-center gap-3.5">
+                                            <div
+                                                className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm flex-shrink-0 ${
+                                                    student.isLunas
+                                                        ? 'bg-emerald-500/15 border border-emerald-500/30 text-emerald-400'
+                                                        : 'bg-rose-500/15 border border-rose-500/30 text-rose-400'
+                                                }`}
+                                            >
+                                                {student.absen || '#'}
+                                            </div>
+                                            <div>
+                                                <div className="flex items-center gap-2">
+                                                    <h3 className="font-semibold text-white text-[15px]">
+                                                        {student.name}
+                                                    </h3>
+                                                    {student.nickname && (
+                                                        <span className="text-xs text-white/40">({student.nickname})</span>
+                                                    )}
+                                                </div>
+                                                <div className="flex flex-wrap items-center gap-2 text-xs mt-1 text-white/50">
+                                                    <span>Terbayar: {student.weeksPaid} Minggu</span>
+                                                    <span>•</span>
+                                                    <span>Total: {formatCurrency(student.totalPaid)}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Status & CTA Button */}
+                                        <div className="flex items-center justify-between sm:justify-end gap-3 border-t sm:border-t-0 pt-3 sm:pt-0 border-white/[0.06]">
+                                            {student.isLunas ? (
+                                                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-300 text-xs font-semibold">
+                                                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                                                    <span>Lunas (Minggu {currentWeek})</span>
+                                                </div>
+                                            ) : (
+                                                <div className="flex items-center gap-3">
+                                                    <div className="text-right">
+                                                        <span className="text-[11px] text-rose-400/80 block leading-tight">
+                                                            Tunggakan {student.weeksLate} Minggu
+                                                        </span>
+                                                        <span className="text-sm font-bold text-rose-300">
+                                                            {formatCurrency(student.tunggakan)}
+                                                        </span>
+                                                    </div>
+                                                    <button
+                                                        onClick={() => navigate(`/qr-payment?studentId=${student._id}`)}
+                                                        className="px-3.5 py-1.5 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-semibold shadow-md transition-all hover:scale-105 flex items-center gap-1"
+                                                    >
+                                                        <span>Bayar</span>
+                                                        <ArrowRight className="w-3.5 h-3.5" />
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                    )}
+                </div>
+            </section>
+
+            {/* Active Events (if any) */}
             {events.length > 0 && (
-                <section className="px-5 sm:px-8 lg:px-12 pb-14 animate-slide-up">
-                    <div className="flex items-center gap-2.5 mb-5">
-                        <Gift className="w-[18px] h-[18px] text-violet-400" />
-                        <h2 className="text-[15px] font-semibold text-white">Event Kelas</h2>
+                <section className="relative z-10 py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                    <div className="flex items-center gap-2.5 mb-6">
+                        <Gift className="w-5 h-5 text-violet-400" />
+                        <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight">Event & Patungan Kelas</h2>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         {events.map((event, idx) => {
                             const progress = Math.min(100, ((event.totalPaid || 0) / (event.targetAmount || 1)) * 100);
                             return (
-                                <div key={idx} className="rounded-2xl bg-white/[0.035] border border-white/[0.1] p-5 sm:p-6 hover:bg-white/[0.07] transition-all card-hover glow-hover">
-                                    <h3 className="font-semibold text-white text-[15px] mb-4">{event.name || 'Event'}</h3>
-                                    <div className="space-y-2.5 text-[13px]">
-                                        <div className="flex justify-between">
-                                            <span className="text-white/60">Target</span>
-                                            <span className="text-white/60 font-medium">{formatCurrency(event.targetAmount || 0)}</span>
+                                <div key={idx} className="glass-cyber-card rounded-2xl p-6 card-hover">
+                                    <h3 className="font-bold text-white text-base mb-3">{event.name || 'Event Khusus'}</h3>
+                                    <div className="space-y-2 text-xs">
+                                        <div className="flex justify-between text-white/50">
+                                            <span>Target Iuran</span>
+                                            <span className="text-white font-medium">{formatCurrency(event.targetAmount || 0)}</span>
                                         </div>
-                                        <div className="flex justify-between">
-                                            <span className="text-white/60">Terkumpul</span>
-                                            <span className="text-indigo-400 font-medium">{formatCurrency(event.totalPaid || 0)}</span>
-                                        </div>
-                                        <div className="flex justify-between">
-                                            <span className="text-white/60">Peserta</span>
-                                            <span className="text-white/60 font-medium">{event.paidCount || 0} siswa</span>
+                                        <div className="flex justify-between text-white/50">
+                                            <span>Terkumpul</span>
+                                            <span className="text-indigo-400 font-semibold">{formatCurrency(event.totalPaid || 0)}</span>
                                         </div>
                                     </div>
-                                    <div className="mt-4 h-1 bg-white/[0.06] rounded-full overflow-hidden">
-                                        <div className="h-full bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full transition-all duration-700 progress-animate" style={{ width: `${progress}%` }} />
+                                    <div className="mt-4 h-1.5 bg-white/[0.08] rounded-full overflow-hidden">
+                                        <div
+                                            className="h-full bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full transition-all duration-700"
+                                            style={{ width: `${progress}%` }}
+                                        />
                                     </div>
-                                    <p className="text-[11px] text-white/55 mt-2 text-right">{progress.toFixed(0)}%</p>
+                                    <div className="flex justify-between items-center text-[11px] text-white/40 mt-2">
+                                        <span>{event.paidCount || 0} Mahasiswa berpartisipasi</span>
+                                        <span className="font-semibold text-white/70">{progress.toFixed(0)}%</span>
+                                    </div>
                                 </div>
                             );
                         })}
@@ -284,35 +547,43 @@ const PublicDashboard = () => {
                 </section>
             )}
 
-            {/* Leaderboard */}
+            {/* Top 5 Leaderboard Preview */}
             {leaderboard.length > 0 && (
-                <section className="px-5 sm:px-8 lg:px-12 pb-14 animate-slide-up">
-                    <div className="flex items-center justify-between mb-5">
+                <section className="relative z-10 py-10 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+                    <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-2.5">
-                            <Trophy className="w-[18px] h-[18px] text-amber-300" />
-                            <h2 className="text-[15px] font-semibold text-white">Top Contributors</h2>
+                            <Trophy className="w-5 h-5 text-amber-400" />
+                            <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight">Top Donatur Kas Kelas</h2>
                         </div>
-                        <button onClick={() => navigate('/leaderboard')} className="flex items-center gap-1 text-[13px] text-white/60 hover:text-white/60 transition">
-                            Selengkapnya <ChevronRight className="w-3.5 h-3.5" />
+                        <button
+                            onClick={() => navigate('/leaderboard')}
+                            className="flex items-center gap-1 text-xs text-indigo-400 hover:text-indigo-300 font-medium transition"
+                        >
+                            <span>Lihat Semua Peringkat</span>
+                            <ChevronRight className="w-3.5 h-3.5" />
                         </button>
                     </div>
-                    <div className="rounded-2xl bg-white/[0.035] border border-white/[0.1] overflow-hidden">
-                        {leaderboard.map((member, index) => {
-                            const rankColors = ['text-amber-300', 'text-white/55', 'text-orange-400'];
-                            const rankBg = ['bg-amber-400/10 border-amber-400/15', 'bg-white/[0.1]/10 border-white/[0.1]/20', 'bg-orange-400/10 border-orange-400/20'];
-                            const RankIcon = index === 0 ? Trophy : index === 1 ? Medal : index === 2 ? Award : null;
+
+                    <div className="glass-cyber-card rounded-2xl overflow-hidden divide-y divide-white/[0.06]">
+                        {leaderboard.slice(0, 5).map((member, index) => {
+                            const rankIcons = ['🥇', '🥈', '🥉'];
                             return (
-                                <div key={member.studentId} className={`flex items-center justify-between px-5 sm:px-6 py-3.5 hover:bg-white/[0.015] transition-colors rank-enter ${index !== leaderboard.length - 1 ? 'border-b border-white/[0.12]' : ''}`}>
+                                <div
+                                    key={member._id}
+                                    className="flex items-center justify-between p-4 sm:p-5 hover:bg-white/[0.02] transition-colors"
+                                >
                                     <div className="flex items-center gap-3.5 min-w-0">
-                                        <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center border ${index < 3 ? rankBg[index] : 'bg-white/[0.03] border-white/[0.1]'}`}>
-                                            {RankIcon ? <RankIcon className={`w-3.5 h-3.5 ${rankColors[index]} ${index === 0 ? "trophy-shimmer" : ""}`} /> : <span className="text-[11px] font-semibold text-white/55">{index + 1}</span>}
+                                        <div className="w-8 h-8 rounded-xl flex items-center justify-center text-base font-bold flex-shrink-0">
+                                            {index < 3 ? rankIcons[index] : <span className="text-xs text-white/40 font-semibold">{index + 1}</span>}
                                         </div>
                                         <div className="min-w-0">
-                                            <p className="text-[13px] font-medium text-white/90 truncate">{member.studentName}</p>
-                                            <p className="text-[11px] text-white/25">{member.paymentCount} transaksi</p>
+                                            <p className="text-sm font-semibold text-white truncate">{member.name}</p>
+                                            <p className="text-xs text-white/40">
+                                                Absen #{member.absen} • {member.paymentCount} Transaksi
+                                            </p>
                                         </div>
                                     </div>
-                                    <p className={`text-[13px] font-semibold flex-shrink-0 ml-4 ${index < 3 ? rankColors[index] : 'text-white/60'}`}>
+                                    <p className="text-sm font-bold text-amber-300 flex-shrink-0 ml-4">
                                         {formatCurrency(member.totalPaid)}
                                     </p>
                                 </div>
@@ -322,37 +593,29 @@ const PublicDashboard = () => {
                 </section>
             )}
 
-            {/* CTA */}
-            <section className="px-5 sm:px-8 lg:px-12 pb-20 animate-fade-in">
-                <div className="rounded-2xl bg-gradient-to-br from-indigo-500/[0.06] to-violet-500/[0.04] border border-indigo-500/[0.08] border-glow p-8 sm:p-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-                    <div>
-                        <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 tracking-tight">
-                            Lihat Detail Pembayaranmu
-                        </h3>
-                        <p className="text-white/60 text-sm max-w-md leading-relaxed">
-                            Login untuk melihat riwayat pembayaran, total kontribusi, dan status keuanganmu.
-                        </p>
-                    </div>
-                    <button
-                        onClick={() => navigate('/login')}
-                        className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-white/95 text-zinc-900 hover:bg-white transition-all text-sm font-semibold flex-shrink-0 shadow-lg shadow-indigo-500/10 btn-press"
-                    >
-                        Login Sekarang
-                        <ArrowRight className="w-4 h-4" />
-                    </button>
-                </div>
-            </section>
-
-            {/* Footer */}
-            <footer className="border-t border-white/[0.12]">
-                <div className="px-5 sm:px-8 lg:px-12 py-6 sm:py-8 flex flex-col sm:flex-row items-center justify-between gap-3">
-                    <div className="flex items-center gap-2">
-                        <div className="w-5 h-5 rounded bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
-                            <Wallet className="w-2.5 h-2.5 text-white" />
+            {/* Modern Clean Footer */}
+            <footer className="relative z-10 border-t border-white/[0.08] mt-16 bg-[#09090b]/80">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div className="flex items-center gap-2.5">
+                        <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
+                            <ShieldCheck className="w-3.5 h-3.5 text-white" />
                         </div>
-                        <span className="text-[13px] text-white/55">Kas Kelas TRIFORCE</span>
+                        <span className="text-xs font-semibold text-white/70">Kas Kelas TRIFORCE</span>
+                        <span className="text-white/20">•</span>
+                        <span className="text-[11px] text-white/40">Data Tersinkronisasi Otomatis</span>
                     </div>
-                    <p className="text-[11px] text-white/15">Data diperbarui secara real-time</p>
+
+                    <div className="flex items-center gap-4 text-xs text-white/50">
+                        <button onClick={() => navigate('/qr-payment')} className="hover:text-white transition">
+                            Bayar QRIS
+                        </button>
+                        <button onClick={() => navigate('/leaderboard')} className="hover:text-white transition">
+                            Leaderboard
+                        </button>
+                        <button onClick={() => navigate('/login')} className="hover:text-white transition">
+                            Login Bendahara
+                        </button>
+                    </div>
                 </div>
             </footer>
         </div>

@@ -22,9 +22,11 @@ import {
     Receipt,
     AlertTriangle,
     CalendarDays,
+    MessageCircle,
     Settings as SettingsIcon,
 } from 'lucide-react';
 import Settings from './components/settings/Settings';
+import ReceiptModal from './components/payments/ReceiptModal';
 import {
     studentsAPI,
     paymentsAPI,
@@ -56,6 +58,8 @@ const App = () => {
     const [editingStudent, setEditingStudent] = useState(null);
     const [showPayment, setShowPayment] = useState(false);
     const [showExpense, setShowExpense] = useState(false);
+    const [selectedReceiptPayment, setSelectedReceiptPayment] = useState(null);
+    const [showReceiptModal, setShowReceiptModal] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -254,6 +258,23 @@ const App = () => {
         } catch (err) {
             alert('Gagal menambah pembayaran: ' + err.response?.data?.message);
         }
+    };
+
+    // Send WhatsApp reminder for tunggakan
+    const handleSendWAReminder = (student, tunggakan) => {
+        const cleanPhone = (student?.phoneNumber || '').replace(/\D/g, '');
+        const intlPhone = cleanPhone.startsWith('0')
+            ? '62' + cleanPhone.slice(1)
+            : cleanPhone.startsWith('62')
+            ? cleanPhone
+            : cleanPhone
+            ? '62' + cleanPhone
+            : '';
+        const text = `Halo ${student?.name || 'Teman'}, mengingatkan bahwa kamu memiliki tunggakan uang kas kelas sebesar Rp ${Number(tunggakan || 0).toLocaleString('id-ID')}. Mohon segera melunasi ke Bendahara ya! Terima kasih 🙏`;
+        const url = intlPhone
+            ? `https://wa.me/${intlPhone}?text=${encodeURIComponent(text)}`
+            : `https://wa.me/?text=${encodeURIComponent(text)}`;
+        window.open(url, '_blank');
     };
 
     // Add expense
@@ -1791,36 +1812,48 @@ const App = () => {
                                                     </div>
                                                 </td>
                                                 <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm">
-                                                    {payment.count > 1 ? (
-                                                        <div className="flex items-center gap-1">
-                                                            <button
-                                                                onClick={() => deletePayment(payment.paymentIds[payment.paymentIds.length - 1])}
-                                                                className="px-2 py-1 rounded-md bg-rose-500/10 text-rose-300 hover:bg-rose-500/20 transition-colors text-xs font-medium"
-                                                                title="Hapus 1 pembayaran"
-                                                            >
-                                                                −1
-                                                            </button>
-                                                            <button
-                                                                onClick={() => {
-                                                                    if (window.confirm(`Hapus SEMUA ${payment.count} pembayaran ini?`)) {
-                                                                        payment.paymentIds.forEach((id) => deletePayment(id));
-                                                                    }
-                                                                }}
-                                                                className="text-rose-300/40 hover:text-rose-300 p-1 transition-colors"
-                                                                title={`Hapus semua ${payment.count}`}
-                                                            >
-                                                                <Trash2 className="w-3.5 h-3.5" />
-                                                            </button>
-                                                        </div>
-                                                    ) : (
+                                                    <div className="flex items-center gap-1.5">
                                                         <button
-                                                            onClick={() => deletePayment(payment._id)}
-                                                            className="text-rose-300/60 hover:text-rose-300 p-1 transition-colors"
-                                                            title="Hapus"
+                                                            onClick={() => {
+                                                                setSelectedReceiptPayment(payment);
+                                                                setShowReceiptModal(true);
+                                                            }}
+                                                            className="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-300 hover:bg-indigo-500/20 hover:text-indigo-200 transition-colors"
+                                                            title="Lihat Kwitansi Digital"
                                                         >
-                                                            <Trash2 className="w-4 h-4" />
+                                                            <Receipt className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                                                         </button>
-                                                    )}
+                                                        {payment.count > 1 ? (
+                                                            <div className="flex items-center gap-1">
+                                                                <button
+                                                                    onClick={() => deletePayment(payment.paymentIds[payment.paymentIds.length - 1])}
+                                                                    className="px-2 py-1 rounded-md bg-rose-500/10 text-rose-300 hover:bg-rose-500/20 transition-colors text-xs font-medium"
+                                                                    title="Hapus 1 pembayaran"
+                                                                >
+                                                                    −1
+                                                                </button>
+                                                                <button
+                                                                    onClick={() => {
+                                                                        if (window.confirm(`Hapus SEMUA ${payment.count} pembayaran ini?`)) {
+                                                                            payment.paymentIds.forEach((id) => deletePayment(id));
+                                                                        }
+                                                                    }}
+                                                                    className="text-rose-300/40 hover:text-rose-300 p-1 transition-colors"
+                                                                    title={`Hapus semua ${payment.count}`}
+                                                                >
+                                                                    <Trash2 className="w-3.5 h-3.5" />
+                                                                </button>
+                                                            </div>
+                                                        ) : (
+                                                            <button
+                                                                onClick={() => deletePayment(payment._id)}
+                                                                className="text-rose-300/60 hover:text-rose-300 p-1.5 transition-colors"
+                                                                title="Hapus"
+                                                            >
+                                                                <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                                                            </button>
+                                                        )}
+                                                    </div>
                                                 </td>
                                             </tr>
                                         );
@@ -2125,16 +2158,26 @@ const App = () => {
                                                             )}
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                                            <button
-                                                                onClick={() =>
-                                                                    addPaymentQuick(
-                                                                        student._id
-                                                                    )
-                                                                }
-                                                                className="bg-teal-500/10 text-teal-300 px-3 py-1.5 rounded-lg hover:bg-teal-500/18 transition text-xs border border-teal-500/15"
-                                                            >
-                                                                Bayar Sekarang
-                                                            </button>
+                                                            <div className="flex items-center gap-2">
+                                                                <button
+                                                                    onClick={() =>
+                                                                        addPaymentQuick(
+                                                                            student._id
+                                                                        )
+                                                                    }
+                                                                    className="bg-teal-500/10 text-teal-300 px-3 py-1.5 rounded-lg hover:bg-teal-500/18 transition text-xs border border-teal-500/15 font-medium"
+                                                                >
+                                                                    Bayar Sekarang
+                                                                </button>
+                                                                <button
+                                                                    onClick={() => handleSendWAReminder(student, tunggakan)}
+                                                                    className="bg-emerald-500/10 text-emerald-300 px-2.5 py-1.5 rounded-lg hover:bg-emerald-500/20 transition text-xs border border-emerald-500/20 flex items-center gap-1.5 font-medium"
+                                                                    title="Kirim pengingat tunggakan via WhatsApp"
+                                                                >
+                                                                    <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />
+                                                                    <span>Ingatkan</span>
+                                                                </button>
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 );
@@ -2582,6 +2625,26 @@ const App = () => {
                         </div>
                     </div>
                 )}
+
+                {/* Digital Receipt Modal */}
+                <ReceiptModal
+                    isOpen={showReceiptModal}
+                    onClose={() => {
+                        setShowReceiptModal(false);
+                        setSelectedReceiptPayment(null);
+                    }}
+                    payment={selectedReceiptPayment}
+                    student={
+                        selectedReceiptPayment
+                            ? students.find(
+                                  (s) =>
+                                      s._id ===
+                                      (selectedReceiptPayment.studentId?._id ||
+                                          selectedReceiptPayment.studentId)
+                              )
+                            : null
+                    }
+                />
             </div>
         </div>
     );
