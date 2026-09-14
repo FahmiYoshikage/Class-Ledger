@@ -17,6 +17,7 @@ import {
     Target,
     Loader2,
     Radio,
+    FileText,
 } from 'lucide-react';
 import axios from 'axios';
 import EventReminderTab from '../events/EventReminderTab';
