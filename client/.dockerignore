@@ -1,0 +1,13 @@
+node_modules
+src
+public
+scripts
+dev-dist
+npm-debug.log*
+*.config.js
+package*.json
+.env*
+.git
+.gitignore
+README.md
+*.md

@@ -11,8 +11,7 @@ COPY dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy runtime entrypoint script to inject .env at container startup
-COPY docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
+COPY --chmod=755 docker-entrypoint.sh /docker-entrypoint.sh
 
 # Expose HTTP port
 EXPOSE 80

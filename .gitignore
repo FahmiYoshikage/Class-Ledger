@@ -67,7 +67,8 @@ k8s/**/*.yaml
 
 # Docker
 .dockerinit
-.dockerignore
+!client/.dockerignore
+!server/.dockerignore
 Dockerfile*
 docker-compose*.yml
 *.image
