@@ -13,6 +13,7 @@ import QRPayment from './components/payments/QRPayment.jsx';
 import QRPaymentAdmin from './components/payments/QRPaymentAdmin.jsx';
 import ProtectedRoute from './components/core/ProtectedRoute.jsx';
 import DashboardLayout from './components/core/DashboardLayout.jsx';
+import NotFoundPage from './components/core/NotFoundPage.jsx';
 import './index.css';
 
 // Service Worker update checking (graceful, non-destructive)
@@ -82,7 +83,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                     </Route>
 
                     {/* Fallback */}
-                    <Route path="*" element={<Navigate to="/" replace />} />
+                    <Route path="*" element={<NotFoundPage />} />
                 </Routes>
             </AuthProvider>
         </BrowserRouter>

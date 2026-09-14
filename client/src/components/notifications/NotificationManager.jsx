@@ -46,7 +46,7 @@ const NotificationManager = () => {
 
     // Group message states
     const [showGroupModal, setShowGroupModal] = useState(false);
-    const [groupId, setGroupId] = useState('');
+    const [groupId, setGroupId] = useState('120363402325545063@g.us');
     const [groupPreview, setGroupPreview] = useState('');
     const [showFinancialReportModal, setShowFinancialReportModal] = useState(false);
 

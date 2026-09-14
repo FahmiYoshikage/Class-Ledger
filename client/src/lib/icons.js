@@ -1,7 +1,7 @@
 /**
  * Auto-generated optimized lucide-react imports.
  * Hanya icon yang benar-benar dipakai yang di-import.
- * Ini mengurangi Vite transform dari ~1600 modules jadi ~74.
+ * Ini mengurangi Vite transform dari ~1600 modules jadi ~76.
  * 
  * Re-generate: node scripts/generate-icons.js
  */
@@ -23,6 +23,7 @@ export { default as CheckCircle2 } from '../../node_modules/lucide-react/dist/es
 export { default as ChevronLeft } from '../../node_modules/lucide-react/dist/esm/icons/chevron-left.js';
 export { default as ChevronRight } from '../../node_modules/lucide-react/dist/esm/icons/chevron-right.js';
 export { default as Clock } from '../../node_modules/lucide-react/dist/esm/icons/clock.js';
+export { default as Compass } from '../../node_modules/lucide-react/dist/esm/icons/compass.js';
 export { default as Copy } from '../../node_modules/lucide-react/dist/esm/icons/copy.js';
 export { default as CreditCard } from '../../node_modules/lucide-react/dist/esm/icons/credit-card.js';
 export { default as DollarSign } from '../../node_modules/lucide-react/dist/esm/icons/dollar-sign.js';
@@ -64,6 +65,7 @@ export { default as Send } from '../../node_modules/lucide-react/dist/esm/icons/
 export { default as Settings } from '../../node_modules/lucide-react/dist/esm/icons/settings.js';
 export { default as Share2 } from '../../node_modules/lucide-react/dist/esm/icons/share-2.js';
 export { default as Shield } from '../../node_modules/lucide-react/dist/esm/icons/shield.js';
+export { default as ShieldAlert } from '../../node_modules/lucide-react/dist/esm/icons/shield-alert.js';
 export { default as ShieldCheck } from '../../node_modules/lucide-react/dist/esm/icons/shield-check.js';
 export { default as Smartphone } from '../../node_modules/lucide-react/dist/esm/icons/smartphone.js';
 export { default as Sparkles } from '../../node_modules/lucide-react/dist/esm/icons/sparkles.js';

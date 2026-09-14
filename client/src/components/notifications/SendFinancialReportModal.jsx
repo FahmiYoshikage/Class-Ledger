@@ -21,14 +21,14 @@ const FALLBACK_TEMPLATES = {
 };
 
 const SendFinancialReportModal = ({ isOpen, onClose, onSuccess }) => {
-    const [groupId, setGroupId] = useState('');
+    const [groupId, setGroupId] = useState('120363402325545063@g.us');
     const [saveDefault, setSaveDefault] = useState(true);
     const [selectedTemplateKey, setSelectedTemplateKey] = useState('full');
-    const [message, setMessage] = useState('');
+    const [message, setMessage] = useState(FALLBACK_TEMPLATES.full);
     const [templates, setTemplates] = useState({
-        full: '',
-        summary: '',
-        arrears: '',
+        full: FALLBACK_TEMPLATES.full,
+        summary: FALLBACK_TEMPLATES.summary,
+        arrears: FALLBACK_TEMPLATES.arrears,
     });
     const [attachPdf, setAttachPdf] = useState(true);
     const [loading, setLoading] = useState(false);
@@ -122,9 +122,6 @@ const SendFinancialReportModal = ({ isOpen, onClose, onSuccess }) => {
             });
             return;
         }
-
-        const confirmMsg = `Kirim laporan kas kelas ke WhatsApp Grup?\n\nTarget ID: ${groupId.trim()}\nLampiran PDF: ${attachPdf ? 'Ya (Otomatis dibuat)' : 'Tidak'}\nSimpan Default: ${saveDefault ? 'Ya' : 'Tidak'}`;
-        if (!window.confirm(confirmMsg)) return;
 
         setSending(true);
         setStatusResult(null);
@@ -430,7 +427,7 @@ const SendFinancialReportModal = ({ isOpen, onClose, onSuccess }) => {
                     <button
                         type="button"
                         onClick={handleSend}
-                        disabled={sending || loading || !groupId.trim() || !message.trim()}
+                        disabled={sending || !groupId.trim() || !message.trim()}
                         className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-black font-bold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-emerald-500/25 transition-all active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
                     >
                         {sending ? (
