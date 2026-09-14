@@ -97,6 +97,23 @@ Hasil verifikasi langsung dari `docker stats` saat kedua container berjalan:
    curl -s http://localhost:8767/api/health
    ```
 
+### 6. Refaktor Penghapusan Akun Mahasiswa, Dead Code, & Transisi Single-Role Bendahara
+- **Penghapusan File & Dead Code**:
+  - Menghapus 3 file frontend monolitik & dead code: `AdminDashboard.jsx` (447 baris), `MemberDashboard.jsx` (560 baris), dan `UserManagement.jsx` (513 baris) — total **1.520 baris kode terhapus**.
+  - Menghapus folder kosong `client/src/components/students` dan `client/src/pages`.
+  - Menghapus metode dead code pada `client/src/services/api.js` (`getUsers`, `updateUser`, `deleteUser`, `resetPassword`).
+- **Penyederhanaan Arsitektur Auth (ACL -> Single-Role Bendahara)**:
+  - `client/src/main.jsx`: Menghapus `DashboardRouter`. Rute `/app/dashboard` langsung me-render `<App />` (Bendahara Dashboard).
+  - `client/src/components/core/ProtectedRoute.jsx`: Menyederhanakan pengecekan autentikasi murni (menghapus `requiredRole` dan layar error 403 Access Denied).
+  - `client/src/components/core/DashboardLayout.jsx`: Membersihkan pengecekan role `admin`, navigasi difokuskan untuk Bendahara (Dashboard, QR Admin, Logs, Sesi, Profil, Logout).
+  - `client/src/context/AuthContext.jsx`: Fungsi cek role disederhanakan menjadi `() => !!user`.
+- **Akses Publik Nyaman untuk Mahasiswa**:
+  - `/qr-payment` dijadikan rute publik sehingga mahasiswa dapat memilih namanya, melihat tunggakan, dan mengunggah foto bukti transfer langsung tanpa perlu registrasi/login.
+  - Ditambahkan tombol pintas `"Bayar QRIS"` di navbar [client/src/components/core/PublicDashboard.jsx](file:///home/fahmi/Documents/Class-Ledger/client/src/components/core/PublicDashboard.jsx) dan tombol login dinamai jelas `"Bendahara"`.
+  - [client/src/components/core/Login.jsx](file:///home/fahmi/Documents/Class-Ledger/client/src/components/core/Login.jsx) disesuaikan judulnya menjadi `"Login Bendahara"` lengkap dengan tombol kembali ke dashboard publik.
+  - [client/nginx.conf](file:///home/fahmi/Documents/Class-Ledger/client/nginx.conf): Menambahkan proxy directive `location ^~ /uploads/` ke `api:5000/uploads/` agar bukti transfer dan gambar QRIS dapat diakses tanpa CORS/broken link.
+  - [server/routes/auth.js](file:///home/fahmi/Documents/Class-Ledger/server/routes/auth.js): Menambahkan endpoint `PATCH /profile` agar fitur ubah nama/username di [client/src/components/core/ProfileEdit.jsx](file:///home/fahmi/Documents/Class-Ledger/client/src/components/core/ProfileEdit.jsx) berfungsi normal.
+
 ---
 
 ## 🛠️ Langkah Menjalankan / Deploy di VPS
