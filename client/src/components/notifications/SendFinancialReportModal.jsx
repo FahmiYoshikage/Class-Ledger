@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
     MessageCircle,
     Send,
@@ -13,6 +13,12 @@ import {
     Sparkles,
 } from 'lucide-react';
 import { notificationsAPI } from '../../services/api';
+
+const FALLBACK_TEMPLATES = {
+    full: `📊 *LAPORAN KAS KELAS* 📊\nTRIFORCE\n━━━━━━━━━━━━━━━━━━━━\n\nMohon kerja samanya untuk pembayaran kas kelas ya teman-teman! 🙏\n\n━━━━━━━━━━━━━━━━━━━━\n💳 *INFORMASI PEMBAYARAN*\nSemua atas nama: *Fahmi Ilham Bagaskara*\n\n*E-Wallet:*\n💚 Gopay: 085646745887\n💰 Dana: 085646745887\n🛍️ ShopeePay: 085646745887\n\n*Mobile Banking:*\n🏦 SeaBank: 901006225290\n🏦 BRI: 011001041959536\n━━━━━━━━━━━━━━━━━━━━\n\n🏆 Cek Leaderboard Lengkap:\nhttps://triforce.crud.my.id/leaderboard`,
+    summary: `📊 *UPDATE KAS KELAS (RINGKAS)* 📊\nTRIFORCE\n━━━━━━━━━━━━━━━━━━━━\nPengingat pembayaran kas kelas mingguan (Rp 2.000/minggu).\n\n💳 *Pembayaran via:* Dana / Gopay / ShopeePay / SeaBank / BRI (a.n Fahmi Ilham Bagaskara)\n🏆 https://triforce.crud.my.id/leaderboard`,
+    arrears: `⚠️ *PENGINGAT KAS & TUNGGAKAN* ⚠️\nTRIFORCE\n━━━━━━━━━━━━━━━━━━━━\nYuk segera lunasi kas kelas teman-teman agar operasional kegiatan tetap aman! 💪\n\n💳 *Pembayaran via:* Dana / Gopay / ShopeePay / SeaBank / BRI (a.n Fahmi Ilham Bagaskara)\n🏆 https://triforce.crud.my.id/leaderboard`,
+};
 
 const SendFinancialReportModal = ({ isOpen, onClose, onSuccess }) => {
     const [groupId, setGroupId] = useState('');
@@ -30,12 +36,6 @@ const SendFinancialReportModal = ({ isOpen, onClose, onSuccess }) => {
     const [copied, setCopied] = useState(false);
     const [statusResult, setStatusResult] = useState(null);
 
-    const fallbackTemplates = {
-        full: `📊 *LAPORAN KAS KELAS* 📊\nTRIFORCE\n━━━━━━━━━━━━━━━━━━━━\n\nMohon kerja samanya untuk pembayaran kas kelas ya teman-teman! 🙏\n\n━━━━━━━━━━━━━━━━━━━━\n💳 *INFORMASI PEMBAYARAN*\nSemua atas nama: *Fahmi Ilham Bagaskara*\n\n*E-Wallet:*\n💚 Gopay: 085646745887\n💰 Dana: 085646745887\n🛍️ ShopeePay: 085646745887\n\n*Mobile Banking:*\n🏦 SeaBank: 901006225290\n🏦 BRI: 011001041959536\n━━━━━━━━━━━━━━━━━━━━\n\n🏆 Cek Leaderboard Lengkap:\nhttps://triforce.crud.my.id/leaderboard`,
-        summary: `📊 *UPDATE KAS KELAS (RINGKAS)* 📊\nTRIFORCE\n━━━━━━━━━━━━━━━━━━━━\nPengingat pembayaran kas kelas mingguan (Rp 2.000/minggu).\n\n💳 *Pembayaran via:* Dana / Gopay / ShopeePay / SeaBank / BRI (a.n Fahmi Ilham Bagaskara)\n🏆 https://triforce.crud.my.id/leaderboard`,
-        arrears: `⚠️ *PENGINGAT KAS & TUNGGAKAN* ⚠️\nTRIFORCE\n━━━━━━━━━━━━━━━━━━━━\nYuk segera lunasi kas kelas teman-teman agar operasional kegiatan tetap aman! 💪\n\n💳 *Pembayaran via:* Dana / Gopay / ShopeePay / SeaBank / BRI (a.n Fahmi Ilham Bagaskara)\n🏆 https://triforce.crud.my.id/leaderboard`,
-    };
-
     const fetchPreview = useCallback(async () => {
         setLoading(true);
         setStatusResult(null);
@@ -43,24 +43,24 @@ const SendFinancialReportModal = ({ isOpen, onClose, onSuccess }) => {
             const res = await notificationsAPI.getBroadcastPreview();
             if (res.data?.success) {
                 const fetchedTemplates = res.data.templates || {
-                    full: res.data.message || fallbackTemplates.full,
-                    summary: fallbackTemplates.summary,
-                    arrears: fallbackTemplates.arrears,
+                    full: res.data.message || FALLBACK_TEMPLATES.full,
+                    summary: FALLBACK_TEMPLATES.summary,
+                    arrears: FALLBACK_TEMPLATES.arrears,
                 };
                 setTemplates(fetchedTemplates);
-                setMessage(fetchedTemplates[selectedTemplateKey] || res.data.message || fallbackTemplates[selectedTemplateKey]);
+                setMessage(fetchedTemplates[selectedTemplateKey] || res.data.message || FALLBACK_TEMPLATES[selectedTemplateKey]);
                 if (res.data.groupId) {
                     setGroupId(res.data.groupId);
-                } else if (!groupId) {
-                    setGroupId('120363402325545063@g.us');
+                } else {
+                    setGroupId((prev) => prev || '120363402325545063@g.us');
                 }
             }
         } catch (err) {
             console.error('Error fetching broadcast preview:', err);
             // Fallback so user is never blocked
-            if (!groupId) setGroupId('120363402325545063@g.us');
-            setTemplates(fallbackTemplates);
-            if (!message) setMessage(fallbackTemplates[selectedTemplateKey] || fallbackTemplates.full);
+            setGroupId((prev) => prev || '120363402325545063@g.us');
+            setTemplates(FALLBACK_TEMPLATES);
+            setMessage((prev) => prev || FALLBACK_TEMPLATES[selectedTemplateKey] || FALLBACK_TEMPLATES.full);
 
             setStatusResult({
                 success: false,
@@ -72,13 +72,13 @@ const SendFinancialReportModal = ({ isOpen, onClose, onSuccess }) => {
         } finally {
             setLoading(false);
         }
-    }, [selectedTemplateKey, groupId, message]);
+    }, [selectedTemplateKey]);
 
     // Fetch live templates & default Group ID whenever modal opens
     useEffect(() => {
         if (!isOpen) return;
         fetchPreview();
-    }, [isOpen]);
+    }, [isOpen, fetchPreview]);
 
     if (!isOpen) return null;
 
@@ -86,16 +86,16 @@ const SendFinancialReportModal = ({ isOpen, onClose, onSuccess }) => {
         setSelectedTemplateKey(key);
         if (templates[key]) {
             setMessage(templates[key]);
-        } else if (fallbackTemplates[key]) {
-            setMessage(fallbackTemplates[key]);
+        } else if (FALLBACK_TEMPLATES[key]) {
+            setMessage(FALLBACK_TEMPLATES[key]);
         }
     };
 
     const handleResetTemplate = () => {
         if (templates[selectedTemplateKey]) {
             setMessage(templates[selectedTemplateKey]);
-        } else if (fallbackTemplates[selectedTemplateKey]) {
-            setMessage(fallbackTemplates[selectedTemplateKey]);
+        } else if (FALLBACK_TEMPLATES[selectedTemplateKey]) {
+            setMessage(FALLBACK_TEMPLATES[selectedTemplateKey]);
         }
     };
 
