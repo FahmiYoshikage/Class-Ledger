@@ -1060,40 +1060,59 @@ const App = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#18181b] text-white selection:bg-indigo-500/25">
-            <div className="px-4 sm:px-6 lg:px-8 py-6 page-transition">
+        <div className="min-h-screen bg-[#09090b] text-white selection:bg-indigo-500/30 relative overflow-hidden">
+            {/* Ambient Floating Aurora Mesh */}
+            <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+                <div className="absolute -top-[15%] left-1/4 w-[500px] h-[500px] rounded-full bg-gradient-to-br from-indigo-600/10 via-violet-600/8 to-transparent blur-3xl animate-aurora" />
+                <div className="absolute top-[35%] -right-[10%] w-[450px] h-[450px] rounded-full bg-gradient-to-br from-pink-600/8 via-purple-600/8 to-transparent blur-3xl animate-aurora" style={{ animationDelay: '-6s' }} />
+                <div className="absolute bottom-[5%] left-[10%] w-[450px] h-[450px] rounded-full bg-gradient-to-br from-cyan-600/8 via-teal-600/8 to-transparent blur-3xl animate-aurora" style={{ animationDelay: '-12s' }} />
+            </div>
+
+            <div className="relative z-10 px-4 sm:px-6 lg:px-8 py-6 page-transition">
                 {/* Header */}
-                <div className="flex items-center justify-between mb-8 animate-fade-in">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 animate-fade-in">
                     <div className="flex items-center gap-3.5">
-                        <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-500/15 animate-pulse-glow">
-                            <Wallet className="w-5 h-5 text-white" />
+                        <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 via-violet-500 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/25 border border-white/20 animate-levitate">
+                            <Wallet className="w-6 h-6 text-white" />
+                            <div className="absolute inset-0 rounded-2xl bg-white/20 opacity-0 hover:opacity-100 transition-opacity" />
                         </div>
                         <div>
-                            <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-                                Kas Kelas
-                            </h1>
-                            <p className="text-[13px] text-white/60">
+                            <div className="flex items-center gap-2">
+                                <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                                    Kas Kelas
+                                </h1>
+                                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 uppercase tracking-widest">
+                                    Bendahara
+                                </span>
+                            </div>
+                            <p className="text-xs sm:text-[13px] text-white/60">
                                 Sistem Pencatatan Kas TRIFORCE Rp 2.000/minggu
                             </p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-3">
-                        <div className="text-right">
-                            <p className="text-[11px] text-white/60 uppercase tracking-wider">
-                                Minggu ke-
-                            </p>
-                            <p className="text-2xl font-bold text-indigo-400 tabular-nums">
-                                {currentWeek}
-                            </p>
+                    <div className="flex items-center gap-3 self-end sm:self-auto">
+                        <div className="px-3.5 py-2 rounded-xl bg-zinc-900/70 border border-indigo-500/20 shadow-inner flex items-center gap-3 glass-cyber-card">
+                            <div className="relative flex h-2.5 w-2.5">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                            </div>
+                            <div className="text-right">
+                                <p className="text-[10px] text-white/50 uppercase tracking-widest font-semibold">
+                                    Minggu ke-
+                                </p>
+                                <p className="text-xl sm:text-2xl font-black text-indigo-400 tabular-nums leading-none">
+                                    {currentWeek}
+                                </p>
+                            </div>
                         </div>
                         <button
                             onClick={loadAllData}
-                            className="p-2 hover:bg-white/[0.07] rounded-lg transition"
+                            className="p-2.5 hover:bg-white/[0.08] rounded-xl transition-all border border-white/10 hover:border-white/20 active:scale-95 text-white/60 hover:text-white"
                             title="Refresh data"
                         >
                             <RefreshCw
-                                className={`w-4 h-4 text-white/55 ${
-                                    loading ? 'animate-spin' : ''
+                                className={`w-4 h-4 ${
+                                    loading ? 'animate-spin text-indigo-400' : ''
                                 }`}
                             />
                         </button>
@@ -1112,63 +1131,74 @@ const App = () => {
 
                 {/* Stats Cards */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 animate-slide-up">
-                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-4 sm:p-5 hover:bg-white/[0.07] transition-all card-hover glow-hover animate-slide-up stagger-1">
+                    {/* Total Siswa */}
+                    <div className="group rounded-2xl bg-zinc-950/60 border border-indigo-500/20 p-4 sm:p-5 hover:border-indigo-500/40 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden glass-cyber-card shadow-lg shadow-indigo-950/20">
+                        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-indigo-500/0 via-indigo-500/80 to-indigo-500/0" />
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-[11px] sm:text-[13px] text-white/60 font-medium">
                                     Total Siswa
                                 </p>
-                                <p className="text-xl sm:text-2xl font-bold text-white mt-1 tabular-nums">
+                                <p className="text-xl sm:text-2xl font-black text-white mt-1 tabular-nums">
                                     {students.length}
                                 </p>
                             </div>
-                            <div className="p-2 rounded-lg bg-indigo-500/8 border border-indigo-500/12 icon-container-hover">
-                                <Users className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400" />
+                            <div className="p-2.5 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 group-hover:scale-110 transition-transform">
+                                <Users className="w-5 h-5" />
                             </div>
                         </div>
                     </div>
-                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-4 sm:p-5 hover:bg-white/[0.07] transition-all card-hover glow-hover animate-slide-up stagger-2">
+
+                    {/* Kas Masuk */}
+                    <div className="group rounded-2xl bg-zinc-950/60 border border-teal-500/20 p-4 sm:p-5 hover:border-teal-500/40 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden glass-cyber-card shadow-lg shadow-teal-950/20">
+                        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-teal-500/0 via-teal-500/80 to-teal-500/0" />
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-[11px] sm:text-[13px] text-white/60 font-medium">
                                     Kas Masuk
                                 </p>
-                                <p className="text-lg sm:text-xl font-bold text-teal-300 mt-1">
+                                <p className="text-lg sm:text-xl font-black text-teal-300 mt-1 tabular-nums">
                                     {formatRp(totalKasMasuk)}
                                 </p>
                             </div>
-                            <div className="p-2 rounded-lg bg-teal-500/8 border border-teal-500/12 icon-container-hover">
-                                <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-teal-300" />
+                            <div className="p-2.5 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-300 group-hover:scale-110 transition-transform">
+                                <TrendingUp className="w-5 h-5" />
                             </div>
                         </div>
                     </div>
-                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-4 sm:p-5 hover:bg-white/[0.07] transition-all card-hover glow-hover animate-slide-up stagger-3">
+
+                    {/* Kas Keluar */}
+                    <div className="group rounded-2xl bg-zinc-950/60 border border-rose-500/20 p-4 sm:p-5 hover:border-rose-500/40 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden glass-cyber-card shadow-lg shadow-rose-950/20">
+                        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-rose-500/0 via-rose-500/80 to-rose-500/0" />
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-[11px] sm:text-[13px] text-white/60 font-medium">
                                     Kas Keluar
                                 </p>
-                                <p className="text-lg sm:text-xl font-bold text-rose-300 mt-1">
+                                <p className="text-lg sm:text-xl font-black text-rose-300 mt-1 tabular-nums">
                                     {formatRp(totalKasKeluar)}
                                 </p>
                             </div>
-                            <div className="p-2 rounded-lg bg-rose-500/8 border border-rose-400/12 icon-container-hover">
-                                <TrendingDown className="w-4 h-4 sm:w-5 sm:h-5 text-rose-300" />
+                            <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-400/20 text-rose-300 group-hover:scale-110 transition-transform">
+                                <TrendingDown className="w-5 h-5" />
                             </div>
                         </div>
                     </div>
-                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-4 sm:p-5 hover:bg-white/[0.07] transition-all card-hover glow-hover animate-slide-up stagger-4">
+
+                    {/* Saldo Kas */}
+                    <div className="group rounded-2xl bg-zinc-950/60 border border-purple-500/30 p-4 sm:p-5 hover:border-purple-500/50 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden glass-cyber-card shadow-lg shadow-purple-950/30">
+                        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-purple-500/0 via-pink-500/80 to-purple-500/0" />
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-[11px] sm:text-[13px] text-white/60 font-medium">
                                     Saldo Kas
                                 </p>
-                                <p className="text-lg sm:text-xl font-bold text-indigo-400 mt-1">
+                                <p className="text-lg sm:text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-300 via-indigo-300 to-pink-300 mt-1 tabular-nums">
                                     {formatRp(saldoKas)}
                                 </p>
                             </div>
-                            <div className="p-2 rounded-lg bg-indigo-500/8 border border-indigo-500/12 icon-container-hover">
-                                <Wallet className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400" />
+                            <div className="p-2.5 rounded-xl bg-gradient-to-br from-indigo-500/15 to-pink-500/15 border border-indigo-500/30 text-indigo-300 group-hover:scale-110 transition-transform">
+                                <Wallet className="w-5 h-5" />
                             </div>
                         </div>
                     </div>
@@ -1178,17 +1208,17 @@ const App = () => {
                 <div className="mb-6 grid grid-cols-2 gap-3 animate-slide-up stagger-5">
                     <button
                         onClick={exportCompleteReport}
-                        className="bg-teal-500/8 hover:bg-teal-500/10 border border-teal-500/15 text-teal-300 px-5 py-3 rounded-xl transition-all flex items-center justify-center gap-2.5 text-sm font-medium btn-press ripple-effect"
+                        className="bg-teal-500/10 hover:bg-teal-500/15 border border-teal-500/25 text-teal-300 px-5 py-3 rounded-xl transition-all flex items-center justify-center gap-2.5 text-sm font-semibold hover:shadow-lg hover:shadow-teal-950/50 active:scale-[0.99]"
                     >
-                        <FileText className="w-4 h-4" />
-                        <span>Excel</span>
+                        <FileText className="w-4 h-4 text-teal-400" />
+                        <span>Ekspor Excel</span>
                     </button>
                     <button
                         onClick={exportCompleteReportPDF}
-                        className="bg-rose-500/8 hover:bg-rose-500/10 border border-rose-400/15 text-rose-300 px-5 py-3 rounded-xl transition-all flex items-center justify-center gap-2.5 text-sm font-medium btn-press ripple-effect"
+                        className="bg-rose-500/10 hover:bg-rose-500/15 border border-rose-400/25 text-rose-300 px-5 py-3 rounded-xl transition-all flex items-center justify-center gap-2.5 text-sm font-semibold hover:shadow-lg hover:shadow-rose-950/50 active:scale-[0.99]"
                     >
-                        <FileText className="w-4 h-4" />
-                        <span>PDF</span>
+                        <FileText className="w-4 h-4 text-rose-400" />
+                        <span>Ekspor PDF</span>
                     </button>
                 </div>
 
@@ -1198,8 +1228,8 @@ const App = () => {
                 </div>
 
                 {/* Tabs */}
-                <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] mb-6 animate-slide-up stagger-6">
-                    <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 border-b border-white/[0.1]">
+                <div className="rounded-2xl bg-zinc-950/60 border border-white/10 mb-6 animate-slide-up shadow-xl shadow-black/30 overflow-hidden glass-cyber-card">
+                    <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 divide-y sm:divide-y-0 sm:divide-x divide-white/[0.06]">
                         {[
                             { key: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
                             { key: 'analytics', label: 'Analytics', icon: BarChart3 },
@@ -1218,16 +1248,16 @@ const App = () => {
                                     key={tab.key}
                                     onClick={() => setActiveTab(tab.key)}
                                     className={
-                                        'relative flex flex-col items-center justify-center gap-1 py-3 sm:py-3.5 text-[11px] sm:text-[12px] font-medium whitespace-nowrap transition-all duration-200 ' +
+                                        'relative flex flex-col items-center justify-center gap-1.5 py-3.5 px-2 text-[11px] sm:text-[12px] font-semibold whitespace-nowrap transition-all duration-200 ' +
                                         (isActive
-                                            ? 'text-indigo-400'
-                                            : 'text-white/40 hover:text-white/65 hover:bg-white/[0.03]')
+                                            ? 'text-white bg-indigo-500/15 shadow-inner'
+                                            : 'text-white/50 hover:text-white hover:bg-white/[0.04]')
                                     }
                                 >
-                                    <Icon className={`w-4 h-4 sm:w-[18px] sm:h-[18px] transition-colors duration-200 ${isActive ? 'text-indigo-400' : ''}`} />
+                                    <Icon className={`w-4 h-4 sm:w-[18px] sm:h-[18px] transition-transform duration-200 ${isActive ? 'text-indigo-400 scale-110' : 'text-white/40'}`} />
                                     <span>{tab.label}</span>
                                     {isActive && (
-                                        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-[2px] rounded-full bg-gradient-to-r from-indigo-500 to-violet-500" />
+                                        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-10 h-[2.5px] rounded-full bg-gradient-to-r from-teal-400 via-indigo-500 to-pink-500 shadow-sm shadow-indigo-500" />
                                     )}
                                 </button>
                             );
@@ -1240,11 +1270,11 @@ const App = () => {
                     activeTab === 'pembayaran' ||
                     activeTab === 'pengeluaran' ||
                     activeTab === 'tunggakan') && (
-                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-4 mb-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="rounded-2xl bg-zinc-950/60 border border-white/10 p-4 sm:p-5 mb-6 glass-cyber-card shadow-lg">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                             {/* Search Bar */}
                             <div className="relative">
-                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/55" />
+                                <Search className="absolute left-3.5 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white/40" />
                                 <input
                                     type="text"
                                     placeholder="Cari nama atau absen..."
@@ -1252,7 +1282,7 @@ const App = () => {
                                     onChange={(e) =>
                                         setSearchQuery(e.target.value)
                                     }
-                                    className="w-full pl-10 pr-4 py-2 bg-white/[0.06] border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent text-white placeholder-white/40"
+                                    className="w-full pl-10 pr-4 py-2.5 bg-white/[0.04] border border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 text-white placeholder-white/40 text-sm transition-all outline-none"
                                 />
                             </div>
 
@@ -1263,14 +1293,14 @@ const App = () => {
                                     onChange={(e) =>
                                         setFilterStatus(e.target.value)
                                     }
-                                    className="px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white"
+                                    className="px-4 py-2.5 bg-white/[0.04] border border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 text-white text-sm transition-all outline-none cursor-pointer"
                                 >
-                                    <option value="Semua">Semua Status</option>
-                                    <option value="Aktif">Aktif</option>
-                                    <option value="Tidak Aktif">
+                                    <option value="Semua" className="bg-zinc-900 text-white">Semua Status</option>
+                                    <option value="Aktif" className="bg-zinc-900 text-white">Aktif</option>
+                                    <option value="Tidak Aktif" className="bg-zinc-900 text-white">
                                         Tidak Aktif
                                     </option>
-                                    <option value="Alumni">Alumni</option>
+                                    <option value="Alumni" className="bg-zinc-900 text-white">Alumni</option>
                                 </select>
                             )}
 
@@ -1281,11 +1311,12 @@ const App = () => {
                                     onChange={(e) =>
                                         setFilterMethod(e.target.value)
                                     }
-                                    className="px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white"
+                                    className="px-4 py-2.5 bg-white/[0.04] border border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 text-white text-sm transition-all outline-none cursor-pointer"
                                 >
-                                    <option value="Semua">Semua Metode</option>
-                                    <option value="Tunai">Tunai</option>
-                                    <option value="Transfer">Transfer</option>
+                                    <option value="Semua" className="bg-zinc-900 text-white">Semua Metode</option>
+                                    <option value="Tunai" className="bg-zinc-900 text-white">Tunai</option>
+                                    <option value="Transfer" className="bg-zinc-900 text-white">Transfer</option>
+                                    <option value="QRIS" className="bg-zinc-900 text-white">QRIS</option>
                                 </select>
                             )}
 
@@ -1296,19 +1327,19 @@ const App = () => {
                                     onChange={(e) =>
                                         setFilterCategory(e.target.value)
                                     }
-                                    className="px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white"
+                                    className="px-4 py-2.5 bg-white/[0.04] border border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 text-white text-sm transition-all outline-none cursor-pointer"
                                 >
-                                    <option value="Semua">
+                                    <option value="Semua" className="bg-zinc-900 text-white">
                                         Semua Kategori
                                     </option>
-                                    <option value="Kebersihan">
+                                    <option value="Kebersihan" className="bg-zinc-900 text-white">
                                         Kebersihan
                                     </option>
-                                    <option value="Acara">Acara</option>
-                                    <option value="Perlengkapan">
+                                    <option value="Acara" className="bg-zinc-900 text-white">Acara</option>
+                                    <option value="Perlengkapan" className="bg-zinc-900 text-white">
                                         Perlengkapan
                                     </option>
-                                    <option value="Lain-lain">Lain-lain</option>
+                                    <option value="Lain-lain" className="bg-zinc-900 text-white">Lain-lain</option>
                                 </select>
                             )}
 
@@ -1321,8 +1352,7 @@ const App = () => {
                                     onChange={(e) =>
                                         setDateFrom(e.target.value)
                                     }
-                                    placeholder="Dari tanggal"
-                                    className="px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white"
+                                    className="px-4 py-2.5 bg-white/[0.04] border border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 text-white text-sm transition-all outline-none"
                                 />
                             )}
 
@@ -1333,8 +1363,7 @@ const App = () => {
                                     type="date"
                                     value={dateTo}
                                     onChange={(e) => setDateTo(e.target.value)}
-                                    placeholder="Sampai tanggal"
-                                    className="px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white"
+                                    className="px-4 py-2.5 bg-white/[0.04] border border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 text-white text-sm transition-all outline-none"
                                 />
                             )}
 
@@ -1348,10 +1377,10 @@ const App = () => {
                                     setDateFrom('');
                                     setDateTo('');
                                 }}
-                                className="px-4 py-2 bg-white/[0.04] hover:bg-white/[0.08] text-white/55 rounded-lg transition flex items-center justify-center gap-2 border border-white/[0.1]"
+                                className="px-4 py-2.5 bg-white/[0.04] hover:bg-white/[0.08] text-white/70 hover:text-white rounded-xl transition flex items-center justify-center gap-2 border border-white/10 text-sm font-medium"
                             >
                                 <RefreshCw className="w-4 h-4" />
-                                Reset Filter
+                                <span>Reset Filter</span>
                             </button>
                         </div>
                     </div>
@@ -1361,22 +1390,46 @@ const App = () => {
                 {activeTab === 'dashboard' && (
                     <div className="space-y-6">
                         {studentsWithTunggakan > 0 && (
-                            <div className="bg-amber-500/8 border border-amber-400/15 p-4 rounded-xl">
-                                <div className="flex items-center">
-                                    <AlertCircle className="w-5 h-5 text-yellow-400 mr-2" />
-                                    <p className="text-amber-300">
-                                        <strong>{studentsWithTunggakan}</strong>{' '}
-                                        siswa memiliki tunggakan
-                                    </p>
+                            <div className="bg-amber-500/10 border border-amber-500/25 p-4 sm:p-5 rounded-2xl glass-cyber-card flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg shadow-amber-950/20">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-300 shrink-0">
+                                        <AlertCircle className="w-5 h-5" />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-semibold text-white">
+                                            Perhatian: <span className="text-amber-300 font-bold">{studentsWithTunggakan} siswa</span> memiliki tunggakan kas
+                                        </p>
+                                        <p className="text-xs text-white/50 mt-0.5">
+                                            Periksa tab Tunggakan untuk rincian atau kirim pengingat tagihan instan
+                                        </p>
+                                    </div>
                                 </div>
+                                <button
+                                    onClick={() => setActiveTab('tunggakan')}
+                                    className="px-3.5 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 text-xs font-semibold border border-amber-500/30 transition-all shrink-0 self-end sm:self-auto"
+                                >
+                                    Lihat Tunggakan &rarr;
+                                </button>
                             </div>
                         )}
 
-                        <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] overflow-hidden">
-                            <div className="p-4 sm:p-6 border-b border-white/[0.1] border-white/[0.1]">
-                                <h2 className="text-lg sm:text-xl font-bold text-white">
-                                    Status Pembayaran Siswa
-                                </h2>
+                        <div className="rounded-2xl bg-zinc-950/60 border border-white/10 overflow-hidden glass-cyber-card shadow-xl shadow-black/30">
+                            <div className="p-4 sm:p-6 border-b border-white/10 flex items-center justify-between">
+                                <div>
+                                    <h2 className="text-lg sm:text-xl font-bold text-white tracking-wide">
+                                        Status Pembayaran Siswa
+                                    </h2>
+                                    <p className="text-xs text-white/50 mt-0.5">
+                                        Monitoring kas seluruh siswa minggu ke-{currentWeek}
+                                    </p>
+                                </div>
+                                <button
+                                    onClick={() => setShowPayment(true)}
+                                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-indigo-500/15 hover:bg-indigo-500/25 text-indigo-300 text-xs font-semibold border border-indigo-500/30 transition-all shadow-sm"
+                                >
+                                    <Plus className="w-3.5 h-3.5" />
+                                    <span>Tambah Kas</span>
+                                </button>
                             </div>
                             <div className="overflow-x-auto">
                                 <table className="min-w-full divide-y divide-white/[0.04]">
@@ -1495,42 +1548,42 @@ const App = () => {
 
                 {/* Siswa Tab */}
                 {activeTab === 'siswa' && (
-                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1]">
-                        <div className="p-4 sm:p-6 border-b border-white/[0.1] border-white/[0.1]">
+                    <div className="rounded-2xl bg-zinc-950/60 border border-white/10 glass-cyber-card shadow-xl shadow-black/30 overflow-hidden">
+                        <div className="p-4 sm:p-6 border-b border-white/10">
                             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
-                                <h2 className="text-lg sm:text-xl font-bold text-white">
-                                    Data Siswa
-                                </h2>
+                                <div>
+                                    <h2 className="text-lg sm:text-xl font-bold text-white tracking-wide">
+                                        Data Siswa
+                                    </h2>
+                                    <p className="text-xs text-white/50 mt-0.5">
+                                        Total {filteredStudents.length} siswa terdaftar
+                                    </p>
+                                </div>
                                 <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                                     <button
                                         onClick={exportStudentsToExcel}
-                                        className="flex-1 sm:flex-none bg-teal-500/8 text-teal-300 px-3 sm:px-4 py-2 rounded-lg hover:bg-teal-500/15 transition flex items-center justify-center gap-2 text-sm border border-teal-500/15"
+                                        className="flex-1 sm:flex-none bg-teal-500/10 text-teal-300 px-3.5 py-2 rounded-xl hover:bg-teal-500/20 transition-all flex items-center justify-center gap-2 text-xs font-semibold border border-teal-500/20"
                                     >
-                                        <Download className="w-4 h-4" />
+                                        <Download className="w-4 h-4 text-teal-400" />
                                         <span className="hidden sm:inline">
                                             Excel
                                         </span>
                                     </button>
                                     <button
                                         onClick={exportStudentsToPDF}
-                                        className="flex-1 sm:flex-none bg-rose-500/8 text-rose-300 px-3 sm:px-4 py-2 rounded-lg hover:bg-rose-500/12 transition flex items-center justify-center gap-2 text-sm border border-rose-400/15"
+                                        className="flex-1 sm:flex-none bg-rose-500/10 text-rose-300 px-3.5 py-2 rounded-xl hover:bg-rose-500/20 transition-all flex items-center justify-center gap-2 text-xs font-semibold border border-rose-400/20"
                                     >
-                                        <FileText className="w-4 h-4" />
+                                        <FileText className="w-4 h-4 text-rose-400" />
                                         <span className="hidden sm:inline">
                                             PDF
                                         </span>
                                     </button>
                                     <button
                                         onClick={() => setShowAddStudent(true)}
-                                        className="w-full sm:w-auto bg-indigo-500/10 text-indigo-400 px-3 sm:px-4 py-2 rounded-lg hover:bg-indigo-500/18 transition flex items-center justify-center gap-2 text-sm font-medium border border-indigo-500/15"
+                                        className="w-full sm:w-auto bg-indigo-500/15 text-indigo-300 px-4 py-2 rounded-xl hover:bg-indigo-500/25 transition-all flex items-center justify-center gap-2 text-xs font-semibold border border-indigo-500/30 shadow-sm"
                                     >
-                                        <Plus className="w-4 h-4" />
-                                        <span className="hidden sm:inline">
-                                            Tambah Siswa
-                                        </span>
-                                        <span className="sm:hidden">
-                                            Tambah
-                                        </span>
+                                        <Plus className="w-4 h-4 text-indigo-400" />
+                                        <span>Tambah Siswa</span>
                                     </button>
                                 </div>
                             </div>
@@ -1662,48 +1715,42 @@ const App = () => {
 
                 {/* Pembayaran Tab */}
                 {activeTab === 'pembayaran' && (
-                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1]">
-                        <div className="p-4 sm:p-6 border-b border-white/[0.1] border-white/[0.1]">
+                    <div className="rounded-2xl bg-zinc-950/60 border border-white/10 glass-cyber-card shadow-xl shadow-black/30 overflow-hidden">
+                        <div className="p-4 sm:p-6 border-b border-white/10">
                             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
                                 <div>
-                                    <h2 className="text-lg sm:text-xl font-bold text-white">
+                                    <h2 className="text-lg sm:text-xl font-bold text-white tracking-wide">
                                         Riwayat Pembayaran
                                     </h2>
-                                    <p className="text-xs sm:text-sm text-white/60 mt-1">
-                                        Total: {filteredPayments.length}{' '}
-                                        pembayaran
+                                    <p className="text-xs text-white/50 mt-0.5">
+                                        Total {filteredPayments.length} transaksi pembayaran tercatat
                                     </p>
                                 </div>
                                 <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                                     <button
                                         onClick={exportPaymentsToExcel}
-                                        className="flex-1 sm:flex-none bg-teal-500/8 text-teal-300 px-3 sm:px-4 py-2 rounded-lg hover:bg-teal-500/15 transition flex items-center justify-center gap-2 text-sm border border-teal-500/15"
+                                        className="flex-1 sm:flex-none bg-teal-500/10 text-teal-300 px-3.5 py-2 rounded-xl hover:bg-teal-500/20 transition-all flex items-center justify-center gap-2 text-xs font-semibold border border-teal-500/20"
                                     >
-                                        <Download className="w-4 h-4" />
+                                        <Download className="w-4 h-4 text-teal-400" />
                                         <span className="hidden sm:inline">
                                             Excel
                                         </span>
                                     </button>
                                     <button
                                         onClick={exportPaymentsToPDF}
-                                        className="flex-1 sm:flex-none bg-rose-500/8 text-rose-300 px-3 sm:px-4 py-2 rounded-lg hover:bg-rose-500/12 transition flex items-center justify-center gap-2 text-sm border border-rose-400/15"
+                                        className="flex-1 sm:flex-none bg-rose-500/10 text-rose-300 px-3.5 py-2 rounded-xl hover:bg-rose-500/20 transition-all flex items-center justify-center gap-2 text-xs font-semibold border border-rose-400/20"
                                     >
-                                        <Download className="w-4 h-4" />
+                                        <Download className="w-4 h-4 text-rose-400" />
                                         <span className="hidden sm:inline">
                                             PDF
                                         </span>
                                     </button>
                                     <button
                                         onClick={() => setShowPayment(true)}
-                                        className="w-full sm:w-auto bg-indigo-500/10 text-indigo-400 px-3 sm:px-4 py-2 rounded-lg hover:bg-indigo-500/18 transition flex items-center justify-center gap-2 text-sm font-medium border border-indigo-500/15"
+                                        className="w-full sm:w-auto bg-indigo-500/15 text-indigo-300 px-4 py-2 rounded-xl hover:bg-indigo-500/25 transition-all flex items-center justify-center gap-2 text-xs font-semibold border border-indigo-500/30 shadow-sm"
                                     >
-                                        <Plus className="w-4 h-4" />
-                                        <span className="hidden sm:inline">
-                                            Tambah Pembayaran
-                                        </span>
-                                        <span className="sm:hidden">
-                                            Tambah
-                                        </span>
+                                        <Plus className="w-4 h-4 text-indigo-400" />
+                                        <span>Tambah Pembayaran</span>
                                     </button>
                                 </div>
                             </div>
@@ -1930,42 +1977,42 @@ const App = () => {
 
                 {/* Pengeluaran Tab */}
                 {activeTab === 'pengeluaran' && (
-                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1]">
-                        <div className="p-4 sm:p-6 border-b border-white/[0.1] border-white/[0.1]">
+                    <div className="rounded-2xl bg-zinc-950/60 border border-white/10 glass-cyber-card shadow-xl shadow-black/30 overflow-hidden">
+                        <div className="p-4 sm:p-6 border-b border-white/10">
                             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
-                                <h2 className="text-lg sm:text-xl font-bold text-white">
-                                    Riwayat Pengeluaran
-                                </h2>
+                                <div>
+                                    <h2 className="text-lg sm:text-xl font-bold text-white tracking-wide">
+                                        Riwayat Pengeluaran
+                                    </h2>
+                                    <p className="text-xs text-white/50 mt-0.5">
+                                        Total {filteredExpenses.length} pos pengeluaran kas tercatat
+                                    </p>
+                                </div>
                                 <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                                     <button
                                         onClick={exportExpensesToExcel}
-                                        className="flex-1 sm:flex-none bg-teal-500/8 text-teal-300 px-3 sm:px-4 py-2 rounded-lg hover:bg-teal-500/15 transition flex items-center justify-center gap-2 text-sm border border-teal-500/15"
+                                        className="flex-1 sm:flex-none bg-teal-500/10 text-teal-300 px-3.5 py-2 rounded-xl hover:bg-teal-500/20 transition-all flex items-center justify-center gap-2 text-xs font-semibold border border-teal-500/20"
                                     >
-                                        <Download className="w-4 h-4" />
+                                        <Download className="w-4 h-4 text-teal-400" />
                                         <span className="hidden sm:inline">
                                             Excel
                                         </span>
                                     </button>
                                     <button
                                         onClick={exportExpensesToPDF}
-                                        className="flex-1 sm:flex-none bg-rose-500/8 text-rose-300 px-3 sm:px-4 py-2 rounded-lg hover:bg-rose-500/12 transition flex items-center justify-center gap-2 text-sm border border-rose-400/15"
+                                        className="flex-1 sm:flex-none bg-rose-500/10 text-rose-300 px-3.5 py-2 rounded-xl hover:bg-rose-500/20 transition-all flex items-center justify-center gap-2 text-xs font-semibold border border-rose-400/20"
                                     >
-                                        <Download className="w-4 h-4" />
+                                        <Download className="w-4 h-4 text-rose-400" />
                                         <span className="hidden sm:inline">
                                             PDF
                                         </span>
                                     </button>
                                     <button
                                         onClick={() => setShowExpense(true)}
-                                        className="w-full sm:w-auto bg-indigo-500/10 text-indigo-400 px-3 sm:px-4 py-2 rounded-lg hover:bg-indigo-500/18 transition flex items-center justify-center gap-2 text-sm font-medium border border-indigo-500/15"
+                                        className="w-full sm:w-auto bg-rose-500/15 text-rose-300 px-4 py-2 rounded-xl hover:bg-rose-500/25 transition-all flex items-center justify-center gap-2 text-xs font-semibold border border-rose-500/30 shadow-sm"
                                     >
-                                        <Plus className="w-4 h-4" />
-                                        <span className="hidden sm:inline">
-                                            Tambah Pengeluaran
-                                        </span>
-                                        <span className="sm:hidden">
-                                            Tambah
-                                        </span>
+                                        <Plus className="w-4 h-4 text-rose-400" />
+                                        <span>Tambah Pengeluaran</span>
                                     </button>
                                 </div>
                             </div>
@@ -2074,25 +2121,24 @@ const App = () => {
                     </div>
                 )}
 
-                {/* Tunggakan Tab - NEW FEATURE */}
+                {/* Tunggakan Tab */}
                 {activeTab === 'tunggakan' && (
-                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1]">
-                        <div className="p-6 border-b border-white/[0.1]">
-                            <div className="flex items-center justify-between">
+                    <div className="rounded-2xl bg-zinc-950/60 border border-white/10 glass-cyber-card shadow-xl shadow-black/30 overflow-hidden">
+                        <div className="p-4 sm:p-6 border-b border-white/10">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                                 <div>
-                                    <h2 className="text-xl font-bold text-white">
+                                    <h2 className="text-lg sm:text-xl font-bold text-white tracking-wide">
                                         Daftar Tunggakan
                                     </h2>
-                                    <p className="text-sm text-white/60 mt-1">
-                                        Siswa yang belum bayar minggu ke-{' '}
-                                        {currentWeek}
+                                    <p className="text-xs text-white/50 mt-0.5">
+                                        Siswa yang belum bayar minggu ke-{currentWeek}
                                     </p>
                                 </div>
-                                <div className="text-right">
-                                    <p className="text-sm text-white/60">
-                                        Total Tunggakan
+                                <div className="px-4 py-2 rounded-xl bg-rose-500/10 border border-rose-500/20 text-right sm:text-right w-full sm:w-auto flex sm:block items-center justify-between">
+                                    <p className="text-[11px] text-white/60 uppercase tracking-wider">
+                                        Total Belum Lunas
                                     </p>
-                                    <p className="text-2xl font-bold text-rose-300">
+                                    <p className="text-lg sm:text-xl font-black text-rose-300">
                                         {getUnpaidStudents().length} Siswa
                                     </p>
                                 </div>

@@ -1,7 +1,7 @@
 /**
  * Auto-generated optimized lucide-react imports.
  * Hanya icon yang benar-benar dipakai yang di-import.
- * Ini mengurangi Vite transform dari ~1600 modules jadi ~75.
+ * Ini mengurangi Vite transform dari ~1600 modules jadi ~74.
  * 
  * Re-generate: node scripts/generate-icons.js
  */
@@ -42,7 +42,6 @@ export { default as Loader2 } from '../../node_modules/lucide-react/dist/esm/ico
 export { default as Lock } from '../../node_modules/lucide-react/dist/esm/icons/lock.js';
 export { default as LogIn } from '../../node_modules/lucide-react/dist/esm/icons/log-in.js';
 export { default as LogOut } from '../../node_modules/lucide-react/dist/esm/icons/log-out.js';
-export { default as Mail } from '../../node_modules/lucide-react/dist/esm/icons/mail.js';
 export { default as MapPin } from '../../node_modules/lucide-react/dist/esm/icons/map-pin.js';
 export { default as Medal } from '../../node_modules/lucide-react/dist/esm/icons/medal.js';
 export { default as Menu } from '../../node_modules/lucide-react/dist/esm/icons/menu.js';

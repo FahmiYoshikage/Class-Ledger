@@ -9,7 +9,6 @@ import AuditLogs from './components/settings/AuditLogs.jsx';
 import SessionManagement from './components/events/SessionManagement.jsx';
 import PublicDashboard from './components/core/PublicDashboard.jsx';
 import Leaderboard from './components/leaderboard/Leaderboard.jsx';
-import ProfileEdit from './components/core/ProfileEdit.jsx';
 import QRPayment from './components/payments/QRPayment.jsx';
 import QRPaymentAdmin from './components/payments/QRPaymentAdmin.jsx';
 import ProtectedRoute from './components/core/ProtectedRoute.jsx';
@@ -109,7 +108,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                             path="change-password"
                             element={<ChangePassword />}
                         />
-                        <Route path="profile" element={<ProfileEdit />} />
+                        <Route
+                            path="profile"
+                            element={<Navigate to="/app/dashboard" replace />}
+                        />
                         <Route
                             path="sessions"
                             element={<SessionManagement />}
