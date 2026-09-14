@@ -223,6 +223,61 @@ router.post(
     }
 );
 
+// @route   PATCH /api/auth/profile
+// @desc    Update Bendahara profile (fullName, username)
+// @access  Private (Bendahara)
+router.patch('/profile', authenticate, async (req, res) => {
+    try {
+        const { fullName, username } = req.body;
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found',
+            });
+        }
+
+        if (fullName && fullName.trim()) {
+            user.fullName = fullName.trim();
+        }
+
+        if (username && username.trim()) {
+            const cleanUsername = username.trim();
+            const existing = await User.findOne({
+                username: cleanUsername,
+                _id: { $ne: user._id },
+            });
+            if (existing) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Username sudah digunakan',
+                });
+            }
+            user.username = cleanUsername;
+        }
+
+        await user.save();
+
+        res.json({
+            success: true,
+            message: 'Profil berhasil diperbarui',
+            user: {
+                id: user._id,
+                username: user.username,
+                fullName: user.fullName,
+                role: user.role || 'admin',
+            },
+        });
+    } catch (err) {
+        console.error('Update profile error:', err);
+        res.status(500).json({
+            success: false,
+            message: 'Gagal memperbarui profil',
+            error: err.message,
+        });
+    }
+});
+
 // @route   POST /api/auth/logout
 // @desc    Logout admin
 // @access  Private (requires auth)

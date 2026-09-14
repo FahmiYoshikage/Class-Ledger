@@ -13,6 +13,7 @@ import {
     ArrowRight,
     BarChart3,
     ChevronRight,
+    QrCode,
 } from 'lucide-react';
 import axios from 'axios';
 
@@ -170,11 +171,18 @@ const PublicDashboard = () => {
                                 <span className="hidden sm:inline">Leaderboard</span>
                             </button>
                             <button
+                                onClick={() => navigate('/qr-payment')}
+                                className="flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.1] text-white/60 hover:text-white/90 transition-all text-[13px] btn-press"
+                            >
+                                <QrCode className="w-3.5 h-3.5 text-indigo-400" />
+                                <span className="hidden sm:inline">Bayar QRIS</span>
+                            </button>
+                            <button
                                 onClick={() => navigate('/login')}
                                 className="flex items-center gap-1.5 px-4 py-1.5 sm:px-5 sm:py-2 rounded-full bg-white/95 text-zinc-900 hover:bg-white transition-all text-[13px] font-semibold btn-press"
                             >
                                 <LogIn className="w-3.5 h-3.5" />
-                                <span>Login</span>
+                                <span>Bendahara</span>
                             </button>
                         </div>
                     </div>

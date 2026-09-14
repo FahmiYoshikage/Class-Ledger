@@ -73,17 +73,10 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('user', JSON.stringify(updatedUser));
     };
 
-    // Check if user has permission
-    const hasRole = (roles) => {
-        if (!user) return false;
-        if (typeof roles === 'string') {
-            return user.role === roles;
-        }
-        return roles.includes(user.role);
-    };
-
-    const isAdmin = () => hasRole('admin');
-    const isMember = () => hasRole(['member', 'admin']);
+    // Simplified role checks (single-role Bendahara)
+    const hasRole = () => !!user;
+    const isAdmin = () => !!user;
+    const isMember = () => !!user;
 
     const value = {
         user,

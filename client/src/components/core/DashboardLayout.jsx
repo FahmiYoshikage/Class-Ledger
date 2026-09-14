@@ -3,9 +3,7 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
     LogOut,
-    User,
     Shield,
-    Users as UsersIcon,
     Home,
     Activity,
     Laptop,
@@ -14,7 +12,6 @@ import {
     Menu,
     X,
     QrCode,
-    ChevronDown,
 } from 'lucide-react';
 
 const DashboardLayout = () => {
@@ -77,19 +74,14 @@ const DashboardLayout = () => {
                         {/* User Info */}
                         <div className="flex items-center gap-2.5">
                             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-500/10">
-                                {user?.role === 'admin' ? (
-                                    <Shield className="w-4 h-4 text-white" />
-                                ) : (
-                                    <User className="w-4 h-4 text-white" />
-                                )}
+                                <Shield className="w-4 h-4 text-white" />
                             </div>
                             <div className="hidden sm:block">
                                 <p className="text-[13px] font-semibold text-white leading-tight">
-                                    {user?.fullName}
+                                    {user?.fullName || 'Bendahara'}
                                 </p>
-                                <p className="text-[11px] text-white/60 capitalize">
-                                    {user?.role === 'admin' && '👑 '}
-                                    {user?.role}
+                                <p className="text-[11px] text-white/60">
+                                    👑 Bendahara
                                 </p>
                             </div>
                         </div>
@@ -105,34 +97,23 @@ const DashboardLayout = () => {
                                 />
                             )}
                             <NavButton
-                                onClick={() => navigate('/app/qr-payment')}
+                                onClick={() => navigate('/app/qr-admin')}
                                 icon={QrCode}
-                                label="QR Pay"
-                                variant="primary"
-                                active={location.pathname === '/app/qr-payment'}
+                                label="QR Admin"
+                                active={location.pathname === '/app/qr-admin'}
                             />
-                            {user?.role === 'admin' && (
-                                <>
-                                    <NavButton
-                                        onClick={() => navigate('/app/qr-admin')}
-                                        icon={QrCode}
-                                        label="QR Admin"
-                                        active={location.pathname === '/app/qr-admin'}
-                                    />
-                                    <NavButton
-                                        onClick={() => navigate('/app/users')}
-                                        icon={UsersIcon}
-                                        label="Users"
-                                        active={location.pathname === '/app/users'}
-                                    />
-                                    <NavButton
-                                        onClick={() => navigate('/app/audit-logs')}
-                                        icon={Activity}
-                                        label="Logs"
-                                        active={location.pathname === '/app/audit-logs'}
-                                    />
-                                </>
-                            )}
+                            <NavButton
+                                onClick={() => navigate('/app/audit-logs')}
+                                icon={Activity}
+                                label="Logs"
+                                active={location.pathname === '/app/audit-logs'}
+                            />
+                            <NavButton
+                                onClick={() => navigate('/app/sessions')}
+                                icon={Laptop}
+                                label="Sesi"
+                                active={location.pathname === '/app/sessions'}
+                            />
                             <NavButton
                                 onClick={() => navigate('/app/profile')}
                                 icon={Edit}
@@ -167,17 +148,11 @@ const DashboardLayout = () => {
                             {location.pathname !== '/app/dashboard' && (
                                 <MobileNavButton onClick={() => navigate('/app/dashboard')} icon={Home} label="Dashboard" variant="primary" />
                             )}
-                            <MobileNavButton onClick={() => navigate('/app/qr-payment')} icon={QrCode} label="QR Payment" variant="primary" />
-                            {user?.role === 'admin' && (
-                                <>
-                                    <MobileNavButton onClick={() => navigate('/app/qr-admin')} icon={QrCode} label="QR Admin" />
-                                    <MobileNavButton onClick={() => navigate('/app/users')} icon={UsersIcon} label="Manage Users" />
-                                    <MobileNavButton onClick={() => navigate('/app/audit-logs')} icon={Activity} label="Audit Logs" />
-                                </>
-                            )}
+                            <MobileNavButton onClick={() => navigate('/app/qr-admin')} icon={QrCode} label="QR Admin" />
+                            <MobileNavButton onClick={() => navigate('/app/audit-logs')} icon={Activity} label="Audit Logs" />
+                            <MobileNavButton onClick={() => navigate('/app/sessions')} icon={Laptop} label="Sesi Aktif" />
                             <MobileNavButton onClick={() => navigate('/app/profile')} icon={Edit} label="Edit Profile" />
-                            <MobileNavButton onClick={() => navigate('/app/change-password')} icon={Key} label="Change Password" />
-                            <MobileNavButton onClick={() => navigate('/app/sessions')} icon={Laptop} label="Sessions" />
+                            <MobileNavButton onClick={() => navigate('/app/change-password')} icon={Key} label="Ganti Password" />
                             <div className="border-t border-white/[0.12] my-1" />
                             <MobileNavButton onClick={handleLogout} icon={LogOut} label="Logout" variant="danger" />
                         </div>

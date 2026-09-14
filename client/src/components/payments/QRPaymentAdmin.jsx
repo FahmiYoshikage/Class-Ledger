@@ -316,18 +316,12 @@ function QRPaymentAdmin() {
 
                                     <div className="mb-4">
                                         <img
-                                            src={`${
-                                                import.meta.env
-                                                    .VITE_API_BASE_URL
-                                            }${conf.proofImageUrl}`}
+                                            src={conf.proofImageUrl}
                                             alt="Bukti Transfer"
                                             className="w-full rounded-lg border cursor-pointer hover:opacity-90 transition"
                                             onClick={() =>
                                                 window.open(
-                                                    `${
-                                                        import.meta.env
-                                                            .VITE_API_BASE_URL
-                                                    }${conf.proofImageUrl}`,
+                                                    conf.proofImageUrl,
                                                     '_blank'
                                                 )
                                             }
@@ -570,10 +564,7 @@ function QRPaymentAdmin() {
                                     >
                                         <div className="flex items-start space-x-4">
                                             <img
-                                                src={`${
-                                                    import.meta.env
-                                                        .VITE_API_BASE_URL
-                                                }${qr.imageUrl}`}
+                                                src={qr.imageUrl}
                                                 alt="QR"
                                                 className="w-24 h-24 object-contain rounded border"
                                             />

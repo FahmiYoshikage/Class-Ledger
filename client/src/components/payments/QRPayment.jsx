@@ -152,9 +152,7 @@ function QRPayment() {
                     </h2>
                     <div className="bg-white/[0.04] rounded-lg p-4 mb-4">
                         <img
-                            src={`${import.meta.env.VITE_API_BASE_URL}${
-                                activeQR.imageUrl
-                            }`}
+                            src={activeQR.imageUrl}
                             alt="QR Code"
                             className="w-full max-w-xs mx-auto rounded-lg shadow"
                         />

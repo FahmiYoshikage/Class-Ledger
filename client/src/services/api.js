@@ -49,13 +49,8 @@ api.interceptors.response.use(
 // Auth API
 export const authAPI = {
     login: (credentials) => api.post('/auth/login', credentials),
-    register: (userData) => api.post('/auth/register', userData),
     getMe: () => api.get('/auth/me'),
     changePassword: (passwords) => api.post('/auth/change-password', passwords),
-    getUsers: () => api.get('/auth/users'),
-    updateUser: (id, data) => api.patch(`/auth/users/${id}`, data),
-    deleteUser: (id) => api.delete(`/auth/users/${id}`),
-    resetPassword: (id) => api.post(`/auth/users/${id}/reset-password`),
     logout: async () => {
         try {
             // Call backend to invalidate session

@@ -67,7 +67,7 @@ const Login = () => {
                 {/* Login Card */}
                 <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl p-8 glow-hover">
                     <h2 className="text-2xl font-bold text-white mb-6">
-                        Login ke Akun
+                        Login Bendahara
                     </h2>
 
                     {/* Error Alert */}
@@ -172,10 +172,16 @@ const Login = () => {
                 </div>
 
                 {/* Footer */}
-                <div className="mt-8 text-center">
-                    <p className="text-sm text-white/60">
-                        Lupa password? Hubungi bendahara kelas
+                <div className="mt-8 text-center space-y-2">
+                    <p className="text-xs text-white/40">
+                        Portal ini khusus pengurus / bendahara kas kelas
                     </p>
+                    <button
+                        onClick={() => navigate('/')}
+                        className="text-xs text-indigo-400 hover:text-indigo-300 transition underline block mx-auto"
+                    >
+                        ← Kembali ke Dashboard Publik
+                    </button>
                 </div>
             </div>
         </div>

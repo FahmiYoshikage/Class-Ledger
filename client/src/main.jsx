@@ -5,10 +5,8 @@ import { AuthProvider } from './context/AuthContext.jsx';
 import App from './App.jsx';
 import Login from './components/core/Login.jsx';
 import ChangePassword from './components/core/ChangePassword.jsx';
-import UserManagement from './components/settings/UserManagement.jsx';
 import AuditLogs from './components/settings/AuditLogs.jsx';
 import SessionManagement from './components/events/SessionManagement.jsx';
-import MemberDashboard from './components/core/MemberDashboard.jsx';
 import PublicDashboard from './components/core/PublicDashboard.jsx';
 import Leaderboard from './components/leaderboard/Leaderboard.jsx';
 import ProfileEdit from './components/core/ProfileEdit.jsx';
@@ -16,7 +14,6 @@ import QRPayment from './components/payments/QRPayment.jsx';
 import QRPaymentAdmin from './components/payments/QRPaymentAdmin.jsx';
 import ProtectedRoute from './components/core/ProtectedRoute.jsx';
 import DashboardLayout from './components/core/DashboardLayout.jsx';
-import { useAuth } from './context/AuthContext.jsx';
 import './index.css';
 
 // Clean up old service workers and caches on load
@@ -78,19 +75,6 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-// Dashboard Router Component
-function DashboardRouter() {
-    const { user } = useAuth();
-
-    // If member, show member dashboard
-    if (user?.role === 'member') {
-        return <MemberDashboard />;
-    }
-
-    // If admin, show full dashboard
-    return <App />;
-}
-
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
         <BrowserRouter>
@@ -101,9 +85,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 
                     {/* Public Routes */}
                     <Route path="/leaderboard" element={<Leaderboard />} />
+                    <Route path="/qr-payment" element={<QRPayment />} />
                     <Route path="/login" element={<Login />} />
 
-                    {/* Protected Routes */}
+                    {/* Protected Routes (Bendahara Only) */}
                     <Route
                         path="/app"
                         element={
@@ -118,13 +103,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                         />
                         <Route
                             path="dashboard"
-                            element={
-                                <ProtectedRoute
-                                    requiredRole={['admin', 'member']}
-                                >
-                                    <DashboardRouter />
-                                </ProtectedRoute>
-                            }
+                            element={<App />}
                         />
                         <Route
                             path="change-password"
@@ -136,40 +115,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                             element={<SessionManagement />}
                         />
                         <Route
-                            path="qr-payment"
-                            element={
-                                <ProtectedRoute
-                                    requiredRole={['admin', 'member']}
-                                >
-                                    <QRPayment />
-                                </ProtectedRoute>
-                            }
-                        />
-
-                        {/* Admin Only Routes */}
-                        <Route
-                            path="users"
-                            element={
-                                <ProtectedRoute requiredRole="admin">
-                                    <UserManagement />
-                                </ProtectedRoute>
-                            }
-                        />
-                        <Route
                             path="audit-logs"
-                            element={
-                                <ProtectedRoute requiredRole="admin">
-                                    <AuditLogs />
-                                </ProtectedRoute>
-                            }
+                            element={<AuditLogs />}
                         />
                         <Route
                             path="qr-admin"
-                            element={
-                                <ProtectedRoute requiredRole="admin">
-                                    <QRPaymentAdmin />
-                                </ProtectedRoute>
-                            }
+                            element={<QRPaymentAdmin />}
                         />
                     </Route>
 
