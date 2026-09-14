@@ -17,9 +17,17 @@ export default defineConfig({
                 cleanupOutdatedCaches: true,
                 runtimeCaching: [
                     {
-                        // API requests - Network First strategy
-                        urlPattern: ({ url }) => {
-                            return url.pathname.startsWith('/api/');
+                        // API requests - Network First strategy only for read-only public resources
+                        urlPattern: ({ url, request }) => {
+                            return (
+                                request.method === 'GET' &&
+                                url.pathname.startsWith('/api/') &&
+                                !url.pathname.startsWith('/api/notifications') &&
+                                !url.pathname.startsWith('/api/auth') &&
+                                !url.pathname.startsWith('/api/sessions') &&
+                                !url.pathname.startsWith('/api/audit-logs') &&
+                                !url.pathname.startsWith('/api/admin')
+                            );
                         },
                         handler: 'NetworkFirst',
                         options: {

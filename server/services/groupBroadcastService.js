@@ -13,13 +13,9 @@ class GroupBroadcastService {
         this.groupId = process.env.FONNTE_GROUP_ID;
     }
 
-    // Generate bi-weekly summary report text
-    async generateSummaryReport(templateType = 'full') {
+    // Generate all bi-weekly summary report templates in a single query pass
+    async generateAllTemplates() {
         try {
-            // ============================================================
-            // EXACT DASHBOARD LOGIC - DO NOT MODIFY WITHOUT UPDATING BOTH
-            // ============================================================
-
             // Get settings
             const startDateSetting = await Setting.findOne({
                 key: 'start_date',
@@ -27,9 +23,6 @@ class GroupBroadcastService {
             const startDate = startDateSetting?.value
                 ? new Date(startDateSetting.value)
                 : new Date(process.env.START_DATE || '2025-10-27');
-
-            console.log('📊 Broadcast Report Generation:');
-            console.log('  Start Date:', startDate.toISOString().split('T')[0]);
 
             const [
                 allStudents,
@@ -45,20 +38,11 @@ class GroupBroadcastService {
                 Setting.findOne({ key: 'class_name' }),
             ]);
 
-            // ============================================================
-            // FILTER LOGIC - MATCH DASHBOARD EXACTLY
-            // Dashboard uses ALL data without date filtering for totals
-            // ============================================================
-
             // 1. Filter ACTIVE students only
             const students = allStudents.filter((s) => s.status === 'Aktif');
-
-            // 2. ALL payments (NO date filter — dashboard sums everything)
-            //    Dashboard: totalKasMasuk = payments.reduce((sum, p) => sum + p.amount, 0)
             const allPaymentsList = allPayments;
 
-            // 3. Student-only payments from active students (for tunggakan/contributor)
-            //    Dashboard getTotalPaid also uses ALL payments, no date filter
+            // Student payments only
             const studentPayments = allPaymentsList.filter((p) => {
                 if (!p.studentId || !p.studentId._id) return false;
                 const student = students.find(
@@ -67,14 +51,12 @@ class GroupBroadcastService {
                 return student != null;
             });
 
-            // 4. ALL expenses (NO date filter — dashboard sums everything)
             const expenses = allExpenses;
-
             const semesterName =
                 semesterNameSetting?.value || 'Semester 2024/2025';
             const className = classNameSetting?.value || 'Kelas';
 
-            // Calculate statistics — ALL data, no date filter (MATCH DASHBOARD)
+            // Calculate statistics
             const totalIncome = allPaymentsList.reduce(
                 (sum, p) => sum + (p.amount || 0),
                 0
@@ -85,7 +67,7 @@ class GroupBroadcastService {
             );
             const balance = totalIncome - totalExpenses;
 
-            // Get recent 2 weeks payments (this section IS date-filtered by design)
+            // Recent 2 weeks payments
             const twoWeeksAgo = new Date();
             twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
             const recentPayments = allPaymentsList.filter(
@@ -96,14 +78,11 @@ class GroupBroadcastService {
                 0
             );
 
-            // ============================================================
-            // TUNGGAKAN CALCULATION - EXACT DASHBOARD FORMULA
-            // ============================================================
+            // Tunggakan calculation
             const currentWeek = await this.getCurrentWeek();
             const weeklyAmount = 2000;
 
-            // Get accumulatedWeeks from previous semesters (MATCH DASHBOARD)
-            let accumulatedWeeks = 7; // default
+            let accumulatedWeeks = 7;
             try {
                 const accRes = await Setting.findOne({ key: 'accumulated_weeks' });
                 if (accRes?.value != null) {
@@ -113,7 +92,6 @@ class GroupBroadcastService {
                 // Use default
             }
 
-            // Helper function: getTotalPaid (EXACT DASHBOARD)
             const getTotalPaid = (studentId) => {
                 const studentIdStr = studentId.toString();
                 const filtered = studentPayments.filter((p) => {
@@ -123,7 +101,6 @@ class GroupBroadcastService {
                 return filtered.reduce((sum, p) => sum + p.amount, 0);
             };
 
-            // Helper function: getTunggakan (EXACT DASHBOARD FORMULA)
             const getTunggakan = (studentId) => {
                 const totalPaid = getTotalPaid(studentId);
                 const totalWeeks = accumulatedWeeks + currentWeek;
@@ -145,9 +122,7 @@ class GroupBroadcastService {
             ).length;
             const belumLunasCount = students.length - lunasCount;
 
-            // ============================================================
-            // TOP CONTRIBUTORS - Use getTotalPaid for consistency
-            // ============================================================
+            // Top contributors
             const contributorMap = students.map((student) => ({
                 name: student.nickname || student.name,
                 total: getTotalPaid(student._id),
@@ -164,7 +139,7 @@ class GroupBroadcastService {
                     )}`;
                 });
 
-            // Students with highest tunggakan
+            // Top debtors
             const topDebtors = studentsWithStatus
                 .filter((s) => s.tunggakan > 0)
                 .sort((a, b) => b.tunggakan - a.tunggakan)
@@ -176,11 +151,7 @@ class GroupBroadcastService {
                         )}`
                 );
 
-            // ============================================================
-            // PRESET TEMPLATES
-            // ============================================================
-            if (templateType === 'summary') {
-                return `
+            const summaryTpl = `
 📊 *UPDATE KAS KELAS (RINGKAS)* 📊
 ${className} - ${semesterName}
 ━━━━━━━━━━━━━━━━━━━━
@@ -199,11 +170,9 @@ ${className} - ${semesterName}
 
 🏆 Cek Rincian: ${process.env.BASE_URL || 'https://triforce.crud.my.id'}/leaderboard
 _Terima kasih atas kerja samanya!_ 🙏
-                `.trim();
-            }
+            `.trim();
 
-            if (templateType === 'arrears') {
-                return `
+            const arrearsTpl = `
 ⚠️ *PENGINGAT KAS & DAFTAR TUNGGAKAN* ⚠️
 ${className} - ${semesterName}
 ━━━━━━━━━━━━━━━━━━━━
@@ -227,11 +196,9 @@ _Yuk segera dilunasi ya teman-teman agar operasional kas kelas tetap aman!_ 💪
 • SeaBank: 901006225290 | BRI: 011001041959536
 
 🏆 Cek Rincian: ${process.env.BASE_URL || 'https://triforce.crud.my.id'}/leaderboard
-                `.trim();
-            }
+            `.trim();
 
-            // Build full message (default)
-            const message = `
+            const fullTpl = `
 📊 *LAPORAN KAS KELAS* 📊
 ${className} - ${semesterName}
 ━━━━━━━━━━━━━━━━━━━━
@@ -295,11 +262,21 @@ _Laporan ini dikirim otomatis setiap 2 minggu_
 _Terima kasih atas partisipasinya!_ 🙏
             `.trim();
 
-            return message;
+            return {
+                full: fullTpl,
+                summary: summaryTpl,
+                arrears: arrearsTpl,
+            };
         } catch (error) {
             console.error('Error generating summary report:', error);
             throw error;
         }
+    }
+
+    // Generate bi-weekly summary report text
+    async generateSummaryReport(templateType = 'full') {
+        const templates = await this.generateAllTemplates();
+        return templates[templateType] || templates.full;
     }
 
     // Get current week

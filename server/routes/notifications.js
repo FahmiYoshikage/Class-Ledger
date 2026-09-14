@@ -1148,26 +1148,17 @@ router.get('/broadcast-preview', async (req, res) => {
 
         const templateType = req.query.template || 'full';
 
-        const [fullMsg, summaryMsg, arrearsMsg, savedGroupSetting] =
-            await Promise.all([
-                groupBroadcastService.generateSummaryReport('full'),
-                groupBroadcastService.generateSummaryReport('summary'),
-                groupBroadcastService.generateSummaryReport('arrears'),
-                Setting.findOne({ key: 'fonnte_group_id' }),
-            ]);
+        const [templates, savedGroupSetting] = await Promise.all([
+            groupBroadcastService.generateAllTemplates(),
+            Setting.findOne({ key: 'fonnte_group_id' }),
+        ]);
 
         const defaultGroupId =
             savedGroupSetting?.value || process.env.FONNTE_GROUP_ID || '';
 
-        const templates = {
-            full: fullMsg,
-            summary: summaryMsg,
-            arrears: arrearsMsg,
-        };
-
         res.json({
             success: true,
-            message: templates[templateType] || fullMsg,
+            message: templates[templateType] || templates.full,
             templates,
             groupId: defaultGroupId,
             hasToken: !!process.env.FONNTE_API_TOKEN,
