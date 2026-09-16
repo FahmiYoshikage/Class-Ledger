@@ -28,7 +28,7 @@ class AntiBanService {
             // Maksimal pesan per hari (semua tipe)
             maxPerDay: parseInt(process.env.WA_MAX_PER_DAY) || 30,
             // Maksimal pesan per jam
-            maxPerHour: parseInt(process.env.WA_MAX_PER_HOUR) || 8,
+            maxPerHour: parseInt(process.env.WA_MAX_PER_HOUR) || 15,
             // Delay antar pesan (ms) — min & max untuk random range
             delayMin: parseInt(process.env.WA_DELAY_MIN) || 45_000, // 45 detik
             delayMax: parseInt(process.env.WA_DELAY_MAX) || 180_000, // 3 menit
@@ -172,6 +172,31 @@ class AntiBanService {
         this._resetCountersIfNeeded();
         this.messagesSentToday++;
         this.messagesSentThisHour++;
+    }
+
+    /**
+     * Cek apakah siswa sudah menerima notifikasi pada hari yang sama (WIB / Asia/Jakarta).
+     * Mencegah spam berlebih: batasi maksimal 1 pesan per siswa per hari kalender.
+     */
+    isSentToday(date) {
+        if (!date) return false;
+        const sentDate = new Date(date);
+        if (isNaN(sentDate.getTime())) return false;
+
+        const now = new Date();
+        const options = {
+            timeZone: 'Asia/Jakarta',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+        };
+        const sentDateStr = sentDate.toLocaleDateString('en-CA', options); // Format: YYYY-MM-DD
+        const nowDateStr = now.toLocaleDateString('en-CA', options);
+
+        // Jika tanggal kalender WIB sama ATAU selisih waktu kurang dari 18 jam
+        const hoursSince =
+            (now.getTime() - sentDate.getTime()) / (1000 * 60 * 60);
+        return sentDateStr === nowDateStr || hoursSince < 18;
     }
 
     /**
@@ -397,24 +422,18 @@ class AntiBanService {
                 break;
             }
 
-            // Cek apakah sudah dikirim dalam 3 hari terakhir (anti-spam existing)
-            if (student.lastNotificationSent) {
-                const daysSinceLastSent = Math.floor(
-                    (Date.now() - student.lastNotificationSent.getTime()) /
-                        (24 * 60 * 60 * 1000)
+            // Batasi tiap siswa maksimal 1 pesan per hari kalender (anti-spam cerdas)
+            if (this.isSentToday(student.lastNotificationSent)) {
+                console.log(
+                    `⏭️  Skip ${student.name} (sudah menerima reminder hari ini, max 1 pesan/hari)`
                 );
-                if (daysSinceLastSent < 3) {
-                    console.log(
-                        `⏭️  Skip ${student.name} (terakhir dikirim ${daysSinceLastSent} hari lalu)`
-                    );
-                    results.skipped++;
-                    results.details.push({
-                        name: student.name,
-                        status: 'skipped',
-                        reason: 'recent',
-                    });
-                    continue;
-                }
+                results.skipped++;
+                results.details.push({
+                    name: student.name,
+                    status: 'skipped',
+                    reason: 'sent_today',
+                });
+                continue;
             }
 
             try {
@@ -571,17 +590,14 @@ class AntiBanService {
                 break;
             }
 
-            // Anti-spam: skip jika sudah dikirim < 3 hari
-            if (student.lastNotificationSent) {
-                const daysSince = Math.floor(
-                    (Date.now() - student.lastNotificationSent.getTime()) /
-                        (24 * 60 * 60 * 1000)
+            // Batasi tiap siswa maksimal 1 pesan per hari kalender (anti-spam cerdas)
+            if (this.isSentToday(student.lastNotificationSent)) {
+                console.log(
+                    `⏭️  [${jobId}] Skip ${student.name} (sudah menerima reminder hari ini, max 1 pesan/hari)`
                 );
-                if (daysSince < 3) {
-                    job.skipped++;
-                    job.progress = i + 1;
-                    continue;
-                }
+                job.skipped++;
+                job.progress = i + 1;
+                continue;
             }
 
             try {

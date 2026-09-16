@@ -258,7 +258,7 @@ ${process.env.BASE_URL || 'https://triforce.crud.my.id'}/leaderboard
 _• Data hanya menghitung pembayaran siswa_
 _• Tunggakan dihitung per minggu (Rp 2.000/minggu)_
 
-_Laporan ini dikirim otomatis setiap 2 minggu_
+_Laporan ini dikirim otomatis setiap minggu_
 _Terima kasih atas partisipasinya!_ 🙏
             `.trim();
 
@@ -431,6 +431,11 @@ _Terima kasih atas partisipasinya!_ 🙏
             console.error('Stack:', error.stack);
             return { success: false, error: error.message };
         }
+    }
+
+    // Alias for weekly report broadcast
+    async sendWeeklyReport(pdfUrl = null, customMessage = null, targetGroupId = null, attachPdf = true) {
+        return this.sendBiWeeklyReport(pdfUrl, customMessage, targetGroupId, attachPdf);
     }
 }
 

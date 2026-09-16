@@ -163,7 +163,7 @@ class NotificationScheduler {
     }
 
 // Kirim reminder otomatis — menggunakan anti-ban protection
-async sendAutomaticReminders(minWeeks = 2) {
+async sendAutomaticReminders(minWeeks = 1) {
     try {
         console.log(
             '🤖 Starting automatic reminder process (with anti-ban protection)...'
@@ -233,76 +233,37 @@ async sendAutomaticReminders(minWeeks = 2) {
         };
 
         // ========================================
-        // 📅 SCHEDULE 1: Senin pagi jam 07:00
+        // 📅 SCHEDULE 1: Daily Reminder (Setiap hari jam 10:00 WIB)
         // ========================================
-        const mondayMorning = cron.schedule(
-            '0 7 * * 1',
-            async () => {
-                if (isWithinGracePeriod()) {
-                    console.log(
-                        '⏳ [MONDAY REMINDER] Skipped — container just started'
-                    );
-                    return;
-                }
-                console.log(
-                    '\n⏰ [MONDAY REMINDER] Running Monday morning reminder...'
-                );
-// 🛡️ Terapkan jitter
-await this._getAntiBanService().applyCronJitter('MONDAY REMINDER');
-const whatsappService = await this._getWhatsappService();
-await this.sendAutomaticReminders(1);
-            },
-            {
-                scheduled: false,
-                timezone: 'Asia/Jakarta',
-            }
-        );
+        // Mengingatkan semua siswa yang menunggak (minWeeks: 1).
+        // Diproteksi oleh isSentToday() sehingga tiap siswa maks 1 pesan/hari.
+        // Tipe template diacak & pengiriman dijeda secara human-like anti-ban.
+        const dailyCronExpression =
+            process.env.WA_DAILY_REMINDER_CRON || '0 10 * * *';
 
-        // ========================================
-        // 📅 SCHEDULE 2: Jumat sore jam 15:00
-        // ========================================
-        const fridayAfternoon = cron.schedule(
-            '0 15 * * 5',
-            async () => {
-                if (isWithinGracePeriod()) {
-                    console.log(
-                        '⏳ [FRIDAY REMINDER] Skipped — container just started'
-                    );
-                    return;
-                }
-                console.log(
-                    '\n⏰ [FRIDAY REMINDER] Running Friday afternoon reminder...'
-                );
-// 🛡️ Terapkan jitter
-await this._getAntiBanService().applyCronJitter('FRIDAY REMINDER');
-const whatsappService = await this._getWhatsappService();
-await this.sendAutomaticReminders(2);
-            },
-            {
-                scheduled: false,
-                timezone: 'Asia/Jakarta',
-            }
-        );
-
-        // ========================================
-        // 📅 SCHEDULE 3: Setiap hari jam 10:00 (optional)
-        // ========================================
         const dailyReminder = cron.schedule(
-            '0 10 * * *',
+            dailyCronExpression,
             async () => {
                 if (isWithinGracePeriod()) {
                     console.log(
-                        '⏳ [DAILY CHECK] Skipped — container just started'
+                        '⏳ [DAILY REMINDER] Skipped — container just started'
                     );
                     return;
                 }
                 console.log(
-                    '\n⏰ [DAILY CHECK] Checking for urgent reminders...'
+                    '\n⏰ [DAILY REMINDER] Running daily reminder for students with unpaid dues...'
                 );
-// 🛡️ Terapkan jitter
-await this._getAntiBanService().applyCronJitter('DAILY CHECK');
-const whatsappService = await this._getWhatsappService();
-await this.sendAutomaticReminders(4);
+                try {
+                    // 🛡️ Terapkan jitter acak 0-25 menit sebelum mulai kirim
+                    const antiBan = await this._getAntiBanService();
+                    await antiBan.applyCronJitter('DAILY REMINDER');
+                    await this.sendAutomaticReminders(1);
+                } catch (err) {
+                    console.error(
+                        '❌ [DAILY REMINDER] Execution error:',
+                        err.message
+                    );
+                }
             },
             {
                 scheduled: false,
@@ -311,29 +272,36 @@ await this.sendAutomaticReminders(4);
         );
 
         // ========================================
-        // 📅 SCHEDULE 4: Bi-Weekly Group Broadcast (Every 2 weeks, Sunday 18:00)
+        // 📅 SCHEDULE 2: Weekly Group Broadcast (Setiap Minggu jam 18:00 WIB)
         // ========================================
-        const biWeeklyBroadcast = cron.schedule(
-            '0 18 * * 0',
+        // Mengirim info ringkasan kas & siswa yang belum bayar setelah seminggu ke grup WA kelas
+        const groupCronExpression =
+            process.env.WA_GROUP_BROADCAST_CRON || '0 18 * * 0';
+
+        const weeklyGroupBroadcast = cron.schedule(
+            groupCronExpression,
             async () => {
                 if (isWithinGracePeriod()) {
                     console.log(
-                        '⏳ [BI-WEEKLY BROADCAST] Skipped — container just started'
+                        '⏳ [WEEKLY GROUP BROADCAST] Skipped — container just started'
                     );
                     return;
                 }
-                const weekNumber = Math.floor(
-                    Date.now() / (1000 * 60 * 60 * 24 * 7)
+                console.log(
+                    '\n📊 [WEEKLY GROUP BROADCAST] Sending weekly group summary report...'
                 );
-                // Only run every 2 weeks
-                if (weekNumber % 2 === 0) {
-                    console.log(
-                        '\n📊 [BI-WEEKLY BROADCAST] Sending group summary report...'
+                try {
+                    // 🛡️ Terapkan jitter acak 0-15 menit
+                    const antiBan = await this._getAntiBanService();
+                    await antiBan.applyCronJitter('WEEKLY GROUP BROADCAST');
+                    const groupBroadcastService =
+                        await this._getGroupBroadcastService();
+                    await groupBroadcastService.sendBiWeeklyReport();
+                } catch (err) {
+                    console.error(
+                        '❌ [WEEKLY GROUP BROADCAST] Execution error:',
+                        err.message
                     );
-// 🛡️ Terapkan jitter
-await this._getAntiBanService().applyCronJitter('BI-WEEKLY BROADCAST');
-const groupBroadcastService = await this._getGroupBroadcastService();
-await groupBroadcastService.sendBiWeeklyReport();
                 }
             },
             {
@@ -344,24 +312,14 @@ await groupBroadcastService.sendBiWeeklyReport();
 
         this.jobs = [
             {
-                name: 'Monday Morning',
-                job: mondayMorning,
-                schedule: 'Every Monday 07:00',
-            },
-            {
-                name: 'Friday Afternoon',
-                job: fridayAfternoon,
-                schedule: 'Every Friday 15:00',
-            },
-            {
-                name: 'Bi-Weekly Group Broadcast',
-                job: biWeeklyBroadcast,
-                schedule: 'Every 2 weeks, Sunday 18:00',
-            },
-            {
-                name: 'Daily Urgent',
+                name: 'Daily Reminder',
                 job: dailyReminder,
-                schedule: 'Every day 10:00',
+                schedule: `Every day 10:00 WIB (${dailyCronExpression})`,
+            },
+            {
+                name: 'Weekly Group Broadcast',
+                job: weeklyGroupBroadcast,
+                schedule: `Every Sunday 18:00 WIB (${groupCronExpression})`,
             },
         ];
 

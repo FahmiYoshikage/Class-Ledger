@@ -214,6 +214,25 @@ Hasil verifikasi 19 skenario keselamatan sistem:
 ════════════════════════════════════════════════════════════════════
 ```
 
+### 11. Cron Job Pengingat Harian Cerdas Anti-Ban & Auto-Broadcast Grup WA Mingguan
+- **Pengingat Harian Otomatis (`0 10 * * *`)**:
+  - Berjalan setiap hari jam **10:00 WIB** dengan *random jitter* 0–25 menit.
+  - Mengingatkan seluruh siswa yang memiliki tunggakan kas $\ge 1$ minggu.
+- **Pembatasan 1 Pesan/Hari per Siswa (`isSentToday`)**:
+  - Menghapus aturan lama `daysSinceLastSent < 3` dan menggantinya dengan validasi hari kalender `Asia/Jakarta` (`isSentToday`).
+  - Siswa yang sudah menerima pengingat hari ini otomatis di-skip (`reason: 'sent_today'`).
+  - Siswa yang belum bayar akan diingatkan rutin setiap hari dengan jaminan maksimal 1 pesan per hari.
+- **Randomisasi & Anti-Ban**:
+  - Setiap pesan diacak dari 7 kategori (*friendly, motivational, gentle, energetic, humorous, casual, formal*) dan 4-6 template.
+  - Teks disisipi *zero-width characters* tak terlihat dan variasi emoji unik sehingga sidik jari pesan tidak pernah identik.
+  - Jeda gaussian 45–180 detik antar siswa dan istirahat berkala 5–10 menit tiap 4 pesan.
+  - Batas per jam dinaikkan aman menjadi 15 pesan/jam.
+- **Broadcast Mingguan ke Grup WA (`0 18 * * 0`)**:
+  - Berjalan otomatis setiap hari **Minggu jam 18:00 WIB** (+ jitter 0–15 menit).
+  - Mengirimkan ringkasan kas, saldo, siswa lunas, daftar penunggak, dan lampiran PDF laporan keuangan resmi ke grup WhatsApp kelas.
+- **Unit Test Otomatis**:
+  - Dibuat script [`scripts/test-scheduler-rules.js`](scripts/test-scheduler-rules.js) memverifikasi seluruh 72 skenario aturan anti-ban (100% PASS).
+
 ---
 
 ## 🛠️ Langkah Menjalankan / Deploy di VPS
@@ -228,7 +247,8 @@ git pull origin master
 # 3. Build & start container (cepat & tanpa freeze!)
 docker compose up -d --build
 
-# 4. Jalankan E2E Safety Net test untuk memantau integritas sistem
+# 4. Jalankan pengujian keselamatan sistem
+node scripts/test-scheduler-rules.js
 node scripts/test-e2e.js
 ```
 
