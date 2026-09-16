@@ -1,87 +1,27 @@
 import React, { useMemo } from 'react';
 import {
-    LineChart,
-    Line,
+    AreaChart,
+    Area,
     XAxis,
     YAxis,
     CartesianGrid,
     Tooltip,
     Legend,
     ResponsiveContainer,
-    Area,
-    AreaChart,
 } from 'recharts';
+import { useTheme } from '../../context/ThemeContext';
+import { TrendingDown, TrendingUp, AlertCircle, CheckCircle2 } from 'lucide-react';
 
-const DebtTrendChart = ({ students, payments }) => {
-    const chartData = useMemo(() => {
-        const startDate = new Date('2025-10-27');
-        const now = new Date();
-        const days = Math.floor((now - startDate) / (24 * 60 * 60 * 1000));
-        const currentWeek = Math.max(0, Math.ceil(days / 7) + 1);
-
-        const activeStudents = students.filter((s) => s.status === 'Aktif');
-        const maxWeeks = Math.min(currentWeek, 12);
-
-        const weeklyData = [];
-
-        // Calculate debt for each week
-        for (let week = 1; week <= maxWeeks; week++) {
-            let totalDebt = 0;
-            let studentsWithDebt = 0;
-            let totalExpected = 0;
-            let totalPaid = 0;
-
-            activeStudents.forEach((student) => {
-                // Calculate expected payment up to this week
-                const expectedAmount = week * 2000;
-                totalExpected += expectedAmount;
-
-                // Calculate total paid up to this week
-                const studentPayments = payments.filter((p) => {
-                    const studentId = p.studentId?._id || p.studentId;
-                    const paymentDate = new Date(p.date);
-                    const daysSinceStart = Math.floor(
-                        (paymentDate - startDate) / (24 * 60 * 60 * 1000)
-                    );
-                    const paymentWeek = Math.ceil(daysSinceStart / 7) + 1;
-
-                    return studentId === student._id && paymentWeek <= week;
-                });
-
-                const paidAmount = studentPayments.reduce(
-                    (sum, p) => sum + p.amount,
-                    0
-                );
-                totalPaid += paidAmount;
-
-                const debt = expectedAmount - paidAmount;
-                if (debt > 0) {
-                    totalDebt += debt;
-                    studentsWithDebt++;
-                }
-            });
-
-            const avgDebt =
-                activeStudents.length > 0
-                    ? totalDebt / activeStudents.length
-                    : 0;
-            const collectionRate =
-                totalExpected > 0 ? (totalPaid / totalExpected) * 100 : 0;
-
-            weeklyData.push({
-                week: `M${week}`,
-                weekNumber: week,
-                totalDebt,
-                studentsWithDebt,
-                avgDebt,
-                collectionRate,
-                totalExpected,
-                totalPaid,
-            });
-        }
-
-        return weeklyData;
-    }, [students, payments]);
+const DebtTrendChart = ({
+    students = [],
+    payments = [],
+    currentWeek = 1,
+    accumulatedWeeks = 7,
+    startDate = null,
+    weeklyAmount = 2000,
+}) => {
+    const { theme } = useTheme();
+    const isDark = theme === 'dark';
 
     const formatCurrency = (value) => {
         return new Intl.NumberFormat('id-ID', {
@@ -92,35 +32,108 @@ const DebtTrendChart = ({ students, payments }) => {
         }).format(value);
     };
 
+    const { chartData, latestMetrics } = useMemo(() => {
+        const activeStudents = students.filter((s) => s.status === 'Aktif');
+        const activeWeek = Math.max(1, Number(currentWeek) || 1);
+        const accWeeks = Math.max(0, Number(accumulatedWeeks) || 0);
+
+        const semStart = startDate ? new Date(startDate) : new Date('2025-10-27');
+        semStart.setHours(0, 0, 0, 0);
+
+        // Precompute payment timeline for all students
+        // Sort payments ascending by date
+        const sortedPayments = [...payments].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        const weeklyData = [];
+
+        for (let w = 1; w <= activeWeek; w++) {
+            const totalCumulativeWeeks = accWeeks + w;
+            const expectedPerStudent = totalCumulativeWeeks * weeklyAmount;
+            const totalExpected = activeStudents.length * expectedPerStudent;
+
+            // Cutoff date for week w: semStart + (w * 7 days)
+            const weekCutoff = new Date(semStart.getTime() + w * 7 * 24 * 60 * 60 * 1000);
+
+            // Calculate paid amount per student up to this week's cutoff
+            let totalPaid = 0;
+            let totalDebt = 0;
+            let studentsWithDebt = 0;
+            let totalSurplus = 0;
+
+            activeStudents.forEach((student) => {
+                const studentPayments = sortedPayments.filter((p) => {
+                    const sId = p.studentId?._id || p.studentId || p.student?._id || p.student;
+                    if (sId !== student._id) return false;
+                    // Payments on or before this week cutoff
+                    return new Date(p.date) <= weekCutoff;
+                });
+
+                const studentPaid = studentPayments.reduce((sum, p) => sum + (p.amount || 0), 0);
+                totalPaid += studentPaid;
+
+                const diff = expectedPerStudent - studentPaid;
+                if (diff > 0) {
+                    totalDebt += diff;
+                    studentsWithDebt++;
+                } else if (diff < 0) {
+                    totalSurplus += Math.abs(diff);
+                }
+            });
+
+            const avgDebt = activeStudents.length > 0 ? totalDebt / activeStudents.length : 0;
+            const collectionRate = totalExpected > 0 ? Math.min(100, (totalPaid / totalExpected) * 100) : 0;
+
+            weeklyData.push({
+                week: `M${w}`,
+                weekNumber: w,
+                totalDebt,
+                studentsWithDebt,
+                avgDebt,
+                collectionRate,
+                totalExpected,
+                totalPaid,
+                totalSurplus,
+            });
+        }
+
+        // Compare latest vs previous week
+        const latest = weeklyData[weeklyData.length - 1] || null;
+        const previous = weeklyData.length > 1 ? weeklyData[weeklyData.length - 2] : null;
+
+        const debtDiff = latest && previous ? latest.totalDebt - previous.totalDebt : 0;
+        const isImproving = debtDiff <= 0;
+
+        return {
+            chartData: weeklyData,
+            latestMetrics: {
+                latest,
+                debtDiff,
+                isImproving,
+            },
+        };
+    }, [students, payments, currentWeek, accumulatedWeeks, startDate, weeklyAmount]);
+
     const CustomTooltip = ({ active, payload }) => {
         if (active && payload && payload.length) {
             const data = payload[0].payload;
             return (
-                <div className="bg-[#1e1e22]/98 backdrop-blur-xl p-4 rounded-lg  border border-white/[0.1] bg-white/[0.04] text-white">
-                    <p className="font-semibold text-white mb-2">
-                        Minggu {data.weekNumber}
+                <div className="p-3.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl shadow-xl text-slate-900 dark:text-white min-w-[200px]">
+                    <p className="font-bold text-slate-800 dark:text-white mb-2 text-sm">
+                        Minggu ke-{data.weekNumber}
                     </p>
-                    <div className="space-y-1">
-                        <p className="text-sm text-rose-300">
+                    <div className="space-y-1 text-xs">
+                        <p className="text-rose-600 dark:text-rose-400 font-semibold">
                             Total Tunggakan: {formatCurrency(data.totalDebt)}
                         </p>
-                        <p className="text-sm text-orange-400/80">
+                        <p className="text-amber-600 dark:text-amber-400">
                             Siswa Menunggak: {data.studentsWithDebt} siswa
                         </p>
-                        <p className="text-sm text-amber-300">
-                            Rata-rata Tunggakan: {formatCurrency(data.avgDebt)}
+                        <p className="text-slate-500 dark:text-white/60">
+                            Rata-rata: {formatCurrency(data.avgDebt)}
                         </p>
-                        <p className="text-sm text-indigo-400">
-                            Tingkat Koleksi: {data.collectionRate.toFixed(1)}%
+                        <p className="text-emerald-600 dark:text-emerald-400 font-semibold">
+                            Koleksi: {data.collectionRate.toFixed(1)}%
                         </p>
-                        <div className="border-t pt-2 mt-2">
-                            <p className="text-xs text-white/60">
-                                Target: {formatCurrency(data.totalExpected)}
-                            </p>
-                            <p className="text-xs text-white/60">
-                                Terkumpul: {formatCurrency(data.totalPaid)}
-                            </p>
-                        </div>
                     </div>
                 </div>
             );
@@ -130,217 +143,86 @@ const DebtTrendChart = ({ students, payments }) => {
 
     if (chartData.length === 0) {
         return (
-            <div className="h-64 flex items-center justify-center text-white/60">
+            <div className="h-64 flex items-center justify-center text-slate-400 dark:text-white/50">
                 <p>Tidak ada data tunggakan</p>
             </div>
         );
     }
 
-    // Calculate trend
-    const latestDebt = chartData[chartData.length - 1].totalDebt;
-    const previousDebt =
-        chartData.length > 1 ? chartData[chartData.length - 2].totalDebt : 0;
-    const debtChange = latestDebt - previousDebt;
-    const isImproving = debtChange <= 0;
-
     return (
         <div className="space-y-4">
-            {/* Trend Indicator */}
-            <div
-                className={`p-4 rounded-lg ${
-                    isImproving
-                        ? 'bg-indigo-500/[0.05]0/[0.06] border border-emerald-500/20'
-                        : 'bg-rose-500/[0.05] border border-rose-500/20'
-                }`}
-            >
-                <div className="flex items-center justify-between">
-                    <div>
-                        <p
-                            className={`text-sm font-medium ${
-                                isImproving ? 'text-indigo-400' : 'text-rose-300'
-                            }`}
-                        >
-                            {isImproving
-                                ? '📉 Trend Membaik'
-                                : '📈 Trend Memburuk'}
-                        </p>
-                        <p
-                            className={`text-xs mt-1 ${
-                                isImproving ? 'text-indigo-400' : 'text-rose-300'
-                            }`}
-                        >
-                            {isImproving
-                                ? 'Tunggakan berkurang dari minggu lalu'
-                                : 'Tunggakan bertambah dari minggu lalu'}
-                        </p>
+            {/* Trend Indicator Banner */}
+            {latestMetrics.latest && (
+                <div
+                    className={`p-3 sm:p-4 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs sm:text-sm ${
+                        latestMetrics.isImproving
+                            ? 'bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/20 text-emerald-800 dark:text-emerald-300'
+                            : 'bg-rose-50 dark:bg-rose-500/10 border-rose-200 dark:border-rose-500/20 text-rose-800 dark:text-rose-300'
+                    }`}
+                >
+                    <div className="flex items-center gap-2">
+                        {latestMetrics.isImproving ? (
+                            <TrendingDown className="w-5 h-5 text-emerald-500 shrink-0" />
+                        ) : (
+                            <TrendingUp className="w-5 h-5 text-rose-500 shrink-0" />
+                        )}
+                        <div>
+                            <p className="font-bold">
+                                {latestMetrics.isImproving
+                                    ? 'Trend Positif: Tunggakan Terkendali'
+                                    : 'Perhatian: Tunggakan Mengalami Kenaikan'}
+                            </p>
+                            <p className="text-xs opacity-80">
+                                {latestMetrics.debtDiff !== 0
+                                    ? `${latestMetrics.isImproving ? 'Penurunan' : 'Kenaikan'} ${formatCurrency(
+                                          Math.abs(latestMetrics.debtDiff)
+                                      )} dibandingkan minggu sebelumnya.`
+                                    : 'Jumlah tunggakan sama seperti minggu lalu.'}
+                            </p>
+                        </div>
                     </div>
-                    <div className="text-right">
-                        <p
-                            className={`text-2xl font-bold ${
-                                isImproving ? 'text-indigo-400' : 'text-rose-300'
-                            }`}
-                        >
-                            {debtChange >= 0 ? '+' : ''}
-                            {formatCurrency(debtChange)}
-                        </p>
-                        <p className="text-xs text-white/60">
-                            Perubahan minggu ini
-                        </p>
+                    <div className="font-mono font-bold text-right self-end sm:self-auto">
+                        Tingkat Koleksi: {latestMetrics.latest.collectionRate.toFixed(1)}%
                     </div>
                 </div>
-            </div>
+            )}
 
-            {/* Chart */}
-            <ResponsiveContainer width="100%" height={350}>
-                <AreaChart
-                    data={chartData}
-                    margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-                >
+            {/* Area Chart */}
+            <ResponsiveContainer width="100%" height={320}>
+                <AreaChart data={chartData} margin={{ top: 15, right: 20, left: 10, bottom: 5 }}>
                     <defs>
-                        <linearGradient
-                            id="colorDebt"
-                            x1="0"
-                            y1="0"
-                            x2="0"
-                            y2="1"
-                        >
-                            <stop
-                                offset="5%"
-                                stopColor="#ef4444"
-                                stopOpacity={0.8}
-                            />
-                            <stop
-                                offset="95%"
-                                stopColor="#ef4444"
-                                stopOpacity={0}
-                            />
+                        <linearGradient id="debtGradient" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.4} />
+                            <stop offset="95%" stopColor="#f43f5e" stopOpacity={0.0} />
                         </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                    <CartesianGrid
+                        strokeDasharray="3 3"
+                        stroke={isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}
+                    />
                     <XAxis
                         dataKey="week"
-                        tick={{ fontSize: 12 }}
-                        stroke="rgba(255,255,255,0.25)"
+                        tick={{ fontSize: 11, fill: isDark ? 'rgba(255,255,255,0.6)' : '#64748b' }}
+                        stroke={isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)'}
                     />
                     <YAxis
-                        tick={{ fontSize: 12 }}
-                        stroke="rgba(255,255,255,0.25)"
-                        tickFormatter={(value) =>
-                            `${(value / 1000).toFixed(0)}k`
-                        }
+                        tick={{ fontSize: 11, fill: isDark ? 'rgba(255,255,255,0.6)' : '#64748b' }}
+                        stroke={isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)'}
+                        tickFormatter={(val) => `${(val / 1000).toFixed(0)}k`}
                     />
                     <Tooltip content={<CustomTooltip />} />
-                    <Legend wrapperStyle={{ fontSize: '14px' }} />
+                    <Legend wrapperStyle={{ fontSize: '13px', paddingTop: '10px' }} />
                     <Area
                         type="monotone"
                         dataKey="totalDebt"
-                        stroke="#ef4444"
-                        strokeWidth={2}
-                        fillOpacity={1}
-                        fill="url(#colorDebt)"
                         name="Total Tunggakan"
+                        stroke="#f43f5e"
+                        strokeWidth={2.5}
+                        fillOpacity={1}
+                        fill="url(#debtGradient)"
                     />
                 </AreaChart>
             </ResponsiveContainer>
-
-            {/* Statistics Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-white/[0.04] p-4 rounded-lg">
-                    <p className="text-sm text-white/60 mb-1">
-                        Tunggakan Tertinggi
-                    </p>
-                    <p className="text-xl font-bold text-rose-300">
-                        {formatCurrency(
-                            Math.max(...chartData.map((d) => d.totalDebt))
-                        )}
-                    </p>
-                    <p className="text-xs text-white/60 mt-1">
-                        Minggu{' '}
-                        {
-                            chartData.find(
-                                (d) =>
-                                    d.totalDebt ===
-                                    Math.max(
-                                        ...chartData.map((x) => x.totalDebt)
-                                    )
-                            )?.weekNumber
-                        }
-                    </p>
-                </div>
-
-                <div className="bg-white/[0.04] p-4 rounded-lg">
-                    <p className="text-sm text-white/60 mb-1">
-                        Rata-rata Tunggakan/Siswa
-                    </p>
-                    <p className="text-xl font-bold text-orange-400/80">
-                        {formatCurrency(
-                            chartData.length > 0
-                                ? chartData.reduce(
-                                      (sum, d) => sum + d.avgDebt,
-                                      0
-                                  ) / chartData.length
-                                : 0
-                        )}
-                    </p>
-                    <p className="text-xs text-white/60 mt-1">
-                        Seluruh periode
-                    </p>
-                </div>
-
-                <div className="bg-white/[0.04] p-4 rounded-lg">
-                    <p className="text-sm text-white/60 mb-1">
-                        Tingkat Koleksi Rata-rata
-                    </p>
-                    <p className="text-xl font-bold text-indigo-400">
-                        {chartData.length > 0
-                            ? (
-                                  chartData.reduce(
-                                      (sum, d) => sum + d.collectionRate,
-                                      0
-                                  ) / chartData.length
-                              ).toFixed(1)
-                            : 0}
-                        %
-                    </p>
-                    <p className="text-xs text-white/60 mt-1">
-                        Target vs Terkumpul
-                    </p>
-                </div>
-            </div>
-
-            {/* Insights */}
-            <div className="bg-blue-500/[0.06] p-4 rounded-lg border border-blue-500/20">
-                <p className="text-sm font-medium text-blue-300 mb-2">
-                    💡 Insight & Rekomendasi
-                </p>
-                <ul className="text-sm text-blue-500 space-y-1">
-                    {chartData[chartData.length - 1].collectionRate < 70 && (
-                        <li>
-                            • Tingkat koleksi di bawah 70%, pertimbangkan kirim
-                            reminder lebih sering
-                        </li>
-                    )}
-                    {chartData[chartData.length - 1].studentsWithDebt >
-                        students.length * 0.5 && (
-                        <li>
-                            • Lebih dari 50% siswa menunggak, pertimbangkan
-                            sistem reward untuk yang rajin bayar
-                        </li>
-                    )}
-                    {isImproving && (
-                        <li>
-                            • Trend positif! Pertahankan strategi pengumpulan
-                            kas saat ini
-                        </li>
-                    )}
-                    {!isImproving && debtChange > 5000 && (
-                        <li>
-                            • Tunggakan meningkat signifikan, segera lakukan
-                            penagihan intensif
-                        </li>
-                    )}
-                </ul>
-            </div>
         </div>
     );
 };

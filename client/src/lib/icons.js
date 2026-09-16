@@ -1,7 +1,7 @@
 /**
  * Auto-generated optimized lucide-react imports.
  * Hanya icon yang benar-benar dipakai yang di-import.
- * Ini mengurangi Vite transform dari ~1600 modules jadi ~76.
+ * Ini mengurangi Vite transform dari ~1600 modules jadi ~81.
  * 
  * Re-generate: node scripts/generate-icons.js
  */
@@ -36,8 +36,10 @@ export { default as Filter } from '../../node_modules/lucide-react/dist/esm/icon
 export { default as Flame } from '../../node_modules/lucide-react/dist/esm/icons/flame.js';
 export { default as Gift } from '../../node_modules/lucide-react/dist/esm/icons/gift.js';
 export { default as Home } from '../../node_modules/lucide-react/dist/esm/icons/house.js';
+export { default as Info } from '../../node_modules/lucide-react/dist/esm/icons/info.js';
 export { default as Key } from '../../node_modules/lucide-react/dist/esm/icons/key.js';
 export { default as Laptop } from '../../node_modules/lucide-react/dist/esm/icons/laptop.js';
+export { default as Layers } from '../../node_modules/lucide-react/dist/esm/icons/layers.js';
 export { default as LayoutDashboard } from '../../node_modules/lucide-react/dist/esm/icons/layout-dashboard.js';
 export { default as Loader2 } from '../../node_modules/lucide-react/dist/esm/icons/loader-circle.js';
 export { default as Lock } from '../../node_modules/lucide-react/dist/esm/icons/lock.js';
@@ -48,9 +50,11 @@ export { default as Medal } from '../../node_modules/lucide-react/dist/esm/icons
 export { default as Menu } from '../../node_modules/lucide-react/dist/esm/icons/menu.js';
 export { default as MessageCircle } from '../../node_modules/lucide-react/dist/esm/icons/message-circle.js';
 export { default as MessageSquare } from '../../node_modules/lucide-react/dist/esm/icons/message-square.js';
-export { default as MinusCircle } from '../../node_modules/lucide-react/dist/esm/icons/circle-minus.js';
+export { default as Minus } from '../../node_modules/lucide-react/dist/esm/icons/minus.js';
 export { default as Monitor } from '../../node_modules/lucide-react/dist/esm/icons/monitor.js';
+export { default as Moon } from '../../node_modules/lucide-react/dist/esm/icons/moon.js';
 export { default as Pause } from '../../node_modules/lucide-react/dist/esm/icons/pause.js';
+export { default as PauseCircle } from '../../node_modules/lucide-react/dist/esm/icons/circle-pause.js';
 export { default as PieChart } from '../../node_modules/lucide-react/dist/esm/icons/chart-pie.js';
 export { default as Play } from '../../node_modules/lucide-react/dist/esm/icons/play.js';
 export { default as Plus } from '../../node_modules/lucide-react/dist/esm/icons/plus.js';
@@ -69,6 +73,7 @@ export { default as ShieldAlert } from '../../node_modules/lucide-react/dist/esm
 export { default as ShieldCheck } from '../../node_modules/lucide-react/dist/esm/icons/shield-check.js';
 export { default as Smartphone } from '../../node_modules/lucide-react/dist/esm/icons/smartphone.js';
 export { default as Sparkles } from '../../node_modules/lucide-react/dist/esm/icons/sparkles.js';
+export { default as Sun } from '../../node_modules/lucide-react/dist/esm/icons/sun.js';
 export { default as Tablet } from '../../node_modules/lucide-react/dist/esm/icons/tablet.js';
 export { default as Target } from '../../node_modules/lucide-react/dist/esm/icons/target.js';
 export { default as Trash2 } from '../../node_modules/lucide-react/dist/esm/icons/trash-2.js';

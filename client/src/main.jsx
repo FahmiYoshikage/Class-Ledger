@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext.jsx';
+import { ThemeProvider } from './context/ThemeContext.jsx';
 import App from './App.jsx';
 import Login from './components/core/Login.jsx';
 import ChangePassword from './components/core/ChangePassword.jsx';
@@ -33,8 +34,9 @@ if ('serviceWorker' in navigator) {
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
         <BrowserRouter>
-            <AuthProvider>
-                <Routes>
+            <ThemeProvider>
+                <AuthProvider>
+                    <Routes>
                     {/* Public Route - Landing Page */}
                     <Route path="/" element={<PublicDashboard />} />
 
@@ -85,7 +87,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                     {/* Fallback */}
                     <Route path="*" element={<NotFoundPage />} />
                 </Routes>
-            </AuthProvider>
+                </AuthProvider>
+            </ThemeProvider>
         </BrowserRouter>
     </React.StrictMode>
 );
