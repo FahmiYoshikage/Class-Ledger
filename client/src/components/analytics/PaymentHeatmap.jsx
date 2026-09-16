@@ -376,14 +376,27 @@ const PaymentHeatmap = ({
             </div>
 
             {/* Heatmap Table */}
-            <div className="rounded-2xl border border-slate-200 dark:border-white/10 overflow-hidden bg-white dark:bg-zinc-950/60 shadow-lg shadow-black/5 dark:shadow-black/30">
-                <div className="overflow-x-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
-                    <table className="w-full border-collapse text-left">
+            <div className="w-full rounded-2xl border border-slate-200 dark:border-white/10 overflow-hidden bg-white dark:bg-zinc-950/70 shadow-xl shadow-black/5 dark:shadow-black/30">
+                <div className="overflow-x-auto w-full" style={{ WebkitOverflowScrolling: 'touch' }}>
+                    <table className="w-full border-collapse text-left min-w-[850px]">
                         <thead>
                             <tr className="border-b border-slate-200 dark:border-white/10 bg-slate-50/80 dark:bg-white/[0.02]">
-                                <th className="sticky left-0 z-20 bg-slate-50 dark:bg-zinc-900/95 backdrop-blur-md px-3 sm:px-4 py-3 text-xs font-bold text-slate-700 dark:text-white/80 uppercase tracking-wider min-w-[180px] sm:min-w-[220px] border-r border-slate-200 dark:border-white/10 shadow-[2px_0_6px_-2px_rgba(0,0,0,0.08)]">
-                                    Siswa
+                                {/* Column 1: No / Absen / NRP */}
+                                <th className="sticky left-0 z-20 bg-slate-100/95 dark:bg-zinc-900/95 backdrop-blur-md px-2 py-3.5 text-center text-xs font-bold text-slate-700 dark:text-white/80 uppercase tracking-wider w-16 min-w-[64px] max-w-[64px] border-b border-r border-slate-200 dark:border-white/10 shadow-[2px_0_6px_-2px_rgba(0,0,0,0.06)]">
+                                    No
                                 </th>
+
+                                {/* Column 2: Nama Siswa */}
+                                <th className="sticky left-[64px] z-20 bg-slate-100/95 dark:bg-zinc-900/95 backdrop-blur-md px-4 py-3.5 text-left text-xs font-bold text-slate-700 dark:text-white/80 uppercase tracking-wider min-w-[200px] sm:min-w-[240px] border-b border-r border-slate-200 dark:border-white/10 shadow-[4px_0_10px_-2px_rgba(0,0,0,0.08)]">
+                                    Nama Siswa
+                                </th>
+
+                                {/* Column 3: Total Kas */}
+                                <th className="bg-slate-50/80 dark:bg-white/[0.02] px-4 py-3.5 text-right text-xs font-bold text-slate-700 dark:text-white/80 uppercase tracking-wider min-w-[130px] sm:min-w-[150px] border-b border-slate-200 dark:border-white/10">
+                                    Total Kas
+                                </th>
+
+                                {/* Weeks Columns */}
                                 {Array.from({ length: heatmapData.displayMaxWeeks }, (_, i) => {
                                     const weekNum = i + 1;
                                     const isCurrentWeek = weekNum === heatmapData.currentBaseline;
@@ -391,60 +404,89 @@ const PaymentHeatmap = ({
                                     return (
                                         <th
                                             key={weekNum}
-                                            className={`px-1.5 py-3 text-center text-xs font-semibold whitespace-nowrap min-w-[36px] ${
+                                            className={`px-1 py-3 text-center text-xs font-semibold whitespace-nowrap min-w-[44px] sm:min-w-[48px] border-b border-slate-200 dark:border-white/10 ${
                                                 isCurrentWeek
                                                     ? 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-500 font-black'
                                                     : isFuture
-                                                    ? 'text-cyan-600 dark:text-cyan-400/80 bg-cyan-500/[0.04]'
+                                                    ? 'text-cyan-600 dark:text-cyan-400 bg-cyan-500/[0.04]'
                                                     : 'text-slate-600 dark:text-white/60'
                                             }`}
                                             title={isCurrentWeek ? 'Minggu Berjalan Saat Ini' : isFuture ? 'Minggu Masa Depan (Surplus / Bayar Lebih Awal)' : `Minggu ke-${weekNum}`}
                                         >
-                                            W{weekNum}
-                                            {isCurrentWeek && (
-                                                <span className="block text-[9px] font-mono text-indigo-500">NOW</span>
-                                            )}
+                                            <div className="flex flex-col items-center justify-center">
+                                                <span>W{weekNum}</span>
+                                                {isCurrentWeek && (
+                                                    <span className="inline-block px-1 py-0.5 text-[8px] font-black font-mono uppercase rounded bg-indigo-500 text-white leading-none">
+                                                        NOW
+                                                    </span>
+                                                )}
+                                            </div>
                                         </th>
                                     );
                                 })}
-                                <th className="px-3 py-3 text-center text-xs font-bold text-slate-700 dark:text-white/80 uppercase tracking-wider min-w-[110px]">
-                                    Terbayar
+
+                                {/* Tercover Column */}
+                                <th className="bg-slate-50/80 dark:bg-white/[0.02] px-3 py-3.5 text-center text-xs font-bold text-slate-700 dark:text-white/80 uppercase tracking-wider min-w-[110px] border-b border-slate-200 dark:border-white/10">
+                                    Tercover
                                 </th>
-                                <th className="px-3 py-3 text-center text-xs font-bold text-slate-700 dark:text-white/80 uppercase tracking-wider min-w-[140px]">
+
+                                {/* Status Column */}
+                                <th className="bg-slate-50/80 dark:bg-white/[0.02] px-4 py-3.5 text-center text-xs font-bold text-slate-700 dark:text-white/80 uppercase tracking-wider min-w-[160px] border-b border-slate-200 dark:border-white/10">
                                     Status Kas
                                 </th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-200/70 dark:divide-white/[0.06]">
-                            {filteredRows.map((row, rowIndex) => {
+                            {filteredRows.map((row) => {
                                 return (
                                     <tr
                                         key={row.student._id}
                                         className="hover:bg-slate-50/80 dark:hover:bg-white/[0.02] transition-colors"
                                     >
-                                        {/* Sticky Student Info Column */}
-                                        <td className="sticky left-0 z-10 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md px-3 sm:px-4 py-2.5 whitespace-nowrap min-w-[180px] sm:min-w-[220px] border-r border-slate-200 dark:border-white/10 shadow-[2px_0_6px_-2px_rgba(0,0,0,0.08)]">
-                                            <div className="flex items-center gap-2 sm:gap-3">
-                                                <span className="text-[11px] font-bold text-slate-500 dark:text-white/60 bg-slate-100 dark:bg-white/[0.06] w-6 h-6 rounded-md flex items-center justify-center shrink-0">
-                                                    {row.student.absen || '-'}
-                                                </span>
-                                                <div className="truncate flex-1">
-                                                    <p className="text-xs sm:text-sm font-semibold text-slate-800 dark:text-white truncate" title={row.student.name}>
+                                        {/* Column 1: Sticky Absen / NRP */}
+                                        <td className="sticky left-0 z-10 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md px-2 py-3 text-center border-r border-slate-200 dark:border-white/10 w-16 min-w-[64px] max-w-[64px] shadow-[2px_0_6px_-2px_rgba(0,0,0,0.06)]">
+                                            <span className="inline-flex items-center justify-center w-7 h-7 rounded-lg text-xs font-mono font-bold bg-slate-100 dark:bg-white/[0.07] text-slate-700 dark:text-white/90 border border-slate-200/80 dark:border-white/10 shadow-sm">
+                                                #{String(row.student.absen || '-').padStart(2, '0')}
+                                            </span>
+                                        </td>
+
+                                        {/* Column 2: Sticky Student Name */}
+                                        <td className="sticky left-[64px] z-10 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md px-4 py-3 border-r border-slate-200 dark:border-white/10 shadow-[4px_0_10px_-2px_rgba(0,0,0,0.08)] min-w-[200px] sm:min-w-[240px]">
+                                            <div className="flex items-center gap-2.5 min-w-0">
+                                                <div className="w-7 h-7 rounded-lg bg-indigo-500/10 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 font-bold text-xs flex items-center justify-center shrink-0 border border-indigo-500/20">
+                                                    {row.student.name.charAt(0).toUpperCase()}
+                                                </div>
+                                                <div className="min-w-0 flex-1">
+                                                    <p className="text-xs sm:text-sm font-semibold text-slate-900 dark:text-white truncate" title={row.student.name}>
                                                         {row.student.name}
                                                     </p>
-                                                    <p className="text-[10px] text-slate-500 dark:text-white/40">
-                                                        Total: {formatRp(row.totalPaid)}
-                                                    </p>
+                                                    {row.student.nickname && (
+                                                        <p className="text-[10px] text-slate-500 dark:text-white/40 truncate">
+                                                            ({row.student.nickname})
+                                                        </p>
+                                                    )}
                                                 </div>
+                                            </div>
+                                        </td>
+
+                                        {/* Column 3: Total Kas */}
+                                        <td className="px-4 py-3 text-right whitespace-nowrap min-w-[130px] sm:min-w-[150px]">
+                                            <div className="text-right">
+                                                <span className="font-mono font-bold text-xs sm:text-sm text-emerald-600 dark:text-emerald-400 tabular-nums block">
+                                                    {formatRp(row.totalPaid)}
+                                                </span>
+                                                <span className="text-[10px] text-slate-500 dark:text-white/40 font-medium">
+                                                    {row.weeksPaidInView} mgg terbayar
+                                                </span>
                                             </div>
                                         </td>
 
                                         {/* Heatmap Week Cells */}
                                         {row.cells.map((cell) => (
-                                            <td key={cell.weekNumber} className="px-1 py-2 text-center">
+                                            <td key={cell.weekNumber} className="px-1 py-2 text-center min-w-[44px] sm:min-w-[48px]">
                                                 <div className="flex items-center justify-center">
                                                     <div
-                                                        className={`w-6 h-6 rounded-md flex items-center justify-center transition-transform hover:scale-110 cursor-help ${getCellClass(
+                                                        className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center transition-transform hover:scale-115 cursor-help ${getCellClass(
                                                             cell.cellState
                                                         )}`}
                                                         title={getCellTooltip(row, cell)}
@@ -455,29 +497,29 @@ const PaymentHeatmap = ({
                                             </td>
                                         ))}
 
-                                        {/* Total Weeks Covered */}
-                                        <td className="px-3 py-2.5 text-center whitespace-nowrap">
-                                            <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 dark:bg-white/[0.06] text-slate-700 dark:text-white/80">
+                                        {/* Column N+1: Tercover */}
+                                        <td className="px-3 py-3 text-center whitespace-nowrap min-w-[110px]">
+                                            <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 dark:bg-white/[0.06] text-slate-700 dark:text-white/80 border border-slate-200/80 dark:border-white/10 font-mono">
                                                 {row.weeksPaidInView} Minggu
                                             </span>
                                         </td>
 
-                                        {/* Status Badge */}
-                                        <td className="px-3 py-2.5 text-center whitespace-nowrap">
+                                        {/* Column N+2: Status Kas */}
+                                        <td className="px-4 py-3 text-center whitespace-nowrap min-w-[160px]">
                                             {row.isSurplus ? (
-                                                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-cyan-500/15 text-cyan-600 dark:text-cyan-300 border border-cyan-500/30 shadow-[0_0_8px_rgba(6,182,212,0.3)]">
-                                                    <Sparkles className="w-3 h-3 text-cyan-500" />
-                                                    Surplus {row.surplusWeeks} Mgg
+                                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-cyan-500/15 text-cyan-600 dark:text-cyan-300 border border-cyan-500/30 shadow-[0_0_10px_rgba(6,182,212,0.3)]">
+                                                    <Sparkles className="w-3.5 h-3.5 text-cyan-500 shrink-0" />
+                                                    <span>Surplus +{row.surplusWeeks} Mgg</span>
                                                 </span>
                                             ) : row.isLunas ? (
-                                                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30">
-                                                    <CheckCircle2 className="w-3 h-3 text-emerald-500" />
-                                                    Lunas
+                                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30">
+                                                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                                                    <span>Lunas</span>
                                                 </span>
                                             ) : (
-                                                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-500/15 text-rose-600 dark:text-rose-300 border border-rose-500/30">
-                                                    <XCircle className="w-3 h-3 text-rose-500" />
-                                                    Nunggak {row.nunggakWeeks} Mgg
+                                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-500/15 text-rose-600 dark:text-rose-300 border border-rose-500/30">
+                                                    <XCircle className="w-3.5 h-3.5 text-rose-500 shrink-0" />
+                                                    <span>Nunggak {row.nunggakWeeks} Mgg</span>
                                                 </span>
                                             )}
                                         </td>

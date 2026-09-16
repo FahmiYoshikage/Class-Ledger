@@ -1070,7 +1070,7 @@ const App = () => {
                 <div className="absolute bottom-[5%] left-[10%] w-[450px] h-[450px] rounded-full bg-gradient-to-br from-cyan-600/8 via-teal-600/8 to-transparent blur-3xl animate-aurora" style={{ animationDelay: '-12s' }} />
             </div>
 
-            <div className="relative z-10 px-4 sm:px-6 lg:px-8 py-6 page-transition">
+            <div className="relative z-10 w-full px-1 sm:px-3 lg:px-4 py-4 page-transition">
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 animate-fade-in">
                     <div className="flex items-center gap-3.5">

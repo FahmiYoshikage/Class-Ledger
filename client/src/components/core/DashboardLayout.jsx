@@ -196,8 +196,8 @@ const DashboardLayout = () => {
                 </div>
             </nav>
 
-            {/* Page Content */}
-            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+            {/* Page Content - Full Width & Functional */}
+            <main className="w-full px-3 sm:px-6 lg:px-8 py-3 sm:py-5">
                 <Outlet />
             </main>
         </div>
