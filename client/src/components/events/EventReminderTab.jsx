@@ -26,20 +26,20 @@ const EventReminderTab = ({
 }) => {
     return (
         <div className="space-y-6">
-            <div className="bg-gradient-to-r from-blue-500/10 to-indigo-500/10 p-6 rounded-lg border-2 border-blue-500/20">
-                <h3 className="font-bold text-lg mb-3 text-blue-300 flex items-center gap-2">
+            <div className="bg-gradient-to-r from-blue-500/10 to-indigo-500/10 p-6 rounded-xl border border-blue-200 dark:border-blue-500/20 shadow-sm">
+                <h3 className="font-bold text-lg mb-3 text-blue-700 dark:text-blue-300 flex items-center gap-2">
                     <Calendar className="w-6 h-6" />
                     Reminder Pembayaran Event ke Grup
                 </h3>
-                <p className="text-white/60 mb-2">
+                <p className="text-slate-600 dark:text-white/60 mb-2">
                     Kirim reminder khusus untuk pembayaran event ke grup
                     WhatsApp dengan mention semua yang belum bayar.
                 </p>
-                <div className="bg-white/[0.04] p-3 rounded border border-blue-500/20">
-                    <p className="text-sm text-white/60">
-                        <strong>Keunggulan:</strong>
+                <div className="bg-white/60 dark:bg-white/[0.04] p-3 rounded-lg border border-blue-200 dark:border-blue-500/20 shadow-xs">
+                    <p className="text-sm text-slate-700 dark:text-white/70 font-semibold">
+                        Keunggulan:
                     </p>
-                    <ul className="text-sm text-white/60 ml-4 mt-2 space-y-1">
+                    <ul className="text-sm text-slate-600 dark:text-white/60 ml-4 mt-2 space-y-1">
                         <li>
                             • Satu pesan grup dengan @mention semua yang belum
                             bayar
@@ -52,14 +52,14 @@ const EventReminderTab = ({
             </div>
 
             {/* Event Selection */}
-            <div className="bg-[#1e1e22]/98 backdrop-blur-xl p-4 rounded-lg border">
-                <label className="block text-sm font-medium text-white/60 mb-2">
+            <div className="bg-white dark:bg-zinc-900/60 p-4 rounded-xl border border-slate-200 dark:border-white/10 shadow-sm">
+                <label className="block text-sm font-medium text-slate-700 dark:text-white/70 mb-2">
                     Pilih Event
                 </label>
                 <select
                     value={selectedEvent?._id || ''}
                     onChange={(e) => handleEventSelect(e.target.value)}
-                    className="w-full px-4 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-sky-500"
+                    className="w-full px-4 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-sky-500 outline-none"
                 >
                     <option value="">-- Pilih Event --</option>
                     {events.map((event) => (
@@ -79,13 +79,13 @@ const EventReminderTab = ({
             {selectedEvent && (
                 <>
                     {/* Event Info */}
-                    <div className="bg-gradient-to-r from-emerald-500/10 to-teal-500/10 p-4 rounded-lg border border-emerald-500/20">
+                    <div className="bg-gradient-to-r from-emerald-500/10 to-teal-500/10 p-4 rounded-xl border border-emerald-200 dark:border-emerald-500/20 shadow-sm">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
-                                <p className="text-sm text-white/60">
+                                <p className="text-sm text-slate-600 dark:text-white/60">
                                     Target Total
                                 </p>
-                                <p className="text-xl font-bold text-white">
+                                <p className="text-xl font-bold text-slate-900 dark:text-white">
                                     Rp{' '}
                                     {selectedEvent.targetAmount.toLocaleString(
                                         'id-ID'
@@ -93,10 +93,10 @@ const EventReminderTab = ({
                                 </p>
                             </div>
                             <div>
-                                <p className="text-sm text-white/60">
+                                <p className="text-sm text-slate-600 dark:text-white/60">
                                     Per Siswa
                                 </p>
-                                <p className="text-xl font-bold text-white">
+                                <p className="text-xl font-bold text-slate-900 dark:text-white">
                                     Rp{' '}
                                     {selectedEvent.perStudentAmount.toLocaleString(
                                         'id-ID'
@@ -104,18 +104,18 @@ const EventReminderTab = ({
                                 </p>
                             </div>
                             <div>
-                                <p className="text-sm text-white/60">
+                                <p className="text-sm text-slate-600 dark:text-white/60">
                                     Sudah Bayar
                                 </p>
-                                <p className="text-xl font-bold text-indigo-400">
+                                <p className="text-xl font-bold text-indigo-600 dark:text-indigo-400">
                                     {selectedEvent.studentsPaid.length} siswa
                                 </p>
                             </div>
                         </div>
                         <div className="mt-3">
-                            <div className="flex justify-between text-sm text-white/60 mb-1">
+                            <div className="flex justify-between text-sm text-slate-600 dark:text-white/60 mb-1">
                                 <span>Progress Pembayaran</span>
-                                <span>
+                                <span className="font-semibold text-slate-900 dark:text-white">
                                     {selectedEvent.studentsPaid.length > 0
                                         ? Math.round(
                                               ((selectedEvent.studentsPaid
@@ -128,9 +128,9 @@ const EventReminderTab = ({
                                     %
                                 </span>
                             </div>
-                            <div className="w-full bg-white/[0.06] rounded-full h-3">
+                            <div className="w-full bg-slate-200 dark:bg-white/[0.08] rounded-full h-3">
                                 <div
-                                    className="bg-green-600 h-3 rounded-full transition-all"
+                                    className="bg-emerald-600 h-3 rounded-full transition-all"
                                     style={{
                                         width: `${
                                             selectedEvent.studentsPaid.length >
@@ -153,7 +153,7 @@ const EventReminderTab = ({
 
                     {/* Message Category */}
                     <div>
-                        <label className="block text-sm font-medium text-white/60 mb-2">
+                        <label className="block text-sm font-medium text-slate-700 dark:text-white/70 mb-2">
                             Pilih Style Pesan
                         </label>
                         <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
@@ -163,11 +163,11 @@ const EventReminderTab = ({
                                     onClick={() => setEventCategory(cat.value)}
                                     className={`p-3 rounded-lg border-2 text-center transition-all ${
                                         eventCategory === cat.value
-                                            ? 'border-blue-500 bg-indigo-500/[0.05]0/[0.06]'
-                                            : 'border-white/[0.1] hover:border-white/[0.1]'
+                                            ? 'border-blue-500 bg-blue-50 dark:bg-blue-500/15 text-blue-700 dark:text-blue-300 font-semibold shadow-xs'
+                                            : 'border-slate-200 dark:border-white/10 bg-white dark:bg-zinc-800/40 text-slate-700 dark:text-white/80 hover:border-slate-300 dark:hover:border-white/20'
                                     }`}
                                 >
-                                    <div className="text-sm font-medium">
+                                    <div className="text-sm">
                                         {cat.label}
                                     </div>
                                 </button>
@@ -176,18 +176,18 @@ const EventReminderTab = ({
                     </div>
 
                     {/* Unpaid Students Summary */}
-                    <div className="bg-[#1e1e22] border border-white/[0.12] rounded-xl">
-                        <div className="p-4 border-b">
-                            <h4 className="font-semibold text-white">
+                    <div className="bg-white dark:bg-zinc-900/60 border border-slate-200 dark:border-white/10 rounded-xl shadow-sm">
+                        <div className="p-4 border-b border-slate-100 dark:border-white/10">
+                            <h4 className="font-semibold text-slate-900 dark:text-white">
                                 Siswa yang Belum Bayar (
                                 {eventUnpaidStudents.length})
                             </h4>
                         </div>
                         <div className="p-4">
                             {eventUnpaidStudents.length === 0 ? (
-                                <div className="text-center py-8 text-white/60">
-                                    <CheckCircle className="w-12 h-12 mx-auto mb-2 text-teal-300" />
-                                    <p className="font-medium text-indigo-400">
+                                <div className="text-center py-8 text-slate-500 dark:text-white/60">
+                                    <CheckCircle className="w-12 h-12 mx-auto mb-2 text-emerald-500" />
+                                    <p className="font-semibold text-emerald-700 dark:text-emerald-400">
                                         Semua siswa sudah bayar! 🎉
                                     </p>
                                     <p className="text-sm mt-1">
@@ -196,8 +196,8 @@ const EventReminderTab = ({
                                 </div>
                             ) : (
                                 <div>
-                                    <div className="bg-amber-500/[0.06] border border-amber-500/20 rounded-lg p-3 mb-3">
-                                        <p className="text-sm text-amber-300">
+                                    <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 rounded-lg p-3 mb-3">
+                                        <p className="text-sm text-amber-800 dark:text-amber-300">
                                             <strong>Info:</strong>{' '}
                                             {eventUnpaidStudents.length} siswa
                                             belum melakukan pembayaran. Pesan
@@ -209,14 +209,14 @@ const EventReminderTab = ({
                                         {eventUnpaidStudents.map((student) => (
                                             <div
                                                 key={student._id}
-                                                className="flex items-center gap-2 p-2 bg-white/[0.04] rounded"
+                                                className="flex items-center gap-2 p-2 bg-slate-50 dark:bg-white/[0.04] border border-slate-100 dark:border-white/5 rounded-lg"
                                             >
-                                                <div className="w-2 h-2 bg-rose-500/[0.05]0 rounded-full"></div>
+                                                <div className="w-2 h-2 bg-rose-500 rounded-full"></div>
                                                 <div className="flex-1">
-                                                    <p className="font-medium text-sm text-white">
+                                                    <p className="font-medium text-sm text-slate-900 dark:text-white">
                                                         {student.name}
                                                     </p>
-                                                    <p className="text-xs text-white/60">
+                                                    <p className="text-xs text-slate-500 dark:text-white/60">
                                                         {student.phoneNumber ||
                                                             '(Tanpa WA)'}
                                                     </p>
@@ -231,15 +231,15 @@ const EventReminderTab = ({
 
                     {/* Group ID Input and Send */}
                     {eventUnpaidStudents.length > 0 && (
-                        <div className="bg-purple-500/10 rounded-lg border-2 border-purple-500/20 p-6">
-                            <h4 className="font-semibold text-purple-300 mb-4 flex items-center gap-2">
+                        <div className="bg-purple-50/50 dark:bg-purple-500/10 rounded-xl border border-purple-200 dark:border-purple-500/20 p-6 shadow-sm">
+                            <h4 className="font-semibold text-purple-800 dark:text-purple-300 mb-4 flex items-center gap-2">
                                 <Users className="w-5 h-5" />
                                 Kirim ke Grup WhatsApp
                             </h4>
 
                             <div className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-white/60 mb-2">
+                                    <label className="block text-sm font-medium text-slate-700 dark:text-white/70 mb-2">
                                         Group ID WhatsApp
                                     </label>
                                     <input
@@ -249,9 +249,9 @@ const EventReminderTab = ({
                                             setGroupId(e.target.value)
                                         }
                                         placeholder="628xxxxxxxxxx-xxxxxxxxx@g.us"
-                                        className="w-full px-4 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500"
+                                        className="w-full px-4 py-2 bg-white dark:bg-zinc-800 border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500 outline-none"
                                     />
-                                    <p className="text-xs text-white/60 mt-1">
+                                    <p className="text-xs text-slate-500 dark:text-white/60 mt-1">
                                         Format: 628xxx-xxx@g.us (dapatkan dari
                                         bot atau WhatsApp Web)
                                     </p>
@@ -261,7 +261,7 @@ const EventReminderTab = ({
                                     <button
                                         onClick={handlePreviewEventGroup}
                                         disabled={loading || !groupId.trim()}
-                                        className="flex items-center justify-center gap-2 px-4 py-3 bg-purple-500/15 border-2 border-purple-500/25 text-purple-300 rounded-lg hover:bg-purple-500/25 disabled:bg-white/[0.04] disabled:text-white/55 disabled:border-white/[0.1] transition-colors"
+                                        className="flex items-center justify-center gap-2 px-4 py-3 bg-purple-100 dark:bg-purple-500/15 border border-purple-300 dark:border-purple-500/25 text-purple-800 dark:text-purple-300 rounded-lg hover:bg-purple-200 dark:hover:bg-purple-500/25 disabled:opacity-50 transition-colors font-medium"
                                     >
                                         <Eye className="w-5 h-5" />
                                         Preview Pesan
@@ -270,7 +270,7 @@ const EventReminderTab = ({
                                     <button
                                         onClick={handleSendEventToGroup}
                                         disabled={sending || !groupId.trim()}
-                                        className="flex items-center justify-center gap-2 px-4 py-3 bg-violet-500/15 text-violet-400 border border-violet-500/20 rounded-lg hover:bg-violet-500/25 disabled:bg-white/[0.08] transition-colors font-medium"
+                                        className="flex items-center justify-center gap-2 px-4 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg disabled:opacity-50 transition-colors font-medium shadow-sm"
                                     >
                                         <Send className="w-5 h-5" />
                                         {sending
@@ -280,12 +280,12 @@ const EventReminderTab = ({
                                 </div>
 
                                 {groupPreview && (
-                                    <div className="bg-[#1e1e22]/98 backdrop-blur-xl p-4 rounded-lg border mt-4">
-                                        <p className="text-sm font-medium text-white/60 mb-2">
+                                    <div className="bg-white dark:bg-zinc-900/60 p-4 rounded-xl border border-slate-200 dark:border-white/10 mt-4 shadow-sm">
+                                        <p className="text-sm font-medium text-slate-700 dark:text-white/70 mb-2">
                                             Preview Pesan:
                                         </p>
-                                        <div className="bg-white/[0.04] p-3 rounded">
-                                            <pre className="text-sm whitespace-pre-wrap text-white font-mono">
+                                        <div className="bg-slate-50 dark:bg-white/[0.04] p-3 rounded-lg border border-slate-200 dark:border-white/10">
+                                            <pre className="text-sm whitespace-pre-wrap text-slate-800 dark:text-slate-200 font-mono">
                                                 {groupPreview}
                                             </pre>
                                         </div>
@@ -296,19 +296,19 @@ const EventReminderTab = ({
                     )}
 
                     {/* How to get Group ID */}
-                    <div className="bg-white/[0.04] rounded-lg p-4 border">
-                        <h4 className="font-semibold text-white mb-2 flex items-center gap-2">
+                    <div className="bg-white dark:bg-zinc-900/60 rounded-xl p-4 border border-slate-200 dark:border-white/10 shadow-sm">
+                        <h4 className="font-semibold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
                             <AlertCircle className="w-4 h-4" />
                             Cara Mendapatkan Group ID
                         </h4>
-                        <ol className="text-sm text-white/60 space-y-2 ml-4">
+                        <ol className="text-sm text-slate-600 dark:text-white/60 space-y-2 ml-4">
                             <li>
                                 <strong>1. Via Bot Fonnte:</strong>
                                 <ul className="ml-4 mt-1 space-y-1">
                                     <li>• Tambahkan bot ke grup WhatsApp</li>
                                     <li>
                                         • Kirim perintah{' '}
-                                        <code className="bg-white/[0.06] px-1 rounded">
+                                        <code className="bg-slate-100 dark:bg-white/[0.06] text-slate-800 dark:text-slate-200 px-1 rounded">
                                             /getid
                                         </code>{' '}
                                         di grup
@@ -323,7 +323,7 @@ const EventReminderTab = ({
                                     <li>• Buka Developer Console (F12)</li>
                                     <li>
                                         • Ketik:{' '}
-                                        <code className="bg-white/[0.06] px-1 rounded">
+                                        <code className="bg-slate-100 dark:bg-white/[0.06] text-slate-800 dark:text-slate-200 px-1 rounded">
                                             window.location.href
                                         </code>
                                     </li>

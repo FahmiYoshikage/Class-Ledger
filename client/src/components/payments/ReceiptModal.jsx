@@ -134,12 +134,12 @@ _Kas Kelas Official Digital Ledger_`;
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
-            <div className="relative w-full max-w-lg my-8 bg-zinc-950/90 border border-white/10 rounded-2xl shadow-2xl overflow-hidden glass-cyber-card print:border-none print:shadow-none print:bg-white print:text-black">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-md overflow-y-auto">
+            <div className="relative w-full max-w-lg my-8 bg-white dark:bg-zinc-950/90 border border-slate-200 dark:border-white/10 rounded-2xl shadow-2xl overflow-hidden print:border-none print:shadow-none print:bg-white print:text-black">
                 {/* Close Button (Hidden on Print) */}
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 p-2 text-white/50 hover:text-white rounded-full bg-white/5 hover:bg-white/10 transition-colors z-10 print:hidden"
+                    className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-700 dark:text-white/50 dark:hover:text-white rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 transition-colors z-10 print:hidden"
                 >
                     <X className="w-5 h-5" />
                 </button>
@@ -147,82 +147,82 @@ _Kas Kelas Official Digital Ledger_`;
                 {/* Receipt Card Body */}
                 <div id="printable-receipt" className="p-6 sm:p-8">
                     {/* Header */}
-                    <div className="border-b border-dashed border-white/15 pb-5 text-center relative print:border-black/20">
-                        <div className="inline-flex items-center justify-center p-2.5 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 mb-3 print:border-zinc-300">
-                            <ShieldCheck className="w-7 h-7 text-indigo-400 print:text-black" />
+                    <div className="border-b border-dashed border-slate-200 dark:border-white/15 pb-5 text-center relative print:border-black/20">
+                        <div className="inline-flex items-center justify-center p-2.5 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400 mb-3 print:border-zinc-300">
+                            <ShieldCheck className="w-7 h-7 text-indigo-600 dark:text-indigo-400 print:text-black" />
                         </div>
-                        <h2 className="text-xl font-extrabold text-white tracking-wide uppercase print:text-black">
+                        <h2 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-wide uppercase print:text-black">
                             Kwitansi Pembayaran Kas
                         </h2>
-                        <p className="text-xs text-white/60 font-mono mt-1 print:text-zinc-600">
-                            No. Bukti: <span className="text-indigo-300 font-bold print:text-black">{receiptNo}</span>
+                        <p className="text-xs text-slate-500 dark:text-white/60 font-mono mt-1 print:text-zinc-600">
+                            No. Bukti: <span className="text-indigo-600 dark:text-indigo-300 font-bold print:text-black">{receiptNo}</span>
                         </p>
                     </div>
 
                     {/* Meta Info */}
-                    <div className="grid grid-cols-2 gap-3 py-4 text-xs sm:text-sm border-b border-dashed border-white/15 print:border-black/20">
+                    <div className="grid grid-cols-2 gap-3 py-4 text-xs sm:text-sm border-b border-dashed border-slate-200 dark:border-white/15 print:border-black/20">
                         <div>
-                            <span className="text-white/40 block text-[11px] uppercase tracking-wider print:text-zinc-500">
+                            <span className="text-slate-400 dark:text-white/40 block text-[11px] uppercase tracking-wider print:text-zinc-500">
                                 Diterima Dari
                             </span>
-                            <span className="font-semibold text-white block mt-0.5 print:text-black">
+                            <span className="font-semibold text-slate-900 dark:text-white block mt-0.5 print:text-black">
                                 {studentName}
                             </span>
-                            <span className="text-xs text-white/50 print:text-zinc-600">
+                            <span className="text-xs text-slate-500 dark:text-white/50 print:text-zinc-600">
                                 Absen: {absen}
                             </span>
                         </div>
                         <div className="text-right">
-                            <span className="text-white/40 block text-[11px] uppercase tracking-wider print:text-zinc-500">
+                            <span className="text-slate-400 dark:text-white/40 block text-[11px] uppercase tracking-wider print:text-zinc-500">
                                 Tanggal Transaksi
                             </span>
-                            <span className="font-semibold text-white block mt-0.5 print:text-black">
+                            <span className="font-semibold text-slate-900 dark:text-white block mt-0.5 print:text-black">
                                 {formattedDate}
                             </span>
-                            <span className="text-xs text-indigo-400 font-medium print:text-zinc-700">
+                            <span className="text-xs text-indigo-600 dark:text-indigo-400 font-medium print:text-zinc-700">
                                 Metode: {payment.method || 'Tunai'}
                             </span>
                         </div>
                     </div>
 
                     {/* Amount Highlight */}
-                    <div className="my-5 p-4 rounded-xl bg-indigo-950/30 border border-indigo-500/20 text-center relative overflow-hidden print:bg-zinc-100 print:border-zinc-300">
-                        <span className="text-[11px] uppercase tracking-widest text-indigo-300/70 font-semibold block mb-1 print:text-zinc-600">
+                    <div className="my-5 p-4 rounded-xl bg-indigo-50/70 dark:bg-indigo-950/30 border border-indigo-100 dark:border-indigo-500/20 text-center relative overflow-hidden print:bg-zinc-100 print:border-zinc-300">
+                        <span className="text-[11px] uppercase tracking-widest text-indigo-600/80 dark:text-indigo-300/70 font-semibold block mb-1 print:text-zinc-600">
                             Jumlah Diterima
                         </span>
-                        <div className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-300 via-indigo-300 to-pink-300 font-mono print:text-black">
+                        <div className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-indigo-600 to-pink-600 dark:from-teal-300 dark:via-indigo-300 dark:to-pink-300 font-mono print:text-black">
                             Rp {amount.toLocaleString('id-ID')}
                         </div>
-                        <p className="text-xs text-white/70 italic mt-1 font-serif print:text-zinc-700">
+                        <p className="text-xs text-slate-600 dark:text-white/70 italic mt-1 font-serif print:text-zinc-700">
                             # {terbilang(amount)} Rupiah #
                         </p>
 
                         {/* Stamp LUNAS */}
-                        <div className="absolute right-3 top-2 border-2 border-teal-400/50 text-teal-400 px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest rotate-[-12deg] select-none opacity-80 print:border-black print:text-black">
+                        <div className="absolute right-3 top-2 border-2 border-teal-600/50 dark:border-teal-400/50 text-teal-600 dark:text-teal-400 px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest rotate-[-12deg] select-none opacity-80 print:border-black print:text-black">
                             LUNAS
                         </div>
                     </div>
 
                     {/* Breakdown */}
                     <div className="space-y-2 text-xs sm:text-sm py-2">
-                        <div className="flex justify-between items-center text-white/70 print:text-zinc-700">
+                        <div className="flex justify-between items-center text-slate-600 dark:text-white/70 print:text-zinc-700">
                             <span>Keperluan:</span>
-                            <span className="font-medium text-white text-right print:text-black">
+                            <span className="font-medium text-slate-900 dark:text-white text-right print:text-black">
                                 {purpose}
                             </span>
                         </div>
                         {payment.count > 1 && (
-                            <div className="flex justify-between items-center text-white/70 print:text-zinc-700">
+                            <div className="flex justify-between items-center text-slate-600 dark:text-white/70 print:text-zinc-700">
                                 <span>Rincian Pembayaran:</span>
-                                <span className="font-medium text-indigo-300 print:text-black">
+                                <span className="font-medium text-indigo-600 dark:text-indigo-300 print:text-black">
                                     {payment.count}x Minggu (@ Rp {payment.amount?.toLocaleString('id-ID')})
                                 </span>
                             </div>
                         )}
                         {payment.note && (
-                            <div className="flex justify-between items-start text-white/70 pt-1 print:text-zinc-700">
+                            <div className="flex justify-between items-start text-slate-600 dark:text-white/70 pt-1 print:text-zinc-700">
                                 <span>Catatan:</span>
-                                <span className="text-white/90 text-right italic max-w-[240px] print:text-black">
+                                <span className="text-slate-800 dark:text-white/90 text-right italic max-w-[240px] print:text-black">
                                     "{payment.note}"
                                 </span>
                             </div>
@@ -230,7 +230,7 @@ _Kas Kelas Official Digital Ledger_`;
                     </div>
 
                     {/* Footer Signature Note */}
-                    <div className="mt-6 pt-4 border-t border-dashed border-white/15 flex justify-between items-end text-xs text-white/50 print:border-black/20 print:text-zinc-600">
+                    <div className="mt-6 pt-4 border-t border-dashed border-slate-200 dark:border-white/15 flex justify-between items-end text-xs text-slate-500 dark:text-white/50 print:border-black/20 print:text-zinc-600">
                         <div>
                             <p className="text-[11px] leading-relaxed">
                                 Dokumen ini merupakan bukti pembayaran sah
@@ -239,8 +239,8 @@ _Kas Kelas Official Digital Ledger_`;
                             </p>
                         </div>
                         <div className="text-center font-mono text-[11px]">
-                            <p className="text-white/40 mb-8 print:text-zinc-400">Bendahara Kelas</p>
-                            <p className="text-white/80 font-bold border-t border-white/20 pt-1 print:text-black print:border-black">
+                            <p className="text-slate-400 dark:text-white/40 mb-8 print:text-zinc-400">Bendahara Kelas</p>
+                            <p className="text-slate-800 dark:text-white/80 font-bold border-t border-slate-200 dark:border-white/20 pt-1 print:text-black print:border-black">
                                 Verified Digital
                             </p>
                         </div>
@@ -248,27 +248,27 @@ _Kas Kelas Official Digital Ledger_`;
                 </div>
 
                 {/* Action Bar (Hidden on Print) */}
-                <div className="p-4 bg-white/[0.02] border-t border-white/10 flex flex-wrap items-center justify-between gap-2 print:hidden">
+                <div className="p-4 bg-slate-50 dark:bg-white/[0.02] border-t border-slate-200 dark:border-white/10 flex flex-wrap items-center justify-between gap-2 print:hidden">
                     <div className="flex gap-2">
                         <button
                             onClick={handlePrint}
-                            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white text-xs font-medium transition-colors border border-white/10"
+                            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-white text-xs font-medium transition-colors border border-slate-200 dark:border-white/10 shadow-sm"
                         >
-                            <Printer className="w-4 h-4 text-white/70" />
+                            <Printer className="w-4 h-4 text-slate-500 dark:text-white/70" />
                             <span>Cetak PDF</span>
                         </button>
                         <button
                             onClick={handleCopy}
-                            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white text-xs font-medium transition-colors border border-white/10"
+                            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-white text-xs font-medium transition-colors border border-slate-200 dark:border-white/10 shadow-sm"
                         >
                             {copied ? (
                                 <>
-                                    <Check className="w-4 h-4 text-teal-400" />
-                                    <span className="text-teal-400">Tersalin</span>
+                                    <Check className="w-4 h-4 text-teal-500 dark:text-teal-400" />
+                                    <span className="text-teal-600 dark:text-teal-400">Tersalin</span>
                                 </>
                             ) : (
                                 <>
-                                    <Copy className="w-4 h-4 text-white/70" />
+                                    <Copy className="w-4 h-4 text-slate-500 dark:text-white/70" />
                                     <span>Salin WA</span>
                                 </>
                             )}
@@ -277,9 +277,9 @@ _Kas Kelas Official Digital Ledger_`;
 
                     <button
                         onClick={handleSendWA}
-                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-xs font-semibold transition-all border border-emerald-500/30 shadow-lg shadow-emerald-950/50"
+                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white dark:bg-emerald-500/20 dark:hover:bg-emerald-500/30 dark:text-emerald-300 text-xs font-semibold transition-all border border-emerald-600 dark:border-emerald-500/30 shadow-lg shadow-emerald-600/20 dark:shadow-emerald-950/50"
                     >
-                        <MessageCircle className="w-4 h-4 text-emerald-400" />
+                        <MessageCircle className="w-4 h-4 text-white dark:text-emerald-400" />
                         <span>Kirim ke WhatsApp</span>
                     </button>
                 </div>

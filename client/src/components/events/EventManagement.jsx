@@ -249,24 +249,24 @@ const EventManagement = () => {
     return (
         <div className="space-y-6">
             {/* Header */}
-            <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-6">
+            <div className="rounded-xl bg-white dark:bg-zinc-900/60 border border-slate-200 dark:border-white/10 p-6 shadow-sm">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="bg-purple-600 p-3 rounded-lg">
+                        <div className="bg-purple-600 p-3 rounded-lg shadow-sm">
                             <Calendar className="w-6 h-6 text-white" />
                         </div>
                         <div>
-                            <h2 className="text-2xl font-bold text-white">
+                            <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
                                 Event Management
                             </h2>
-                            <p className="text-white/60">
+                            <p className="text-slate-500 dark:text-white/60">
                                 Kelola iuran event & kegiatan kelas
                             </p>
                         </div>
                     </div>
                     <button
                         onClick={() => setShowCreateEvent(true)}
-                        className="bg-violet-500/15 text-violet-400 border border-violet-500/20 px-4 py-2 rounded-lg hover:bg-violet-500/25 transition flex items-center gap-2"
+                        className="bg-violet-50 dark:bg-violet-500/15 text-violet-700 dark:text-violet-400 border border-violet-200 dark:border-violet-500/20 px-4 py-2 rounded-lg hover:bg-violet-100 dark:hover:bg-violet-500/25 transition flex items-center gap-2 font-semibold shadow-sm"
                     >
                         <Plus className="w-4 h-4" />
                         Buat Event Baru
@@ -287,22 +287,22 @@ const EventManagement = () => {
                         return (
                             <div
                                 key={event._id}
-                                className="rounded-xl bg-white/[0.035] border border-white/[0.1] hover: transition cursor-pointer"
+                                className="rounded-xl bg-white dark:bg-zinc-900/60 border border-slate-200 dark:border-white/10 hover:border-violet-400 dark:hover:border-violet-500/40 transition cursor-pointer shadow-sm hover:shadow-md"
                                 onClick={() => {
                                     setActiveEvent(event);
                                     loadEventPayments(event._id);
                                 }}
                             >
-                                <div className="p-4 border-b">
+                                <div className="p-4 border-b border-slate-100 dark:border-white/10">
                                     <div className="flex items-start justify-between mb-2">
-                                        <h3 className="font-bold text-lg text-white">
+                                        <h3 className="font-bold text-lg text-slate-900 dark:text-white">
                                             {event.name}
                                         </h3>
-                                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-indigo-500/[0.05]0/15 text-indigo-400">
+                                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-500/20">
                                             Aktif
                                         </span>
                                     </div>
-                                    <p className="text-sm text-white/60">
+                                    <p className="text-sm text-slate-500 dark:text-white/60">
                                         {event.description}
                                     </p>
                                 </div>
@@ -311,14 +311,14 @@ const EventManagement = () => {
                                     {/* Progress Bar */}
                                     <div>
                                         <div className="flex justify-between text-sm mb-1">
-                                            <span className="text-white/60">
+                                            <span className="text-slate-500 dark:text-white/60">
                                                 Progress
                                             </span>
-                                            <span className="font-semibold text-violet-400">
+                                            <span className="font-semibold text-violet-600 dark:text-violet-400">
                                                 {progress.toFixed(1)}%
                                             </span>
                                         </div>
-                                        <div className="w-full bg-white/[0.06] rounded-full h-2">
+                                        <div className="w-full bg-slate-100 dark:bg-white/[0.08] rounded-full h-2">
                                             <div
                                                 className="bg-purple-600 h-2 rounded-full transition-all"
                                                 style={{
@@ -331,36 +331,36 @@ const EventManagement = () => {
                                     {/* Stats */}
                                     <div className="grid grid-cols-2 gap-2 text-sm">
                                         <div>
-                                            <p className="text-white/60">
+                                            <p className="text-slate-500 dark:text-white/60">
                                                 Target
                                             </p>
-                                            <p className="font-semibold">
+                                            <p className="font-semibold text-slate-900 dark:text-white">
                                                 {formatRp(event.targetAmount)}
                                             </p>
                                         </div>
                                         <div>
-                                            <p className="text-white/60">
+                                            <p className="text-slate-500 dark:text-white/60">
                                                 Terkumpul
                                             </p>
-                                            <p className="font-semibold text-indigo-400">
+                                            <p className="font-semibold text-indigo-600 dark:text-indigo-400">
                                                 {formatRp(event.totalCollected)}
                                             </p>
                                         </div>
                                         <div>
-                                            <p className="text-white/60">
+                                            <p className="text-slate-500 dark:text-white/60">
                                                 Per Siswa
                                             </p>
-                                            <p className="font-semibold">
+                                            <p className="font-semibold text-slate-900 dark:text-white">
                                                 {formatRp(
                                                     event.perStudentAmount
                                                 )}
                                             </p>
                                         </div>
                                         <div>
-                                            <p className="text-white/60">
+                                            <p className="text-slate-500 dark:text-white/60">
                                                 Sudah Bayar
                                             </p>
-                                            <p className="font-semibold">
+                                            <p className="font-semibold text-slate-900 dark:text-white">
                                                 {event.studentsPaid.length}{' '}
                                                 siswa
                                             </p>
@@ -369,11 +369,11 @@ const EventManagement = () => {
 
                                     {/* Surplus Info */}
                                     {surplus > 0 && (
-                                        <div className="bg-emerald-500/[0.06] border border-emerald-500/20 rounded p-2 text-sm">
-                                            <p className="text-indigo-400 font-semibold">
+                                        <div className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 rounded p-2 text-sm">
+                                            <p className="text-emerald-700 dark:text-emerald-300 font-semibold">
                                                 Surplus: {formatRp(surplus)}
                                             </p>
-                                            <p className="text-xs text-indigo-400">
+                                            <p className="text-xs text-emerald-600 dark:text-emerald-400">
                                                 Akan masuk ke kas saat event
                                                 selesai
                                             </p>
@@ -382,8 +382,8 @@ const EventManagement = () => {
 
                                     {/* Unpaid Count */}
                                     {unpaid.length > 0 && (
-                                        <div className="bg-amber-500/[0.06] border border-amber-500/20 rounded p-2">
-                                            <p className="text-xs text-amber-300">
+                                        <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 rounded p-2">
+                                            <p className="text-xs text-amber-700 dark:text-amber-300 font-medium">
                                                 <AlertCircle className="w-3 h-3 inline mr-1" />
                                                 {unpaid.length} siswa belum
                                                 bayar
@@ -398,9 +398,9 @@ const EventManagement = () => {
 
             {/* Completed Events */}
             {events.filter((e) => e.status === 'selesai').length > 0 && (
-                <div className="rounded-xl bg-white/[0.035] border border-white/[0.1]">
-                    <div className="p-4 border-b">
-                        <h3 className="font-bold text-white">
+                <div className="rounded-xl bg-white dark:bg-zinc-900/60 border border-slate-200 dark:border-white/10 shadow-sm">
+                    <div className="p-4 border-b border-slate-100 dark:border-white/10">
+                        <h3 className="font-bold text-slate-900 dark:text-white">
                             Event Selesai
                         </h3>
                     </div>
@@ -410,13 +410,13 @@ const EventManagement = () => {
                             .map((event) => (
                                 <div
                                     key={event._id}
-                                    className="flex items-center justify-between p-3 bg-white/[0.04] rounded"
+                                    className="flex items-center justify-between p-3 bg-slate-50 dark:bg-white/[0.04] border border-slate-100 dark:border-white/5 rounded-lg"
                                 >
                                     <div>
-                                        <p className="font-semibold text-white">
+                                        <p className="font-semibold text-slate-900 dark:text-white">
                                             {event.name}
                                         </p>
-                                        <p className="text-sm text-white/60">
+                                        <p className="text-sm text-slate-500 dark:text-white/60">
                                             Terkumpul:{' '}
                                             {formatRp(event.totalCollected)} •
                                             Surplus:{' '}
@@ -426,7 +426,7 @@ const EventManagement = () => {
                                             )}
                                         </p>
                                     </div>
-                                    <CheckCircle className="w-5 h-5 text-indigo-400" />
+                                    <CheckCircle className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                                 </div>
                             ))}
                     </div>
@@ -436,57 +436,57 @@ const EventManagement = () => {
             {/* Event Detail Modal */}
             {activeEvent && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50 backdrop-animate">
-                    <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl modal-animate max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                    <div className="bg-white dark:bg-[#1e1e22] border border-slate-200 dark:border-white/[0.12] rounded-2xl modal-animate max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
                         {/* Modal Header */}
-                        <div className="p-6 border-b border-white/[0.1] sticky top-0 bg-[#1e1e22] ">
+                        <div className="p-6 border-b border-slate-200 dark:border-white/[0.1] sticky top-0 bg-white dark:bg-[#1e1e22] z-10">
                             <div className="flex items-start justify-between">
                                 <div>
-                                    <h3 className="text-2xl font-bold text-white">
+                                    <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
                                         {activeEvent.name}
                                     </h3>
-                                    <p className="text-white/60 mt-1">
+                                    <p className="text-slate-500 dark:text-white/60 mt-1">
                                         {activeEvent.description}
                                     </p>
                                 </div>
                                 <button
                                     onClick={() => setActiveEvent(null)}
-                                    className="p-2 hover:bg-white/[0.07] rounded"
+                                    className="p-2 hover:bg-slate-100 dark:hover:bg-white/[0.07] text-slate-500 dark:text-white/60 hover:text-slate-900 dark:hover:text-white rounded-lg transition"
                                 >
                                     <X className="w-5 h-5" />
                                 </button>
                             </div>
 
                             {/* Progress Summary */}
-                            <div className="mt-4 grid grid-cols-4 gap-4">
-                                <div className="bg-purple-500/10 p-3 rounded">
-                                    <p className="text-xs text-violet-400 mb-1">
+                            <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
+                                <div className="bg-purple-50 dark:bg-purple-500/10 border border-purple-200 dark:border-purple-500/20 p-3 rounded-lg">
+                                    <p className="text-xs text-purple-600 dark:text-violet-400 mb-1">
                                         Target
                                     </p>
-                                    <p className="font-bold text-purple-300">
+                                    <p className="font-bold text-purple-700 dark:text-purple-300">
                                         {formatRp(activeEvent.targetAmount)}
                                     </p>
                                 </div>
-                                <div className="bg-emerald-500/[0.06] p-3 rounded">
-                                    <p className="text-xs text-emerald-400 mb-1">
+                                <div className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 p-3 rounded-lg">
+                                    <p className="text-xs text-emerald-600 dark:text-emerald-400 mb-1">
                                         Terkumpul
                                     </p>
-                                    <p className="font-bold text-emerald-300">
+                                    <p className="font-bold text-emerald-700 dark:text-emerald-300">
                                         {formatRp(activeEvent.totalCollected)}
                                     </p>
                                 </div>
-                                <div className="bg-blue-500/[0.06] p-3 rounded">
-                                    <p className="text-xs text-blue-400 mb-1">
+                                <div className="bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 p-3 rounded-lg">
+                                    <p className="text-xs text-blue-600 dark:text-blue-400 mb-1">
                                         Per Siswa
                                     </p>
-                                    <p className="font-bold text-blue-300">
+                                    <p className="font-bold text-blue-700 dark:text-blue-300">
                                         {formatRp(activeEvent.perStudentAmount)}
                                     </p>
                                 </div>
-                                <div className="bg-amber-500/[0.06] p-3 rounded">
-                                    <p className="text-xs text-amber-300 mb-1">
+                                <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 p-3 rounded-lg">
+                                    <p className="text-xs text-amber-600 dark:text-amber-300 mb-1">
                                         Sudah Bayar
                                     </p>
-                                    <p className="font-bold text-amber-300">
+                                    <p className="font-bold text-amber-700 dark:text-amber-300">
                                         {activeEvent.studentsPaid.length}/
                                         {students.length}
                                     </p>
@@ -500,7 +500,7 @@ const EventManagement = () => {
                             <div className="flex gap-2">
                                 <button
                                     onClick={() => setShowPaymentModal(true)}
-                                    className="flex-1 bg-violet-500/15 text-violet-400 border border-violet-500/20 px-4 py-2 rounded-lg hover:bg-violet-500/25 transition flex items-center justify-center gap-2"
+                                    className="flex-1 bg-violet-50 dark:bg-violet-500/15 text-violet-700 dark:text-violet-400 border border-violet-200 dark:border-violet-500/20 px-4 py-2 rounded-lg hover:bg-violet-100 dark:hover:bg-violet-500/25 transition flex items-center justify-center gap-2 font-semibold shadow-sm"
                                 >
                                     <Plus className="w-4 h-4" />
                                     Tambah Pembayaran
@@ -511,7 +511,7 @@ const EventManagement = () => {
                                         onClick={() =>
                                             handleCompleteEvent(activeEvent._id)
                                         }
-                                        className="flex-1 bg-teal-500/10 text-teal-300 border border-teal-500/15 px-4 py-2 rounded-lg hover:bg-teal-500/18 transition flex items-center justify-center gap-2"
+                                        className="flex-1 bg-emerald-50 dark:bg-teal-500/10 text-emerald-700 dark:text-teal-300 border border-emerald-200 dark:border-teal-500/15 px-4 py-2 rounded-lg hover:bg-emerald-100 dark:hover:bg-teal-500/18 transition flex items-center justify-center gap-2 font-semibold shadow-sm"
                                     >
                                         <CheckCircle className="w-4 h-4" />
                                         Selesaikan Event
@@ -521,7 +521,7 @@ const EventManagement = () => {
                                     onClick={() =>
                                         handleDeleteEvent(activeEvent._id)
                                     }
-                                    className="bg-rose-500/10 text-rose-300 border border-rose-400/15 px-4 py-2 rounded-lg hover:bg-rose-500/18 transition"
+                                    className="bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-400/15 px-4 py-2 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-500/18 transition font-semibold shadow-sm"
                                 >
                                     <Trash2 className="w-4 h-4" />
                                 </button>
@@ -529,8 +529,8 @@ const EventManagement = () => {
 
                             {/* Paid Students */}
                             {getPaidStudents(activeEvent).length > 0 && (
-                                <div className="bg-emerald-500/[0.06] border border-emerald-500/20 rounded-lg p-4">
-                                    <h4 className="font-semibold text-emerald-300 mb-2">
+                                <div className="bg-emerald-50/70 dark:bg-emerald-500/[0.06] border border-emerald-200 dark:border-emerald-500/20 rounded-lg p-4">
+                                    <h4 className="font-semibold text-emerald-800 dark:text-emerald-300 mb-2">
                                         Siswa Sudah Bayar (
                                         {getPaidStudents(activeEvent).length})
                                     </h4>
@@ -540,7 +540,7 @@ const EventManagement = () => {
                                             .map((student) => (
                                                 <span
                                                     key={student._id}
-                                                    className="px-2 py-1 bg-indigo-500/[0.05]0/15 text-indigo-400 rounded text-sm"
+                                                    className="px-2 py-1 bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-500/30 rounded text-sm font-medium"
                                                 >
                                                     {student.absen}.{' '}
                                                     {student.name}
@@ -552,8 +552,8 @@ const EventManagement = () => {
 
                             {/* Unpaid Students */}
                             {getUnpaidStudents(activeEvent).length > 0 && (
-                                <div className="bg-amber-500/[0.06] border border-amber-500/20 rounded-lg p-4">
-                                    <h4 className="font-semibold text-amber-300 mb-2">
+                                <div className="bg-amber-50/70 dark:bg-amber-500/[0.06] border border-amber-200 dark:border-amber-500/20 rounded-lg p-4">
+                                    <h4 className="font-semibold text-amber-800 dark:text-amber-300 mb-2">
                                         Siswa Belum Bayar (
                                         {getUnpaidStudents(activeEvent).length})
                                     </h4>
@@ -563,7 +563,7 @@ const EventManagement = () => {
                                             .map((student) => (
                                                 <span
                                                     key={student._id}
-                                                    className="px-2 py-1 bg-amber-500/[0.06]0/15 text-amber-300 rounded text-sm"
+                                                    className="px-2 py-1 bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-500/30 rounded text-sm font-medium"
                                                 >
                                                     {student.absen}.{' '}
                                                     {student.name}
@@ -575,36 +575,36 @@ const EventManagement = () => {
 
                             {/* Payment History */}
                             <div>
-                                <h4 className="font-semibold text-white mb-3">
+                                <h4 className="font-semibold text-slate-900 dark:text-white mb-3">
                                     Riwayat Pembayaran
                                 </h4>
-                                <div className="border rounded-lg overflow-hidden">
+                                <div className="border border-slate-200 dark:border-white/10 rounded-lg overflow-hidden shadow-sm">
                                     <table className="w-full">
-                                        <thead className="bg-white/[0.04]">
+                                        <thead className="bg-slate-50 dark:bg-white/[0.04] border-b border-slate-200 dark:border-white/10">
                                             <tr>
-                                                <th className="px-4 py-2 text-left text-xs font-medium text-white/60">
+                                                <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 dark:text-white/60">
                                                     Tanggal
                                                 </th>
-                                                <th className="px-4 py-2 text-left text-xs font-medium text-white/60">
+                                                <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 dark:text-white/60">
                                                     Nama
                                                 </th>
-                                                <th className="px-4 py-2 text-left text-xs font-medium text-white/60">
+                                                <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 dark:text-white/60">
                                                     Jumlah
                                                 </th>
-                                                <th className="px-4 py-2 text-left text-xs font-medium text-white/60">
+                                                <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 dark:text-white/60">
                                                     Metode
                                                 </th>
-                                                <th className="px-4 py-2 text-center text-xs font-medium text-white/60">
+                                                <th className="px-4 py-2 text-center text-xs font-medium text-slate-500 dark:text-white/60">
                                                     Aksi
                                                 </th>
                                             </tr>
                                         </thead>
-                                        <tbody className="divide-y">
+                                        <tbody className="divide-y divide-slate-200 dark:divide-white/[0.06]">
                                             {eventPayments.length === 0 ? (
                                                 <tr>
                                                     <td
                                                         colSpan="5"
-                                                        className="px-4 py-8 text-center text-white/60"
+                                                        className="px-4 py-8 text-center text-slate-500 dark:text-white/60"
                                                     >
                                                         Belum ada riwayat
                                                         pembayaran
@@ -612,31 +612,26 @@ const EventManagement = () => {
                                                 </tr>
                                             ) : (
                                                 eventPayments.map((payment) => (
-                                                    <tr key={payment._id}>
-                                                        <td className="px-4 py-2 text-sm">
+                                                    <tr key={payment._id} className="hover:bg-slate-50/50 dark:hover:bg-white/[0.02]">
+                                                        <td className="px-4 py-2 text-sm text-slate-600 dark:text-slate-300">
                                                             {new Date(
                                                                 payment.date
                                                             ).toLocaleDateString(
                                                                 'id-ID'
                                                             )}
                                                         </td>
-                                                        <td className="px-4 py-2 text-sm font-medium">
+                                                        <td className="px-4 py-2 text-sm font-medium text-slate-900 dark:text-white">
                                                             {payment.studentId
                                                                 ?.name || '-'}
                                                         </td>
-                                                        <td className="px-4 py-2 text-sm">
+                                                        <td className="px-4 py-2 text-sm font-semibold text-slate-900 dark:text-white">
                                                             {formatRp(
                                                                 payment.amount
                                                             )}
                                                         </td>
                                                         <td className="px-4 py-2 text-sm">
                                                             <span
-                                                                className={`px-2 py-1 text-xs rounded-full ${
-                                                                    payment.method ===
-                                                                    'Tunai'
-                                                                        ? 'bg-indigo-500/[0.05]0/15 text-indigo-400'
-                                                                        : 'bg-indigo-500/[0.05]0/15 text-indigo-400'
-                                                                }`}
+                                                                className="px-2 py-1 text-xs rounded-full bg-blue-50 dark:bg-blue-500/15 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-500/20 font-medium"
                                                             >
                                                                 {payment.method}
                                                             </span>
@@ -649,7 +644,7 @@ const EventManagement = () => {
                                                                             payment
                                                                         )
                                                                     }
-                                                                    className="text-blue-500 hover:text-blue-500 p-1"
+                                                                    className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 p-1"
                                                                     title="Edit"
                                                                 >
                                                                     <Edit className="w-4 h-4" />
@@ -660,7 +655,7 @@ const EventManagement = () => {
                                                                             payment._id
                                                                         )
                                                                     }
-                                                                    className="text-rose-300 hover:text-rose-300 p-1"
+                                                                    className="text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 p-1"
                                                                     title="Hapus"
                                                                 >
                                                                     <Trash2 className="w-4 h-4" />
@@ -678,12 +673,11 @@ const EventManagement = () => {
                     </div>
                 </div>
             )}
-
             {/* Create Event Modal */}
             {showCreateEvent && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50 backdrop-animate">
-                    <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl modal-animate max-w-2xl w-full p-6">
-                        <h3 className="text-xl font-bold mb-4">
+                    <div className="bg-white dark:bg-[#1e1e22] border border-slate-200 dark:border-white/[0.12] rounded-2xl modal-animate max-w-2xl w-full p-6 shadow-2xl">
+                        <h3 className="text-xl font-bold mb-4 text-slate-900 dark:text-white">
                             Buat Event Baru
                         </h3>
                         <form
@@ -691,7 +685,7 @@ const EventManagement = () => {
                             className="space-y-4"
                         >
                             <div>
-                                <label className="block text-sm font-medium text-white/60 mb-1">
+                                <label className="block text-sm font-medium text-slate-700 dark:text-white/70 mb-1">
                                     Nama Event
                                 </label>
                                 <input
@@ -699,25 +693,25 @@ const EventManagement = () => {
                                     name="name"
                                     required
                                     placeholder="Contoh: Study Tour"
-                                    className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500 outline-none"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-white/60 mb-1">
+                                <label className="block text-sm font-medium text-slate-700 dark:text-white/70 mb-1">
                                     Deskripsi
                                 </label>
                                 <textarea
                                     name="description"
                                     rows="2"
                                     placeholder="Deskripsi singkat event"
-                                    className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500 outline-none"
                                 />
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-white/60 mb-1">
+                                    <label className="block text-sm font-medium text-slate-700 dark:text-white/70 mb-1">
                                         Target Iuran Total
                                     </label>
                                     <input
@@ -750,12 +744,12 @@ const EventManagement = () => {
                                                     : 'Belum ada data siswa. Silakan tambahkan siswa terlebih dahulu.';
                                         }}
                                         placeholder="100000"
-                                        className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                        className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500 outline-none"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-white/60 mb-1">
+                                    <label className="block text-sm font-medium text-slate-700 dark:text-white/70 mb-1">
                                         Iuran Per Siswa
                                     </label>
                                     <input
@@ -764,14 +758,14 @@ const EventManagement = () => {
                                         required
                                         id="perStudentAmount"
                                         placeholder="3500"
-                                        className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                        className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500 outline-none"
                                     />
                                 </div>
                             </div>
 
-                            <div className="bg-blue-500/[0.06] border border-blue-500/20 rounded p-3 text-sm">
+                            <div className="bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 rounded-lg p-3 text-sm">
                                 <p
-                                    className="text-indigo-400"
+                                    className="text-blue-700 dark:text-blue-300"
                                     id="calculatedInfo"
                                 >
                                     Masukkan target iuran untuk kalkulasi
@@ -779,9 +773,9 @@ const EventManagement = () => {
                                 </p>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-white/60 mb-1">
+                                    <label className="block text-sm font-medium text-slate-700 dark:text-white/70 mb-1">
                                         Tanggal Mulai
                                     </label>
                                     <input
@@ -793,19 +787,19 @@ const EventManagement = () => {
                                                 .toISOString()
                                                 .split('T')[0]
                                         }
-                                        className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                        className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500 outline-none"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-white/60 mb-1">
+                                    <label className="block text-sm font-medium text-slate-700 dark:text-white/70 mb-1">
                                         Tanggal Selesai
                                     </label>
                                     <input
                                         type="date"
                                         name="endDate"
                                         required
-                                        className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                        className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500 outline-none"
                                     />
                                 </div>
                             </div>
@@ -814,13 +808,13 @@ const EventManagement = () => {
                                 <button
                                     type="button"
                                     onClick={() => setShowCreateEvent(false)}
-                                    className="flex-1 px-4 py-2 border border-white/[0.1] rounded-lg hover:bg-white/[0.04] transition"
+                                    className="flex-1 px-4 py-2 border border-slate-300 dark:border-white/10 text-slate-700 dark:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-white/[0.04] transition font-medium"
                                 >
                                     Batal
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex-1 px-4 py-2 bg-violet-500/15 text-violet-400 border border-violet-500/20 rounded-lg hover:bg-violet-500/25 transition"
+                                    className="flex-1 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg transition font-semibold shadow-sm"
                                 >
                                     Buat Event
                                 </button>
@@ -833,19 +827,19 @@ const EventManagement = () => {
             {/* Add Payment Modal */}
             {showPaymentModal && activeEvent && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50 backdrop-animate">
-                    <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl modal-animate max-w-md w-full p-6">
-                        <h3 className="text-xl font-bold mb-4">
+                    <div className="bg-white dark:bg-[#1e1e22] border border-slate-200 dark:border-white/[0.12] rounded-2xl modal-animate max-w-md w-full p-6 shadow-2xl">
+                        <h3 className="text-xl font-bold mb-4 text-slate-900 dark:text-white">
                             Tambah Pembayaran Event
                         </h3>
                         <form onSubmit={handleAddPayment} className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-white/60 mb-1">
+                                <label className="block text-sm font-medium text-slate-700 dark:text-white/70 mb-1">
                                     Siswa
                                 </label>
                                 <select
                                     name="studentId"
                                     required
-                                    className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500 outline-none"
                                 >
                                     <option value="">Pilih Siswa</option>
                                     {students
@@ -862,7 +856,7 @@ const EventManagement = () => {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-white/60 mb-1">
+                                <label className="block text-sm font-medium text-slate-700 dark:text-white/70 mb-1">
                                     Jumlah
                                 </label>
                                 <input
@@ -870,16 +864,16 @@ const EventManagement = () => {
                                     name="amount"
                                     defaultValue={activeEvent.perStudentAmount}
                                     required
-                                    className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500 outline-none"
                                 />
-                                <p className="text-xs text-white/60 mt-1">
+                                <p className="text-xs text-slate-500 dark:text-white/60 mt-1">
                                     Default:{' '}
                                     {formatRp(activeEvent.perStudentAmount)}
                                 </p>
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-white/60 mb-1">
+                                <label className="block text-sm font-medium text-slate-700 dark:text-white/70 mb-1">
                                     Tanggal
                                 </label>
                                 <input
@@ -889,17 +883,17 @@ const EventManagement = () => {
                                         new Date().toISOString().split('T')[0]
                                     }
                                     required
-                                    className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500 outline-none"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-white/60 mb-1">
+                                <label className="block text-sm font-medium text-slate-700 dark:text-white/70 mb-1">
                                     Metode
                                 </label>
                                 <select
                                     name="method"
-                                    className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500 outline-none"
                                 >
                                     <option>Tunai</option>
                                     <option>Transfer</option>
@@ -907,13 +901,13 @@ const EventManagement = () => {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-white/60 mb-1">
+                                <label className="block text-sm font-medium text-slate-700 dark:text-white/70 mb-1">
                                     Catatan (opsional)
                                 </label>
                                 <input
                                     type="text"
                                     name="note"
-                                    className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500 outline-none"
                                 />
                             </div>
 
@@ -921,13 +915,13 @@ const EventManagement = () => {
                                 <button
                                     type="button"
                                     onClick={() => setShowPaymentModal(false)}
-                                    className="flex-1 px-4 py-2 border border-white/[0.1] rounded-lg hover:bg-white/[0.04] transition"
+                                    className="flex-1 px-4 py-2 border border-slate-300 dark:border-white/10 text-slate-700 dark:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-white/[0.04] transition font-medium"
                                 >
                                     Batal
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex-1 px-4 py-2 bg-violet-500/15 text-violet-400 border border-violet-500/20 rounded-lg hover:bg-violet-500/25 transition"
+                                    className="flex-1 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg transition font-semibold shadow-sm"
                                 >
                                     Simpan
                                 </button>
@@ -940,8 +934,8 @@ const EventManagement = () => {
             {/* Edit Payment Modal */}
             {showEditPaymentModal && activeEvent && editingPayment && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50 backdrop-animate">
-                    <div className="bg-[#1e1e22] border border-white/[0.12] rounded-2xl modal-animate max-w-md w-full p-6">
-                        <h3 className="text-xl font-bold mb-4">
+                    <div className="bg-white dark:bg-[#1e1e22] border border-slate-200 dark:border-white/[0.12] rounded-2xl modal-animate max-w-md w-full p-6 shadow-2xl">
+                        <h3 className="text-xl font-bold mb-4 text-slate-900 dark:text-white">
                             Edit Pembayaran Event
                         </h3>
                         <form
@@ -949,14 +943,14 @@ const EventManagement = () => {
                             className="space-y-4"
                         >
                             <div>
-                                <label className="block text-sm font-medium text-white/60 mb-1">
+                                <label className="block text-sm font-medium text-slate-700 dark:text-white/70 mb-1">
                                     Siswa
                                 </label>
                                 <select
                                     name="studentId"
                                     required
                                     defaultValue={editingPayment.studentId?._id}
-                                    className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500 outline-none"
                                 >
                                     <option value="">Pilih Siswa</option>
                                     {students
@@ -973,7 +967,7 @@ const EventManagement = () => {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-white/60 mb-1">
+                                <label className="block text-sm font-medium text-slate-700 dark:text-white/70 mb-1">
                                     Jumlah
                                 </label>
                                 <input
@@ -981,12 +975,12 @@ const EventManagement = () => {
                                     name="amount"
                                     defaultValue={editingPayment.amount}
                                     required
-                                    className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500 outline-none"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-white/60 mb-1">
+                                <label className="block text-sm font-medium text-slate-700 dark:text-white/70 mb-1">
                                     Tanggal
                                 </label>
                                 <input
@@ -998,18 +992,18 @@ const EventManagement = () => {
                                             .split('T')[0]
                                     }
                                     required
-                                    className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500 outline-none"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-white/60 mb-1">
+                                <label className="block text-sm font-medium text-slate-700 dark:text-white/70 mb-1">
                                     Metode
                                 </label>
                                 <select
                                     name="method"
                                     defaultValue={editingPayment.method}
-                                    className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500 outline-none"
                                 >
                                     <option>Tunai</option>
                                     <option>Transfer</option>
@@ -1017,14 +1011,14 @@ const EventManagement = () => {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-white/60 mb-1">
+                                <label className="block text-sm font-medium text-slate-700 dark:text-white/70 mb-1">
                                     Catatan (opsional)
                                 </label>
                                 <input
                                     type="text"
                                     name="note"
                                     defaultValue={editingPayment.note || ''}
-                                    className="w-full px-3 py-2 border border-white/[0.1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500 outline-none"
                                 />
                             </div>
 
@@ -1035,13 +1029,13 @@ const EventManagement = () => {
                                         setShowEditPaymentModal(false);
                                         setEditingPayment(null);
                                     }}
-                                    className="flex-1 px-4 py-2 border border-white/[0.1] rounded-lg hover:bg-white/[0.04] transition"
+                                    className="flex-1 px-4 py-2 border border-slate-300 dark:border-white/10 text-slate-700 dark:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-white/[0.04] transition font-medium"
                                 >
                                     Batal
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex-1 px-4 py-2 bg-indigo-500/[0.05]0/15 text-indigo-400 border border-indigo-500/15 rounded-lg hover:bg-indigo-500/[0.05]0/25 transition"
+                                    className="flex-1 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg transition font-semibold shadow-sm"
                                 >
                                     Update
                                 </button>

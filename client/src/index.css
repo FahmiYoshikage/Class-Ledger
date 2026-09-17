@@ -198,33 +198,59 @@ html:not(.dark) body {
 ::-webkit-scrollbar-track {
     background: transparent;
 }
-::-webkit-scrollbar-thumb {
+/* Scrollbars */
+html.dark ::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.12);
     border-radius: 3px;
 }
-::-webkit-scrollbar-thumb:hover {
+html.dark ::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.22);
+}
+html.light ::-webkit-scrollbar-thumb,
+html:not(.dark) ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 3px;
+}
+html.light ::-webkit-scrollbar-thumb:hover,
+html:not(.dark) ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.28);
 }
 
 /* Selection */
 ::selection {
     background-color: rgba(99, 102, 241, 0.25);
-    color: white;
+    color: currentColor;
 }
 
 /* Glass morphism utility */
-.glass {
+html.dark .glass {
     background: rgba(255, 255, 255, 0.04);
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
 }
+html.light .glass,
+html:not(.dark) .glass {
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+}
 
-/* Dark card style */
+/* Apple Card style */
 .apple-card {
-    background: rgba(255, 255, 255, 0.04);
     border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+html.dark .apple-card {
+    background: rgba(255, 255, 255, 0.04);
     box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.1);
+}
+html.light .apple-card,
+html:not(.dark) .apple-card {
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
 }
 
 /* Smooth transitions */
@@ -245,28 +271,49 @@ textarea:focus {
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
 }
 
-/* Dark theme select options */
-select option {
-    background-color: #1e1e22;
-    color: #fafafa;
-}
-
-/* Dark theme form elements - prevent white-on-white text */
-input,
-select,
-textarea {
+/* DARK THEME form elements */
+html.dark input,
+html.dark select,
+html.dark textarea {
     background-color: rgba(255, 255, 255, 0.06);
     color: #fafafa;
 }
-
-input::placeholder,
-textarea::placeholder {
+html.dark input::placeholder,
+html.dark textarea::placeholder {
     color: rgba(255, 255, 255, 0.4);
 }
+html.dark select option {
+    background-color: #18181b;
+    color: #fafafa;
+}
+html.dark input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(0.65);
+}
 
-/* Dark date input icon */
-input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1) brightness(0.6);
+/* LIGHT THEME form elements */
+html.light input,
+html.light select,
+html.light textarea,
+html:not(.dark) input,
+html:not(.dark) select,
+html:not(.dark) textarea {
+    background-color: #ffffff;
+    color: #0f172a;
+}
+html.light input::placeholder,
+html.light textarea::placeholder,
+html:not(.dark) input::placeholder,
+html:not(.dark) textarea::placeholder {
+    color: #94a3b8;
+}
+html.light select option,
+html:not(.dark) select option {
+    background-color: #ffffff;
+    color: #0f172a;
+}
+html.light input[type="date"]::-webkit-calendar-picker-indicator,
+html:not(.dark) input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: none;
 }
 
 /* Smooth page transitions */

@@ -123,181 +123,177 @@ const SessionManagement = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-6">
-            <div className="max-w-6xl mx-auto">
-                {/* Header */}
-                <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-white flex items-center gap-3">
-                        <Monitor className="w-8 h-8 text-indigo-400" />
-                        Session Management
-                    </h1>
-                    <p className="text-white/60 mt-2">
-                        Kelola perangkat yang terhubung dengan akun Anda
+        <div className="space-y-6">
+            {/* Header */}
+            <div className="rounded-2xl bg-white/80 dark:bg-zinc-950/60 border border-slate-200 dark:border-white/10 p-6 shadow-sm">
+                <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
+                    <Monitor className="w-8 h-8 text-indigo-600 dark:text-indigo-400" />
+                    Manajemen Sesi Login
+                </h1>
+                <p className="text-xs sm:text-sm text-slate-500 dark:text-white/60 mt-1">
+                    Kelola perangkat dan sesi aktif yang terhubung dengan akun bendahara Anda
+                </p>
+            </div>
+
+            {/* Error Message */}
+            {error && (
+                <div className="bg-rose-500/10 border border-rose-500/25 rounded-2xl p-4">
+                    <div className="flex items-center gap-3">
+                        <AlertTriangle className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0" />
+                        <div>
+                            <h3 className="font-semibold text-rose-700 dark:text-rose-300 text-sm">
+                                Error
+                            </h3>
+                            <p className="text-xs text-rose-600 dark:text-rose-300/90 mt-0.5">
+                                {error}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Statistics */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="rounded-2xl bg-white dark:bg-zinc-900/60 border border-slate-200 dark:border-white/10 p-5 shadow-sm">
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-white/60">
+                        Total Sesi Terdaftar
+                    </h3>
+                    <p className="text-2xl font-bold text-slate-900 dark:text-white mt-2">
+                        {stats.total}
                     </p>
                 </div>
+                <div className="rounded-2xl bg-white dark:bg-zinc-900/60 border border-slate-200 dark:border-white/10 p-5 shadow-sm">
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-white/60">
+                        Sesi Aktif Sekarang
+                    </h3>
+                    <p className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mt-2">
+                        {stats.active}
+                    </p>
+                </div>
+            </div>
 
-                {/* Error Message */}
-                {error && (
-                    <div className="bg-rose-500/[0.05] border border-rose-500/20 rounded-lg p-4 mb-6">
-                        <div className="flex items-center gap-3">
-                            <AlertTriangle className="w-5 h-5 text-rose-300" />
-                            <div>
-                                <h3 className="font-semibold text-rose-300">
-                                    Error
-                                </h3>
-                                <p className="text-sm text-rose-300 mt-1">
-                                    {error}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {/* Statistics */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-4">
-                        <h3 className="text-sm font-medium text-white/60">
-                            Total Sessions
+            {/* Security Notice */}
+            <div className="bg-amber-500/10 border border-amber-500/25 rounded-2xl p-4 sm:p-5">
+                <div className="flex items-start gap-3">
+                    <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
+                    <div className="flex-1">
+                        <h3 className="font-bold text-amber-800 dark:text-amber-300 text-sm">
+                            Keamanan Akun
                         </h3>
-                        <p className="text-2xl font-bold text-white mt-2">
-                            {stats.total}
+                        <p className="text-xs text-amber-700 dark:text-amber-300/80 mt-1 leading-relaxed">
+                            Jika Anda melihat perangkat yang tidak dikenal, segera hentikan sesi tersebut dan ganti password Anda demi keamanan kas kelas.
                         </p>
-                    </div>
-                    <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-4">
-                        <h3 className="text-sm font-medium text-white/60">
-                            Active Sessions
-                        </h3>
-                        <p className="text-2xl font-bold text-indigo-400 mt-2">
-                            {stats.active}
-                        </p>
+                        <button
+                            onClick={handleTerminateAll}
+                            className="mt-3 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl shadow-sm transition text-xs font-semibold cursor-pointer"
+                        >
+                            Logout Semua Perangkat Lain
+                        </button>
                     </div>
                 </div>
+            </div>
 
-                {/* Actions */}
-                <div className="bg-amber-500/[0.06] border border-amber-500/20 rounded-lg p-4 mb-6">
-                    <div className="flex items-start gap-3">
-                        <AlertTriangle className="w-5 h-5 text-amber-300 mt-0.5" />
-                        <div className="flex-1">
-                            <h3 className="font-semibold text-amber-300">
-                                Keamanan Akun
-                            </h3>
-                            <p className="text-sm text-amber-300 mt-1">
-                                Jika Anda melihat perangkat yang tidak dikenal,
-                                segera hentikan sesi tersebut dan ganti password
-                                Anda.
-                            </p>
-                            <button
-                                onClick={handleTerminateAll}
-                                className="mt-3 px-4 py-2 bg-amber-500/[0.06]0/15 text-amber-300 border border-amber-400/15 rounded-lg hover:bg-amber-500/[0.06]0/25 transition text-sm font-medium"
-                            >
-                                Logout Semua Perangkat Lain
-                            </button>
-                        </div>
+            {/* Sessions List */}
+            <div className="space-y-4">
+                {loading ? (
+                    <div className="rounded-2xl bg-white dark:bg-zinc-900/60 border border-slate-200 dark:border-white/10 p-8 text-center text-slate-500 dark:text-white/60 shadow-sm text-sm">
+                        Memuat daftar sesi...
                     </div>
-                </div>
+                ) : sessions.length === 0 ? (
+                    <div className="rounded-2xl bg-white dark:bg-zinc-900/60 border border-slate-200 dark:border-white/10 p-8 text-center text-slate-500 dark:text-white/60 shadow-sm text-sm">
+                        Tidak ada sesi aktif ditemukan.
+                    </div>
+                ) : (
+                    sessions.map((session) => (
+                        <div
+                            key={session._id}
+                            className={`rounded-2xl bg-white dark:bg-zinc-900/60 border border-slate-200 dark:border-white/10 p-5 sm:p-6 shadow-sm ${
+                                session.isCurrent
+                                    ? 'ring-2 ring-indigo-500/50'
+                                    : ''
+                            }`}
+                        >
+                            <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
+                                <div className="flex items-start gap-3.5 flex-1">
+                                    {/* Device Icon */}
+                                    <div
+                                        className={`p-3 rounded-xl flex items-center justify-center shrink-0 ${
+                                            session.isCurrent
+                                                ? 'bg-indigo-50 dark:bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-500/30'
+                                                : 'bg-slate-100 dark:bg-white/[0.04] text-slate-600 dark:text-white/60 border border-slate-200 dark:border-white/10'
+                                        }`}
+                                    >
+                                        {getDeviceIcon(
+                                            session.deviceInfo?.device
+                                        )}
+                                    </div>
 
-                {/* Sessions List */}
-                <div className="space-y-4">
-                    {loading ? (
-                        <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-8 text-center text-white/60">
-                            Loading sessions...
-                        </div>
-                    ) : sessions.length === 0 ? (
-                        <div className="rounded-xl bg-white/[0.035] border border-white/[0.1] p-8 text-center text-white/60">
-                            Tidak ada sesi aktif
-                        </div>
-                    ) : (
-                        sessions.map((session) => (
-                            <div
-                                key={session._id}
-                                className={`rounded-xl bg-white/[0.035] border border-white/[0.1] p-6 ${
-                                    session.isCurrent
-                                        ? 'ring-2 ring-[#0071e3]'
-                                        : ''
-                                }`}
-                            >
-                                <div className="flex items-start justify-between">
-                                    <div className="flex items-start gap-4 flex-1">
-                                        {/* Device Icon */}
-                                        <div
-                                            className={`p-3 rounded-lg ${
-                                                session.isCurrent
-                                                    ? 'bg-indigo-500/[0.05]0/[0.06] text-indigo-400'
-                                                    : 'bg-white/[0.04] text-white/60'
-                                            }`}
-                                        >
-                                            {getDeviceIcon(
-                                                session.deviceInfo?.device
+                                    {/* Session Info */}
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                                            <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base">
+                                                {session.deviceInfo
+                                                    ?.browser ||
+                                                    'Unknown Browser'}{' '}
+                                                di{' '}
+                                                {session.deviceInfo?.os ||
+                                                    'Unknown OS'}
+                                            </h3>
+                                            {session.isCurrent && (
+                                                <span className="flex items-center gap-1 px-2.5 py-0.5 bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 text-[11px] font-bold rounded-full border border-emerald-200 dark:border-emerald-500/30">
+                                                    <CheckCircle className="w-3 h-3" />
+                                                    Sesi Saat Ini
+                                                </span>
                                             )}
                                         </div>
 
-                                        {/* Session Info */}
-                                        <div className="flex-1">
-                                            <div className="flex items-center gap-2 mb-2">
-                                                <h3 className="font-semibold text-white">
-                                                    {session.deviceInfo
-                                                        ?.browser ||
-                                                        'Unknown Browser'}{' '}
-                                                    on{' '}
-                                                    {session.deviceInfo?.os ||
-                                                        'Unknown OS'}
-                                                </h3>
-                                                {session.isCurrent && (
-                                                    <span className="flex items-center gap-1 px-2 py-1 bg-indigo-500/[0.05]0/15 text-indigo-400 text-xs font-semibold rounded">
-                                                        <CheckCircle className="w-3 h-3" />
-                                                        Current Session
-                                                    </span>
-                                                )}
+                                        <div className="space-y-1 text-xs text-slate-500 dark:text-white/60 font-mono">
+                                            <div className="flex items-center gap-2">
+                                                <MapPin className="w-3.5 h-3.5 text-slate-400 dark:text-white/40" />
+                                                <span>
+                                                    IP: {session.ipAddress}
+                                                </span>
                                             </div>
-
-                                            <div className="space-y-1 text-sm text-white/60">
-                                                <div className="flex items-center gap-2">
-                                                    <MapPin className="w-4 h-4" />
-                                                    <span>
-                                                        IP: {session.ipAddress}
-                                                    </span>
-                                                </div>
-                                                <div className="flex items-center gap-2">
-                                                    <Clock className="w-4 h-4" />
-                                                    <span>
-                                                        Last activity:{' '}
-                                                        {formatDate(
-                                                            session.lastActivity
-                                                        )}
-                                                    </span>
-                                                </div>
-                                                <div className="flex items-center gap-2">
-                                                    <Clock className="w-4 h-4" />
-                                                    <span>
-                                                        Created:{' '}
-                                                        {formatDate(
-                                                            session.createdAt
-                                                        )}
-                                                    </span>
-                                                </div>
+                                            <div className="flex items-center gap-2">
+                                                <Clock className="w-3.5 h-3.5 text-slate-400 dark:text-white/40" />
+                                                <span>
+                                                    Aktivitas terakhir:{' '}
+                                                    {formatDate(
+                                                        session.lastActivity
+                                                    )}
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <Clock className="w-3.5 h-3.5 text-slate-400 dark:text-white/40" />
+                                                <span>
+                                                    Dibuat:{' '}
+                                                    {formatDate(
+                                                        session.createdAt
+                                                    )}
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
-
-                                    {/* Actions */}
-                                    {!session.isCurrent && (
-                                        <button
-                                            onClick={() =>
-                                                handleTerminateSession(
-                                                    session._id
-                                                )
-                                            }
-                                            className="flex items-center gap-2 px-3 py-2 text-rose-300 hover:bg-rose-500/[0.05] rounded-lg transition text-sm font-medium"
-                                        >
-                                            <Trash2 className="w-4 h-4" />
-                                            Terminate
-                                        </button>
-                                    )}
                                 </div>
+
+                                {/* Actions */}
+                                {!session.isCurrent && (
+                                    <button
+                                        onClick={() =>
+                                            handleTerminateSession(
+                                                session._id
+                                            )
+                                        }
+                                        className="flex items-center gap-1.5 px-3.5 py-1.5 text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 dark:hover:bg-rose-500/20 border border-rose-200 dark:border-rose-500/20 rounded-xl transition text-xs font-semibold cursor-pointer"
+                                    >
+                                        <Trash2 className="w-3.5 h-3.5" />
+                                        Hentikan Sesi
+                                    </button>
+                                )}
                             </div>
-                        ))
-                    )}
-                </div>
+                        </div>
+                    ))
+                )}
             </div>
         </div>
     );
