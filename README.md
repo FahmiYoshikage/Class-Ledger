@@ -1,476 +1,117 @@
-# 🤖 Automation Scripts untuk Deployment
+# 💎 Class-Ledger
 
-Scripts untuk memudahkan deployment Kas Kelas ke VPS dengan Cloudflare Tunnel.
+> **Sistem Manajemen Keuangan & Kas Kelas Modern, Transparan, dan Siap Pakai (Turnkey Open-Source Product).**
 
-## 📜 Available Scripts
-
-### 1. `vps-setup.sh` - Initial VPS Setup
-
-Setup awal VPS dengan install semua dependencies yang diperlukan.
-
-**What it does:**
-
--   Install Node.js 20.x
--   Install PM2
--   Install Nginx
--   Install Git
--   Install cloudflared
--   Configure Nginx (port 8012)
--   Setup firewall (UFW)
--   Setup PM2 log rotation
-
-**Usage:**
-
-```bash
-# Di VPS sebagai root
-wget https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/master/scripts/vps-setup.sh
-chmod +x vps-setup.sh
-sudo ./vps-setup.sh
-```
-
-### 2. `cloudflare-setup.sh` - Cloudflare Tunnel Setup
-
-Setup Cloudflare Tunnel untuk expose aplikasi ke internet.
-
-**What it does:**
-
--   Login ke Cloudflare
--   Create tunnel
--   Generate config file
--   Create DNS record
--   Install tunnel sebagai system service
-
-**Usage:**
-
-```bash
-# Di VPS
-cd /var/www/kas-kelas/scripts
-chmod +x cloudflare-setup.sh
-sudo ./cloudflare-setup.sh
-```
-
-Kemudian ikuti prompt:
-
--   Enter tunnel name (default: kas-kelas)
--   Enter domain (e.g., kas-kelas.yourdomain.com)
-
-### 3. `deploy.sh` - Deploy/Update Application
-
-Deploy atau update aplikasi (pull code, build, restart services).
-
-**What it does:**
-
--   Pull latest code dari Git
--   Install backend dependencies
--   Install frontend dependencies
--   Build frontend
--   Copy frontend files ke Nginx directory
--   Restart PM2 dan Nginx
-
-**Usage:**
-
-```bash
-# Di VPS
-cd /var/www/kas-kelas/scripts
-chmod +x deploy.sh
-./deploy.sh
-```
+Class-Ledger adalah aplikasi web modern untuk mengelola keuangan kas kelas, organisasi siswa, atau komunitas. Dilengkapi dengan **First Setup Wizard**, sistem ini dapat di-*self-host* secara mandiri oleh siapa saja tanpa perlu konfigurasi database manual atau mengubah kode sumber.
 
 ---
 
-## 🚀 Quick Start Guide
+## ✨ Fitur Unggulan
 
-### Step 1: Setup VPS
-
-```bash
-# Di VPS sebagai root
-wget https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/master/scripts/vps-setup.sh
-chmod +x vps-setup.sh
-sudo ./vps-setup.sh
-```
-
-### Step 2: Clone Repository
-
-```bash
-cd /var/www/kas-kelas
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git .
-```
-
-### Step 3: Setup Backend
-
-```bash
-cd /var/www/kas-kelas/server
-npm install --production
-
-# Create .env file
-nano .env
-```
-
-Paste environment variables:
-
-```env
-PORT=5000
-NODE_ENV=production
-MONGODB_URI=mongodb+srv://user:password@cluster.mongodb.net/kas-kelas
-FONNTE_API_TOKEN=nfbJg3AToThMuurynxg8
-WA_TEST_MODE=false
-AUTO_REMINDER_ENABLED=true
-START_DATE=2025-10-27
-```
-
-Start backend:
-
-```bash
-pm2 start server.js --name kas-kelas-api
-pm2 save
-pm2 startup  # Follow instructions
-```
-
-### Step 4: Setup Frontend
-
-```bash
-cd /var/www/kas-kelas/client
-
-# Create .env.production
-nano .env.production
-```
-
-Paste:
-
-```env
-VITE_API_URL=/api
-```
-
-Build and deploy:
-
-```bash
-npm install
-npm run build
-sudo cp -r dist/* /var/www/html/kas-kelas/
-sudo chown -R www-data:www-data /var/www/html/kas-kelas
-```
-
-### Step 5: Setup Cloudflare Tunnel
-
-```bash
-cd /var/www/kas-kelas/scripts
-chmod +x cloudflare-setup.sh
-sudo ./cloudflare-setup.sh
-```
-
-### Step 6: Test Application
-
-```bash
-# Local test
-curl http://localhost:8012
-curl http://localhost:8012/api/health
-
-# Check services
-pm2 list
-sudo systemctl status nginx
-sudo systemctl status cloudflared
-```
-
-Open browser: `https://kas-kelas.yourdomain.com`
+- 🧙 **Interactive First Setup Wizard (`/setup`)**  
+  Pengaturan awal visual 6 langkah untuk nama kelas, instansi, nominal kas mingguan, rekening transfer, bot WhatsApp, dan pembuatan akun bendahara superadmin.
+- 🌓 **Dynamic Dark / Light Mode (Cyber Glassmorphic)**  
+  Tampilan UI responsif kelas dunia dengan aksen neon cybernetic, glassmorphism, dan tema terang/gelap yang dapat diganti sewaktu-waktu.
+- 💳 **Pembayaran Fleksibel (QRIS & Multi-Rekening)**  
+  Dukungan QRIS dinamis dan banyak rekening bank / e-wallet (BCA, Mandiri, BRI, SeaBank, Dana, Gopay, ShopeePay, dll.).
+- 🟩 **Heatmap Kehadiran Pembayaran Pintar**  
+  Visualisasi pembayaran bergaya GitHub commit graph:
+  - Mendukung *burst payment* (bayar banyak minggu sekaligus).
+  - Menyala melebihi minggu berjalan saat siswa membayar lebih (*glowing surplus*).
+  - Reset otomatis sesuai status semester aktif atau pause.
+- 🤖 **WhatsApp Gateway & Anti-Ban Bot**  
+  Integrasi Fonnte untuk reminder tunggakan otomatis, broadcast laporan ke grup WhatsApp kelas, dan algoritma *human-like anti-ban* (random jitter, variable delays, batch throttling).
+- 🏆 **Leaderboard Donatur & Gamifikasi**  
+  Peringkat donatur dan ketepatan waktu dengan sistem badge (*Master Ledger, Sultan Kas, Pioneer*).
+- 📑 **Export Laporan Lengkap**  
+  Cetak laporan keuangan kas masuk, keluar, dan tunggakan siswa dalam format PDF dan Excel (.xlsx) dengan 1 klik.
+- 🔒 **Keamanan Tingkat Tinggi**  
+  Dilengkapi audit log aktivitas, rate limiting, hashing password Argon2id/Bcrypt, session tracking, dan JWT token.
 
 ---
 
-## 🔄 Update Workflow
+## 🚀 Panduan Self-Hosting Cepat
 
-Setiap kali ada update code:
+### Opsi 1: Menggunakan Docker Compose (Direkomendasikan)
 
-```bash
-cd /var/www/kas-kelas/scripts
-./deploy.sh
-```
+Prasyarat: Docker dan Docker Compose telah terpasang.
 
----
+1. **Clone repositori:**
+   ```bash
+   git clone https://github.com/FahmiYoshikage/Class-Ledger.git
+   cd Class-Ledger
+   ```
 
-## 📝 Manual Commands
+2. **Salin file environment:**
+   ```bash
+   cp .env.example .env
+   # Edit JWT_SECRET di .env jika diperlukan
+   ```
 
-### PM2 Commands
+3. **Jalankan container:**
+   ```bash
+   docker compose -f docker-compose.selfhost.yml up -d
+   ```
 
-```bash
-pm2 list                      # List all processes
-pm2 logs kas-kelas-api       # View logs
-pm2 restart kas-kelas-api    # Restart backend
-pm2 stop kas-kelas-api       # Stop backend
-pm2 delete kas-kelas-api     # Delete process
-pm2 monit                     # Monitor CPU/Memory
-```
-
-### Nginx Commands
-
-```bash
-sudo systemctl status nginx
-sudo systemctl restart nginx
-sudo nginx -t                # Test config
-sudo tail -f /var/log/nginx/kas-kelas-access.log
-sudo tail -f /var/log/nginx/kas-kelas-error.log
-```
-
-### Cloudflare Tunnel Commands
-
-```bash
-sudo systemctl status cloudflared
-sudo systemctl restart cloudflared
-sudo journalctl -u cloudflared -f
-cloudflared tunnel list
-```
+4. **Buka browser:**
+   Akses `http://localhost` (atau IP VPS Anda). Sistem akan otomatis mendeteksi instalasi baru dan membuka **First Setup Wizard** (`/setup`).
 
 ---
 
-## 🐛 Troubleshooting
+### Opsi 2: Instalasi Manual (Node.js + MongoDB)
 
-### Backend tidak start
+Prasyarat:
+- Node.js v18 atau v20+
+- MongoDB 5.0+ berjalan secara lokal atau MongoDB Atlas URI
 
-```bash
-pm2 logs kas-kelas-api
-cd /var/www/kas-kelas/server
-node server.js  # Test manually
-```
+1. **Setup Backend:**
+   ```bash
+   cd server
+   npm install
+   cp ../.env.example .env
+   # Sesuaikan MONGODB_URI di .env jika perlu
+   npm start
+   ```
 
-### Frontend tidak load
+2. **Setup Frontend:**
+   ```bash
+   cd ../client
+   npm install
+   npm run build
+   # Atau untuk mode development:
+   npm run dev
+   ```
 
-```bash
-sudo nginx -t
-sudo systemctl status nginx
-ls -la /var/www/html/kas-kelas
-```
-
-### Cloudflare Tunnel error
-
-```bash
-sudo systemctl status cloudflared
-sudo journalctl -u cloudflared -n 50
-cat /etc/cloudflared/config.yml
-```
-
-### MongoDB connection error
-
--   Check `.env` file
--   Check MongoDB Atlas whitelist (set to 0.0.0.0/0)
--   Test connection: `mongo "mongodb+srv://..."`
+3. **Buka Browser:**
+   Buka `http://localhost:5173` (dev) atau `http://localhost:5000` (production). Selesaikan wizard pada `/setup`.
 
 ---
 
-## 🔒 Security Notes
+## ⚙️ Variabel Lingkungan (`.env`)
 
-1. **Protect `.env` files:**
+Lihat [`.env.example`](.env.example) untuk daftar lengkap konfigurasi yang tersedia. Seluruh data personal (nama kelas, rekening, dll.) **tidak perlu** diatur di `.env`, melainkan dapat diisi langsung lewat halaman **Setup Wizard** atau tab **Pengaturan** di dashboard bendahara.
 
-    ```bash
-    chmod 600 /var/www/kas-kelas/server/.env
-    ```
-
-2. **Regular updates:**
-
-    ```bash
-    sudo apt update && sudo apt upgrade -y
-    ```
-
-3. **Monitor logs:**
-
-    ```bash
-    pm2 logs kas-kelas-api
-    sudo tail -f /var/log/nginx/kas-kelas-error.log
-    ```
-
-4. **Backup MongoDB:**
-    - Use MongoDB Atlas automated backups
-    - Or manual: `mongodump --uri="mongodb+srv://..."`
+| Variabel | Deskripsi | Default |
+|---|---|---|
+| `PORT` | Port server backend | `5000` |
+| `MONGODB_URI` | Koneksi MongoDB | `mongodb://127.0.0.1:27017/kas-kelas` |
+| `JWT_SECRET` | Kunci enkripsi token sesi | *Wajib diganti saat production* |
+| `BASE_URL` | Domain publik aplikasi Anda | `http://localhost:5000` |
+| `FONNTE_API_TOKEN` | Token API WhatsApp Gateway (Opsional) | `-` |
+| `AUTO_REMINDER_ENABLED` | Aktifkan reminder WhatsApp otomatis | `true` |
 
 ---
 
-## 🛠️ Tools (CLI Automation)
+## 🛠️ Arsitektur Teknologi
 
-Kas Kelas menyediakan antarmuka CLI (Command Line Interface) untuk mengelola semua operasi deployment dan maintenance. Gunakan perintah `kas` dari root project:
-
-### Install CLI
-```bash
-chmod +x kas
-```
-
-### Available Commands
-
-| Command | Deskripsi | Contoh |
-|---------|-----------|--------|
-| `kas help` | Tampilkan bantuan lengkap | `kas help` |
-| `kas vps-setup` | Initial VPS Setup | `kas vps-setup` |
-| `kas cloudflare-setup` | Cloudflare Tunnel Setup | `kas cloudflare-setup` |
-| `kas deploy` | Deploy/Update Application | `kas deploy` atau `kas deploy staging` |
-| `kas vps-deploy` | Deploy to VPS (alternatif) | `kas vps-deploy` |
-| `kas clean-redeploy` | Clean Redeploy | `kas clean-redeploy` |
-| `kas migrate-atlas` | MongoDB Atlas Migration | `kas migrate-atlas` |
-| `kas fix-permissions` | Fix Permissions | `kas fix-permissions` |
-| `kas fix-localhost` | Fix Localhost Settings | `kas fix-localhost` |
-| `kas precheck` | Pre-deployment Check | `kas precheck` |
-| `kas github-auth` | GitHub Auth Setup | `kas github-auth` |
-| `kas verify-deploy` | Verify Deployment | `kas verify-deploy` |
-| `kas test-sessions` | Test Sessions | `kas test-sessions` |
-| `kas verify-pause` | Verify Pause Feature | `kas verify-pause` |
-| `kas restyle-app` | Restyle App | `kas restyle-app` |
-
-### Usage Examples
-
-```bash
-# Deploy aplikasi
-kas deploy
-kas deploy staging
-
-# Setup VPS dari nol
-kas vps-setup
-
-# Cloudflare Tunnel Setup
-kas cloudflare-setup
-
-# Migrasi database ke Atlas
-kas migrate-atlas
-
-# Cek persiapan sebelum deploy
-kas precheck
-
-# Lihat bantuan
-kas help
-```
-
-## ⚓ Deployment Methods (Pilih yang Anda Sukini)
-
-Kas Kelas mendukung dua metode deployment yang bisa Anda pilih sesuai kebutuhan:
-
-### opsi 1: Docker Compose (Disarankan untuk VPS/Single Admin)
-
-Cocok untuk: VPS tunggal, admin satu orang, pengsetup yang sederhana
-
-```bash
-# Jalankan dari root project
-docker-compose up -d
-
-# Lihat status container
-docker-compose ps
-
-# Lihat log
-docker-compose logs -f api
-docker-compose logs -f frontend
-
-# Matikan
-docker-compose down
-```
-
-**Komponen:**
-- `api` container: Node.js Express (0.5 CPU / 256 MB limits)
-- `frontend` container: Nginx (0.25 CPU / 128 MB limits)
-- Communication: Same Docker network (`omnigrid-net`)
-- Environment: Dibaca dari `./server/.env.production`
-
-**Cocok untuk:** Pengguna VPS, pengembangan lokal, deployment yang cepat tanpa kompleksitas K8s.
+- **Frontend**: React 18, Vite, Tailwind CSS, Lucide Icons, Canvas Confetti
+- **Backend**: Node.js, Express.js (ES Modules), Mongoose
+- **Database**: MongoDB
+- **Autentikasi**: JWT (JSON Web Token) dengan HTTP-Only / Bearer header
+- **Notifikasi**: Fonnte WhatsApp API Gateway dengan Anti-Ban Throttler
 
 ---
 
-### opsi 2: Kubernetes (Untuk AKS/Production)
+## 📄 Lisensi
 
-Cocok untuk: Kluster multi-node, auto-scaling, production environment
-
-```bash
-# Apply manifests
-kubectl apply -f k8s/
-
-# Cek status
-kubectl get pods -n kas-kelas
-kubectl get ingress -n kas-kelas
-
-# Lihat resource
-kubectl describe deployment kas-kelas-api -n kas-kelas
-kubectl get hpa -n kas-kelas
-```
-
-**Komponen:**
-- `kas-kelas-api` Deployment: 2 replicas, 0.5 CPU / 256 MB limits
-- `kas-kelas-frontend` Deployment: 2 replicas, 0.25 CPU / 128 MB limits
-- `kas-kelas-ingress` dengan TLS dari Let's Encrypt
-- `PersistentVolumeClaim` untuk uploads/reports
-- Communication: ClusterIP services + Ingress
-- Environment: ConfigMap + Kubernetes Secrets
-
-**Cocok untuk:** Production deployment, Azure AKS, skala yang bisa di-expand, high availability.
-
----
-
-### 📖 Langkah Dasar Setiap Metode
-
-**Docker Compose:**
-1. `docker-compose up -d`
-2. Akses via `http://localhost:5001` (API) dan `http://localhost:8767` (Frontend)
-3. Atau gunakan Cloudflare Tunnel untuk domain publik
-
-**Kubernetes:**
-1. `kubectl apply -f k8s/`
-2. Tunggu pod ready: `kubectl get pods -n kas-kelas`
-3. Akses via Ingress URL: `https://kas-kelas.yourdomain.com`
-4. Atau gunakan `kubectl port-forward` untuk local testing
-
----
-
-## 📞 Support
-
-Jika ada masalah:
-
-1. Check logs (PM2, Nginx, Cloudflared)
-2. Verify services running: `pm2 list`, `systemctl status nginx cloudflared`
-3. Test locally: `curl http://localhost:8012`
-4. Check DNS propagation: `nslookup kas-kelas.yourdomain.com`
-
----
-
-
-## 🛠️ Tools (CLI Automation)
-
-Kas Kelas menyediakan antarmuka CLI (Command Line Interface) untuk mengelola semua operasi deployment dan maintenance. Gunakan perintah `kas` dari root project:
-
-### Install CLI
-```bash
-chmod +x kas
-```
-
-### Available Commands
-
-| Command | Deskripsi | Contoh |
-|---------|-----------|--------|
-| `kas help` | Tampilkan bantuan lengkap | `kas help` |
-| `kas vps-setup` | Initial VPS Setup | `kas vps-setup` |
-| `kas cloudflare-setup` | Cloudflare Tunnel Setup | `kas cloudflare-setup` |
-| `kas deploy` | Deploy/Update Application | `kas deploy` atau `kas deploy staging` |
-| `kas vps-deploy` | Deploy to VPS (alternatif) | `kas vps-deploy` |
-| `kas clean-redeploy` | Clean Redeploy | `kas clean-redeploy` |
-| `kas migrate-atlas` | MongoDB Atlas Migration | `kas migrate-atlas` |
-| `kas fix-permissions` | Fix Permissions | `kas fix-permissions` |
-| `kas fix-localhost` | Fix Localhost Settings | `kas fix-localhost` |
-| `kas precheck` | Pre-deployment Check | `kas precheck` |
-| `kas github-auth` | GitHub Auth Setup | `kas github-auth` |
-| `kas verify-deploy` | Verify Deployment | `kas verify-deploy` |
-| `kas test-sessions` | Test Sessions | `kas test-sessions` |
-| `kas verify-pause` | Verify Pause Feature | `kas verify-pause` |
-| `kas restyle-app` | Restyle App | `kas restyle-app` |
-
-### Usage Examples
-
-```bash
-# Deploy aplikasi
-kas deploy
-kas deploy staging
-
-# Setup VPS dari nol
-kas vps-setup
-
-# Cloudflare Tunnel Setup
-kas cloudflare-setup
-
-# Migrasi database ke Atlas
-kas migrate-atlas
-
-# Cek persiapan sebelum deploy
-kas precheck
-
-# Lihat bantuan
-kas help
-```
-
+Proyek ini dirilis di bawah lisensi [MIT License](LICENSE). Bebas digunakan, dimodifikasi, dan disebarluaskan untuk keperluan sekolah, kampus, maupun organisasi nirlaba.

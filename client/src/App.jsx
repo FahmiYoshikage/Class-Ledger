@@ -39,8 +39,10 @@ import EventManagement from './components/events/EventManagement';
 import CustomPayment from './components/payments/CustomPayment';
 import NotificationManager from './components/notifications/NotificationManager';
 import DashboardAnalytics from './components/analytics/DashboardAnalytics';
+import { useAppConfig } from './context/ConfigContext';
 
 const App = () => {
+    const { config, refreshConfig } = useAppConfig();
     const [students, setStudents] = useState([]);
     const [payments, setPayments] = useState([]);
     const [expenses, setExpenses] = useState([]);
@@ -224,7 +226,7 @@ const App = () => {
         try {
             const newPayment = {
                 studentId: studentId,
-                amount: 2000,
+                amount: config.weeklyAmount || 2000,
                 date: new Date().toISOString(),
                 week: currentWeek,
                 method: 'Tunai',
@@ -1025,13 +1027,16 @@ const App = () => {
     const getTunggakan = (studentId) => {
         const totalPaid = getTotalPaid(studentId);
         const totalWeeks = accumulatedWeeks + currentWeek;
-        const shouldPay = totalWeeks * 2000;
+        const fee = config.weeklyAmount || 2000;
+        const shouldPay = totalWeeks * fee;
         return shouldPay - totalPaid;
     };
 
     const isLate = (studentId) => {
         const tunggakan = getTunggakan(studentId);
-        return tunggakan >= 8000;
+        const threshold = config.lateThreshold || 4;
+        const fee = config.weeklyAmount || 2000;
+        return tunggakan >= threshold * fee;
     };
 
     // Total kas masuk/keluar dari SEMUA data
@@ -1081,14 +1086,14 @@ const App = () => {
                         <div>
                             <div className="flex items-center gap-2">
                                 <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-                                    Kas Kelas
+                                    Kas {config.className || 'Kelas'}
                                 </h1>
                                 <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/15 text-indigo-600 dark:text-indigo-300 border border-indigo-500/30 uppercase tracking-widest">
                                     Bendahara
                                 </span>
                             </div>
                             <p className="text-xs sm:text-[13px] text-slate-500 dark:text-white/60">
-                                Sistem Pencatatan Kas TRIFORCE Rp 2.000/minggu
+                                {config.institutionName ? `${config.institutionName} • ` : ''}Sistem Kas {config.className || 'Kelas'} {formatRp(config.weeklyAmount || 2000)}/minggu
                             </p>
                         </div>
                     </div>
@@ -1562,7 +1567,7 @@ const App = () => {
                         accumulatedWeeks={accumulatedWeeks}
                         semesterStatus={semesterStatus}
                         startDate={startDate}
-                        weeklyAmount={2000}
+                        weeklyAmount={config.weeklyAmount || 2000}
                         onRefresh={loadAllData}
                     />
                 )}
@@ -2268,6 +2273,7 @@ const App = () => {
                         onStartDateChange={handleStartDateChange}
                         currentStartDate={startDate}
                         onWeekChange={loadCurrentWeek}
+                        onConfigUpdated={refreshConfig}
                     />
                 )}
 
@@ -2539,7 +2545,7 @@ const App = () => {
                                     <input
                                         type="number"
                                         name="amount"
-                                        defaultValue="2000"
+                                        defaultValue={config.weeklyAmount || 2000}
                                         required
                                         className="w-full px-3 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-transparent transition-all duration-200 text-white placeholder-white/40"
                                     />

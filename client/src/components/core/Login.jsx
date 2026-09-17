@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
+import { useAppConfig } from '../../context/ConfigContext';
 import { useNavigate } from 'react-router-dom';
 import { LogIn, Wallet, Eye, EyeOff, AlertCircle, Sun, Moon } from 'lucide-react';
 
 const Login = () => {
+    const { config } = useAppConfig();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -74,10 +76,10 @@ const Login = () => {
                         <Wallet className="w-8 h-8 text-white" />
                     </div>
                     <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-2">
-                        Kas Kelas TRIFORCE
+                        Kas {config.className || 'Kelas'}
                     </h1>
                     <p className="text-slate-500 dark:text-white/60 text-sm">
-                        Sistem Pencatatan Keuangan Kelas
+                        {config.institutionName ? `${config.institutionName} • ` : ''}Sistem Pencatatan Keuangan Kelas
                     </p>
                 </div>
 

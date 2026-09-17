@@ -5,6 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import connectDB from './config/database.js';
 import authRoutes from './routes/auth.js';
+import setupRoutes from './routes/setup.js';
 import studentRoutes from './routes/student.js';
 import paymentRoutes from './routes/payments.js';
 import expenseRoutes from './routes/expenses.js';
@@ -76,8 +77,9 @@ connectDB();
 // Apply rate limiting to all API routes
 app.use('/api/', apiLimiter);
 
-// --- Auth Routes (Public - for admin login) ---
+// --- Auth & Setup Routes ---
 app.use('/api/auth', authRoutes);
+app.use('/api/setup', setupRoutes);
 
 // --- Core API Routes ---
 app.use('/api/students', studentRoutes);

@@ -30,12 +30,20 @@ class GroupBroadcastService {
                 allExpenses,
                 semesterNameSetting,
                 classNameSetting,
+                weeklyAmountSetting,
+                lateThresholdSetting,
+                paymentAccountsSetting,
+                paymentNotesSetting,
             ] = await Promise.all([
                 Student.find(),
                 Payment.find().populate('studentId'),
                 Expense.find(),
                 Setting.findOne({ key: 'semester_name' }),
                 Setting.findOne({ key: 'class_name' }),
+                Setting.findOne({ key: 'weekly_amount' }),
+                Setting.findOne({ key: 'late_threshold' }),
+                Setting.findOne({ key: 'payment_accounts' }),
+                Setting.findOne({ key: 'payment_notes' }),
             ]);
 
             // 1. Filter ACTIVE students only
@@ -54,7 +62,24 @@ class GroupBroadcastService {
             const expenses = allExpenses;
             const semesterName =
                 semesterNameSetting?.value || 'Semester 2024/2025';
-            const className = classNameSetting?.value || 'Kelas';
+            const className = classNameSetting?.value || 'Kas Kelas';
+            const weeklyAmount = Number(weeklyAmountSetting?.value) || 2000;
+            const lateThreshold = Number(lateThresholdSetting?.value) || 4;
+            const lateAmount = weeklyAmount * lateThreshold;
+            const paymentAccounts = Array.isArray(paymentAccountsSetting?.value) ? paymentAccountsSetting.value : [];
+            const paymentNotes = paymentNotesSetting?.value || '';
+
+            // Format dynamic payment info text
+            let paymentInfoBlock = '';
+            if (paymentAccounts.length > 0) {
+                const accLines = paymentAccounts.map((acc) => {
+                    const holder = acc.accountHolder ? ` (a.n ${acc.accountHolder})` : '';
+                    return `• ${acc.bankName || acc.provider}: *${acc.accountNumber}*${holder}`;
+                }).join('\n');
+                paymentInfoBlock = `💳 *INFORMASI PEMBAYARAN:*\n${accLines}${paymentNotes ? `\n_${paymentNotes}_` : ''}`;
+            } else {
+                paymentInfoBlock = `💳 *INFORMASI PEMBAYARAN:*\nSilakan hubungi Bendahara Kelas untuk nomor rekening pembayaran.`;
+            }
 
             // Calculate statistics
             const totalIncome = allPaymentsList.reduce(
@@ -71,7 +96,7 @@ class GroupBroadcastService {
             const twoWeeksAgo = new Date();
             twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
             const recentPayments = allPaymentsList.filter(
-                (p) => p.date && new Date(p.date) >= twoWeeksAgo
+                (p) => new Date(p.date) >= twoWeeksAgo
             );
             const recentIncome = recentPayments.reduce(
                 (sum, p) => sum + p.amount,
@@ -80,7 +105,6 @@ class GroupBroadcastService {
 
             // Tunggakan calculation
             const currentWeek = await this.getCurrentWeek();
-            const weeklyAmount = 2000;
 
             let accumulatedWeeks = 7;
             try {
@@ -160,15 +184,13 @@ ${className} - ${semesterName}
 💸 Total Pengeluaran: Rp ${totalExpenses.toLocaleString('id-ID')}
 💵 Saldo Kas Saat Ini: *Rp ${balance.toLocaleString('id-ID')}*
 
-📅 *Periode:* Minggu Ke-${currentWeek} (Rp 2.000/minggu)
+📅 *Periode:* Minggu Ke-${currentWeek} (Rp ${weeklyAmount.toLocaleString('id-ID')}/minggu)
 👥 *Status Siswa:* ✅ ${lunasCount} Lunas | ⚠️ ${belumLunasCount} Belum Lunas
 
 ━━━━━━━━━━━━━━━━━━━━
-💳 *Informasi Pembayaran (a.n Fahmi Ilham Bagaskara):*
-• Dana / Gopay / ShopeePay: 085646745887
-• SeaBank: 901006225290 | BRI: 011001041959536
+${paymentInfoBlock}
 
-🏆 Cek Rincian: ${process.env.BASE_URL || 'https://triforce.crud.my.id'}/leaderboard
+🏆 Cek Rincian: ${process.env.BASE_URL || ''}/leaderboard
 _Terima kasih atas kerja samanya!_ 🙏
             `.trim();
 
@@ -178,7 +200,7 @@ ${className} - ${semesterName}
 ━━━━━━━━━━━━━━━━━━━━
 
 💰 Saldo Kas Saat Ini: *Rp ${balance.toLocaleString('id-ID')}*
-📅 Periode: Minggu Ke-${currentWeek} (Kas: Rp 2.000/minggu)
+📅 Periode: Minggu Ke-${currentWeek} (Kas: Rp ${weeklyAmount.toLocaleString('id-ID')}/minggu)
 👥 Siswa Belum Lunas: *${belumLunasCount} siswa*
 
 ${
@@ -191,11 +213,9 @@ _Yuk segera dilunasi ya teman-teman agar operasional kas kelas tetap aman!_ 💪
 }
 
 ━━━━━━━━━━━━━━━━━━━━
-💳 *Informasi Pembayaran (a.n Fahmi Ilham Bagaskara):*
-• Dana / Gopay / ShopeePay: 085646745887
-• SeaBank: 901006225290 | BRI: 011001041959536
+${paymentInfoBlock}
 
-🏆 Cek Rincian: ${process.env.BASE_URL || 'https://triforce.crud.my.id'}/leaderboard
+🏆 Cek Rincian: ${process.env.BASE_URL || ''}/leaderboard
             `.trim();
 
             const fullTpl = `
@@ -210,8 +230,8 @@ ${className} - ${semesterName}
 
 📅 *PERIODE:*
 • Minggu Ke-${currentWeek}
-• Kas per minggu: Rp 2.000
-• Status Telat: Tunggakan ≥ Rp 8.000
+• Kas per minggu: Rp ${weeklyAmount.toLocaleString('id-ID')}
+• Status Telat: Tunggakan ≥ Rp ${lateAmount.toLocaleString('id-ID')}
 
 📈 *2 MINGGU TERAKHIR:*
 • Pemasukan: Rp ${recentIncome.toLocaleString('id-ID')}
@@ -238,25 +258,14 @@ _Segera lunasi ya teman-teman!_ 💪`
 }
 
 ━━━━━━━━━━━━━━━━━━━━
-💳 *INFORMASI PEMBAYARAN*
-Semua atas nama: *Fahmi Ilham Bagaskara*
-
-*E-Wallet:*
-💚 Gopay: 085646745887
-💰 Dana: 085646745887
-🛍️ ShopeePay: 085646745887
-
-*Mobile Banking:*
-🏦 SeaBank: 901006225290
-🏦 BRI: 011001041959536
-━━━━━━━━━━━━━━━━━━━━
+${paymentInfoBlock}
 
 🏆 Cek Leaderboard Lengkap:
-${process.env.BASE_URL || 'https://triforce.crud.my.id'}/leaderboard
+${process.env.BASE_URL || ''}/leaderboard
 
 💡 _Keterangan:_
 _• Data hanya menghitung pembayaran siswa_
-_• Tunggakan dihitung per minggu (Rp 2.000/minggu)_
+_• Tunggakan dihitung per minggu (Rp ${weeklyAmount.toLocaleString('id-ID')}/minggu)_
 
 _Laporan ini dikirim otomatis setiap minggu_
 _Terima kasih atas partisipasinya!_ 🙏

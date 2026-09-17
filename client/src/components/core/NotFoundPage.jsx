@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAppConfig } from '../../context/ConfigContext';
 import {
     Home,
     ArrowLeft,
@@ -12,6 +13,7 @@ import {
 } from 'lucide-react';
 
 const NotFoundPage = () => {
+    const { config } = useAppConfig();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -144,7 +146,7 @@ const NotFoundPage = () => {
                         <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                         System Engine: Online
                     </span>
-                    <span>Kas Kelas TRIFORCE</span>
+                    <span>Kas {config.className || 'Kelas'}</span>
                 </div>
             </div>
         </div>

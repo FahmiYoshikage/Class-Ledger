@@ -14,8 +14,10 @@ import {
     Sparkles,
 } from 'lucide-react';
 import api from '../../services/api';
+import { useAppConfig } from '../../context/ConfigContext';
 
 function QRPayment() {
+    const { config } = useAppConfig();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -191,7 +193,7 @@ function QRPayment() {
                         <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shadow-md">
                             <ShieldCheck className="w-4 h-4 text-white" />
                         </div>
-                        <span className="text-xs font-semibold text-white/80">Kas Kelas TRIFORCE</span>
+                        <span className="text-xs font-semibold text-white/80">Kas {config.className || 'Kelas'}</span>
                     </div>
                 </div>
 
@@ -303,8 +305,32 @@ function QRPayment() {
                                         <AlertCircle className="w-10 h-10 text-amber-400/60 mx-auto mb-3" />
                                         <p className="text-sm font-semibold text-white/80">QR Code Belum Diaktifkan</p>
                                         <p className="text-xs text-white/40 mt-1">
-                                            Bendahara belum mengunggah QR Code aktif. Hubungi bendahara untuk informasi rekening transfer.
+                                            Bendahara belum mengunggah QR Code aktif. Anda dapat mentransfer ke rekening yang tersedia di bawah.
                                         </p>
+                                    </div>
+                                )}
+
+                                {config.paymentAccounts && config.paymentAccounts.length > 0 && (
+                                    <div className="mt-4 p-3.5 rounded-2xl bg-white/[0.02] border border-white/[0.06] text-left">
+                                        <p className="text-[10px] font-semibold text-white/40 mb-2 uppercase tracking-wider">
+                                            Rekening Transfer Alternatif
+                                        </p>
+                                        <div className="space-y-1.5">
+                                            {config.paymentAccounts.map((acc, idx) => (
+                                                <div key={idx} className="flex justify-between items-center text-xs">
+                                                    <span className="text-white/60 font-medium">{acc.bankName}</span>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => copyAccountNumber(acc.accountNumber)}
+                                                        className="font-mono text-white/90 hover:text-white bg-white/[0.05] hover:bg-white/[0.1] px-2 py-0.5 rounded text-[11px] flex items-center gap-1 transition"
+                                                        title="Salin No Rekening"
+                                                    >
+                                                        <span>{acc.accountNumber}</span>
+                                                        <span className="text-[10px] text-white/40">({acc.accountHolder})</span>
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
                                 )}
                             </div>

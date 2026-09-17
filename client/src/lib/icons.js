@@ -1,7 +1,7 @@
 /**
  * Auto-generated optimized lucide-react imports.
  * Hanya icon yang benar-benar dipakai yang di-import.
- * Ini mengurangi Vite transform dari ~1600 modules jadi ~81.
+ * Ini mengurangi Vite transform dari ~1600 modules jadi ~83.
  * 
  * Re-generate: node scripts/generate-icons.js
  */
@@ -15,6 +15,7 @@ export { default as Award } from '../../node_modules/lucide-react/dist/esm/icons
 export { default as BarChart3 } from '../../node_modules/lucide-react/dist/esm/icons/chart-column.js';
 export { default as Bell } from '../../node_modules/lucide-react/dist/esm/icons/bell.js';
 export { default as BookOpen } from '../../node_modules/lucide-react/dist/esm/icons/book-open.js';
+export { default as Building } from '../../node_modules/lucide-react/dist/esm/icons/building.js';
 export { default as Calendar } from '../../node_modules/lucide-react/dist/esm/icons/calendar.js';
 export { default as CalendarDays } from '../../node_modules/lucide-react/dist/esm/icons/calendar-days.js';
 export { default as Check } from '../../node_modules/lucide-react/dist/esm/icons/check.js';
@@ -64,6 +65,7 @@ export { default as Radio } from '../../node_modules/lucide-react/dist/esm/icons
 export { default as Receipt } from '../../node_modules/lucide-react/dist/esm/icons/receipt.js';
 export { default as RefreshCw } from '../../node_modules/lucide-react/dist/esm/icons/refresh-cw.js';
 export { default as Save } from '../../node_modules/lucide-react/dist/esm/icons/save.js';
+export { default as School } from '../../node_modules/lucide-react/dist/esm/icons/school.js';
 export { default as Search } from '../../node_modules/lucide-react/dist/esm/icons/search.js';
 export { default as Send } from '../../node_modules/lucide-react/dist/esm/icons/send.js';
 export { default as Settings } from '../../node_modules/lucide-react/dist/esm/icons/settings.js';

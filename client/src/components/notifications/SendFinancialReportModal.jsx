@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
     MessageCircle,
     Send,
@@ -13,28 +13,51 @@ import {
     Sparkles,
 } from 'lucide-react';
 import { notificationsAPI } from '../../services/api';
+import { useAppConfig } from '../../context/ConfigContext';
 
-const FALLBACK_TEMPLATES = {
-    full: `📊 *LAPORAN KAS KELAS* 📊\nTRIFORCE\n━━━━━━━━━━━━━━━━━━━━\n\nMohon kerja samanya untuk pembayaran kas kelas ya teman-teman! 🙏\n\n━━━━━━━━━━━━━━━━━━━━\n💳 *INFORMASI PEMBAYARAN*\nSemua atas nama: *Fahmi Ilham Bagaskara*\n\n*E-Wallet:*\n💚 Gopay: 085646745887\n💰 Dana: 085646745887\n🛍️ ShopeePay: 085646745887\n\n*Mobile Banking:*\n🏦 SeaBank: 901006225290\n🏦 BRI: 011001041959536\n━━━━━━━━━━━━━━━━━━━━\n\n🏆 Cek Leaderboard Lengkap:\nhttps://triforce.crud.my.id/leaderboard`,
-    summary: `📊 *UPDATE KAS KELAS (RINGKAS)* 📊\nTRIFORCE\n━━━━━━━━━━━━━━━━━━━━\nPengingat pembayaran kas kelas mingguan (Rp 2.000/minggu).\n\n💳 *Pembayaran via:* Dana / Gopay / ShopeePay / SeaBank / BRI (a.n Fahmi Ilham Bagaskara)\n🏆 https://triforce.crud.my.id/leaderboard`,
-    arrears: `⚠️ *PENGINGAT KAS & TUNGGAKAN* ⚠️\nTRIFORCE\n━━━━━━━━━━━━━━━━━━━━\nYuk segera lunasi kas kelas teman-teman agar operasional kegiatan tetap aman! 💪\n\n💳 *Pembayaran via:* Dana / Gopay / ShopeePay / SeaBank / BRI (a.n Fahmi Ilham Bagaskara)\n🏆 https://triforce.crud.my.id/leaderboard`,
+const buildFallbackTemplates = (config) => {
+    const className = (config?.className || 'Kelas').toUpperCase();
+    const amountStr = `Rp ${(config?.weeklyAmount || 2000).toLocaleString('id-ID')}`;
+    const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+
+    let accountsText = 'Silakan hubungi bendahara kelas untuk rekening pembayaran.';
+    if (Array.isArray(config?.paymentAccounts) && config.paymentAccounts.length > 0) {
+        accountsText = config.paymentAccounts
+            .map((acc) => `• *${acc.bankName}*: ${acc.accountNumber} (a.n ${acc.accountHolder})`)
+            .join('\n');
+        if (config?.paymentNotes) {
+            accountsText += `\n_${config.paymentNotes}_`;
+        }
+    }
+
+    return {
+        full: `📊 *LAPORAN KAS KELAS* 📊\n${className}\n━━━━━━━━━━━━━━━━━━━━\n\nMohon kerja samanya untuk pembayaran kas kelas ya teman-teman! 🙏\n\n━━━━━━━━━━━━━━━━━━━━\n💳 *INFORMASI PEMBAYARAN*\n${accountsText}\n━━━━━━━━━━━━━━━━━━━━\n\n🏆 Cek Leaderboard Lengkap:\n${baseUrl}/leaderboard`,
+        summary: `📊 *UPDATE KAS KELAS (RINGKAS)* 📊\n${className}\n━━━━━━━━━━━━━━━━━━━━\nPengingat pembayaran kas kelas mingguan (${amountStr}/minggu).\n\n💳 *Pembayaran via:*\n${accountsText}\n🏆 ${baseUrl}/leaderboard`,
+        arrears: `⚠️ *PENGINGAT KAS & TUNGGAKAN* ⚠️\n${className}\n━━━━━━━━━━━━━━━━━━━━\nYuk segera lunasi kas kelas teman-teman agar operasional kegiatan tetap aman! 💪\n\n💳 *Pembayaran via:*\n${accountsText}\n🏆 ${baseUrl}/leaderboard`,
+    };
 };
 
 const SendFinancialReportModal = ({ isOpen, onClose, onSuccess }) => {
-    const [groupId, setGroupId] = useState('120363402325545063@g.us');
+    const { config } = useAppConfig();
+    const fallbackTemplates = useMemo(() => buildFallbackTemplates(config), [config]);
+
+    const [groupId, setGroupId] = useState(config?.whatsappGroupId || '');
     const [saveDefault, setSaveDefault] = useState(true);
     const [selectedTemplateKey, setSelectedTemplateKey] = useState('full');
-    const [message, setMessage] = useState(FALLBACK_TEMPLATES.full);
-    const [templates, setTemplates] = useState({
-        full: FALLBACK_TEMPLATES.full,
-        summary: FALLBACK_TEMPLATES.summary,
-        arrears: FALLBACK_TEMPLATES.arrears,
-    });
+    const [message, setMessage] = useState(fallbackTemplates.full);
+    const [templates, setTemplates] = useState(fallbackTemplates);
     const [attachPdf, setAttachPdf] = useState(true);
     const [loading, setLoading] = useState(false);
     const [sending, setSending] = useState(false);
     const [copied, setCopied] = useState(false);
     const [statusResult, setStatusResult] = useState(null);
+
+    // Sync templates when config changes
+    useEffect(() => {
+        if (config?.whatsappGroupId && !groupId) {
+            setGroupId(config.whatsappGroupId);
+        }
+    }, [config, groupId]);
 
     const fetchPreview = useCallback(async () => {
         setLoading(true);
@@ -43,24 +66,26 @@ const SendFinancialReportModal = ({ isOpen, onClose, onSuccess }) => {
             const res = await notificationsAPI.getBroadcastPreview();
             if (res.data?.success) {
                 const fetchedTemplates = res.data.templates || {
-                    full: res.data.message || FALLBACK_TEMPLATES.full,
-                    summary: FALLBACK_TEMPLATES.summary,
-                    arrears: FALLBACK_TEMPLATES.arrears,
+                    full: res.data.message || fallbackTemplates.full,
+                    summary: fallbackTemplates.summary,
+                    arrears: fallbackTemplates.arrears,
                 };
                 setTemplates(fetchedTemplates);
-                setMessage(fetchedTemplates[selectedTemplateKey] || res.data.message || FALLBACK_TEMPLATES[selectedTemplateKey]);
+                setMessage(fetchedTemplates[selectedTemplateKey] || res.data.message || fallbackTemplates[selectedTemplateKey]);
                 if (res.data.groupId) {
                     setGroupId(res.data.groupId);
-                } else {
-                    setGroupId((prev) => prev || '120363402325545063@g.us');
+                } else if (config?.whatsappGroupId) {
+                    setGroupId((prev) => prev || config.whatsappGroupId);
                 }
             }
         } catch (err) {
             console.error('Error fetching broadcast preview:', err);
             // Fallback so user is never blocked
-            setGroupId((prev) => prev || '120363402325545063@g.us');
-            setTemplates(FALLBACK_TEMPLATES);
-            setMessage((prev) => prev || FALLBACK_TEMPLATES[selectedTemplateKey] || FALLBACK_TEMPLATES.full);
+            if (config?.whatsappGroupId) {
+                setGroupId((prev) => prev || config.whatsappGroupId);
+            }
+            setTemplates(fallbackTemplates);
+            setMessage((prev) => prev || fallbackTemplates[selectedTemplateKey] || fallbackTemplates.full);
 
             setStatusResult({
                 success: false,
@@ -72,7 +97,7 @@ const SendFinancialReportModal = ({ isOpen, onClose, onSuccess }) => {
         } finally {
             setLoading(false);
         }
-    }, [selectedTemplateKey]);
+    }, [selectedTemplateKey, fallbackTemplates, config]);
 
     // Fetch live templates & default Group ID whenever modal opens
     useEffect(() => {
@@ -254,7 +279,7 @@ const SendFinancialReportModal = ({ isOpen, onClose, onSuccess }) => {
                                 type="text"
                                 value={groupId}
                                 onChange={(e) => setGroupId(e.target.value)}
-                                placeholder="Contoh: 120363402325545063@g.us"
+                                placeholder="Contoh: 120363xxxxxxxxxx@g.us"
                                 className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-white placeholder-white/25 focus:outline-none focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20 text-xs sm:text-sm font-mono tracking-wide transition-all"
                             />
                         </div>

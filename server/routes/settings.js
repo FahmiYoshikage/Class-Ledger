@@ -52,6 +52,53 @@ router.get('/current-week', async (req, res) => {
     }
 });
 
+// Get public-safe settings (safe for client, public dashboard, and payments)
+router.get('/public', async (req, res) => {
+    try {
+        const [
+            className,
+            institutionName,
+            semesterName,
+            description,
+            weeklyAmount,
+            lateThreshold,
+            startDate,
+            paymentAccounts,
+            paymentNotes,
+            semesterStatus,
+            accumulatedWeeks,
+        ] = await Promise.all([
+            Setting.findOne({ key: 'class_name' }),
+            Setting.findOne({ key: 'institution_name' }),
+            Setting.findOne({ key: 'semester_name' }),
+            Setting.findOne({ key: 'class_description' }),
+            Setting.findOne({ key: 'weekly_amount' }),
+            Setting.findOne({ key: 'late_threshold' }),
+            Setting.findOne({ key: 'start_date' }),
+            Setting.findOne({ key: 'payment_accounts' }),
+            Setting.findOne({ key: 'payment_notes' }),
+            Setting.findOne({ key: 'semester_status' }),
+            Setting.findOne({ key: 'accumulated_weeks' }),
+        ]);
+
+        res.json({
+            className: className?.value || 'Kas Kelas',
+            institutionName: institutionName?.value || '',
+            semesterName: semesterName?.value || 'Semester 1',
+            description: description?.value || '',
+            weeklyAmount: Number(weeklyAmount?.value) || 2000,
+            lateThreshold: Number(lateThreshold?.value) || 4,
+            startDate: startDate?.value || '2025-10-27',
+            paymentAccounts: Array.isArray(paymentAccounts?.value) ? paymentAccounts.value : [],
+            paymentNotes: paymentNotes?.value || '',
+            semesterStatus: semesterStatus?.value || 'active',
+            accumulatedWeeks: Number(accumulatedWeeks?.value) || 7,
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 // Get all settings
 router.get('/', async (req, res) => {
     try {

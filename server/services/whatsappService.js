@@ -1,31 +1,46 @@
 import axios from 'axios';
 import Notification from '../models/Notification.js';
+import Setting from '../models/Setting.js';
 import antiBanService from './antiBanService.js';
 
 // ==============================================
-// 💳 INFORMASI PEMBAYARAN
+// 💳 INFORMASI PEMBAYARAN DINAMIS
 // ==============================================
-const getPaymentInfo = () => `
+let dynamicPaymentInfoString = '';
 
-━━━━━━━━━━━━━━━━━━━━
-💳 *INFORMASI PEMBAYARAN*
-Semua atas nama: *Fahmi Ilham Bagaskara*
+export async function refreshWhatsappPaymentInfo() {
+    try {
+        const [paymentAccountsSetting, paymentNotesSetting] = await Promise.all([
+            Setting.findOne({ key: 'payment_accounts' }),
+            Setting.findOne({ key: 'payment_notes' }),
+        ]);
 
-*E-Wallet:*
- Gopay: 085646745887
-💰 Dana: 085646745887
-🛍️ ShopeePay: 085646745887
+        const accounts = paymentAccountsSetting?.value;
+        const notes = paymentNotesSetting?.value;
 
-*Mobile Banking:*
-🏦 SeaBank: 901006225290
-🏦 BRI: 011001041959536
-━━━━━━━━━━━━━━━━━━━━
+        if (Array.isArray(accounts) && accounts.length > 0) {
+            const lines = accounts.map((acc) => {
+                const holder = acc.accountHolder ? ` (a.n ${acc.accountHolder})` : '';
+                return `• ${acc.bankName || acc.provider}: *${acc.accountNumber}*${holder}`;
+            });
+            const notesLine = notes ? `\n_${notes}_\n` : '\n_Mohon konfirmasi setelah transfer ya!_ ✅\n';
+            dynamicPaymentInfoString = `\n━━━━━━━━━━━━━━━━━━━━\n💳 *INFORMASI PEMBAYARAN*\n${lines.join('\n')}\n━━━━━━━━━━━━━━━━━━━━${notesLine}\n🏆 *Cek Leaderboard Donatur Kelas:*\n${process.env.BASE_URL || ''}/leaderboard\n_Raih posisi teratas dan jadi donatur terbaik!_ 🚀`;
+            return dynamicPaymentInfoString;
+        }
+    } catch (e) {
+        // Fallback
+    }
 
-_Mohon konfirmasi setelah transfer ya!_ ✅
+    dynamicPaymentInfoString = `\n━━━━━━━━━━━━━━━━━━━━\n💳 *INFORMASI PEMBAYARAN*\nSilakan hubungi Bendahara Kelas untuk rekening pembayaran.\n━━━━━━━━━━━━━━━━━━━━\n_Mohon konfirmasi setelah transfer ya!_ ✅\n\n🏆 *Cek Leaderboard Donatur Kelas:*\n${process.env.BASE_URL || ''}/leaderboard\n_Raih posisi teratas dan jadi donatur terbaik!_ 🚀`;
+    return dynamicPaymentInfoString;
+}
 
-🏆 *Cek Leaderboard Donatur Kelas:*
-${process.env.BASE_URL || 'https://triforce.crud.my.id'}/leaderboard
-_Raih posisi teratas dan jadi donatur terbaik!_ 🚀`;
+const getPaymentInfo = () => {
+    if (dynamicPaymentInfoString) {
+        return dynamicPaymentInfoString;
+    }
+    return `\n━━━━━━━━━━━━━━━━━━━━\n💳 *INFORMASI PEMBAYARAN*\nSilakan hubungi Bendahara Kelas untuk rekening pembayaran.\n━━━━━━━━━━━━━━━━━━━━\n_Mohon konfirmasi setelah transfer ya!_ ✅\n\n🏆 *Cek Leaderboard Donatur Kelas:*\n${process.env.BASE_URL || ''}/leaderboard\n_Raih posisi teratas dan jadi donatur terbaik!_ 🚀`;
+};
 
 // Backward-compatible object that evaluates dynamic string in template literals
 const PAYMENT_INFO = {
@@ -484,6 +499,9 @@ class WhatsAppService {
         if (!this.apiToken) {
             console.warn('⚠️  FONNTE_API_TOKEN tidak ditemukan di .env');
         }
+
+        // Asynchronously load dynamic payment info from Setting
+        refreshWhatsappPaymentInfo().catch(() => {});
     }
 
     // Normalize nomor telepon ke format internasional

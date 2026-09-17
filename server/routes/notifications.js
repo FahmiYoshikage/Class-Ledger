@@ -977,28 +977,10 @@ router.post('/preview-custom-message', async (req, res) => {
             });
         }
 
-        // Import payment info dari whatsappService
-        const PAYMENT_INFO = `
+        // Import payment info secara dinamis dari whatsappService
+        const PAYMENT_INFO = whatsappService.getPaymentInfo();
 
-═══════════════════
-💳 *INFORMASI PEMBAYARAN*
-Semua atas nama: *Fahmi Ilham Bagaskara*
-
-*E-Wallet:*
-💰 Dana: 085646745887
-💚 Gopay: 085646745887
-🛍️ ShopeePay: 085646745887
-
-*Mobile Banking:*
-🏦 SeaBank: 901006225290
-🏦 Neo Commerce: 5859456107432143
-🏦 BRI: 011001041959536
-🏦 Jago: 103560685633
-═══════════════════
-
-_Mohon konfirmasi setelah transfer ya!_ ✅`;
-
-        const fullMessage = message + PAYMENT_INFO;
+        const fullMessage = message + (PAYMENT_INFO ? `\n\n${PAYMENT_INFO}` : '');
 
         res.json({
             preview: fullMessage,

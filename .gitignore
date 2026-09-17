@@ -71,6 +71,7 @@ k8s/**/*.yaml
 !server/.dockerignore
 Dockerfile*
 docker-compose*.yml
+!docker-compose.selfhost.yml
 *.image
 
 # Editor filehistory

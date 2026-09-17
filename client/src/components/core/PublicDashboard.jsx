@@ -24,6 +24,7 @@ import {
     Flame,
 } from 'lucide-react';
 import axios from 'axios';
+import { useAppConfig } from '../../context/ConfigContext';
 
 const API_URL =
     (typeof window !== 'undefined' && window.__ENV__?.VITE_API_URL) ||
@@ -31,6 +32,7 @@ const API_URL =
     '/api';
 
 const PublicDashboard = () => {
+    const { config } = useAppConfig();
     const navigate = useNavigate();
     const [stats, setStats] = useState({
         totalIncome: 0,
@@ -99,12 +101,13 @@ const PublicDashboard = () => {
             });
 
             // Enriched student data with dues / status
+            const fee = config.weeklyAmount || 2000;
             const enrichedStudents = studentList.map((s) => {
                 const sId = s._id.toString();
                 const pData = studentPaymentMap[sId] || { totalPaid: 0, paymentCount: 0, lastDate: null };
-                const weeksPaid = Math.floor(pData.totalPaid / 2000);
+                const weeksPaid = Math.floor(pData.totalPaid / fee);
                 const weeksLate = Math.max(0, activeWeek - weeksPaid);
-                const tunggakan = weeksLate * 2000;
+                const tunggakan = weeksLate * fee;
 
                 return {
                     ...s,
@@ -207,14 +210,16 @@ const PublicDashboard = () => {
                             <div>
                                 <div className="flex items-center gap-2">
                                     <span className="font-bold text-white text-[15px] tracking-tight">
-                                        Kas Kelas TRIFORCE
+                                        Kas {config.className || 'Kelas'}
                                     </span>
                                     <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
                                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 beacon-live" />
                                         Minggu {currentWeek}
                                     </span>
                                 </div>
-                                <p className="text-[11px] text-white/40 hidden sm:block">Transparansi Keuangan Real-Time</p>
+                                <p className="text-[11px] text-white/40 hidden sm:block">
+                                    {config.institutionName ? `${config.institutionName} • ` : ''}Transparansi Keuangan Real-Time
+                                </p>
                             </div>
                         </div>
 
@@ -600,7 +605,7 @@ const PublicDashboard = () => {
                         <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
                             <ShieldCheck className="w-3.5 h-3.5 text-white" />
                         </div>
-                        <span className="text-xs font-semibold text-white/70">Kas Kelas TRIFORCE</span>
+                        <span className="text-xs font-semibold text-white/70">Kas {config.className || 'Kelas'}</span>
                         <span className="text-white/20">•</span>
                         <span className="text-[11px] text-white/40">Data Tersinkronisasi Otomatis</span>
                     </div>
