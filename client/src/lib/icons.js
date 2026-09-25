@@ -1,7 +1,7 @@
 /**
  * Auto-generated optimized lucide-react imports.
  * Hanya icon yang benar-benar dipakai yang di-import.
- * Ini mengurangi Vite transform dari ~1600 modules jadi ~83.
+ * Ini mengurangi Vite transform dari ~1600 modules jadi ~89.
  * 
  * Re-generate: node scripts/generate-icons.js
  */
@@ -27,16 +27,20 @@ export { default as Clock } from '../../node_modules/lucide-react/dist/esm/icons
 export { default as Compass } from '../../node_modules/lucide-react/dist/esm/icons/compass.js';
 export { default as Copy } from '../../node_modules/lucide-react/dist/esm/icons/copy.js';
 export { default as CreditCard } from '../../node_modules/lucide-react/dist/esm/icons/credit-card.js';
+export { default as Database } from '../../node_modules/lucide-react/dist/esm/icons/database.js';
 export { default as DollarSign } from '../../node_modules/lucide-react/dist/esm/icons/dollar-sign.js';
 export { default as Download } from '../../node_modules/lucide-react/dist/esm/icons/download.js';
 export { default as Edit } from '../../node_modules/lucide-react/dist/esm/icons/square-pen.js';
 export { default as Eye } from '../../node_modules/lucide-react/dist/esm/icons/eye.js';
 export { default as EyeOff } from '../../node_modules/lucide-react/dist/esm/icons/eye-off.js';
+export { default as FileArchive } from '../../node_modules/lucide-react/dist/esm/icons/file-archive.js';
 export { default as FileText } from '../../node_modules/lucide-react/dist/esm/icons/file-text.js';
 export { default as Filter } from '../../node_modules/lucide-react/dist/esm/icons/funnel.js';
 export { default as Flame } from '../../node_modules/lucide-react/dist/esm/icons/flame.js';
 export { default as Gift } from '../../node_modules/lucide-react/dist/esm/icons/gift.js';
+export { default as HardDrive } from '../../node_modules/lucide-react/dist/esm/icons/hard-drive.js';
 export { default as Home } from '../../node_modules/lucide-react/dist/esm/icons/house.js';
+export { default as Image } from '../../node_modules/lucide-react/dist/esm/icons/image.js';
 export { default as Info } from '../../node_modules/lucide-react/dist/esm/icons/info.js';
 export { default as Key } from '../../node_modules/lucide-react/dist/esm/icons/key.js';
 export { default as Laptop } from '../../node_modules/lucide-react/dist/esm/icons/laptop.js';
@@ -78,10 +82,12 @@ export { default as Sparkles } from '../../node_modules/lucide-react/dist/esm/ic
 export { default as Sun } from '../../node_modules/lucide-react/dist/esm/icons/sun.js';
 export { default as Tablet } from '../../node_modules/lucide-react/dist/esm/icons/tablet.js';
 export { default as Target } from '../../node_modules/lucide-react/dist/esm/icons/target.js';
+export { default as Terminal } from '../../node_modules/lucide-react/dist/esm/icons/terminal.js';
 export { default as Trash2 } from '../../node_modules/lucide-react/dist/esm/icons/trash-2.js';
 export { default as TrendingDown } from '../../node_modules/lucide-react/dist/esm/icons/trending-down.js';
 export { default as TrendingUp } from '../../node_modules/lucide-react/dist/esm/icons/trending-up.js';
 export { default as Trophy } from '../../node_modules/lucide-react/dist/esm/icons/trophy.js';
+export { default as Upload } from '../../node_modules/lucide-react/dist/esm/icons/upload.js';
 export { default as UploadCloud } from '../../node_modules/lucide-react/dist/esm/icons/cloud-upload.js';
 export { default as User } from '../../node_modules/lucide-react/dist/esm/icons/user.js';
 export { default as Users } from '../../node_modules/lucide-react/dist/esm/icons/users.js';

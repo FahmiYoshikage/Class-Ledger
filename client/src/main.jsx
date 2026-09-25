@@ -14,6 +14,7 @@ import PublicDashboard from './components/core/PublicDashboard.jsx';
 import Leaderboard from './components/leaderboard/Leaderboard.jsx';
 import QRPayment from './components/payments/QRPayment.jsx';
 import QRPaymentAdmin from './components/payments/QRPaymentAdmin.jsx';
+import BackupManagement from './components/settings/BackupManagement.jsx';
 import ProtectedRoute from './components/core/ProtectedRoute.jsx';
 import DashboardLayout from './components/core/DashboardLayout.jsx';
 import NotFoundPage from './components/core/NotFoundPage.jsx';
@@ -117,6 +118,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                                     <Route
                                         path="qr-admin"
                                         element={<QRPaymentAdmin />}
+                                    />
+                                    <Route
+                                        path="backup"
+                                        element={<BackupManagement />}
                                     />
                                 </Route>
 

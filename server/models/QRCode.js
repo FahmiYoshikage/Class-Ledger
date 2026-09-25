@@ -8,7 +8,8 @@ const qrCodeSchema = new mongoose.Schema(
         },
         paymentMethod: {
             type: String,
-            enum: ['dana', 'gopay', 'ovo', 'bank', 'other'],
+            enum: ['qris', 'dana', 'gopay', 'ovo', 'shopeepay', 'bank', 'other'],
+            default: 'qris',
             required: true,
         },
         accountName: {

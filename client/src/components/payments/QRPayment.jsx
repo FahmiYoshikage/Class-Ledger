@@ -294,7 +294,7 @@ function QRPayment() {
 
                                 {activeQR ? (
                                     <>
-                                        <div className="bg-white p-3.5 rounded-2xl inline-block shadow-xl border border-slate-100 dark:border-transparent mb-5">
+                                        <div className="bg-white p-3.5 rounded-2xl inline-block shadow-xl border border-slate-100 dark:border-transparent mb-3">
                                             <img
                                                 src={activeQR.imageUrl}
                                                 alt="QR Code Kas"
@@ -302,18 +302,31 @@ function QRPayment() {
                                             />
                                         </div>
 
+                                        {activeQR.paymentMethod === 'qris' && (
+                                            <div className="mb-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-700 dark:text-emerald-300 text-[11px] font-medium">
+                                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                                <span>Mendukung Semua Bank & E-Wallet</span>
+                                            </div>
+                                        )}
+
                                         <div className="p-4 rounded-2xl bg-slate-100 dark:bg-white/[0.03] border border-slate-200 dark:border-white/[0.06] text-left text-xs space-y-2.5">
                                             <div className="flex justify-between">
-                                                <span className="text-slate-500 dark:text-white/40">Atas Nama:</span>
+                                                <span className="text-slate-500 dark:text-white/40">
+                                                    {activeQR.paymentMethod === 'qris' ? 'Nama Merchant:' : 'Atas Nama:'}
+                                                </span>
                                                 <span className="font-semibold text-slate-900 dark:text-white">{activeQR.accountName}</span>
                                             </div>
                                             <div className="flex justify-between">
                                                 <span className="text-slate-500 dark:text-white/40">Metode:</span>
-                                                <span className="font-medium text-indigo-600 dark:text-indigo-400 uppercase">{activeQR.paymentMethod}</span>
+                                                <span className="font-medium text-indigo-600 dark:text-indigo-400 uppercase">
+                                                    {activeQR.paymentMethod === 'qris' ? 'QRIS Universal' : activeQR.paymentMethod}
+                                                </span>
                                             </div>
                                             {activeQR.accountNumber && (
                                                 <div className="flex justify-between items-center pt-1 border-t border-slate-200 dark:border-white/[0.06]">
-                                                    <span className="text-slate-500 dark:text-white/40">No. Rekening:</span>
+                                                    <span className="text-slate-500 dark:text-white/40">
+                                                        {activeQR.paymentMethod === 'qris' ? 'NMID / No. Alternatif:' : 'No. Rekening:'}
+                                                    </span>
                                                     <button
                                                         type="button"
                                                         onClick={() => copyAccountNumber(activeQR.accountNumber)}

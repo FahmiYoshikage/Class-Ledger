@@ -157,5 +157,24 @@ export const notificationsAPI = {
     getStats: () => api.get('/notifications/stats'),
 };
 
+// Backup & Recovery API
+export const backupAPI = {
+    export: () =>
+        api.get('/backup/export', {
+            responseType: 'blob',
+        }),
+    list: () => api.get('/backup/list'),
+    download: (filename) =>
+        api.get(`/backup/download/${filename}`, {
+            responseType: 'blob',
+        }),
+    delete: (filename) => api.delete(`/backup/${filename}`),
+    restore: (formData) =>
+        api.post('/backup/restore', formData, {
+            headers: { 'Content-Type': undefined },
+        }),
+    getStats: () => api.get('/backup/stats'),
+};
+
 export { api };
 export default api;

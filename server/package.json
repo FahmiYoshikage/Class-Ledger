@@ -11,9 +11,12 @@
         "start": "node --max-old-space-size=256 server.js",
         "start:lowmem": "node --max-old-space-size=192 --optimize-for-size server.js",
         "dev": "nodemon server.js",
+        "backup": "node scripts/backup-cli.js",
         "build": "cd ../client && npm install && npm run build"
     },
     "dependencies": {
+        "adm-zip": "^0.6.1",
+        "archiver": "^8.0.0",
         "axios": "^1.12.2",
         "bcryptjs": "^3.0.2",
         "cors": "^2.8.5",

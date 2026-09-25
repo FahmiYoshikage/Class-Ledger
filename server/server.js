@@ -47,6 +47,7 @@ import badgeRoutes from './routes/badges.js';
 import qrPaymentRoutes from './routes/qrPayment.js';
 import sessionRoutes from './routes/sessions.js';
 import auditLogRoutes from './routes/auditLogs.js';
+import backupRoutes from './routes/backup.js';
 import notificationScheduler from './services/notificationScheduler.js';
 import { apiLimiter } from './middleware/rateLimiter.js';
 import { authenticate, loginAdmin, authorizeAdmin } from './middleware/auth.js';
@@ -118,6 +119,7 @@ app.use('/api/badges', badgeRoutes);
 app.use('/api/qr-payment', qrPaymentRoutes);
 app.use('/api/sessions', sessionRoutes);
 app.use('/api/audit-logs', auditLogRoutes);
+app.use('/api/backup', backupRoutes);
 
 // --- Admin Aliases (Compatible with /api/admin/* paths) ---
 app.use('/api/admin/students', studentRoutes);
@@ -129,6 +131,7 @@ app.use('/api/admin/notifications', notificationRoutes);
 app.use('/api/admin/qr-payment', qrPaymentRoutes);
 app.use('/api/admin/sessions', sessionRoutes);
 app.use('/api/admin/audit-logs', auditLogRoutes);
+app.use('/api/admin/backup', backupRoutes);
 
 // Serve uploaded files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

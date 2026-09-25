@@ -10,6 +10,73 @@ const QUICK_REJECTION_REASONS = [
     'Dana belum masuk ke rekening kas',
 ];
 
+const METHOD_GUIDES = {
+    qris: {
+        label: 'QRIS (Semua Bank & E-Wallet) [Rekomendasi]',
+        accountNameLabel: 'Nama Merchant / Toko QRIS *',
+        accountNamePlaceholder: 'Contoh: KAS KELAS XII RPL 1 atau BENDAHARA',
+        accountNameHelp: 'Nama merchant resmi yang muncul di layar siswa saat QRIS discan.',
+        accountNumberLabel: 'NMID atau No. HP Alternatif (Opsional)',
+        accountNumberPlaceholder: 'Contoh: ID10200xxxx atau No. HP (Boleh dikosongkan)',
+        accountNumberHelp: 'Opsional. Boleh dikosongkan jika murni transaksi scan gambar QR.',
+        tip: '💡 QRIS mendukung seluruh mobile banking (BCA, Mandiri, BRI, BNI, Seabank, dll.) dan seluruh e-wallet (DANA, GoPay, OVO, ShopeePay). Siswa cukup memindai gambar QRIS ini.',
+    },
+    dana: {
+        label: 'DANA',
+        accountNameLabel: 'Nama Pemilik Akun DANA *',
+        accountNamePlaceholder: 'Contoh: Siti Rahmawati',
+        accountNameHelp: 'Nama pemegang akun DANA.',
+        accountNumberLabel: 'Nomor HP Akun DANA',
+        accountNumberPlaceholder: 'Contoh: 081234567890',
+        accountNumberHelp: 'Nomor HP yang terhubung dengan akun DANA.',
+    },
+    gopay: {
+        label: 'GoPay',
+        accountNameLabel: 'Nama Pemilik Akun GoPay *',
+        accountNamePlaceholder: 'Contoh: Siti Rahmawati',
+        accountNameHelp: 'Nama pemegang akun GoPay.',
+        accountNumberLabel: 'Nomor HP Akun GoPay',
+        accountNumberPlaceholder: 'Contoh: 081234567890',
+        accountNumberHelp: 'Nomor HP yang terhubung dengan akun GoPay.',
+    },
+    ovo: {
+        label: 'OVO',
+        accountNameLabel: 'Nama Pemilik Akun OVO *',
+        accountNamePlaceholder: 'Contoh: Siti Rahmawati',
+        accountNameHelp: 'Nama pemegang akun OVO.',
+        accountNumberLabel: 'Nomor HP Akun OVO',
+        accountNumberPlaceholder: 'Contoh: 081234567890',
+        accountNumberHelp: 'Nomor HP yang terhubung dengan akun OVO.',
+    },
+    shopeepay: {
+        label: 'ShopeePay',
+        accountNameLabel: 'Nama Pemilik Akun ShopeePay *',
+        accountNamePlaceholder: 'Contoh: Siti Rahmawati',
+        accountNameHelp: 'Nama pemegang akun ShopeePay.',
+        accountNumberLabel: 'Nomor HP Akun ShopeePay',
+        accountNumberPlaceholder: 'Contoh: 081234567890',
+        accountNumberHelp: 'Nomor HP yang terhubung dengan akun ShopeePay.',
+    },
+    bank: {
+        label: 'Transfer Bank',
+        accountNameLabel: 'Nama Pemilik Rekening Bank *',
+        accountNamePlaceholder: 'Contoh: Siti Rahmawati',
+        accountNameHelp: 'Nama nasabah pemilik rekening bank.',
+        accountNumberLabel: 'Nomor Rekening Bank',
+        accountNumberPlaceholder: 'Contoh: 1234567890',
+        accountNumberHelp: 'Nomor rekening bank tujuan transfer.',
+    },
+    other: {
+        label: 'Lainnya',
+        accountNameLabel: 'Nama Akun / Penerima *',
+        accountNamePlaceholder: 'Contoh: Nama Akun / Toko',
+        accountNameHelp: 'Nama penerima pembayaran.',
+        accountNumberLabel: 'Nomor Akun / Referensi',
+        accountNumberPlaceholder: 'Contoh: Nomor akun atau nomor HP',
+        accountNumberHelp: 'Nomor akun atau keterangan transfer.',
+    },
+};
+
 function QRPaymentAdmin() {
     const { user } = useAuth();
     const reviewerName = user?.fullName || user?.username || 'Admin';
@@ -31,7 +98,7 @@ function QRPaymentAdmin() {
 
     // Upload form state
     const [uploadForm, setUploadForm] = useState({
-        paymentMethod: 'dana',
+        paymentMethod: 'qris',
         accountName: '',
         accountNumber: '',
         notes: '',
@@ -211,7 +278,7 @@ function QRPaymentAdmin() {
             if (response.data.success) {
                 setMessage('✅ QR Code berhasil diupload');
                 setUploadForm({
-                    paymentMethod: 'dana',
+                    paymentMethod: 'qris',
                     accountName: '',
                     accountNumber: '',
                     notes: '',
@@ -504,63 +571,83 @@ function QRPaymentAdmin() {
                         <h2 className="text-xl font-semibold mb-4 text-slate-900 dark:text-white">
                             Upload QR Code Baru
                         </h2>
-                        <form onSubmit={handleUploadQR} className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-slate-700 dark:text-white/70 mb-1">
-                                    Metode Pembayaran
-                                </label>
-                                <select
-                                    value={uploadForm.paymentMethod}
-                                    onChange={(e) =>
-                                        setUploadForm({
-                                            ...uploadForm,
-                                            paymentMethod: e.target.value,
-                                        })
-                                    }
-                                    className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
-                                >
-                                    <option value="dana">DANA</option>
-                                    <option value="gopay">GoPay</option>
-                                    <option value="ovo">OVO</option>
-                                    <option value="bank">Bank Transfer</option>
-                                    <option value="other">Lainnya</option>
-                                </select>
-                            </div>
+                        {(() => {
+                            const currentGuide = METHOD_GUIDES[uploadForm.paymentMethod] || METHOD_GUIDES.other;
+                            return (
+                                <form onSubmit={handleUploadQR} className="space-y-4">
+                                    {/* Tips Callout */}
+                                    {currentGuide.tip && (
+                                        <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-xs text-emerald-800 dark:text-emerald-300 leading-relaxed">
+                                            {currentGuide.tip}
+                                        </div>
+                                    )}
 
-                            <div>
-                                <label className="block text-sm font-medium text-slate-700 dark:text-white/70 mb-1">
-                                    Nama Akun *
-                                </label>
-                                <input
-                                    type="text"
-                                    value={uploadForm.accountName}
-                                    onChange={(e) =>
-                                        setUploadForm({
-                                            ...uploadForm,
-                                            accountName: e.target.value,
-                                        })
-                                    }
-                                    className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
-                                    required
-                                />
-                            </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-white/70 mb-1">
+                                            Metode Pembayaran
+                                        </label>
+                                        <select
+                                            value={uploadForm.paymentMethod}
+                                            onChange={(e) =>
+                                                setUploadForm({
+                                                    ...uploadForm,
+                                                    paymentMethod: e.target.value,
+                                                })
+                                            }
+                                            className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                                        >
+                                            <option value="qris">QRIS (Semua Bank & E-Wallet) [Rekomendasi]</option>
+                                            <option value="dana">DANA</option>
+                                            <option value="gopay">GoPay</option>
+                                            <option value="ovo">OVO</option>
+                                            <option value="shopeepay">ShopeePay</option>
+                                            <option value="bank">Bank Transfer</option>
+                                            <option value="other">Lainnya</option>
+                                        </select>
+                                    </div>
 
-                            <div>
-                                <label className="block text-sm font-medium text-slate-700 dark:text-white/70 mb-1">
-                                    Nomor Akun
-                                </label>
-                                <input
-                                    type="text"
-                                    value={uploadForm.accountNumber}
-                                    onChange={(e) =>
-                                        setUploadForm({
-                                            ...uploadForm,
-                                            accountNumber: e.target.value,
-                                        })
-                                    }
-                                    className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
-                                />
-                            </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-white/70 mb-1">
+                                            {currentGuide.accountNameLabel}
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={uploadForm.accountName}
+                                            placeholder={currentGuide.accountNamePlaceholder}
+                                            onChange={(e) =>
+                                                setUploadForm({
+                                                    ...uploadForm,
+                                                    accountName: e.target.value,
+                                                })
+                                            }
+                                            className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                                            required
+                                        />
+                                        <p className="text-[11px] text-slate-500 dark:text-white/40 mt-1">
+                                            {currentGuide.accountNameHelp}
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-white/70 mb-1">
+                                            {currentGuide.accountNumberLabel}
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={uploadForm.accountNumber}
+                                            placeholder={currentGuide.accountNumberPlaceholder}
+                                            onChange={(e) =>
+                                                setUploadForm({
+                                                    ...uploadForm,
+                                                    accountNumber: e.target.value,
+                                                })
+                                            }
+                                            className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                                        />
+                                        <p className="text-[11px] text-slate-500 dark:text-white/40 mt-1">
+                                            {currentGuide.accountNumberHelp}
+                                        </p>
+                                    </div>
 
                             <div>
                                 <label className="block text-sm font-medium text-slate-700 dark:text-white/70 mb-1">
@@ -609,7 +696,9 @@ function QRPaymentAdmin() {
                                     ? 'Uploading...'
                                     : '📤 Upload'}
                             </button>
-                        </form>
+                                </form>
+                            );
+                        })()}
                     </div>
 
                     {/* QR List */}
@@ -642,9 +731,15 @@ function QRPaymentAdmin() {
                                                         <p className="font-semibold text-slate-900 dark:text-white">
                                                             {qr.accountName}
                                                         </p>
-                                                        <p className="text-sm text-slate-500 dark:text-white/60 uppercase">
-                                                            {qr.paymentMethod}
-                                                        </p>
+                                                        {qr.paymentMethod === 'qris' ? (
+                                                            <span className="inline-block mt-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+                                                                QRIS Universal
+                                                            </span>
+                                                        ) : (
+                                                            <p className="text-sm text-slate-500 dark:text-white/60 uppercase">
+                                                                {qr.paymentMethod}
+                                                            </p>
+                                                        )}
                                                         {qr.accountNumber && (
                                                             <p className="text-xs text-slate-500 dark:text-white/60">
                                                                 {

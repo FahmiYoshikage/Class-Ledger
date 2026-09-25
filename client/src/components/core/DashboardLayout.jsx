@@ -12,6 +12,7 @@ import {
     Menu,
     X,
     QrCode,
+    HardDrive,
     Sun,
     Moon,
 } from 'lucide-react';
@@ -112,6 +113,12 @@ const DashboardLayout = () => {
                                 active={location.pathname === '/app/qr-admin'}
                             />
                             <NavButton
+                                onClick={() => navigate('/app/backup')}
+                                icon={HardDrive}
+                                label="Backup"
+                                active={location.pathname === '/app/backup'}
+                            />
+                            <NavButton
                                 onClick={() => navigate('/app/audit-logs')}
                                 icon={Activity}
                                 label="Logs"
@@ -186,6 +193,7 @@ const DashboardLayout = () => {
                                 <MobileNavButton onClick={() => navigate('/app/dashboard')} icon={Home} label="Dashboard" variant="primary" />
                             )}
                             <MobileNavButton onClick={() => navigate('/app/qr-admin')} icon={QrCode} label="QR Admin" />
+                            <MobileNavButton onClick={() => navigate('/app/backup')} icon={HardDrive} label="Backup & Restore" />
                             <MobileNavButton onClick={() => navigate('/app/audit-logs')} icon={Activity} label="Audit Logs" />
                             <MobileNavButton onClick={() => navigate('/app/sessions')} icon={Laptop} label="Sesi Aktif" />
                             <MobileNavButton onClick={() => navigate('/app/change-password')} icon={Key} label="Ganti Password" />
