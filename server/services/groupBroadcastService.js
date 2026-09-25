@@ -3,6 +3,7 @@ import Setting from '../models/Setting.js';
 import Student from '../models/Student.js';
 import Payment from '../models/Payment.js';
 import Expense from '../models/Expense.js';
+import QRCode from '../models/QRCode.js';
 import pdfReportService from './pdfReportService.js';
 import antiBanService from './antiBanService.js';
 
@@ -271,10 +272,45 @@ _Laporan ini dikirim otomatis setiap minggu_
 _Terima kasih atas partisipasinya!_ 🙏
             `.trim();
 
+            const baseUrl = process.env.BASE_URL || 'https://triforce.crud.my.id';
+            const qrisTpl = `
+📢 *PENGUMUMAN PEMBAYARAN KAS KELAS VIA QRIS & WEB* 📢
+${className.toUpperCase()}
+━━━━━━━━━━━━━━━━━━━━
+
+Halo teman-teman semua! 👋
+
+Mulai sekarang, pembayaran uang kas kelas sudah jauh lebih praktis dan transparan melalui sistem web kas kelas kita! 🎉
+
+💳 *BISA BAYAR PAKAI APA SAJA?*
+Cukup *scan barcode QRIS* yang terlampir di pesan ini menggunakan:
+• 🏦 *Mobile Banking:* BCA, Mandiri (Livin), BRI (BRImo), BNI, Seabank, Bank Jago, dll.
+• 📱 *E-Wallet:* DANA, GoPay, OVO, ShopeePay, LinkAja.
+
+📸 *CARA BAYAR & KONFIRMASI:*
+1. Scan gambar QRIS di atas dan transfer nominal kas kamu (Rp ${weeklyAmount.toLocaleString('id-ID')}/minggu).
+2. Simpan / tangkap layar (screenshot) bukti transfer berhasil.
+3. Buka link web kas kelas:
+   👉 *${baseUrl}/qr-payment*
+4. Pilih nama kamu, isi nominal, dan upload foto bukti transfernya.
+5. Selesai! ✨
+
+⚡ *KEUNTUNGAN:*
+• Konfirmasi diverifikasi langsung oleh bendahara kelas.
+• Saldo kas bertambah otomatis secara real-time.
+• Peringkat donatur & pelunasan kas langsung terupdate di leaderboard!
+
+🏆 *Cek Peringkat & Status Tunggakan Kamu:*
+👉 ${baseUrl}/leaderboard
+
+Yuk bayar kas tepat waktu demi kelancaran kegiatan kelas kita bersama! Terima kasih teman-teman! 🙏✨
+            `.trim();
+
             return {
                 full: fullTpl,
                 summary: summaryTpl,
                 arrears: arrearsTpl,
+                qris: qrisTpl,
             };
         } catch (error) {
             console.error('Error generating summary report:', error);
@@ -389,15 +425,36 @@ _Terima kasih atas partisipasinya!_ 🙏
         }
     }
 
-    // Main broadcast function (AUTO-GENERATE PDF)
-    async sendBiWeeklyReport(pdfUrl = null, customMessage = null, targetGroupId = null, attachPdf = true) {
+    // Main broadcast function (AUTO-GENERATE PDF OR ATTACH ACTIVE QRIS IMAGE)
+    async sendBiWeeklyReport(
+        pdfUrl = null,
+        customMessage = null,
+        targetGroupId = null,
+        attachPdf = true,
+        attachmentType = 'auto'
+    ) {
         try {
             console.log('📊 Generating group report broadcast...');
             const message = customMessage || (await this.generateSummaryReport());
 
-            // Auto-generate PDF if requested and no URL provided
             let attachmentUrl = null;
-            if (attachPdf) {
+            const baseUrl = process.env.BASE_URL || 'https://triforce.crud.my.id';
+
+            // Resolve attachmentType:
+            // 1. 'qris': attach active QR Code image
+            // 2. 'pdf': generate or attach PDF report
+            // 3. 'none': text only, no attachment
+            // 4. 'auto': backwards compatible with attachPdf (true => pdf, false => none)
+            if (attachmentType === 'qris') {
+                console.log('🖼️ Mencari QR Code aktif untuk dilampirkan ke grup WhatsApp...');
+                const activeQR = await QRCode.findOne({ isActive: true }).sort({ uploadedAt: -1 });
+                if (activeQR && activeQR.imageUrl) {
+                    attachmentUrl = `${baseUrl}${activeQR.imageUrl}`;
+                    console.log('✅ Gambar QRIS aktif ditemukan & dilampirkan:', attachmentUrl);
+                } else {
+                    console.warn('⚠️ Tidak ada QR Code aktif di database. Pesan dikirim sebagai teks biasa.');
+                }
+            } else if (attachmentType === 'pdf' || (attachmentType === 'auto' && attachPdf)) {
                 if (pdfUrl) {
                     attachmentUrl = pdfUrl;
                 } else {
@@ -405,9 +462,6 @@ _Terima kasih atas partisipasinya!_ 🙏
                     try {
                         const pdfResult =
                             await pdfReportService.generateFinancialReport();
-
-                        // Construct public URL
-                        const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
                         attachmentUrl = `${baseUrl}${pdfResult.url}`;
                         console.log('✅ PDF Generated:', attachmentUrl);
                     } catch (pdfErr) {
@@ -415,6 +469,8 @@ _Terima kasih atas partisipasinya!_ 🙏
                         attachmentUrl = null;
                     }
                 }
+            } else {
+                console.log('📝 Pesan broadcast dikirim tanpa lampiran media (teks saja).');
             }
 
             console.log('📤 Sending to WhatsApp group...');
@@ -443,8 +499,14 @@ _Terima kasih atas partisipasinya!_ 🙏
     }
 
     // Alias for weekly report broadcast
-    async sendWeeklyReport(pdfUrl = null, customMessage = null, targetGroupId = null, attachPdf = true) {
-        return this.sendBiWeeklyReport(pdfUrl, customMessage, targetGroupId, attachPdf);
+    async sendWeeklyReport(
+        pdfUrl = null,
+        customMessage = null,
+        targetGroupId = null,
+        attachPdf = true,
+        attachmentType = 'auto'
+    ) {
+        return this.sendBiWeeklyReport(pdfUrl, customMessage, targetGroupId, attachPdf, attachmentType);
     }
 }
 

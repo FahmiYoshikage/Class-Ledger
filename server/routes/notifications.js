@@ -1067,6 +1067,7 @@ router.post('/send-group-broadcast', async (req, res) => {
             customMessage,
             groupId,
             attachPdf = true,
+            attachmentType = 'auto',
             saveDefault = false,
         } = req.body;
 
@@ -1085,20 +1086,25 @@ router.post('/send-group-broadcast', async (req, res) => {
 
         const targetGroupId = groupId?.trim() || undefined;
 
-        // Pass PDF URL, customMessage, targetGroupId, attachPdf
+        // Pass PDF URL, customMessage, targetGroupId, attachPdf, attachmentType
         const result = await groupBroadcastService.sendBiWeeklyReport(
             pdfUrl,
             customMessage,
             targetGroupId,
-            attachPdf
+            attachPdf,
+            attachmentType
         );
 
         if (result.success) {
+            let successMsg = 'Pesan berhasil dikirim ke grup WhatsApp!';
+            if (attachmentType === 'qris') {
+                successMsg = 'Pengumuman dan gambar QRIS pembayaran berhasil dikirim ke grup WhatsApp!';
+            } else if (attachmentType === 'pdf' || (attachmentType === 'auto' && attachPdf)) {
+                successMsg = 'Laporan keuangan dan lampiran PDF berhasil dikirim ke grup WhatsApp!';
+            }
             res.json({
                 success: true,
-                message: attachPdf
-                    ? 'Laporan keuangan dan lampiran PDF berhasil dikirim ke grup WhatsApp!'
-                    : 'Laporan keuangan berhasil dikirim ke grup WhatsApp!',
+                message: successMsg,
                 detail: result,
             });
         } else {
@@ -1123,14 +1129,17 @@ router.get('/broadcast-preview', async (req, res) => {
         const groupBroadcastService = (
             await import('../services/groupBroadcastService.js')
         ).default;
+        const QRCode = (await import('../models/QRCode.js')).default;
 
         const templateType = req.query.template || 'full';
 
-        const [templates, savedGroupSetting] = await Promise.all([
+        const [templates, savedGroupSetting, activeQR] = await Promise.all([
             groupBroadcastService.generateAllTemplates(),
             Setting.findOne({ key: 'fonnte_group_id' }),
+            QRCode.findOne({ isActive: true }).sort({ uploadedAt: -1 }),
         ]);
 
+        const baseUrl = process.env.BASE_URL || 'https://triforce.crud.my.id';
         const defaultGroupId =
             savedGroupSetting?.value || process.env.FONNTE_GROUP_ID || '';
 
@@ -1139,6 +1148,12 @@ router.get('/broadcast-preview', async (req, res) => {
             message: templates[templateType] || templates.full,
             templates,
             groupId: defaultGroupId,
+            hasActiveQR: !!activeQR,
+            activeQRInfo: activeQR ? {
+                accountName: activeQR.accountName,
+                paymentMethod: activeQR.paymentMethod,
+                imageUrl: `${baseUrl}${activeQR.imageUrl}`,
+            } : null,
             hasToken: !!process.env.FONNTE_API_TOKEN,
             note: 'Preview only - not sent to group',
         });

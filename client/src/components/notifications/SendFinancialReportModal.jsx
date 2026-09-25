@@ -11,6 +11,8 @@ import {
     AlertCircle,
     CheckCircle2,
     Sparkles,
+    QrCode,
+    Image,
 } from 'lucide-react';
 import { notificationsAPI } from '../../services/api';
 import { useAppConfig } from '../../context/ConfigContext';
@@ -34,6 +36,7 @@ const buildFallbackTemplates = (config) => {
         full: `📊 *LAPORAN KAS KELAS* 📊\n${className}\n━━━━━━━━━━━━━━━━━━━━\n\nMohon kerja samanya untuk pembayaran kas kelas ya teman-teman! 🙏\n\n━━━━━━━━━━━━━━━━━━━━\n💳 *INFORMASI PEMBAYARAN*\n${accountsText}\n━━━━━━━━━━━━━━━━━━━━\n\n🏆 Cek Leaderboard Lengkap:\n${baseUrl}/leaderboard`,
         summary: `📊 *UPDATE KAS KELAS (RINGKAS)* 📊\n${className}\n━━━━━━━━━━━━━━━━━━━━\nPengingat pembayaran kas kelas mingguan (${amountStr}/minggu).\n\n💳 *Pembayaran via:*\n${accountsText}\n🏆 ${baseUrl}/leaderboard`,
         arrears: `⚠️ *PENGINGAT KAS & TUNGGAKAN* ⚠️\n${className}\n━━━━━━━━━━━━━━━━━━━━\nYuk segera lunasi kas kelas teman-teman agar operasional kegiatan tetap aman! 💪\n\n💳 *Pembayaran via:*\n${accountsText}\n🏆 ${baseUrl}/leaderboard`,
+        qris: `📢 *PENGUMUMAN PEMBAYARAN KAS KELAS VIA QRIS & WEB* 📢\n${className}\n━━━━━━━━━━━━━━━━━━━━\n\nHalo teman-teman semua! 👋\n\nMulai sekarang, pembayaran uang kas kelas sudah jauh lebih praktis dan transparan melalui sistem web kas kelas kita! 🎉\n\n💳 *BISA BAYAR PAKAI APA SAJA?*\nCukup *scan barcode QRIS* yang terlampir di pesan ini menggunakan:\n• 🏦 *Mobile Banking:* BCA, Mandiri (Livin), BRI (BRImo), BNI, Seabank, Bank Jago, dll.\n• 📱 *E-Wallet:* DANA, GoPay, OVO, ShopeePay, LinkAja.\n\n📸 *CARA BAYAR & KONFIRMASI:*\n1. Scan gambar QRIS di atas dan transfer nominal kas kamu (${amountStr}/minggu).\n2. Simpan / tangkap layar (screenshot) bukti transfer berhasil.\n3. Buka link web kas kelas:\n   👉 *${baseUrl}/qr-payment*\n4. Pilih nama kamu, isi nominal, dan upload foto bukti transfernya.\n5. Selesai! ✨\n\n⚡ *KEUNTUNGAN:*\n• Konfirmasi diverifikasi langsung oleh bendahara kelas.\n• Saldo kas bertambah otomatis secara real-time.\n• Peringkat donatur & pelunasan kas langsung terupdate di leaderboard!\n\n🏆 *Cek Peringkat & Status Tunggakan Kamu:*\n👉 ${baseUrl}/leaderboard\n\nYuk bayar kas tepat waktu demi kelancaran kegiatan kelas kita bersama! Terima kasih teman-teman! 🙏✨`,
     };
 };
 
@@ -47,6 +50,8 @@ const SendFinancialReportModal = ({ isOpen, onClose, onSuccess }) => {
     const [message, setMessage] = useState(fallbackTemplates.full);
     const [templates, setTemplates] = useState(fallbackTemplates);
     const [attachPdf, setAttachPdf] = useState(true);
+    const [attachmentType, setAttachmentType] = useState('pdf'); // 'qris' | 'pdf' | 'none'
+    const [activeQRInfo, setActiveQRInfo] = useState(null);
     const [loading, setLoading] = useState(false);
     const [sending, setSending] = useState(false);
     const [copied, setCopied] = useState(false);
@@ -69,9 +74,13 @@ const SendFinancialReportModal = ({ isOpen, onClose, onSuccess }) => {
                     full: res.data.message || fallbackTemplates.full,
                     summary: fallbackTemplates.summary,
                     arrears: fallbackTemplates.arrears,
+                    qris: fallbackTemplates.qris,
                 };
                 setTemplates(fetchedTemplates);
                 setMessage(fetchedTemplates[selectedTemplateKey] || res.data.message || fallbackTemplates[selectedTemplateKey]);
+                if (res.data.activeQRInfo) {
+                    setActiveQRInfo(res.data.activeQRInfo);
+                }
                 if (res.data.groupId) {
                     setGroupId(res.data.groupId);
                 } else if (config?.whatsappGroupId) {
@@ -111,16 +120,25 @@ const SendFinancialReportModal = ({ isOpen, onClose, onSuccess }) => {
         setSelectedTemplateKey(key);
         if (templates[key]) {
             setMessage(templates[key]);
-        } else if (FALLBACK_TEMPLATES[key]) {
-            setMessage(FALLBACK_TEMPLATES[key]);
+        } else if (fallbackTemplates[key]) {
+            setMessage(fallbackTemplates[key]);
+        }
+
+        // Auto-select attachment type based on chosen template
+        if (key === 'qris') {
+            setAttachmentType('qris');
+            setAttachPdf(false);
+        } else if (key === 'full' || key === 'arrears') {
+            setAttachmentType('pdf');
+            setAttachPdf(true);
         }
     };
 
     const handleResetTemplate = () => {
         if (templates[selectedTemplateKey]) {
             setMessage(templates[selectedTemplateKey]);
-        } else if (FALLBACK_TEMPLATES[selectedTemplateKey]) {
-            setMessage(FALLBACK_TEMPLATES[selectedTemplateKey]);
+        } else if (fallbackTemplates[selectedTemplateKey]) {
+            setMessage(fallbackTemplates[selectedTemplateKey]);
         }
     };
 
@@ -155,7 +173,8 @@ const SendFinancialReportModal = ({ isOpen, onClose, onSuccess }) => {
             const res = await notificationsAPI.sendGroupBroadcast({
                 groupId: groupId.trim(),
                 customMessage: message,
-                attachPdf,
+                attachmentType, // 'qris' | 'pdf' | 'none'
+                attachPdf: attachmentType === 'pdf',
                 saveDefault,
             });
 
@@ -304,7 +323,7 @@ const SendFinancialReportModal = ({ isOpen, onClose, onSuccess }) => {
                         <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-white/80">
                             Pilih Template Pesan
                         </label>
-                        <div className="grid grid-cols-3 gap-2">
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                             {[
                                 {
                                     key: 'full',
@@ -313,13 +332,18 @@ const SendFinancialReportModal = ({ isOpen, onClose, onSuccess }) => {
                                 },
                                 {
                                     key: 'summary',
-                                    label: '⚡ Ringkas (Executive)',
+                                    label: '⚡ Ringkas',
                                     desc: 'Ringkasan saldo & info bayar cepat',
                                 },
                                 {
                                     key: 'arrears',
-                                    label: '⚠️ Fokus Tunggakan',
+                                    label: '⚠️ Tunggakan',
                                     desc: 'Prioritas penunggak & rekening',
+                                },
+                                {
+                                    key: 'qris',
+                                    label: '📢 Info QRIS',
+                                    desc: 'Pengumuman QRIS, web kas & leaderboard',
                                 },
                             ].map((tpl) => {
                                 const isActive = selectedTemplateKey === tpl.key;
@@ -401,41 +425,90 @@ const SendFinancialReportModal = ({ isOpen, onClose, onSuccess }) => {
                         </div>
                     </div>
 
-                    {/* PDF Attachment Option */}
-                    <div
-                        onClick={() => setAttachPdf(!attachPdf)}
-                        className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-3 ${
-                            attachPdf
-                                ? 'bg-emerald-50 dark:bg-emerald-500/10 border-emerald-300 dark:border-emerald-500/30 text-emerald-800 dark:text-emerald-300'
-                                : 'bg-slate-50 dark:bg-white/[0.02] border-slate-200 dark:border-white/10 text-slate-600 dark:text-white/50 hover:bg-slate-100 dark:hover:bg-white/[0.04]'
-                        }`}
-                    >
-                        <div className="flex items-center gap-3">
-                            <div
-                                className={`p-2 rounded-xl border ${
-                                    attachPdf
-                                        ? 'bg-emerald-100 dark:bg-emerald-500/20 border-emerald-300 dark:border-emerald-500/40 text-emerald-700 dark:text-emerald-300'
-                                        : 'bg-slate-100 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-500 dark:text-white/40'
+                    {/* Attachment Selection */}
+                    <div className="space-y-2">
+                        <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-white/80">
+                            Lampiran Media (WhatsApp)
+                        </label>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                            {/* QRIS Option */}
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setAttachmentType('qris');
+                                    setAttachPdf(false);
+                                }}
+                                className={`p-3 rounded-xl border text-left transition-all flex flex-col justify-between ${
+                                    attachmentType === 'qris'
+                                        ? 'bg-emerald-50 dark:bg-emerald-500/15 border-emerald-500/50 text-emerald-800 dark:text-emerald-300 ring-1 ring-emerald-500/30 shadow-sm'
+                                        : 'bg-slate-50 dark:bg-white/[0.02] border-slate-200 dark:border-white/10 text-slate-600 dark:text-white/60 hover:bg-slate-100 dark:hover:bg-white/[0.04]'
                                 }`}
                             >
-                                <FileText className="w-4 h-4" />
-                            </div>
-                            <div>
-                                <p className="text-xs sm:text-sm font-semibold text-slate-900 dark:text-white">
-                                    Lampirkan Dokumen PDF Laporan Resmi
-                                </p>
-                                <p className="text-[11px] text-slate-500 dark:text-white/50 mt-0.5">
-                                    Server akan otomatis men-generate file PDF tabel kas lengkap & menyertakannya di pesan
-                                </p>
-                            </div>
+                                <div className="flex items-center gap-2 mb-1.5">
+                                    <div className={`p-1.5 rounded-lg ${attachmentType === 'qris' ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400' : 'bg-slate-200/60 dark:bg-white/5 text-slate-500 dark:text-white/40'}`}>
+                                        <QrCode className="w-4 h-4" />
+                                    </div>
+                                    <span className="text-xs font-semibold text-slate-900 dark:text-white">
+                                        Gambar QRIS
+                                    </span>
+                                </div>
+                                <span className="text-[11px] text-slate-500 dark:text-white/50 line-clamp-2">
+                                    {activeQRInfo ? `QRIS a.n ${activeQRInfo.accountName || 'Aktif'}` : 'Foto barcode QRIS aktif'}
+                                </span>
+                            </button>
+
+                            {/* PDF Option */}
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setAttachmentType('pdf');
+                                    setAttachPdf(true);
+                                }}
+                                className={`p-3 rounded-xl border text-left transition-all flex flex-col justify-between ${
+                                    attachmentType === 'pdf'
+                                        ? 'bg-emerald-50 dark:bg-emerald-500/15 border-emerald-500/50 text-emerald-800 dark:text-emerald-300 ring-1 ring-emerald-500/30 shadow-sm'
+                                        : 'bg-slate-50 dark:bg-white/[0.02] border-slate-200 dark:border-white/10 text-slate-600 dark:text-white/60 hover:bg-slate-100 dark:hover:bg-white/[0.04]'
+                                }`}
+                            >
+                                <div className="flex items-center gap-2 mb-1.5">
+                                    <div className={`p-1.5 rounded-lg ${attachmentType === 'pdf' ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400' : 'bg-slate-200/60 dark:bg-white/5 text-slate-500 dark:text-white/40'}`}>
+                                        <FileText className="w-4 h-4" />
+                                    </div>
+                                    <span className="text-xs font-semibold text-slate-900 dark:text-white">
+                                        Dokumen PDF
+                                    </span>
+                                </div>
+                                <span className="text-[11px] text-slate-500 dark:text-white/50 line-clamp-2">
+                                    Laporan PDF tabel kas resmi
+                                </span>
+                            </button>
+
+                            {/* None Option */}
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setAttachmentType('none');
+                                    setAttachPdf(false);
+                                }}
+                                className={`p-3 rounded-xl border text-left transition-all flex flex-col justify-between ${
+                                    attachmentType === 'none'
+                                        ? 'bg-emerald-50 dark:bg-emerald-500/15 border-emerald-500/50 text-emerald-800 dark:text-emerald-300 ring-1 ring-emerald-500/30 shadow-sm'
+                                        : 'bg-slate-50 dark:bg-white/[0.02] border-slate-200 dark:border-white/10 text-slate-600 dark:text-white/60 hover:bg-slate-100 dark:hover:bg-white/[0.04]'
+                                }`}
+                            >
+                                <div className="flex items-center gap-2 mb-1.5">
+                                    <div className={`p-1.5 rounded-lg ${attachmentType === 'none' ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400' : 'bg-slate-200/60 dark:bg-white/5 text-slate-500 dark:text-white/40'}`}>
+                                        <MessageCircle className="w-4 h-4" />
+                                    </div>
+                                    <span className="text-xs font-semibold text-slate-900 dark:text-white">
+                                        Teks Saja
+                                    </span>
+                                </div>
+                                <span className="text-[11px] text-slate-500 dark:text-white/50 line-clamp-2">
+                                    Pesan tanpa file lampiran
+                                </span>
+                            </button>
                         </div>
-                        <input
-                            type="checkbox"
-                            checked={attachPdf}
-                            onChange={(e) => setAttachPdf(e.target.checked)}
-                            onClick={(e) => e.stopPropagation()}
-                            className="rounded bg-white dark:bg-white/10 border-slate-300 dark:border-white/20 text-emerald-600 focus:ring-0 focus:ring-offset-0 w-4 h-4"
-                        />
                     </div>
                 </div>
 
