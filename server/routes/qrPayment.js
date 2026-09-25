@@ -8,6 +8,7 @@ import PaymentConfirmation from '../models/PaymentConfirmation.js';
 import Payment from '../models/Payment.js';
 import Student from '../models/Student.js';
 import handleApiError from '../utils/errorHandler.js';
+import whatsappService from '../services/whatsappService.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -367,7 +368,7 @@ router.get('/confirmations/pending', async (req, res) => {
             status: 'pending',
         })
             .sort({ submittedAt: 1 }) // Oldest first
-            .populate('studentId', 'name nickname phone');
+            .populate('studentId', 'name nickname phoneNumber absen');
 
         res.json({
             success: true,
@@ -394,7 +395,7 @@ router.get('/confirmations/all', async (req, res) => {
 
         const confirmations = await PaymentConfirmation.find(query)
             .sort({ submittedAt: -1 })
-            .populate('studentId', 'name nickname phone')
+            .populate('studentId', 'name nickname phoneNumber absen')
             .populate('paymentId');
 
         res.json({
@@ -462,11 +463,42 @@ router.post('/approve/:confirmationId', async (req, res) => {
             `✅ Payment approved: ${confirmation.studentId.name} - Rp${confirmation.amount}`
         );
 
+        // Send WhatsApp approval notification to student if phone number is available
+        let notificationSent = false;
+        let notificationStatus = null;
+        if (confirmation.studentId?.phoneNumber) {
+            try {
+                const waResult =
+                    await whatsappService.sendPaymentApprovalNotification(
+                        confirmation.studentId,
+                        confirmation,
+                        payment
+                    );
+                notificationSent = waResult?.success || false;
+                notificationStatus = waResult?.testMode
+                    ? 'test_mode'
+                    : waResult?.success
+                    ? 'sent'
+                    : 'failed';
+            } catch (notifyErr) {
+                console.error(
+                    'Failed to send approval WhatsApp notification:',
+                    notifyErr
+                );
+            }
+        }
+
         res.json({
             success: true,
             confirmation,
             payment,
-            message: 'Pembayaran berhasil disetujui',
+            notificationSent,
+            notificationStatus,
+            message:
+                'Pembayaran berhasil disetujui' +
+                (notificationSent
+                    ? ' & notifikasi WhatsApp terkirim ke siswa'
+                    : ''),
         });
     } catch (error) {
         return handleApiError(res, error, 'Gagal menyetujui pembayaran');
@@ -515,10 +547,41 @@ router.post('/reject/:confirmationId', async (req, res) => {
             `⚠️ Payment rejected: ${confirmation.studentId.name} - Rp${confirmation.amount} - Reason: ${rejectionReason}`
         );
 
+        // Send WhatsApp rejection notification to student if phone number is available
+        let notificationSent = false;
+        let notificationStatus = null;
+        if (confirmation.studentId?.phoneNumber) {
+            try {
+                const waResult =
+                    await whatsappService.sendPaymentRejectionNotification(
+                        confirmation.studentId,
+                        confirmation,
+                        rejectionReason
+                    );
+                notificationSent = waResult?.success || false;
+                notificationStatus = waResult?.testMode
+                    ? 'test_mode'
+                    : waResult?.success
+                    ? 'sent'
+                    : 'failed';
+            } catch (notifyErr) {
+                console.error(
+                    'Failed to send rejection WhatsApp notification:',
+                    notifyErr
+                );
+            }
+        }
+
         res.json({
             success: true,
             confirmation,
-            message: 'Pembayaran ditolak',
+            notificationSent,
+            notificationStatus,
+            message:
+                'Pembayaran ditolak' +
+                (notificationSent
+                    ? ' & notifikasi WhatsApp terkirim ke siswa'
+                    : ''),
         });
     } catch (error) {
         return handleApiError(res, error, 'Gagal menolak pembayaran');

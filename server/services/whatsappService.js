@@ -742,6 +742,114 @@ class WhatsAppService {
         }
     }
 
+    // Kirim notifikasi penolakan pembayaran ke siswa
+    async sendPaymentRejectionNotification(
+        student,
+        confirmation,
+        rejectionReason
+    ) {
+        try {
+            if (!student?.phoneNumber) {
+                return {
+                    success: false,
+                    reason: 'Nomor WhatsApp siswa tidak tersedia',
+                };
+            }
+
+            const formattedAmount = `Rp ${(confirmation?.amount || 0).toLocaleString('id-ID')}`;
+            const submittedDate = new Date(
+                confirmation?.submittedAt || Date.now()
+            ).toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+            });
+
+            const message =
+                `⚠️ *Pemberitahuan Konfirmasi Pembayaran Kas Kelas*\n\n` +
+                `Halo *${student.name}*,\n` +
+                `Konfirmasi pembayaran kas kelas yang kamu kirimkan belum dapat disetujui oleh bendahara dengan rincian berikut:\n\n` +
+                `💵 *Nominal:* ${formattedAmount}\n` +
+                `📅 *Tanggal Kirim:* ${submittedDate}\n` +
+                `❌ *Alasan Penolakan:*\n"${rejectionReason}"\n\n` +
+                `💡 *Saran Tindakan:*\n` +
+                `Mohon periksa kembali transaksi kamu dan lakukan upload ulang bukti transfer yang valid melalui web Kas Kelas.\n\n` +
+                `Jika ada pertanyaan atau kekeliruan, silakan hubungi bendahara kelas. Terima kasih! 🙏`;
+
+            const result = await this.sendMessage(student.phoneNumber, message);
+
+            await Notification.create({
+                studentId: student._id,
+                phoneNumber: this.normalizePhoneNumber(student.phoneNumber),
+                message,
+                type: 'payment_rejected',
+                status: result.status,
+                sentAt: result.success ? new Date() : null,
+                failureReason: result.success ? null : result.error,
+            });
+
+            return result;
+        } catch (error) {
+            console.error(
+                'Error sending payment rejection notification:',
+                error.message
+            );
+            return { success: false, error: error.message };
+        }
+    }
+
+    // Kirim notifikasi persetujuan pembayaran ke siswa
+    async sendPaymentApprovalNotification(student, confirmation, payment) {
+        try {
+            if (!student?.phoneNumber) {
+                return {
+                    success: false,
+                    reason: 'Nomor WhatsApp siswa tidak tersedia',
+                };
+            }
+
+            const formattedAmount = `Rp ${(
+                confirmation?.amount ||
+                payment?.amount ||
+                0
+            ).toLocaleString('id-ID')}`;
+            const approvedDate = new Date().toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+            });
+
+            const message =
+                `✅ *Pembayaran Kas Kelas Diterima!*\n\n` +
+                `Halo *${student.name}*,\n` +
+                `Terima kasih! Pembayaran kas kelas kamu telah diverifikasi dan berhasil disetujui oleh bendahara:\n\n` +
+                `💵 *Nominal:* ${formattedAmount}\n` +
+                `📅 *Tanggal Disetujui:* ${approvedDate}\n` +
+                `💳 *Metode:* QRIS / Transfer\n\n` +
+                `Pencatatan kas dan status tunggakan kamu telah otomatis diperbarui di sistem. Terima kasih atas partisipasi aktifmu dalam kas kelas! 🎉`;
+
+            const result = await this.sendMessage(student.phoneNumber, message);
+
+            await Notification.create({
+                studentId: student._id,
+                phoneNumber: this.normalizePhoneNumber(student.phoneNumber),
+                message,
+                type: 'payment_approved',
+                status: result.status,
+                sentAt: result.success ? new Date() : null,
+                failureReason: result.success ? null : result.error,
+            });
+
+            return result;
+        } catch (error) {
+            console.error(
+                'Error sending payment approval notification:',
+                error.message
+            );
+            return { success: false, error: error.message };
+        }
+    }
+
     // Check status Fonnte API
     async checkStatus() {
         try {

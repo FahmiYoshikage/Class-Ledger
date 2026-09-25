@@ -24,6 +24,8 @@ const notificationSchema = new mongoose.Schema(
                 'late_payment',
                 'custom',
                 'group_reminder',
+                'payment_rejected',
+                'payment_approved',
             ],
             default: 'payment_reminder',
         },

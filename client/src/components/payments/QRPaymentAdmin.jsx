@@ -1,13 +1,33 @@
 import { useState, useEffect } from 'react';
 import api from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
+
+const QUICK_REJECTION_REASONS = [
+    'Bukti transfer tidak terbaca / buram',
+    'Nominal transfer tidak sesuai',
+    'Nama pengirim / rekening tidak cocok',
+    'Bukti transfer sudah pernah digunakan (duplikat)',
+    'Dana belum masuk ke rekening kas',
+];
 
 function QRPaymentAdmin() {
+    const { user } = useAuth();
+    const reviewerName = user?.fullName || user?.username || 'Admin';
+
     const [activeTab, setActiveTab] = useState('pending'); // pending, history, manage
     const [qrCodes, setQrCodes] = useState([]);
     const [pendingConfirmations, setPendingConfirmations] = useState([]);
     const [allConfirmations, setAllConfirmations] = useState([]);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
+
+    // Rejection modal state
+    const [rejectModal, setRejectModal] = useState({
+        isOpen: false,
+        confirmation: null,
+        rejectionReason: '',
+        submitting: false,
+    });
 
     // Upload form state
     const [uploadForm, setUploadForm] = useState({
@@ -72,22 +92,31 @@ function QRPaymentAdmin() {
         }
     };
 
-    const handleApprove = async (confirmationId) => {
-        if (!confirm('Setujui pembayaran ini?')) return;
+    const handleApprove = async (conf) => {
+        const studentName = conf.studentId?.name || 'Siswa';
+        const amount = conf.amount?.toLocaleString('id-ID') || '0';
 
-        const reviewedBy = prompt('Nama Anda:');
-        if (!reviewedBy) return;
+        if (
+            !confirm(
+                `Setujui pembayaran dari ${studentName} sebesar Rp${amount}? Transaksi kas akan otomatis dicatat.`
+            )
+        )
+            return;
 
         try {
             const response = await api.post(
-                `/qr-payment/approve/${confirmationId}`,
+                `/qr-payment/approve/${conf._id}`,
                 {
-                    reviewedBy,
+                    reviewedBy: reviewerName,
                 }
             );
 
             if (response.data.success) {
-                setMessage('✅ Pembayaran berhasil disetujui');
+                setMessage(
+                    `✅ ${
+                        response.data.message || 'Pembayaran berhasil disetujui'
+                    }`
+                );
                 fetchPendingConfirmations();
             }
         } catch (error) {
@@ -99,24 +128,48 @@ function QRPaymentAdmin() {
         }
     };
 
-    const handleReject = async (confirmationId) => {
-        const reviewedBy = prompt('Nama Anda:');
-        if (!reviewedBy) return;
+    const openRejectModal = (conf) => {
+        setRejectModal({
+            isOpen: true,
+            confirmation: conf,
+            rejectionReason: '',
+            submitting: false,
+        });
+    };
 
-        const rejectionReason = prompt('Alasan penolakan:');
-        if (!rejectionReason) return;
+    const closeRejectModal = () => {
+        setRejectModal({
+            isOpen: false,
+            confirmation: null,
+            rejectionReason: '',
+            submitting: false,
+        });
+    };
+
+    const submitReject = async (e) => {
+        if (e) e.preventDefault();
+        if (!rejectModal.confirmation) return;
+        if (!rejectModal.rejectionReason.trim()) {
+            alert('Silakan pilih atau masukkan alasan penolakan.');
+            return;
+        }
+
+        setRejectModal((prev) => ({ ...prev, submitting: true }));
 
         try {
             const response = await api.post(
-                `/qr-payment/reject/${confirmationId}`,
+                `/qr-payment/reject/${rejectModal.confirmation._id}`,
                 {
-                    reviewedBy,
-                    rejectionReason,
+                    reviewedBy: reviewerName,
+                    rejectionReason: rejectModal.rejectionReason.trim(),
                 }
             );
 
             if (response.data.success) {
-                setMessage('⚠️ Pembayaran ditolak');
+                setMessage(
+                    `⚠️ ${response.data.message || 'Pembayaran ditolak'}`
+                );
+                closeRejectModal();
                 fetchPendingConfirmations();
             }
         } catch (error) {
@@ -125,6 +178,7 @@ function QRPaymentAdmin() {
                     (error.response?.data?.message ||
                         'Gagal menolak pembayaran')
             );
+            setRejectModal((prev) => ({ ...prev, submitting: false }));
         }
     };
 
@@ -143,7 +197,7 @@ function QRPaymentAdmin() {
         formData.append('accountName', uploadForm.accountName);
         formData.append('accountNumber', uploadForm.accountNumber);
         formData.append('notes', uploadForm.notes);
-        formData.append('uploadedBy', 'Admin'); // TODO: Get from auth context
+        formData.append('uploadedBy', reviewerName);
 
         setUploadForm({ ...uploadForm, uploading: true });
 
@@ -282,10 +336,16 @@ function QRPaymentAdmin() {
                                     <div className="flex justify-between items-start mb-4">
                                         <div>
                                             <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
-                                                {conf.studentId.name}
+                                                {conf.studentId?.name || 'Siswa'}
                                             </h3>
                                             <p className="text-sm text-slate-500 dark:text-white/60">
-                                                {conf.studentId.phone}
+                                                {conf.studentId?.phoneNumber || conf.studentId?.phone ? (
+                                                    <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-mono text-xs mt-0.5">
+                                                        <span>📱</span> {conf.studentId.phoneNumber || conf.studentId.phone}
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-xs text-slate-400">Tanpa No. WA</span>
+                                                )}
                                             </p>
                                         </div>
                                         <span className="bg-amber-50 dark:bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-500/20 px-3 py-1 rounded-full text-xs font-semibold">
@@ -331,19 +391,19 @@ function QRPaymentAdmin() {
                                     <div className="flex space-x-3">
                                         <button
                                             onClick={() =>
-                                                handleApprove(conf._id)
+                                                handleApprove(conf)
                                             }
-                                            className="flex-1 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-500/20 py-2 px-4 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-500/20 transition font-semibold"
+                                            className="flex-1 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-500/20 py-2.5 px-4 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-500/20 transition font-semibold flex items-center justify-center gap-1.5"
                                         >
-                                            ✓ Setujui
+                                            <span>✓</span> Setujui
                                         </button>
                                         <button
                                             onClick={() =>
-                                                handleReject(conf._id)
+                                                openRejectModal(conf)
                                             }
-                                            className="flex-1 bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-500/20 py-2 px-4 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-500/20 transition font-semibold"
+                                            className="flex-1 bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-500/20 py-2.5 px-4 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-500/20 transition font-semibold flex items-center justify-center gap-1.5"
                                         >
-                                            ✗ Tolak
+                                            <span>✗</span> Tolak
                                         </button>
                                     </div>
                                 </div>
@@ -385,7 +445,10 @@ function QRPaymentAdmin() {
                                         <tr key={conf._id} className="hover:bg-slate-50/50 dark:hover:bg-white/[0.02]">
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="text-sm font-medium text-slate-900 dark:text-white">
-                                                    {conf.studentId.name}
+                                                    {conf.studentId?.name || 'Siswa'}
+                                                </div>
+                                                <div className="text-xs text-slate-400 font-mono">
+                                                    {conf.studentId?.phoneNumber || conf.studentId?.phone || ''}
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
@@ -396,7 +459,7 @@ function QRPaymentAdmin() {
                                                     )}
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
+                                            <td className="px-6 py-4">
                                                 <span
                                                     className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full border ${
                                                         conf.status ===
@@ -408,8 +471,13 @@ function QRPaymentAdmin() {
                                                             : 'bg-amber-50 dark:bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-500/20'
                                                     }`}
                                                 >
-                                                    {conf.status}
+                                                    {conf.status === 'approved' ? '✓ Disetujui' : conf.status === 'rejected' ? '✗ Ditolak' : '⏳ Pending'}
                                                 </span>
+                                                {conf.status === 'rejected' && conf.rejectionReason && (
+                                                    <div className="text-xs text-rose-600 dark:text-rose-400 mt-1 max-w-[220px] truncate" title={conf.rejectionReason}>
+                                                        💬 {conf.rejectionReason}
+                                                    </div>
+                                                )}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500 dark:text-white/60">
                                                 {new Date(
@@ -613,6 +681,134 @@ function QRPaymentAdmin() {
                                 ))}
                             </div>
                         )}
+                    </div>
+                </div>
+            )}
+
+            {/* Rejection Modal */}
+            {rejectModal.isOpen && rejectModal.confirmation && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+                    <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-5">
+                        <div className="flex justify-between items-start">
+                            <div>
+                                <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                    <span className="text-rose-500">❌</span> Tolak Konfirmasi Pembayaran
+                                </h3>
+                                <p className="text-sm text-slate-500 dark:text-white/60 mt-1">
+                                    Siswa akan menerima pemberitahuan resmi via WhatsApp.
+                                </p>
+                            </div>
+                            <button
+                                onClick={closeRejectModal}
+                                className="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl font-bold p-1 rounded-lg"
+                                disabled={rejectModal.submitting}
+                            >
+                                ✕
+                            </button>
+                        </div>
+
+                        {/* Detail Siswa & Nominal */}
+                        <div className="bg-slate-50 dark:bg-white/[0.04] p-4 rounded-xl border border-slate-200 dark:border-white/10 space-y-2">
+                            <div className="flex justify-between text-sm">
+                                <span className="text-slate-500 dark:text-white/60">Siswa:</span>
+                                <span className="font-semibold text-slate-900 dark:text-white">
+                                    {rejectModal.confirmation.studentId?.name || 'Siswa'}
+                                </span>
+                            </div>
+                            <div className="flex justify-between text-sm">
+                                <span className="text-slate-500 dark:text-white/60">Nominal:</span>
+                                <span className="font-bold text-rose-600 dark:text-rose-400">
+                                    Rp {rejectModal.confirmation.amount?.toLocaleString('id-ID')}
+                                </span>
+                            </div>
+                            <div className="flex justify-between text-sm">
+                                <span className="text-slate-500 dark:text-white/60">No. WhatsApp Siswa:</span>
+                                <span className="font-mono text-slate-700 dark:text-white/80">
+                                    {rejectModal.confirmation.studentId?.phoneNumber || rejectModal.confirmation.studentId?.phone ? (
+                                        <span className="text-emerald-600 dark:text-emerald-400 font-semibold">
+                                            📱 {rejectModal.confirmation.studentId?.phoneNumber || rejectModal.confirmation.studentId?.phone} (Tersedia)
+                                        </span>
+                                    ) : (
+                                        <span className="text-amber-500 font-semibold">⚠️ Tidak ada nomor WA</span>
+                                    )}
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Quick Reason Buttons */}
+                        <div>
+                            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-white/60 mb-2">
+                                Pilih Alasan Cepat:
+                            </label>
+                            <div className="flex flex-wrap gap-2">
+                                {QUICK_REJECTION_REASONS.map((reason, idx) => (
+                                    <button
+                                        key={idx}
+                                        type="button"
+                                        onClick={() =>
+                                            setRejectModal((prev) => ({
+                                                ...prev,
+                                                rejectionReason: reason,
+                                            }))
+                                        }
+                                        className={`text-xs px-3 py-1.5 rounded-lg border transition ${
+                                            rejectModal.rejectionReason === reason
+                                                ? 'bg-rose-500 text-white border-rose-500 shadow-sm'
+                                                : 'bg-slate-100 dark:bg-white/[0.05] text-slate-700 dark:text-white/80 border-slate-200 dark:border-white/10 hover:border-rose-400 dark:hover:border-rose-400'
+                                        }`}
+                                    >
+                                        {reason}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Input Alasan */}
+                        <div>
+                            <label className="block text-sm font-semibold text-slate-800 dark:text-white/90 mb-1">
+                                Alasan Penolakan <span className="text-rose-500">*</span>
+                            </label>
+                            <textarea
+                                rows={3}
+                                value={rejectModal.rejectionReason}
+                                onChange={(e) =>
+                                    setRejectModal((prev) => ({
+                                        ...prev,
+                                        rejectionReason: e.target.value,
+                                    }))
+                                }
+                                placeholder="Tulis alasan penolakan untuk siswa..."
+                                className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-zinc-800 border border-slate-300 dark:border-white/15 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-rose-500 outline-none resize-none"
+                                required
+                            />
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="flex gap-3 pt-2">
+                            <button
+                                type="button"
+                                onClick={closeRejectModal}
+                                disabled={rejectModal.submitting}
+                                className="flex-1 px-4 py-2.5 rounded-xl border border-slate-300 dark:border-white/15 text-slate-700 dark:text-white/80 hover:bg-slate-100 dark:hover:bg-white/[0.05] font-medium text-sm transition"
+                            >
+                                Batal
+                            </button>
+                            <button
+                                type="button"
+                                onClick={submitReject}
+                                disabled={rejectModal.submitting || !rejectModal.rejectionReason.trim()}
+                                className="flex-1 px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-sm shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                            >
+                                {rejectModal.submitting ? (
+                                    <>
+                                        <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                                        Memproses...
+                                    </>
+                                ) : (
+                                    'Kirim Penolakan'
+                                )}
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
