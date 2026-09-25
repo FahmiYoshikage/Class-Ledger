@@ -77,7 +77,13 @@ log "Building Frontend image (Vite build, butuh ~512MB heap)..."
 docker compose -f "$PROJECT_DIR/docker-compose.yml" build frontend
 log "Frontend image selesai!"
 
-# ── Step 5: Start containers ──
+# ── Step 5: Pastikan direktori uploads & reports ada dengan permission 777 ──
+mkdir -p "$PROJECT_DIR/server/public/reports"
+mkdir -p "$PROJECT_DIR/server/uploads/payment-proofs"
+mkdir -p "$PROJECT_DIR/server/uploads/qr-codes"
+chmod -R 777 "$PROJECT_DIR/server/public/reports" "$PROJECT_DIR/server/uploads" 2>/dev/null || true
+
+# ── Step 6: Start containers ──
 log "Starting containers..."
 docker compose -f "$PROJECT_DIR/docker-compose.yml" up -d
 

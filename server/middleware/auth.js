@@ -62,10 +62,11 @@ const authenticate = async (req, res, next) => {
                 message: 'Token expired.',
             });
         }
+        console.error('Authentication error:', error);
         res.status(500).json({
             success: false,
-            message: 'Authentication error.',
-            error: error.message,
+            message: 'Terjadi kesalahan saat otentikasi.',
+            error: 'Terjadi kesalahan saat otentikasi.',
         });
     }
 };
@@ -155,10 +156,11 @@ const loginAdmin = async (username, password) => {
             },
         };
     } catch (error) {
+        console.error('Error during login:', error);
         return {
             success: false,
-            message: 'Error during login.',
-            error: error.message,
+            message: 'Terjadi kesalahan saat proses login.',
+            error: 'Terjadi kesalahan saat proses login.',
         };
     }
 };

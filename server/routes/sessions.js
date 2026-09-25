@@ -2,6 +2,7 @@ import express from 'express';
 import Session from '../models/Session.js';
 import { authenticate } from '../middleware/auth.js';
 import jwt from 'jsonwebtoken';
+import { handleApiError } from '../utils/errorHandler.js';
 
 const router = express.Router();
 
@@ -75,12 +76,7 @@ router.get('/', authenticate, async (req, res) => {
             data: sessionsWithCurrent,
         });
     } catch (error) {
-        console.error('Get sessions error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to fetch sessions',
-            error: error.message,
-        });
+        return handleApiError(res, error, 'Gagal mengambil data sesi aktif.');
     }
 });
 
@@ -110,11 +106,7 @@ router.delete('/:id', authenticate, async (req, res) => {
             message: 'Session terminated successfully',
         });
     } catch (error) {
-        console.error('Delete session error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to terminate session',
-        });
+        return handleApiError(res, error, 'Gagal mengakhiri sesi.');
     }
 });
 
@@ -144,11 +136,7 @@ router.delete('/actions/terminate-all', authenticate, async (req, res) => {
             message: 'All other sessions terminated successfully',
         });
     } catch (error) {
-        console.error('Terminate all sessions error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to terminate sessions',
-        });
+        return handleApiError(res, error, 'Gagal mengakhiri sesi lainnya.');
     }
 });
 
@@ -174,11 +162,7 @@ router.get('/stats', authenticate, async (req, res) => {
             },
         });
     } catch (error) {
-        console.error('Get session stats error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to fetch session statistics',
-        });
+        return handleApiError(res, error, 'Gagal mengambil statistik sesi.');
     }
 });
 

@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import Payment from '../models/Payment.js';
 import Setting from '../models/Setting.js';
 import badgeService from '../services/badgeService.js';
+import handleApiError from '../utils/errorHandler.js';
 
 const router = express.Router();
 
@@ -14,7 +15,7 @@ router.get('/', async (req, res) => {
             .sort({ date: -1 });
         res.json(payments);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return handleApiError(res, error, 'Gagal mengambil data pembayaran');
     }
 });
 
@@ -26,7 +27,7 @@ router.get('/student/:studentId', async (req, res) => {
         }).sort({ date: -1 });
         res.json(payments);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return handleApiError(res, error, 'Gagal mengambil data pembayaran siswa');
     }
 });
 
@@ -68,7 +69,7 @@ router.post('/', async (req, res) => {
 
         res.status(201).json(populatedPayment);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        return handleApiError(res, error, 'Gagal menyimpan pembayaran. Periksa data input.', 400);
     }
 });
 
@@ -101,7 +102,7 @@ router.delete('/:id', async (req, res) => {
 
         res.json({ message: 'Payment deleted' });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return handleApiError(res, error, 'Gagal menghapus pembayaran');
     }
 });
 
@@ -119,7 +120,7 @@ router.get('/total/:studentId', async (req, res) => {
         ]);
         res.json({ total: result.length > 0 ? result[0].total : 0 });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return handleApiError(res, error, 'Gagal menghitung total pembayaran');
     }
 });
 
@@ -177,7 +178,7 @@ router.get('/tunggakan/:studentId', async (req, res) => {
             isLunas: amountOwed <= 0,
         });
     } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
+        return handleApiError(res, error, 'Gagal menghitung tunggakan pembayaran');
     }
 });
 

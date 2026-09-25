@@ -1,5 +1,6 @@
 import express from 'express';
 import Expense from '../models/Expense.js';
+import handleApiError from '../utils/errorHandler.js';
 
 const router = express.Router();
 
@@ -9,7 +10,7 @@ router.get('/', async (req, res) => {
         const expenses = await Expense.find().sort({ date: -1 });
         res.json(expenses);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return handleApiError(res, error, 'Gagal mengambil data pengeluaran');
     }
 });
 
@@ -27,7 +28,7 @@ router.post('/', async (req, res) => {
         const newExpense = await expense.save();
         res.status(201).json(newExpense);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        return handleApiError(res, error, 'Gagal menambahkan pengeluaran. Periksa data input.', 400);
     }
 });
 
@@ -41,7 +42,7 @@ router.delete('/:id', async (req, res) => {
         await expense.deleteOne();
         res.json({ message: 'Expense deleted' });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return handleApiError(res, error, 'Gagal menghapus data pengeluaran');
     }
 });
 

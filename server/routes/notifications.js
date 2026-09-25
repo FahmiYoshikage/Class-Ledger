@@ -5,6 +5,7 @@ import Notification from '../models/Notification.js';
 import Setting from '../models/Setting.js';
 import whatsappService from '../services/whatsappService.js';
 import antiBanService from '../services/antiBanService.js';
+import { handleApiError } from '../utils/errorHandler.js';
 
 const router = express.Router();
 
@@ -71,7 +72,7 @@ router.get('/', async (req, res) => {
 
         res.json(notifications);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return handleApiError(res, error, 'Gagal mengambil riwayat notifikasi.');
     }
 });
 
@@ -88,7 +89,7 @@ router.get('/student/:studentId', async (req, res) => {
 
         res.json(notifications);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return handleApiError(res, error, 'Gagal mengambil notifikasi siswa.');
     }
 });
 
@@ -146,7 +147,7 @@ router.get('/needs-reminder', async (req, res) => {
             students: needsReminder,
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return handleApiError(res, error, 'Gagal memuat daftar siswa yang perlu reminder.');
     }
 });
 
@@ -201,8 +202,7 @@ router.post('/send-reminder/:studentId', async (req, res) => {
             testMode: result.testMode,
         });
     } catch (error) {
-        console.error(`❌ Error sending reminder:`, error);
-        res.status(500).json({ error: error.message });
+        return handleApiError(res, error, 'Gagal mengirim reminder ke siswa.');
     }
 });
 
@@ -299,7 +299,7 @@ router.post('/send-bulk-reminder', async (req, res) => {
             skippedDetails: skipped,
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return handleApiError(res, error, 'Gagal memproses bulk reminder.');
     }
 });
 
@@ -311,7 +311,7 @@ router.post('/send-thank-you/:studentId', async (req, res) => {
         const student = await Student.findById(req.params.studentId);
 
         if (!student) {
-            return res.status(404).json({ error: 'Siswa tidak ditemukan' });
+            return res.status(404).json({ success: false, error: 'Siswa tidak ditemukan', message: 'Siswa tidak ditemukan' });
         }
 
         const result = await whatsappService.sendThankYou(student);
@@ -323,7 +323,7 @@ router.post('/send-thank-you/:studentId', async (req, res) => {
                 : 'Gagal mengirim ucapan terima kasih',
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return handleApiError(res, error, 'Gagal mengirim ucapan terima kasih.');
     }
 });
 
@@ -356,7 +356,7 @@ router.post('/send-custom', async (req, res) => {
                 : 'Gagal mengirim pesan',
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return handleApiError(res, error, 'Gagal mengirim pesan kustom.');
     }
 });
 
@@ -384,7 +384,7 @@ router.post('/preview', async (req, res) => {
             category,
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return handleApiError(res, error, 'Gagal membuat preview pesan.');
     }
 });
 
@@ -403,7 +403,7 @@ router.get('/status', async (req, res) => {
             apiToken: process.env.FONNTE_API_TOKEN ? '✓ Set' : '✗ Not Set',
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return handleApiError(res, error, 'Gagal memeriksa status WhatsApp.');
     }
 });
 
@@ -442,7 +442,7 @@ router.get('/stats', async (req, res) => {
             byType,
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return handleApiError(res, error, 'Gagal memuat statistik notifikasi.');
     }
 });
 
@@ -526,7 +526,7 @@ router.post('/send-to-group', async (req, res) => {
             })),
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return handleApiError(res, error, 'Gagal mengirim pengingat ke grup WhatsApp.');
     }
 });
 
@@ -597,7 +597,7 @@ router.post('/preview-group', async (req, res) => {
             })),
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return handleApiError(res, error, 'Gagal membuat preview pesan grup.');
     }
 });
 
@@ -644,7 +644,7 @@ router.post('/send-event-reminder/:studentId/:eventId', async (req, res) => {
             testMode: result.testMode,
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return handleApiError(res, error, 'Gagal mengirim reminder event ke siswa.');
     }
 });
 
@@ -661,7 +661,7 @@ router.post('/send-event-reminder-bulk/:eventId', async (req, res) => {
         const event = await Event.findById(eventId);
 
         if (!event) {
-            return res.status(404).json({ error: 'Event tidak ditemukan' });
+            return res.status(404).json({ success: false, error: 'Event tidak ditemukan', message: 'Event tidak ditemukan' });
         }
 
         // Get students yang belum bayar
@@ -722,7 +722,7 @@ router.post('/send-event-reminder-bulk/:eventId', async (req, res) => {
             },
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return handleApiError(res, error, 'Gagal memproses pengiriman reminder event bulk.');
     }
 });
 
@@ -796,8 +796,7 @@ router.post('/send-event-reminder-group/:eventId', async (req, res) => {
             detail: result.detail,
         });
     } catch (error) {
-        console.error('Route error:', error);
-        res.status(500).json({ error: error.message });
+        return handleApiError(res, error, 'Gagal mengirim reminder event ke grup WhatsApp.');
     }
 });
 
@@ -814,7 +813,7 @@ router.post('/preview-event-reminder/:eventId', async (req, res) => {
         const event = await Event.findById(eventId);
 
         if (!event) {
-            return res.status(404).json({ error: 'Event tidak ditemukan' });
+            return res.status(404).json({ success: false, error: 'Event tidak ditemukan', message: 'Event tidak ditemukan' });
         }
 
         // Get sample student
@@ -856,7 +855,7 @@ router.post('/preview-event-reminder/:eventId', async (req, res) => {
             },
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return handleApiError(res, error, 'Gagal membuat preview reminder event.');
     }
 });
 
@@ -913,7 +912,7 @@ router.post('/preview-event-reminder-group/:eventId', async (req, res) => {
             },
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return handleApiError(res, error, 'Gagal membuat preview reminder event grup.');
     }
 });
 
@@ -927,7 +926,9 @@ router.post('/send-custom-message', async (req, res) => {
         // Validasi input
         if (!phoneNumber || !message) {
             return res.status(400).json({
+                success: false,
                 error: 'Nomor telepon dan pesan harus diisi',
+                message: 'Nomor telepon dan pesan harus diisi',
             });
         }
 
@@ -954,15 +955,11 @@ router.post('/send-custom-message', async (req, res) => {
             res.status(400).json({
                 success: false,
                 message: 'Gagal mengirim pesan',
-                error: result.error || result.detail,
+                error: result.error || result.detail || 'Gagal mengirim pesan',
             });
         }
     } catch (error) {
-        console.error('Error in send custom message endpoint:', error);
-        res.status(500).json({
-            success: false,
-            error: error.message,
-        });
+        return handleApiError(res, error, 'Gagal mengirim pesan kustom.');
     }
 });
 
@@ -988,7 +985,7 @@ router.post('/preview-custom-message', async (req, res) => {
             hasPaymentInfo: true,
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return handleApiError(res, error, 'Gagal membuat preview pesan kustom.');
     }
 });
 
@@ -1006,6 +1003,7 @@ router.get('/test-fonnte', async (req, res) => {
             return res.json({
                 success: false,
                 error: 'FONNTE_API_TOKEN tidak ditemukan di .env',
+                message: 'FONNTE_API_TOKEN tidak ditemukan di .env',
                 recommendation:
                     'Tambahkan FONNTE_API_TOKEN=your_token di file .env',
                 testMode: testMode,
@@ -1040,17 +1038,19 @@ router.get('/test-fonnte', async (req, res) => {
     } catch (error) {
         console.error(
             '❌ Fonnte test error:',
-            error.response?.data || error.message
+            error.response?.data || error?.message || error
         );
+
+        const safeReason = error.response?.data?.reason || (error.response?.status === 401 ? 'API Token tidak valid' : 'Gagal menghubungi server Fonnte');
 
         res.json({
             success: false,
-            error: error.response?.data?.reason || error.message,
-            detail: error.response?.data,
+            error: safeReason,
+            message: safeReason,
             recommendation:
                 error.response?.status === 401
                     ? 'API Token tidak valid. Periksa kembali token Fonnte Anda.'
-                    : 'Terjadi kesalahan saat menghubungi API Fonnte.',
+                    : 'Terjadi kesalahan saat menghubungi API Fonnte. Silakan periksa koneksi internet server.',
         });
     }
 });
@@ -1109,11 +1109,7 @@ router.post('/send-group-broadcast', async (req, res) => {
             });
         }
     } catch (error) {
-        console.error('Error sending group broadcast:', error);
-        res.status(500).json({
-            success: false,
-            error: error.message,
-        });
+        return handleApiError(res, error, 'Gagal mengirim broadcast laporan ke grup WhatsApp.');
     }
 });
 
@@ -1147,26 +1143,22 @@ router.get('/broadcast-preview', async (req, res) => {
             note: 'Preview only - not sent to group',
         });
     } catch (error) {
-        console.error('Error generating preview:', error);
-        res.status(500).json({
-            success: false,
-            error: error.message,
-        });
+        return handleApiError(res, error, 'Gagal membuat preview broadcast.');
     }
 });
 
 // ==============================================
-// � BACKGROUND JOB STATUS
+// 📋 BACKGROUND JOB STATUS
 // ==============================================
 router.get('/send-job/:jobId', async (req, res) => {
     try {
         const job = antiBanService.getJobStatus(req.params.jobId);
         if (!job) {
-            return res.status(404).json({ error: 'Job tidak ditemukan' });
+            return res.status(404).json({ success: false, error: 'Job tidak ditemukan', message: 'Job tidak ditemukan' });
         }
         res.json(job);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return handleApiError(res, error, 'Gagal mengambil status job.');
     }
 });
 
@@ -1174,12 +1166,12 @@ router.get('/send-jobs/active', async (req, res) => {
     try {
         res.json(antiBanService.getActiveJobs());
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return handleApiError(res, error, 'Gagal mengambil daftar job aktif.');
     }
 });
 
 // ==============================================
-// �🛡️ ANTI-BAN STATUS & CONFIG
+// 🛡️ ANTI-BAN STATUS & CONFIG
 // ==============================================
 router.get('/anti-ban/status', async (req, res) => {
     try {
@@ -1188,7 +1180,7 @@ router.get('/anti-ban/status', async (req, res) => {
             config: antiBanService.getConfig(),
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return handleApiError(res, error, 'Gagal mengambil status anti-ban.');
     }
 });
 

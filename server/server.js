@@ -2,8 +2,38 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import connectDB from './config/database.js';
+
+dotenv.config();
+
+// Ensure process allows full read/write for all users (container & host volume sharing)
+try {
+    process.umask(0);
+} catch (e) {
+    // Ignore if not supported
+}
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Ensure critical upload and report directories exist with full permissions
+const uploadsDir = path.join(__dirname, 'uploads');
+const paymentProofsDir = path.join(uploadsDir, 'payment-proofs');
+const qrCodesDir = path.join(uploadsDir, 'qr-codes');
+const reportsDir = path.join(__dirname, 'public/reports');
+
+[uploadsDir, paymentProofsDir, qrCodesDir, reportsDir].forEach((dir) => {
+    try {
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true, mode: 0o777 });
+        }
+        fs.chmodSync(dir, 0o777);
+    } catch (err) {
+        // Non-fatal
+    }
+});
 import authRoutes from './routes/auth.js';
 import setupRoutes from './routes/setup.js';
 import studentRoutes from './routes/student.js';
@@ -20,11 +50,6 @@ import auditLogRoutes from './routes/auditLogs.js';
 import notificationScheduler from './services/notificationScheduler.js';
 import { apiLimiter } from './middleware/rateLimiter.js';
 import { authenticate, loginAdmin, authorizeAdmin } from './middleware/auth.js';
-
-dotenv.config();
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -121,10 +146,19 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-// Error handling middleware
+// Error handling middleware - strictly avoid leaking error traces or internal details to client
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({ message: 'Something went wrong!' });
+    console.error('Unhandled Server Error:', err.stack || err);
+    const status = typeof err.status === 'number' ? err.status : 500;
+    const safeMessage =
+        status < 500 && err.message && !err.message.includes('/') && !err.message.includes('open')
+            ? err.message
+            : 'Terjadi kesalahan pada server. Silakan coba beberapa saat lagi.';
+    res.status(status).json({
+        success: false,
+        message: safeMessage,
+        error: safeMessage,
+    });
 });
 
 app.listen(PORT, () => {

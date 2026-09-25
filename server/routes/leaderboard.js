@@ -3,6 +3,7 @@ import Student from '../models/Student.js';
 import Payment from '../models/Payment.js';
 import Badge from '../models/Badge.js';
 import { BADGE_DEFINITIONS } from '../services/badgeService.js';
+import handleApiError from '../utils/errorHandler.js';
 
 const router = express.Router();
 
@@ -127,11 +128,7 @@ router.get('/', async (req, res) => {
                     : 'Leaderboard berhasil dimuat',
         });
     } catch (error) {
-        console.error('❌ Error fetching leaderboard:', error);
-        res.status(500).json({
-            success: false,
-            error: error.message,
-        });
+        return handleApiError(res, error, 'Gagal memuat leaderboard');
     }
 });
 

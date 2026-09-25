@@ -1,6 +1,7 @@
 import express from 'express';
 import badgeService, { BADGE_DEFINITIONS } from '../services/badgeService.js';
 import Badge from '../models/Badge.js';
+import { handleApiError } from '../utils/errorHandler.js';
 
 const router = express.Router();
 
@@ -21,7 +22,7 @@ router.get('/student/:studentId', async (req, res) => {
         );
         res.json(badges);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return handleApiError(res, error, 'Gagal mengambil data badge siswa.');
     }
 });
 
@@ -37,7 +38,7 @@ router.post('/calculate/:studentId', async (req, res) => {
             count: badges.length,
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return handleApiError(res, error, 'Gagal menghitung badge siswa.');
     }
 });
 
@@ -47,7 +48,7 @@ router.post('/calculate-all', async (req, res) => {
         const result = await badgeService.calculateAllBadges();
         res.json(result);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return handleApiError(res, error, 'Gagal menghitung semua badge.');
     }
 });
 
@@ -61,7 +62,8 @@ router.get('/leaderboard-with-badges', async (req, res) => {
         // Group by student
         const studentBadges = {};
         badges.forEach((badge) => {
-            const studentId = badge.studentId._id.toString();
+            if (!badge.studentId) return;
+            const studentId = badge.studentId._id ? badge.studentId._id.toString() : badge.studentId.toString();
             if (!studentBadges[studentId]) {
                 studentBadges[studentId] = {
                     student: badge.studentId,
@@ -82,7 +84,7 @@ router.get('/leaderboard-with-badges', async (req, res) => {
 
         res.json(leaderboard);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return handleApiError(res, error, 'Gagal memuat leaderboard badge.');
     }
 });
 

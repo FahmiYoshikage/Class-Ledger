@@ -3,6 +3,7 @@ import Event from '../models/Event.js';
 import EventPayment from '../models/EventPayment.js';
 import Payment from '../models/Payment.js';
 import Student from '../models/Student.js';
+import { handleApiError } from '../utils/errorHandler.js';
 
 const router = express.Router();
 
@@ -37,7 +38,7 @@ router.get('/', async (req, res) => {
 
         res.json(events);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return handleApiError(res, error, 'Gagal memuat daftar event.');
     }
 });
 
@@ -49,11 +50,11 @@ router.get('/:id', async (req, res) => {
             'name absen'
         );
         if (!event) {
-            return res.status(404).json({ message: 'Event not found' });
+            return res.status(404).json({ success: false, message: 'Event tidak ditemukan', error: 'Event tidak ditemukan' });
         }
         res.json(event);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return handleApiError(res, error, 'Gagal memuat data event.');
     }
 });
 
@@ -72,7 +73,7 @@ router.post('/', async (req, res) => {
         const newEvent = await event.save();
         res.status(201).json(newEvent);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        return handleApiError(res, error, 'Gagal membuat event.', 400);
     }
 });
 
@@ -81,7 +82,7 @@ router.patch('/:id', async (req, res) => {
     try {
         const event = await Event.findById(req.params.id);
         if (!event) {
-            return res.status(404).json({ message: 'Event not found' });
+            return res.status(404).json({ success: false, message: 'Event tidak ditemukan', error: 'Event tidak ditemukan' });
         }
 
         Object.keys(req.body).forEach((key) => {
@@ -93,7 +94,7 @@ router.patch('/:id', async (req, res) => {
         const updatedEvent = await event.save();
         res.json(updatedEvent);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        return handleApiError(res, error, 'Gagal memperbarui event.', 400);
     }
 });
 
@@ -102,16 +103,16 @@ router.delete('/:id', async (req, res) => {
     try {
         const event = await Event.findById(req.params.id);
         if (!event) {
-            return res.status(404).json({ message: 'Event not found' });
+            return res.status(404).json({ success: false, message: 'Event tidak ditemukan', error: 'Event tidak ditemukan' });
         }
 
         // Delete all event payments
         await EventPayment.deleteMany({ eventId: req.params.id });
 
         await event.deleteOne();
-        res.json({ message: 'Event deleted' });
+        res.json({ success: true, message: 'Event berhasil dihapus' });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return handleApiError(res, error, 'Gagal menghapus event.');
     }
 });
 
@@ -120,13 +121,14 @@ router.post('/:id/complete', async (req, res) => {
     try {
         const event = await Event.findById(req.params.id);
         if (!event) {
-            return res.status(404).json({ message: 'Event not found' });
+            return res.status(404).json({ success: false, message: 'Event tidak ditemukan', error: 'Event tidak ditemukan' });
         }
 
         const completion = event.checkCompletion();
 
         if (!completion.isComplete) {
             return res.status(400).json({
+                success: false,
                 message: 'Event belum mencapai target',
                 data: completion,
             });
@@ -155,12 +157,13 @@ router.post('/:id/complete', async (req, res) => {
         await event.save();
 
         res.json({
+            success: true,
             message: 'Event selesai dan surplus ditransfer ke kas',
             event,
             surplus: completion.surplus,
         });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return handleApiError(res, error, 'Gagal menyelesaikan event.');
     }
 });
 
@@ -172,7 +175,7 @@ router.get('/:id/payments', async (req, res) => {
             .sort({ date: -1 });
         res.json(payments);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return handleApiError(res, error, 'Gagal memuat pembayaran event.');
     }
 });
 
@@ -181,11 +184,11 @@ router.post('/:id/payments', async (req, res) => {
     try {
         const event = await Event.findById(req.params.id);
         if (!event) {
-            return res.status(404).json({ message: 'Event not found' });
+            return res.status(404).json({ success: false, message: 'Event tidak ditemukan', error: 'Event tidak ditemukan' });
         }
 
         if (event.status !== 'aktif') {
-            return res.status(400).json({ message: 'Event sudah tidak aktif' });
+            return res.status(400).json({ success: false, message: 'Event sudah tidak aktif', error: 'Event sudah tidak aktif' });
         }
 
         const payment = new EventPayment({
@@ -213,7 +216,7 @@ router.post('/:id/payments', async (req, res) => {
 
         res.status(201).json(populatedPayment);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        return handleApiError(res, error, 'Gagal menambahkan pembayaran event.', 400);
     }
 });
 
@@ -222,7 +225,7 @@ router.delete('/:eventId/payments/:paymentId', async (req, res) => {
     try {
         const payment = await EventPayment.findById(req.params.paymentId);
         if (!payment) {
-            return res.status(404).json({ message: 'Payment not found' });
+            return res.status(404).json({ success: false, message: 'Pembayaran tidak ditemukan', error: 'Pembayaran tidak ditemukan' });
         }
 
         const event = await Event.findById(req.params.eventId);
@@ -246,9 +249,9 @@ router.delete('/:eventId/payments/:paymentId', async (req, res) => {
         }
 
         await payment.deleteOne();
-        res.json({ message: 'Payment deleted' });
+        res.json({ success: true, message: 'Pembayaran event berhasil dihapus' });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return handleApiError(res, error, 'Gagal menghapus pembayaran event.');
     }
 });
 
@@ -257,12 +260,12 @@ router.patch('/:eventId/payments/:paymentId', async (req, res) => {
     try {
         const payment = await EventPayment.findById(req.params.paymentId);
         if (!payment) {
-            return res.status(404).json({ message: 'Payment not found' });
+            return res.status(404).json({ success: false, message: 'Pembayaran tidak ditemukan', error: 'Pembayaran tidak ditemukan' });
         }
 
         const event = await Event.findById(req.params.eventId);
         if (!event) {
-            return res.status(404).json({ message: 'Event not found' });
+            return res.status(404).json({ success: false, message: 'Event tidak ditemukan', error: 'Event tidak ditemukan' });
         }
 
         // Store old amount to adjust event total
@@ -311,7 +314,7 @@ router.patch('/:eventId/payments/:paymentId', async (req, res) => {
 
         res.json(populatedPayment);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        return handleApiError(res, error, 'Gagal memperbarui pembayaran event.', 400);
     }
 });
 

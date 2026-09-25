@@ -1,5 +1,6 @@
 import express from 'express';
 import Setting from '../models/Setting.js';
+import { handleApiError } from '../utils/errorHandler.js';
 
 const router = express.Router();
 
@@ -48,7 +49,7 @@ router.get('/current-week', async (req, res) => {
             startDate: startDate,
         });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return handleApiError(res, error, 'Gagal menghitung minggu berjalan.');
     }
 });
 
@@ -95,7 +96,7 @@ router.get('/public', async (req, res) => {
             accumulatedWeeks: Number(accumulatedWeeks?.value) || 7,
         });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return handleApiError(res, error, 'Gagal mengambil pengaturan publik.');
     }
 });
 
@@ -105,7 +106,7 @@ router.get('/', async (req, res) => {
         const settings = await Setting.find();
         res.json(settings);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return handleApiError(res, error, 'Gagal mengambil daftar pengaturan.');
     }
 });
 
@@ -114,11 +115,11 @@ router.get('/:key', async (req, res) => {
     try {
         const setting = await Setting.findOne({ key: req.params.key });
         if (!setting) {
-            return res.status(404).json({ message: 'Setting not found' });
+            return res.status(404).json({ success: false, message: 'Pengaturan tidak ditemukan', error: 'Pengaturan tidak ditemukan' });
         }
         res.json(setting);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return handleApiError(res, error, 'Gagal mengambil pengaturan.');
     }
 });
 
@@ -130,7 +131,7 @@ router.post('/', async (req, res) => {
         if (!key || value === undefined) {
             return res
                 .status(400)
-                .json({ message: 'Key and value are required' });
+                .json({ success: false, message: 'Key dan value wajib diisi', error: 'Key dan value wajib diisi' });
         }
 
         // If value is null, delete the setting instead of saving null
@@ -147,7 +148,7 @@ router.post('/', async (req, res) => {
 
         res.json(setting);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        return handleApiError(res, error, 'Gagal menyimpan pengaturan.', 400);
     }
 });
 
@@ -156,11 +157,11 @@ router.delete('/:key', async (req, res) => {
     try {
         const setting = await Setting.findOneAndDelete({ key: req.params.key });
         if (!setting) {
-            return res.status(404).json({ message: 'Setting not found' });
+            return res.status(404).json({ success: false, message: 'Pengaturan tidak ditemukan', error: 'Pengaturan tidak ditemukan' });
         }
-        res.json({ message: 'Setting deleted' });
+        res.json({ success: true, message: 'Setting deleted' });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return handleApiError(res, error, 'Gagal menghapus pengaturan.');
     }
 });
 

@@ -5,6 +5,7 @@ import { createAuditLog } from '../middleware/auditLog.js';
 import {
     authLimiter,
 } from '../middleware/rateLimiter.js';
+import handleApiError from '../utils/errorHandler.js';
 
 const router = express.Router();
 
@@ -59,12 +60,7 @@ router.post('/init-admin', async (req, res) => {
             },
         });
     } catch (error) {
-        console.error('Init admin error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to create admin',
-            error: error.message,
-        });
+        return handleApiError(res, error, 'Gagal membuat akun admin');
     }
 });
 
@@ -130,12 +126,7 @@ router.post('/login', authLimiter, async (req, res) => {
             },
         });
     } catch (error) {
-        console.error('Login error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Login failed',
-            error: error.message,
-        });
+        return handleApiError(res, error, 'Login gagal. Terjadi kesalahan pada server.');
     }
 });
 
@@ -156,12 +147,7 @@ router.get('/me', authenticate, async (req, res) => {
             },
         });
     } catch (error) {
-        console.error('Get user error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to get user info',
-            error: error.message,
-        });
+        return handleApiError(res, error, 'Gagal mengambil informasi profil');
     }
 });
 
@@ -213,12 +199,7 @@ router.post(
                 message: 'Password changed successfully',
             });
         } catch (error) {
-            console.error('Change password error:', error);
-            res.status(500).json({
-                success: false,
-                message: 'Failed to change password',
-                error: error.message,
-            });
+            return handleApiError(res, error, 'Gagal mengubah kata sandi');
         }
     }
 );
@@ -233,12 +214,7 @@ router.post('/logout', authenticate, async (req, res) => {
             message: 'Logged out successfully',
         });
     } catch (error) {
-        console.error('Logout error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Logout failed',
-            error: error.message,
-        });
+        return handleApiError(res, error, 'Gagal keluar sesi');
     }
 });
 

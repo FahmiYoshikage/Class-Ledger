@@ -4,6 +4,7 @@ import Setting from '../models/Setting.js';
 import Student from '../models/Student.js';
 import { generateToken } from '../middleware/auth.js';
 import { createAuditLog } from '../middleware/auditLog.js';
+import { handleApiError } from '../utils/errorHandler.js';
 
 const router = express.Router();
 
@@ -48,9 +49,11 @@ router.get('/status', async (req, res) => {
     } catch (error) {
         console.error('Check setup status error:', error);
         res.status(500).json({
+            success: false,
             setupCompleted: false,
             hasAdmin: false,
-            message: error.message,
+            message: 'Terjadi kesalahan saat memeriksa status setup.',
+            error: 'Terjadi kesalahan saat memeriksa status setup.',
         });
     }
 });
@@ -204,11 +207,7 @@ router.post('/initialize', async (req, res) => {
             },
         });
     } catch (error) {
-        console.error('Setup initialization error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Gagal menginisialisasi sistem: ' + error.message,
-        });
+        return handleApiError(res, error, 'Gagal menginisialisasi sistem. Silakan periksa kembali konfigurasi data.');
     }
 });
 

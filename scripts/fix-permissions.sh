@@ -6,17 +6,14 @@ echo "🔧 Fixing permissions for Docker volumes..."
 
 # Create directories if they don't exist
 mkdir -p server/public/reports
-mkdir -p server/uploads
+mkdir -p server/uploads/payment-proofs
+mkdir -p server/uploads/qr-codes
 
-# Set ownership to UID 1001 (nodejs user in container)
-sudo chown -R 1001:1001 server/public/reports
-sudo chown -R 1001:1001 server/uploads
+# Set full read/write permissions for both host user and container user (UID 1001)
+chmod -R 777 server/public/reports
+chmod -R 777 server/uploads
 
-# Set proper permissions
-chmod -R 755 server/public
-chmod -R 755 server/uploads
-
-echo "✅ Permissions fixed!"
+echo "✅ Permissions fixed (777 mode - read/write for host & container)!"
 echo "📁 Reports directory: $(ls -ld server/public/reports | awk '{print $1, $3, $4}')"
 echo "📁 Uploads directory: $(ls -ld server/uploads | awk '{print $1, $3, $4}')"
 echo ""

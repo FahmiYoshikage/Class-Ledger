@@ -1,5 +1,6 @@
 import express from 'express';
 import Student from '../models/Student.js';
+import handleApiError from '../utils/errorHandler.js';
 
 const router = express.Router();
 
@@ -9,7 +10,7 @@ router.get('/', async (req, res) => {
         const students = await Student.find().sort({ absen: 1 });
         res.json(students);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return handleApiError(res, error, 'Gagal mengambil data siswa');
     }
 });
 
@@ -22,7 +23,7 @@ router.get('/:id', async (req, res) => {
         }
         res.json(student);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return handleApiError(res, error, 'Gagal mengambil detail data siswa');
     }
 });
 
@@ -39,7 +40,7 @@ router.post('/', async (req, res) => {
         const newStudent = await student.save();
         res.status(201).json(newStudent);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        return handleApiError(res, error, 'Gagal menambahkan siswa. Periksa kelengkapan data.', 400);
     }
 });
 
@@ -64,7 +65,7 @@ router.patch('/:id', async (req, res) => {
         const updatedStudent = await student.save();
         res.json(updatedStudent);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        return handleApiError(res, error, 'Gagal memperbarui data siswa.', 400);
     }
 });
 
@@ -78,7 +79,7 @@ router.delete('/:id', async (req, res) => {
         await student.deleteOne();
         res.json({ message: 'Student deleted' });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return handleApiError(res, error, 'Gagal menghapus data siswa');
     }
 });
 

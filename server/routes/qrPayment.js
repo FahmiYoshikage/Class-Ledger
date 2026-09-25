@@ -7,6 +7,7 @@ import QRCode from '../models/QRCode.js';
 import PaymentConfirmation from '../models/PaymentConfirmation.js';
 import Payment from '../models/Payment.js';
 import Student from '../models/Student.js';
+import handleApiError from '../utils/errorHandler.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -102,12 +103,18 @@ const handleQRUpload = (req, res, next) => {
             }
             return res.status(400).json({
                 success: false,
-                message: `Upload error: ${err.message}`,
+                message: 'Gagal mengunggah berkas QR code. Pastikan ukuran di bawah 5MB.',
             });
         } else if (err) {
-            return res.status(400).json({
+            console.error('❌ Upload error in handleQRUpload:', err);
+            const isUserValidationError =
+                typeof err.message === 'string' &&
+                err.message.startsWith('Hanya file gambar');
+            return res.status(isUserValidationError ? 400 : 500).json({
                 success: false,
-                message: err.message || 'Gagal mengupload QR code',
+                message: isUserValidationError
+                    ? err.message
+                    : 'Gagal memproses upload QR code. Silakan coba lagi.',
             });
         }
         next();
@@ -120,17 +127,23 @@ const handleProofUpload = (req, res, next) => {
             if (err.code === 'LIMIT_FILE_SIZE') {
                 return res.status(400).json({
                     success: false,
-                    message: 'Ukuran file bukti foto terlalu besar. Maksimal 5MB.',
+                    message: 'Ukuran file foto terlalu besar. Maksimal 5MB.',
                 });
             }
             return res.status(400).json({
                 success: false,
-                message: `Upload error: ${err.message}`,
+                message: 'Gagal mengunggah bukti pembayaran. Pastikan ukuran di bawah 5MB.',
             });
         } else if (err) {
-            return res.status(400).json({
+            console.error('❌ Upload error in handleProofUpload:', err);
+            const isUserValidationError =
+                typeof err.message === 'string' &&
+                err.message.startsWith('Hanya file gambar');
+            return res.status(isUserValidationError ? 400 : 500).json({
                 success: false,
-                message: err.message || 'Gagal mengupload bukti pembayaran',
+                message: isUserValidationError
+                    ? err.message
+                    : 'Gagal memproses upload bukti transfer. Silakan coba beberapa saat lagi atau hubungi bendahara.',
             });
         }
         next();
@@ -159,12 +172,7 @@ router.get('/active', async (req, res) => {
             qrCode: activeQR,
         });
     } catch (error) {
-        console.error('❌ Error fetching active QR code:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Gagal mengambil QR code',
-            error: error.message,
-        });
+        return handleApiError(res, error, 'Gagal mengambil QR code aktif');
     }
 });
 
@@ -214,12 +222,7 @@ router.post('/upload', handleQRUpload, async (req, res) => {
             message: 'QR code berhasil diupload',
         });
     } catch (error) {
-        console.error('❌ Error uploading QR code:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Gagal mengupload QR code',
-            error: error.message,
-        });
+        return handleApiError(res, error, 'Gagal mengupload QR code');
     }
 });
 
@@ -234,12 +237,7 @@ router.get('/list', async (req, res) => {
             count: qrCodes.length,
         });
     } catch (error) {
-        console.error('❌ Error fetching QR codes:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Gagal mengambil daftar QR code',
-            error: error.message,
-        });
+        return handleApiError(res, error, 'Gagal mengambil daftar QR code');
     }
 });
 
@@ -277,12 +275,7 @@ router.delete('/:id', async (req, res) => {
             message: 'QR code berhasil dihapus',
         });
     } catch (error) {
-        console.error('❌ Error deleting QR code:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Gagal menghapus QR code',
-            error: error.message,
-        });
+        return handleApiError(res, error, 'Gagal menghapus QR code');
     }
 });
 
@@ -338,12 +331,11 @@ router.post('/confirm', handleProofUpload, async (req, res) => {
                 'Konfirmasi pembayaran berhasil dikirim. Menunggu verifikasi admin.',
         });
     } catch (error) {
-        console.error('❌ Error submitting payment confirmation:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Gagal mengirim konfirmasi pembayaran',
-            error: error.message,
-        });
+        return handleApiError(
+            res,
+            error,
+            'Gagal mengirim konfirmasi pembayaran. Silakan coba beberapa saat lagi.'
+        );
     }
 });
 
@@ -362,12 +354,7 @@ router.get('/confirmations/student/:studentId', async (req, res) => {
             count: confirmations.length,
         });
     } catch (error) {
-        console.error('❌ Error fetching student confirmations:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Gagal mengambil riwayat konfirmasi',
-            error: error.message,
-        });
+        return handleApiError(res, error, 'Gagal mengambil riwayat konfirmasi');
     }
 });
 
@@ -388,12 +375,7 @@ router.get('/confirmations/pending', async (req, res) => {
             count: pendingConfirmations.length,
         });
     } catch (error) {
-        console.error('❌ Error fetching pending confirmations:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Gagal mengambil konfirmasi pending',
-            error: error.message,
-        });
+        return handleApiError(res, error, 'Gagal mengambil konfirmasi pending');
     }
 });
 
@@ -421,12 +403,7 @@ router.get('/confirmations/all', async (req, res) => {
             count: confirmations.length,
         });
     } catch (error) {
-        console.error('❌ Error fetching all confirmations:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Gagal mengambil daftar konfirmasi',
-            error: error.message,
-        });
+        return handleApiError(res, error, 'Gagal mengambil daftar konfirmasi');
     }
 });
 
@@ -492,12 +469,7 @@ router.post('/approve/:confirmationId', async (req, res) => {
             message: 'Pembayaran berhasil disetujui',
         });
     } catch (error) {
-        console.error('❌ Error approving payment:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Gagal menyetujui pembayaran',
-            error: error.message,
-        });
+        return handleApiError(res, error, 'Gagal menyetujui pembayaran');
     }
 });
 
@@ -549,12 +521,7 @@ router.post('/reject/:confirmationId', async (req, res) => {
             message: 'Pembayaran ditolak',
         });
     } catch (error) {
-        console.error('❌ Error rejecting payment:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Gagal menolak pembayaran',
-            error: error.message,
-        });
+        return handleApiError(res, error, 'Gagal menolak pembayaran');
     }
 });
 
