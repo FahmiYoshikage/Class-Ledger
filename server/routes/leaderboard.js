@@ -48,11 +48,13 @@ router.get('/', async (req, res) => {
                     : null;
 
             return {
+                _id: student._id,
                 studentId: student._id,
                 name: student.name,
                 nickname: student.nickname || student.name, // Fallback to full name
                 absen: student.absen,
                 totalDonation,
+                totalPaid: totalDonation,
                 earliestPayment,
                 paymentCount: studentPayments.length,
             };

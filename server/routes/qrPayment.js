@@ -2,85 +2,140 @@ import express from 'express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import { fileURLToPath } from 'url';
 import QRCode from '../models/QRCode.js';
 import PaymentConfirmation from '../models/PaymentConfirmation.js';
 import Payment from '../models/Payment.js';
 import Student from '../models/Student.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const UPLOADS_DIR = path.resolve(__dirname, '../uploads');
+const PROOFS_DIR = path.join(UPLOADS_DIR, 'payment-proofs');
+const QR_CODES_DIR = path.join(UPLOADS_DIR, 'qr-codes');
+
+// Ensure upload directories exist safely
+[UPLOADS_DIR, PROOFS_DIR, QR_CODES_DIR].forEach((dir) => {
+    if (!fs.existsSync(dir)) {
+        try {
+            fs.mkdirSync(dir, { recursive: true });
+        } catch (err) {
+            console.error(`Failed to ensure upload directory ${dir}:`, err);
+        }
+    }
+});
 
 const router = express.Router();
 
 // Configure multer for image uploads
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const uploadDir = 'uploads/qr-codes';
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
+        if (!fs.existsSync(QR_CODES_DIR)) {
+            fs.mkdirSync(QR_CODES_DIR, { recursive: true });
         }
-        cb(null, uploadDir);
+        cb(null, QR_CODES_DIR);
     },
     filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-        cb(null, 'qr-' + uniqueSuffix + path.extname(file.originalname));
+        const ext = path.extname(file.originalname).toLowerCase();
+        cb(null, 'qr-' + uniqueSuffix + ext);
     },
 });
 
 const proofStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const uploadDir = 'uploads/payment-proofs';
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
+        if (!fs.existsSync(PROOFS_DIR)) {
+            fs.mkdirSync(PROOFS_DIR, { recursive: true });
         }
-        cb(null, uploadDir);
+        cb(null, PROOFS_DIR);
     },
     filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-        cb(null, 'proof-' + uniqueSuffix + path.extname(file.originalname));
+        const ext = path.extname(file.originalname).toLowerCase();
+        cb(null, 'proof-' + uniqueSuffix + ext);
     },
 });
+
+const imageFileFilter = (req, file, cb) => {
+    const allowedExtensions = /jpeg|jpg|png|webp|heic|heif/i;
+    const ext = path
+        .extname(file.originalname || '')
+        .toLowerCase()
+        .replace('.', '');
+    const isImageMime =
+        file.mimetype?.startsWith('image/') ||
+        allowedExtensions.test(file.mimetype || '');
+    const hasValidExt = !ext || allowedExtensions.test(ext);
+
+    if (isImageMime && hasValidExt) {
+        return cb(null, true);
+    } else {
+        cb(
+            new Error(
+                'Hanya file gambar (JPG, PNG, WEBP) yang diperbolehkan'
+            )
+        );
+    }
+};
 
 const uploadQR = multer({
     storage: storage,
     limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
-    fileFilter: (req, file, cb) => {
-        const allowedTypes = /jpeg|jpg|png/;
-        const extname = allowedTypes.test(
-            path.extname(file.originalname).toLowerCase()
-        );
-        const mimetype = allowedTypes.test(file.mimetype);
-
-        if (mimetype && extname) {
-            return cb(null, true);
-        } else {
-            cb(
-                new Error(
-                    'Hanya file gambar (JPEG, JPG, PNG) yang diperbolehkan'
-                )
-            );
-        }
-    },
+    fileFilter: imageFileFilter,
 });
 
 const uploadProof = multer({
     storage: proofStorage,
     limits: { fileSize: 5 * 1024 * 1024 },
-    fileFilter: (req, file, cb) => {
-        const allowedTypes = /jpeg|jpg|png/;
-        const extname = allowedTypes.test(
-            path.extname(file.originalname).toLowerCase()
-        );
-        const mimetype = allowedTypes.test(file.mimetype);
-
-        if (mimetype && extname) {
-            return cb(null, true);
-        } else {
-            cb(
-                new Error(
-                    'Hanya file gambar (JPEG, JPG, PNG) yang diperbolehkan'
-                )
-            );
-        }
-    },
+    fileFilter: imageFileFilter,
 });
+
+// Middleware wrappers to cleanly handle multer errors
+const handleQRUpload = (req, res, next) => {
+    uploadQR.single('qrImage')(req, res, (err) => {
+        if (err instanceof multer.MulterError) {
+            if (err.code === 'LIMIT_FILE_SIZE') {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Ukuran file QR code terlalu besar. Maksimal 5MB.',
+                });
+            }
+            return res.status(400).json({
+                success: false,
+                message: `Upload error: ${err.message}`,
+            });
+        } else if (err) {
+            return res.status(400).json({
+                success: false,
+                message: err.message || 'Gagal mengupload QR code',
+            });
+        }
+        next();
+    });
+};
+
+const handleProofUpload = (req, res, next) => {
+    uploadProof.single('proofImage')(req, res, (err) => {
+        if (err instanceof multer.MulterError) {
+            if (err.code === 'LIMIT_FILE_SIZE') {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Ukuran file bukti foto terlalu besar. Maksimal 5MB.',
+                });
+            }
+            return res.status(400).json({
+                success: false,
+                message: `Upload error: ${err.message}`,
+            });
+        } else if (err) {
+            return res.status(400).json({
+                success: false,
+                message: err.message || 'Gagal mengupload bukti pembayaran',
+            });
+        }
+        next();
+    });
+};
 
 // ========== QR CODE MANAGEMENT (ADMIN) ==========
 
@@ -114,7 +169,7 @@ router.get('/active', async (req, res) => {
 });
 
 // POST /api/qr-payment/upload - Upload new QR code (admin only)
-router.post('/upload', uploadQR.single('qrImage'), async (req, res) => {
+router.post('/upload', handleQRUpload, async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({
@@ -201,9 +256,16 @@ router.delete('/:id', async (req, res) => {
         }
 
         // Delete file from filesystem
-        const filePath = path.join(process.cwd(), qrCode.imageUrl);
-        if (fs.existsSync(filePath)) {
-            fs.unlinkSync(filePath);
+        if (qrCode.imageUrl) {
+            const filename = path.basename(qrCode.imageUrl);
+            const filePath = path.join(QR_CODES_DIR, filename);
+            if (fs.existsSync(filePath)) {
+                try {
+                    fs.unlinkSync(filePath);
+                } catch (unlinkErr) {
+                    console.warn('Could not unlink QR file:', unlinkErr);
+                }
+            }
         }
 
         await QRCode.findByIdAndDelete(req.params.id);
@@ -227,7 +289,7 @@ router.delete('/:id', async (req, res) => {
 // ========== PAYMENT CONFIRMATION (STUDENT) ==========
 
 // POST /api/qr-payment/confirm - Submit payment confirmation with proof
-router.post('/confirm', uploadProof.single('proofImage'), async (req, res) => {
+router.post('/confirm', handleProofUpload, async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({

@@ -136,9 +136,10 @@ function QRPayment() {
         setSubmitting(true);
 
         try {
+            // Note: Let browser set Content-Type with boundary for multipart/form-data
             const response = await api.post('/qr-payment/confirm', formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data',
+                    'Content-Type': undefined,
                 },
             });
 
@@ -148,9 +149,13 @@ function QRPayment() {
                 setMessage(response.data?.message || 'Gagal mengirim konfirmasi');
             }
         } catch (error) {
-            setMessage(
-                error.response?.data?.message || 'Gagal mengirim konfirmasi pembayaran.'
-            );
+            const errMsg =
+                error.response?.data?.message ||
+                error.response?.data?.error ||
+                (error.response?.status === 413
+                    ? 'Ukuran foto terlalu besar. Maksimal 5MB.'
+                    : error.message || 'Gagal mengirim konfirmasi pembayaran.');
+            setMessage(errMsg);
         } finally {
             setSubmitting(false);
         }
@@ -248,9 +253,13 @@ function QRPayment() {
                             <button
                                 onClick={() => {
                                     setSubmitSuccess(false);
+                                    setSelectedStudent('');
+                                    setAmount('');
+                                    setTunggakanData(null);
                                     setProofImage(null);
                                     setPreviewUrl('');
                                     setNotes('');
+                                    setMessage('');
                                 }}
                                 className="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.06] dark:hover:bg-white/[0.1] text-xs font-semibold text-slate-700 dark:text-white border border-slate-200 dark:border-white/10 transition cursor-pointer"
                             >
@@ -452,7 +461,7 @@ function QRPayment() {
                                         <div className="relative border-2 border-dashed border-slate-300 dark:border-white/[0.15] hover:border-indigo-500/50 rounded-2xl p-4 text-center cursor-pointer transition-all bg-slate-50/50 dark:bg-white/[0.015]">
                                             <input
                                                 type="file"
-                                                accept="image/jpeg,image/jpg,image/png"
+                                                accept="image/*"
                                                 onChange={handleImageChange}
                                                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                                                 required
@@ -475,7 +484,7 @@ function QRPayment() {
                                                     <p className="text-xs font-medium text-slate-700 dark:text-white/80">
                                                         Klik atau drag file bukti transfer ke sini
                                                     </p>
-                                                    <p className="text-[11px] text-slate-400 dark:text-white/30">JPG, JPEG, PNG (Maksimal 5MB)</p>
+                                                    <p className="text-[11px] text-slate-400 dark:text-white/30">JPG, JPEG, PNG, WEBP (Maksimal 5MB)</p>
                                                 </div>
                                             )}
                                         </div>

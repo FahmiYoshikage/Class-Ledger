@@ -23,3 +23,13 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# Uploads and reports
+uploads/*
+!uploads/.gitkeep
+!uploads/payment-proofs/
+!uploads/payment-proofs/.gitkeep
+!uploads/qr-codes/
+!uploads/qr-codes/.gitkeep
+public/reports/*
+!public/reports/.gitkeep

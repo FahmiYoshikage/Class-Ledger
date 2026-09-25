@@ -150,7 +150,7 @@ function QRPaymentAdmin() {
         try {
             const response = await api.post('/qr-payment/upload', formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data',
+                    'Content-Type': undefined,
                 },
             });
 

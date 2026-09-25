@@ -587,7 +587,7 @@ const PublicDashboard = () => {
                             const rankIcons = ['🥇', '🥈', '🥉'];
                             return (
                                 <div
-                                    key={member._id}
+                                    key={member.studentId || member._id || index}
                                     className="flex items-center justify-between p-4 sm:p-5 hover:bg-slate-100/60 dark:hover:bg-white/[0.02] transition-colors"
                                 >
                                     <div className="flex items-center gap-3.5 min-w-0">
@@ -595,14 +595,16 @@ const PublicDashboard = () => {
                                             {index < 3 ? rankIcons[index] : <span className="text-xs text-slate-500 dark:text-white/40 font-semibold">{index + 1}</span>}
                                         </div>
                                         <div className="min-w-0">
-                                            <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">{member.name}</p>
+                                            <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">
+                                                {member.name || member.nickname}
+                                            </p>
                                             <p className="text-xs text-slate-500 dark:text-white/40">
                                                 Absen #{member.absen} • {member.paymentCount} Transaksi
                                             </p>
                                         </div>
                                     </div>
                                     <p className="text-sm font-bold text-amber-600 dark:text-amber-300 flex-shrink-0 ml-4">
-                                        {formatCurrency(member.totalPaid)}
+                                        {formatCurrency(member.totalDonation ?? member.totalPaid ?? 0)}
                                     </p>
                                 </div>
                             );

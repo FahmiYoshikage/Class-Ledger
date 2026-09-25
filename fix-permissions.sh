@@ -6,7 +6,8 @@ echo "🔧 Fixing permissions for Docker volumes..."
 
 # Create directories if they don't exist
 mkdir -p server/public/reports
-mkdir -p server/uploads
+mkdir -p server/uploads/payment-proofs
+mkdir -p server/uploads/qr-codes
 
 # Set ownership to UID 1001 (nodejs user in container)
 sudo chown -R 1001:1001 server/public/reports
