@@ -24,14 +24,14 @@ export async function refreshWhatsappPaymentInfo() {
                 return `• ${acc.bankName || acc.provider}: *${acc.accountNumber}*${holder}`;
             });
             const notesLine = notes ? `\n_${notes}_\n` : '\n_Mohon konfirmasi setelah transfer ya!_ ✅\n';
-            dynamicPaymentInfoString = `\n━━━━━━━━━━━━━━━━━━━━\n💳 *INFORMASI PEMBAYARAN*\n${lines.join('\n')}\n━━━━━━━━━━━━━━━━━━━━${notesLine}\n🏆 *Cek Leaderboard Donatur Kelas:*\n${process.env.BASE_URL || ''}/leaderboard\n_Raih posisi teratas dan jadi donatur terbaik!_ 🚀`;
+            dynamicPaymentInfoString = `\n━━━━━━━━━━━━━━━━━━━━\n💳 *INFORMASI PEMBAYARAN*\n${lines.join('\n')}\n━━━━━━━━━━━━━━━━━━━━${notesLine}\n🏆 *Cek Leaderboard Donatur Kelas:*\n${process.env.BASE_URL || 'https://class.crud.my.id'}/leaderboard\n_Raih posisi teratas dan jadi donatur terbaik!_ 🚀`;
             return dynamicPaymentInfoString;
         }
     } catch (e) {
         // Fallback
     }
 
-    dynamicPaymentInfoString = `\n━━━━━━━━━━━━━━━━━━━━\n💳 *INFORMASI PEMBAYARAN*\nSilakan hubungi Bendahara Kelas untuk rekening pembayaran.\n━━━━━━━━━━━━━━━━━━━━\n_Mohon konfirmasi setelah transfer ya!_ ✅\n\n🏆 *Cek Leaderboard Donatur Kelas:*\n${process.env.BASE_URL || ''}/leaderboard\n_Raih posisi teratas dan jadi donatur terbaik!_ 🚀`;
+    dynamicPaymentInfoString = `\n━━━━━━━━━━━━━━━━━━━━\n💳 *INFORMASI PEMBAYARAN*\nSilakan hubungi Bendahara Kelas untuk rekening pembayaran.\n━━━━━━━━━━━━━━━━━━━━\n_Mohon konfirmasi setelah transfer ya!_ ✅\n\n🏆 *Cek Leaderboard Donatur Kelas:*\n${process.env.BASE_URL || 'https://class.crud.my.id'}/leaderboard\n_Raih posisi teratas dan jadi donatur terbaik!_ 🚀`;
     return dynamicPaymentInfoString;
 }
 
@@ -39,7 +39,7 @@ const getPaymentInfo = () => {
     if (dynamicPaymentInfoString) {
         return dynamicPaymentInfoString;
     }
-    return `\n━━━━━━━━━━━━━━━━━━━━\n💳 *INFORMASI PEMBAYARAN*\nSilakan hubungi Bendahara Kelas untuk rekening pembayaran.\n━━━━━━━━━━━━━━━━━━━━\n_Mohon konfirmasi setelah transfer ya!_ ✅\n\n🏆 *Cek Leaderboard Donatur Kelas:*\n${process.env.BASE_URL || ''}/leaderboard\n_Raih posisi teratas dan jadi donatur terbaik!_ 🚀`;
+    return `\n━━━━━━━━━━━━━━━━━━━━\n💳 *INFORMASI PEMBAYARAN*\nSilakan hubungi Bendahara Kelas untuk rekening pembayaran.\n━━━━━━━━━━━━━━━━━━━━\n_Mohon konfirmasi setelah transfer ya!_ ✅\n\n🏆 *Cek Leaderboard Donatur Kelas:*\n${process.env.BASE_URL || 'https://class.crud.my.id'}/leaderboard\n_Raih posisi teratas dan jadi donatur terbaik!_ 🚀`;
 };
 
 // Backward-compatible object that evaluates dynamic string in template literals

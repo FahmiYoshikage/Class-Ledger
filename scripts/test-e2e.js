@@ -8,7 +8,7 @@
  *
  * Cara menjalankan:
  *   node scripts/test-e2e.js
- *   node scripts/test-e2e.js --base-url https://triforce.crud.my.id
+ *   node scripts/test-e2e.js --base-url https://class.crud.my.id
  *   npm test
  * =============================================================================
  */

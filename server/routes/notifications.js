@@ -1139,7 +1139,7 @@ router.get('/broadcast-preview', async (req, res) => {
             QRCode.findOne({ isActive: true }).sort({ uploadedAt: -1 }),
         ]);
 
-        const baseUrl = process.env.BASE_URL || 'https://triforce.crud.my.id';
+        const baseUrl = process.env.BASE_URL || 'https://class.crud.my.id';
         const defaultGroupId =
             savedGroupSetting?.value || process.env.FONNTE_GROUP_ID || '';
 

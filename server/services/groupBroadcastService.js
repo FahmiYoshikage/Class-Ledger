@@ -176,6 +176,8 @@ class GroupBroadcastService {
                         )}`
                 );
 
+            const baseUrl = process.env.BASE_URL || 'https://class.crud.my.id';
+
             const summaryTpl = `
 📊 *UPDATE KAS KELAS (RINGKAS)* 📊
 ${className} - ${semesterName}
@@ -191,7 +193,7 @@ ${className} - ${semesterName}
 ━━━━━━━━━━━━━━━━━━━━
 ${paymentInfoBlock}
 
-🏆 Cek Rincian: ${process.env.BASE_URL || ''}/leaderboard
+🏆 Cek Rincian: ${baseUrl}/leaderboard
 _Terima kasih atas kerja samanya!_ 🙏
             `.trim();
 
@@ -216,7 +218,7 @@ _Yuk segera dilunasi ya teman-teman agar operasional kas kelas tetap aman!_ 💪
 ━━━━━━━━━━━━━━━━━━━━
 ${paymentInfoBlock}
 
-🏆 Cek Rincian: ${process.env.BASE_URL || ''}/leaderboard
+🏆 Cek Rincian: ${baseUrl}/leaderboard
             `.trim();
 
             const fullTpl = `
@@ -262,7 +264,7 @@ _Segera lunasi ya teman-teman!_ 💪`
 ${paymentInfoBlock}
 
 🏆 Cek Leaderboard Lengkap:
-${process.env.BASE_URL || ''}/leaderboard
+${baseUrl}/leaderboard
 
 💡 _Keterangan:_
 _• Data hanya menghitung pembayaran siswa_
@@ -272,7 +274,6 @@ _Laporan ini dikirim otomatis setiap minggu_
 _Terima kasih atas partisipasinya!_ 🙏
             `.trim();
 
-            const baseUrl = process.env.BASE_URL || 'https://triforce.crud.my.id';
             const qrisTpl = `
 📢 *PENGUMUMAN PEMBAYARAN KAS KELAS VIA QRIS & WEB* 📢
 ${className.toUpperCase()}
@@ -438,7 +439,7 @@ Yuk bayar kas tepat waktu demi kelancaran kegiatan kelas kita bersama! Terima ka
             const message = customMessage || (await this.generateSummaryReport());
 
             let attachmentUrl = null;
-            const baseUrl = process.env.BASE_URL || 'https://triforce.crud.my.id';
+            const baseUrl = process.env.BASE_URL || 'https://class.crud.my.id';
 
             // Resolve attachmentType:
             // 1. 'qris': attach active QR Code image
