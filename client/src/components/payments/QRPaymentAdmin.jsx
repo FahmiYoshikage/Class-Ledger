@@ -1,6 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import api from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import {
+    Eye,
+    Download,
+    Copy,
+    Check,
+    X,
+    Search,
+    Filter,
+    MessageCircle,
+    Image as ImageIcon,
+    FileText,
+    QrCode,
+} from 'lucide-react';
 
 const QUICK_REJECTION_REASONS = [
     'Bukti transfer tidak terbaca / buram',
@@ -95,6 +108,117 @@ function QRPaymentAdmin() {
         rejectionReason: '',
         submitting: false,
     });
+
+    // Detail & Proof modal state
+    const [detailModal, setDetailModal] = useState({
+        isOpen: false,
+        confirmation: null,
+    });
+    const [copiedSummary, setCopiedSummary] = useState(false);
+
+    // History search and filter state
+    const [historySearch, setHistorySearch] = useState('');
+    const [historyStatusFilter, setHistoryStatusFilter] = useState('all'); // 'all', 'approved', 'rejected', 'pending'
+
+    // Filtered confirmations for history tab
+    const filteredConfirmations = useMemo(() => {
+        return allConfirmations.filter((conf) => {
+            if (historyStatusFilter !== 'all' && conf.status !== historyStatusFilter) {
+                return false;
+            }
+            if (historySearch.trim()) {
+                const query = historySearch.toLowerCase();
+                const studentName = (conf.studentId?.name || '').toLowerCase();
+                const studentPhone = (conf.studentId?.phoneNumber || conf.studentId?.phone || '').toLowerCase();
+                const notes = (conf.notes || '').toLowerCase();
+                const reviewer = (conf.reviewedBy || '').toLowerCase();
+                const reason = (conf.rejectionReason || '').toLowerCase();
+
+                return (
+                    studentName.includes(query) ||
+                    studentPhone.includes(query) ||
+                    notes.includes(query) ||
+                    reviewer.includes(query) ||
+                    reason.includes(query)
+                );
+            }
+            return true;
+        });
+    }, [allConfirmations, historyStatusFilter, historySearch]);
+
+    const openDetailModal = (conf) => {
+        setDetailModal({
+            isOpen: true,
+            confirmation: conf,
+        });
+    };
+
+    const closeDetailModal = () => {
+        setDetailModal({
+            isOpen: false,
+            confirmation: null,
+        });
+    };
+
+    const handleDownloadProof = (imageUrl, studentName) => {
+        if (!imageUrl) return;
+        const cleanName = (studentName || 'Siswa').replace(/[^a-zA-Z0-9]/g, '_');
+        const link = document.createElement('a');
+        link.href = imageUrl;
+        link.download = `Bukti_Transfer_${cleanName}_${new Date().toISOString().slice(0, 10)}.png`;
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    const handleCopySummary = (conf) => {
+        const sName = conf.studentId?.name || 'Siswa';
+        const sAbsen = conf.studentId?.absen ? ` (Absen #${conf.studentId.absen})` : '';
+        const phone = conf.studentId?.phoneNumber || conf.studentId?.phone || '-';
+        const amountStr = `Rp ${conf.amount?.toLocaleString('id-ID')}`;
+        const statusStr =
+            conf.status === 'approved'
+                ? 'Disetujui'
+                : conf.status === 'rejected'
+                ? `Ditolak (${conf.rejectionReason || '-'})`
+                : 'Pending';
+        const dateStr = new Date(conf.submittedAt).toLocaleString('id-ID');
+        const reviewerStr = conf.reviewedBy || '-';
+        const proofUrl = conf.proofImageUrl
+            ? conf.proofImageUrl.startsWith('http')
+                ? conf.proofImageUrl
+                : `${window.location.origin}${conf.proofImageUrl}`
+            : '-';
+
+        const text = `📋 [CATATAN PEMBAYARAN QR KAS]\n• Siswa: ${sName}${sAbsen}\n• No. WA: ${phone}\n• Nominal: ${amountStr}\n• Status: ${statusStr}\n• Waktu: ${dateStr}\n• Reviewer: ${reviewerStr}\n• Link Bukti: ${proofUrl}`;
+
+        navigator.clipboard.writeText(text);
+        setCopiedSummary(true);
+        setTimeout(() => setCopiedSummary(false), 2000);
+    };
+
+    const handleApproveFromDetail = async (conf) => {
+        closeDetailModal();
+        await handleApprove(conf);
+    };
+
+    const handleRejectFromDetail = (conf) => {
+        closeDetailModal();
+        openRejectModal(conf);
+    };
+
+    // Close modals on Escape key
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                if (detailModal.isOpen) closeDetailModal();
+                if (rejectModal.isOpen) closeRejectModal();
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [detailModal.isOpen, rejectModal.isOpen]);
 
     // Upload form state
     const [uploadForm, setUploadForm] = useState({
@@ -442,17 +566,21 @@ function QRPaymentAdmin() {
                                     )}
 
                                     <div className="mb-4">
-                                        <img
-                                            src={conf.proofImageUrl}
-                                            alt="Bukti Transfer"
-                                            className="w-full rounded-lg border border-slate-200 dark:border-white/10 cursor-pointer hover:opacity-90 transition"
-                                            onClick={() =>
-                                                window.open(
-                                                    conf.proofImageUrl,
-                                                    '_blank'
-                                                )
-                                            }
-                                        />
+                                        <div
+                                            className="relative group cursor-pointer rounded-xl overflow-hidden border border-slate-200 dark:border-white/10 bg-slate-950 flex items-center justify-center p-1"
+                                            onClick={() => openDetailModal(conf)}
+                                            title="Klik untuk melihat bukti transfer penuh"
+                                        >
+                                            <img
+                                                src={conf.proofImageUrl}
+                                                alt="Bukti Transfer"
+                                                className="w-full max-h-64 object-contain rounded-lg group-hover:scale-[1.01] transition-transform"
+                                            />
+                                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white font-semibold text-xs rounded-xl backdrop-blur-[1px]">
+                                                <Eye className="w-4 h-4" />
+                                                <span>Klik untuk Periksa Detail Bukti</span>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div className="flex space-x-3">
@@ -482,82 +610,244 @@ function QRPaymentAdmin() {
 
             {/* History Tab */}
             {activeTab === 'history' && (
-                <div>
+                <div className="space-y-4">
+                    {/* Search and Filter Bar */}
+                    <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+                        {/* Status Filters */}
+                        <div className="flex flex-wrap gap-1.5 p-1 bg-slate-100 dark:bg-white/[0.04] rounded-xl border border-slate-200 dark:border-white/10">
+                            {[
+                                { key: 'all', label: 'Semua', count: allConfirmations.length },
+                                {
+                                    key: 'approved',
+                                    label: '✓ Disetujui',
+                                    count: allConfirmations.filter((c) => c.status === 'approved').length,
+                                },
+                                {
+                                    key: 'rejected',
+                                    label: '✗ Ditolak',
+                                    count: allConfirmations.filter((c) => c.status === 'rejected').length,
+                                },
+                                {
+                                    key: 'pending',
+                                    label: '⏳ Pending',
+                                    count: allConfirmations.filter((c) => c.status === 'pending').length,
+                                },
+                            ].map((item) => (
+                                <button
+                                    key={item.key}
+                                    type="button"
+                                    onClick={() => setHistoryStatusFilter(item.key)}
+                                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 ${
+                                        historyStatusFilter === item.key
+                                            ? 'bg-white dark:bg-zinc-800 text-blue-600 dark:text-blue-400 shadow-sm'
+                                            : 'text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white'
+                                    }`}
+                                >
+                                    <span>{item.label}</span>
+                                    <span
+                                        className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
+                                            historyStatusFilter === item.key
+                                                ? 'bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300'
+                                                : 'bg-slate-200 dark:bg-white/10 text-slate-500 dark:text-white/50'
+                                        }`}
+                                    >
+                                        {item.count}
+                                    </span>
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Search Input */}
+                        <div className="relative min-w-[240px]">
+                            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                            <input
+                                type="text"
+                                value={historySearch}
+                                onChange={(e) => setHistorySearch(e.target.value)}
+                                placeholder="Cari siswa, no. WA, reviewer..."
+                                className="w-full pl-9 pr-8 py-2 text-xs bg-white dark:bg-zinc-800 border border-slate-300 dark:border-white/10 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            {historySearch && (
+                                <button
+                                    type="button"
+                                    onClick={() => setHistorySearch('')}
+                                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-white"
+                                >
+                                    <X className="w-3.5 h-3.5" />
+                                </button>
+                            )}
+                        </div>
+                    </div>
+
                     {loading ? (
-                        <div className="text-center py-8 text-slate-500 dark:text-white/60">Loading...</div>
+                        <div className="text-center py-12 text-slate-500 dark:text-white/60">
+                            Memuat data riwayat...
+                        </div>
                     ) : (
                         <div className="rounded-xl bg-white dark:bg-zinc-900/60 border border-slate-200 dark:border-white/10 overflow-hidden shadow-sm">
-                            <table className="min-w-full divide-y divide-slate-200 dark:divide-white/[0.06]">
-                                <thead className="bg-slate-50 dark:bg-white/[0.04]">
-                                    <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-white/60 uppercase">
-                                            Siswa
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-white/60 uppercase">
-                                            Jumlah
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-white/60 uppercase">
-                                            Status
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-white/60 uppercase">
-                                            Tanggal
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-white/60 uppercase">
-                                            Reviewer
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-slate-200 dark:divide-white/[0.06]">
-                                    {allConfirmations.map((conf) => (
-                                        <tr key={conf._id} className="hover:bg-slate-50/50 dark:hover:bg-white/[0.02]">
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-sm font-medium text-slate-900 dark:text-white">
-                                                    {conf.studentId?.name || 'Siswa'}
-                                                </div>
-                                                <div className="text-xs text-slate-400 font-mono">
-                                                    {conf.studentId?.phoneNumber || conf.studentId?.phone || ''}
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-sm font-semibold text-slate-900 dark:text-white">
-                                                    Rp
-                                                    {conf.amount.toLocaleString(
-                                                        'id-ID'
-                                                    )}
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <span
-                                                    className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full border ${
-                                                        conf.status ===
-                                                        'approved'
-                                                            ? 'bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-500/20'
-                                                            : conf.status ===
-                                                              'rejected'
-                                                            ? 'bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-500/20'
-                                                            : 'bg-amber-50 dark:bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-500/20'
-                                                    }`}
-                                                >
-                                                    {conf.status === 'approved' ? '✓ Disetujui' : conf.status === 'rejected' ? '✗ Ditolak' : '⏳ Pending'}
-                                                </span>
-                                                {conf.status === 'rejected' && conf.rejectionReason && (
-                                                    <div className="text-xs text-rose-600 dark:text-rose-400 mt-1 max-w-[220px] truncate" title={conf.rejectionReason}>
-                                                        💬 {conf.rejectionReason}
-                                                    </div>
-                                                )}
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500 dark:text-white/60">
-                                                {new Date(
-                                                    conf.submittedAt
-                                                ).toLocaleDateString('id-ID')}
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500 dark:text-white/60">
-                                                {conf.reviewedBy || '-'}
-                                            </td>
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full divide-y divide-slate-200 dark:divide-white/[0.06]">
+                                    <thead className="bg-slate-50 dark:bg-white/[0.04]">
+                                        <tr>
+                                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 dark:text-white/60 uppercase tracking-wider">
+                                                Bukti
+                                            </th>
+                                            <th className="px-5 py-3 text-left text-xs font-semibold text-slate-500 dark:text-white/60 uppercase tracking-wider">
+                                                Siswa
+                                            </th>
+                                            <th className="px-5 py-3 text-left text-xs font-semibold text-slate-500 dark:text-white/60 uppercase tracking-wider">
+                                                Jumlah
+                                            </th>
+                                            <th className="px-5 py-3 text-left text-xs font-semibold text-slate-500 dark:text-white/60 uppercase tracking-wider">
+                                                Status
+                                            </th>
+                                            <th className="px-5 py-3 text-left text-xs font-semibold text-slate-500 dark:text-white/60 uppercase tracking-wider">
+                                                Tanggal
+                                            </th>
+                                            <th className="px-5 py-3 text-left text-xs font-semibold text-slate-500 dark:text-white/60 uppercase tracking-wider">
+                                                Reviewer
+                                            </th>
+                                            <th className="px-5 py-3 text-center text-xs font-semibold text-slate-500 dark:text-white/60 uppercase tracking-wider">
+                                                Aksi
+                                            </th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody className="divide-y divide-slate-200 dark:divide-white/[0.06]">
+                                        {filteredConfirmations.length === 0 ? (
+                                            <tr>
+                                                <td
+                                                    colSpan={7}
+                                                    className="px-6 py-12 text-center text-sm text-slate-500 dark:text-white/50"
+                                                >
+                                                    {historySearch || historyStatusFilter !== 'all'
+                                                        ? 'Tidak ada riwayat konfirmasi yang cocok dengan filter / pencarian.'
+                                                        : 'Belum ada riwayat konfirmasi pembayaran.'}
+                                                </td>
+                                            </tr>
+                                        ) : (
+                                            filteredConfirmations.map((conf) => (
+                                                <tr
+                                                    key={conf._id}
+                                                    onClick={() => openDetailModal(conf)}
+                                                    className="hover:bg-blue-50/30 dark:hover:bg-white/[0.03] transition-colors cursor-pointer group"
+                                                    title="Klik untuk membuka detail & foto bukti transfer"
+                                                >
+                                                    {/* Bukti Thumbnail */}
+                                                    <td className="px-4 py-3 whitespace-nowrap">
+                                                        <div
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                openDetailModal(conf);
+                                                            }}
+                                                            className="relative w-12 h-12 rounded-xl overflow-hidden border border-slate-200 dark:border-white/10 bg-slate-900 shadow-sm group/thumb shrink-0 flex items-center justify-center cursor-pointer"
+                                                            title="Klik untuk melihat bukti transfer penuh"
+                                                        >
+                                                            {conf.proofImageUrl ? (
+                                                                <img
+                                                                    src={conf.proofImageUrl}
+                                                                    alt="Bukti"
+                                                                    className="w-full h-full object-cover group-hover/thumb:scale-110 transition-transform duration-200"
+                                                                    loading="lazy"
+                                                                />
+                                                            ) : (
+                                                                <ImageIcon className="w-5 h-5 text-slate-400" />
+                                                            )}
+                                                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/thumb:opacity-100 transition-opacity flex items-center justify-center text-white">
+                                                                <Eye className="w-4 h-4" />
+                                                            </div>
+                                                        </div>
+                                                    </td>
+
+                                                    {/* Siswa */}
+                                                    <td className="px-5 py-3 whitespace-nowrap">
+                                                        <div className="text-sm font-semibold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                                                            {conf.studentId?.name || 'Siswa'}
+                                                        </div>
+                                                        <div className="text-xs text-slate-400 font-mono mt-0.5">
+                                                            {conf.studentId?.absen ? `Absen #${conf.studentId.absen} • ` : ''}
+                                                            {conf.studentId?.phoneNumber || conf.studentId?.phone || 'Tanpa No. WA'}
+                                                        </div>
+                                                    </td>
+
+                                                    {/* Jumlah */}
+                                                    <td className="px-5 py-3 whitespace-nowrap">
+                                                        <div className="text-sm font-bold text-slate-900 dark:text-white font-mono">
+                                                            Rp {conf.amount?.toLocaleString('id-ID')}
+                                                        </div>
+                                                    </td>
+
+                                                    {/* Status */}
+                                                    <td className="px-5 py-3">
+                                                        <span
+                                                            className={`px-2.5 py-1 inline-flex text-xs leading-4 font-semibold rounded-full border ${
+                                                                conf.status === 'approved'
+                                                                    ? 'bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-500/20'
+                                                                    : conf.status === 'rejected'
+                                                                    ? 'bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-500/20'
+                                                                    : 'bg-amber-50 dark:bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-500/20'
+                                                        }`}
+                                                        >
+                                                            {conf.status === 'approved'
+                                                                ? '✓ Disetujui'
+                                                                : conf.status === 'rejected'
+                                                                ? '✗ Ditolak'
+                                                                : '⏳ Pending'}
+                                                        </span>
+                                                        {conf.status === 'rejected' && conf.rejectionReason && (
+                                                            <div
+                                                                className="text-xs text-rose-600 dark:text-rose-400 mt-1 max-w-[200px] truncate"
+                                                                title={conf.rejectionReason}
+                                                            >
+                                                                💬 {conf.rejectionReason}
+                                                            </div>
+                                                        )}
+                                                        {conf.notes && (
+                                                            <div
+                                                                className="text-[11px] text-slate-500 dark:text-white/50 mt-1 max-w-[200px] truncate"
+                                                                title={conf.notes}
+                                                            >
+                                                                📝 {conf.notes}
+                                                            </div>
+                                                        )}
+                                                    </td>
+
+                                                    {/* Tanggal */}
+                                                    <td className="px-5 py-3 whitespace-nowrap text-xs text-slate-500 dark:text-white/60">
+                                                        <div>{new Date(conf.submittedAt).toLocaleDateString('id-ID')}</div>
+                                                        <div className="text-[11px] text-slate-400">
+                                                            {new Date(conf.submittedAt).toLocaleTimeString('id-ID', {
+                                                                hour: '2-digit',
+                                                                minute: '2-digit',
+                                                            })}
+                                                        </div>
+                                                    </td>
+
+                                                    {/* Reviewer */}
+                                                    <td className="px-5 py-3 whitespace-nowrap text-xs text-slate-600 dark:text-white/70">
+                                                        {conf.reviewedBy || '-'}
+                                                    </td>
+
+                                                    {/* Aksi Button */}
+                                                    <td className="px-5 py-3 whitespace-nowrap text-center">
+                                                        <button
+                                                            type="button"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                openDetailModal(conf);
+                                                            }}
+                                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-500/10 hover:bg-blue-100 dark:hover:bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-500/20 text-xs font-semibold transition shadow-sm"
+                                                            title="Buka rincian lengkap & foto bukti transfer"
+                                                        >
+                                                            <Eye className="w-3.5 h-3.5" />
+                                                            <span>Lihat Detail</span>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     )}
                 </div>
@@ -903,6 +1193,330 @@ function QRPaymentAdmin() {
                                     'Kirim Penolakan'
                                 )}
                             </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Detail & Proof Modal for Record Inspection */}
+            {detailModal.isOpen && detailModal.confirmation && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/75 backdrop-blur-sm overflow-y-auto"
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget) closeDetailModal();
+                    }}
+                >
+                    <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-2xl max-w-4xl w-full my-auto shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
+                        {/* Header */}
+                        <div className="p-4 sm:p-5 border-b border-slate-200 dark:border-white/10 flex items-center justify-between bg-slate-50/70 dark:bg-white/[0.02]">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2.5 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
+                                    <FileText className="w-5 h-5" />
+                                </div>
+                                <div>
+                                    <div className="flex items-center gap-2">
+                                        <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+                                            Rincian Pembayaran QR & Bukti Transfer
+                                        </h3>
+                                        <span
+                                            className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
+                                                detailModal.confirmation.status === 'approved'
+                                                    ? 'bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-500/30'
+                                                    : detailModal.confirmation.status === 'rejected'
+                                                    ? 'bg-rose-50 dark:bg-rose-500/15 text-rose-700 dark:text-rose-300 border-rose-300 dark:border-rose-500/30'
+                                                    : 'bg-amber-50 dark:bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-500/30'
+                                            }`}
+                                        >
+                                            {detailModal.confirmation.status === 'approved'
+                                                ? '✓ Disetujui'
+                                                : detailModal.confirmation.status === 'rejected'
+                                                ? '✗ Ditolak'
+                                                : '⏳ Pending'}
+                                        </span>
+                                    </div>
+                                    <p className="text-xs text-slate-500 dark:text-white/50 mt-0.5">
+                                        ID Konfirmasi: <span className="font-mono">{detailModal.confirmation._id}</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={closeDetailModal}
+                                className="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition"
+                                title="Tutup (Esc)"
+                            >
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+
+                        {/* Body */}
+                        <div className="p-4 sm:p-6 overflow-y-auto flex-1 space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {/* Left Column: Photo Frame */}
+                                <div className="flex flex-col space-y-3">
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-white/60">
+                                            Foto Bukti Transfer
+                                        </span>
+                                        <span className="text-[11px] text-slate-400">
+                                            klik gambar untuk zoom penuh
+                                        </span>
+                                    </div>
+                                    <div className="relative rounded-2xl overflow-hidden border border-slate-200 dark:border-white/10 bg-slate-950 flex items-center justify-center p-2 min-h-[300px] max-h-[460px] group shadow-inner">
+                                        {detailModal.confirmation.proofImageUrl ? (
+                                            <img
+                                                src={detailModal.confirmation.proofImageUrl}
+                                                alt="Bukti Transfer"
+                                                className="max-h-[440px] w-auto max-w-full object-contain rounded-xl cursor-zoom-in transition-transform duration-200 group-hover:scale-[1.02]"
+                                                onClick={() =>
+                                                    window.open(detailModal.confirmation.proofImageUrl, '_blank')
+                                                }
+                                                title="Klik untuk membuka ukuran penuh di tab baru"
+                                            />
+                                        ) : (
+                                            <div className="text-center p-8 text-slate-400">
+                                                <ImageIcon className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                                                <p className="text-xs">Gambar tidak ditemukan</p>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Action Buttons for Image */}
+                                    <div className="grid grid-cols-2 gap-2 pt-1">
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                window.open(detailModal.confirmation.proofImageUrl, '_blank')
+                                            }
+                                            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 dark:bg-white/[0.06] hover:bg-slate-200 dark:hover:bg-white/[0.1] text-slate-700 dark:text-white text-xs font-semibold border border-slate-200 dark:border-white/10 transition"
+                                        >
+                                            <Eye className="w-4 h-4 text-blue-500" />
+                                            <span>Buka Tab Baru</span>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                handleDownloadProof(
+                                                    detailModal.confirmation.proofImageUrl,
+                                                    detailModal.confirmation.studentId?.name
+                                                )
+                                            }
+                                            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 dark:bg-white/[0.06] hover:bg-slate-200 dark:hover:bg-white/[0.1] text-slate-700 dark:text-white text-xs font-semibold border border-slate-200 dark:border-white/10 transition"
+                                        >
+                                            <Download className="w-4 h-4 text-emerald-500" />
+                                            <span>Unduh Gambar</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Right Column: Details */}
+                                <div className="flex flex-col justify-between space-y-4">
+                                    <div className="space-y-4">
+                                        {/* Amount Card */}
+                                        <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-500/10 via-indigo-500/5 to-transparent border border-blue-500/20 flex items-center justify-between">
+                                            <div>
+                                                <span className="text-xs font-medium text-blue-600 dark:text-blue-400">
+                                                    Nominal Transfer Siswa
+                                                </span>
+                                                <div className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mt-0.5">
+                                                    Rp {detailModal.confirmation.amount?.toLocaleString('id-ID')}
+                                                </div>
+                                            </div>
+                                            <div className="p-3 rounded-xl bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-500/30">
+                                                <QrCode className="w-6 h-6" />
+                                            </div>
+                                        </div>
+
+                                        {/* Status Explanations */}
+                                        {detailModal.confirmation.status === 'approved' && (
+                                            <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-xs text-emerald-800 dark:text-emerald-300 space-y-1">
+                                                <p className="font-semibold flex items-center gap-1.5">
+                                                    <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                                                    Pembayaran Kas Telah Disetujui
+                                                </p>
+                                                <p className="text-[11px] text-emerald-700/80 dark:text-emerald-300/80">
+                                                    Transaksi sudah otomatis dicatat ke buku kas kelas dan terhitung pada saldo serta papan peringkat leaderboard.
+                                                </p>
+                                            </div>
+                                        )}
+
+                                        {detailModal.confirmation.status === 'rejected' && (
+                                            <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/25 text-xs text-rose-800 dark:text-rose-300 space-y-1.5">
+                                                <p className="font-semibold flex items-center gap-1.5 text-rose-700 dark:text-rose-300">
+                                                    <X className="w-4 h-4 text-rose-600 dark:text-rose-400" />
+                                                    Pembayaran Ditolak dengan Alasan:
+                                                </p>
+                                                <p className="font-semibold text-rose-900 dark:text-rose-200 bg-rose-500/10 p-2.5 rounded-lg border border-rose-500/20">
+                                                    "{detailModal.confirmation.rejectionReason || 'Alasan tidak disebutkan'}"
+                                                </p>
+                                                <p className="text-[11px] text-rose-700/80 dark:text-rose-300/80">
+                                                    Pemberitahuan penolakan telah dikirimkan ke nomor WhatsApp siswa yang bersangkutan.
+                                                </p>
+                                            </div>
+                                        )}
+
+                                        {/* Student Information */}
+                                        <div className="p-4 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/10 space-y-3">
+                                            <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-white/60">
+                                                Data Siswa & Kontak
+                                            </h4>
+                                            <div className="space-y-2 text-xs">
+                                                <div className="flex justify-between items-center py-1 border-b border-slate-200/60 dark:border-white/5">
+                                                    <span className="text-slate-500 dark:text-white/50">Nama Lengkap</span>
+                                                    <span className="font-bold text-slate-900 dark:text-white text-sm">
+                                                        {detailModal.confirmation.studentId?.name || 'Siswa'}
+                                                    </span>
+                                                </div>
+                                                <div className="flex justify-between items-center py-1 border-b border-slate-200/60 dark:border-white/5">
+                                                    <span className="text-slate-500 dark:text-white/50">Nomor Absen</span>
+                                                    <span className="font-semibold text-slate-800 dark:text-white/90">
+                                                        {detailModal.confirmation.studentId?.absen
+                                                            ? `#${detailModal.confirmation.studentId.absen}`
+                                                            : '-'}
+                                                    </span>
+                                                </div>
+                                                <div className="flex justify-between items-center py-1 border-b border-slate-200/60 dark:border-white/5">
+                                                    <span className="text-slate-500 dark:text-white/50">Nomor WhatsApp</span>
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="font-mono text-slate-800 dark:text-white/90">
+                                                            {detailModal.confirmation.studentId?.phoneNumber ||
+                                                                detailModal.confirmation.studentId?.phone ||
+                                                                '-'}
+                                                        </span>
+                                                        {(detailModal.confirmation.studentId?.phoneNumber ||
+                                                            detailModal.confirmation.studentId?.phone) && (
+                                                            <a
+                                                                href={`https://wa.me/${(
+                                                                    detailModal.confirmation.studentId.phoneNumber ||
+                                                                    detailModal.confirmation.studentId.phone
+                                                                ).replace(/[^0-9]/g, '')}`}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="inline-flex items-center gap-1 text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold hover:underline"
+                                                            >
+                                                                <MessageCircle className="w-3.5 h-3.5" />
+                                                                <span>Chat WA</span>
+                                                            </a>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                {detailModal.confirmation.notes && (
+                                                    <div className="pt-1">
+                                                        <span className="text-slate-500 dark:text-white/50 block mb-1">
+                                                            Catatan Siswa:
+                                                        </span>
+                                                        <div className="p-2.5 rounded-lg bg-indigo-50/70 dark:bg-indigo-500/10 border border-indigo-200/60 dark:border-indigo-500/20 text-indigo-800 dark:text-indigo-300 italic">
+                                                            "{detailModal.confirmation.notes}"
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {/* Audit & Review History */}
+                                        <div className="p-4 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/10 space-y-2 text-xs">
+                                            <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-white/60 mb-2">
+                                                Riwayat Peninjauan & Audit
+                                            </h4>
+                                            <div className="flex justify-between py-1 border-b border-slate-200/60 dark:border-white/5">
+                                                <span className="text-slate-500 dark:text-white/50">Waktu Diajukan</span>
+                                                <span className="font-medium text-slate-800 dark:text-white/90">
+                                                    {new Date(detailModal.confirmation.submittedAt).toLocaleString(
+                                                        'id-ID',
+                                                        {
+                                                            dateStyle: 'medium',
+                                                            timeStyle: 'short',
+                                                        }
+                                                    )}
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between py-1 border-b border-slate-200/60 dark:border-white/5">
+                                                <span className="text-slate-500 dark:text-white/50">Waktu Ditinjau</span>
+                                                <span className="font-medium text-slate-800 dark:text-white/90">
+                                                    {detailModal.confirmation.reviewedAt
+                                                        ? new Date(detailModal.confirmation.reviewedAt).toLocaleString(
+                                                              'id-ID',
+                                                              {
+                                                                  dateStyle: 'medium',
+                                                                  timeStyle: 'short',
+                                                              }
+                                                          )
+                                                        : '-'}
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between py-1">
+                                                <span className="text-slate-500 dark:text-white/50">Reviewer</span>
+                                                <span className="font-bold text-slate-900 dark:text-white">
+                                                    {detailModal.confirmation.reviewedBy || '-'}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Copy Summary for Bookkeeping */}
+                                    <div className="pt-2">
+                                        <button
+                                            type="button"
+                                            onClick={() => handleCopySummary(detailModal.confirmation)}
+                                            className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-slate-100 dark:bg-white/[0.05] hover:bg-slate-200 dark:hover:bg-white/[0.1] text-slate-700 dark:text-white text-xs font-semibold border border-slate-200 dark:border-white/10 transition shadow-sm"
+                                        >
+                                            {copiedSummary ? (
+                                                <>
+                                                    <Check className="w-4 h-4 text-emerald-500" />
+                                                    <span className="text-emerald-600 dark:text-emerald-400">
+                                                        Rincian Berhasil Disalin ke Clipboard!
+                                                    </span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Copy className="w-4 h-4 text-slate-500" />
+                                                    <span>Salin Rincian untuk Kebutuhan Pencatatan</span>
+                                                </>
+                                            )}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Modal Footer */}
+                        <div className="p-4 sm:p-5 border-t border-slate-200 dark:border-white/10 bg-slate-50/70 dark:bg-white/[0.02] flex items-center justify-between gap-3">
+                            <span className="text-xs text-slate-400 dark:text-white/40 hidden sm:inline">
+                                Tekan tombol Tutup atau klik area luar modal untuk keluar
+                            </span>
+                            <div className="flex items-center gap-2 ml-auto">
+                                {detailModal.confirmation.status === 'pending' && (
+                                    <>
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                handleApproveFromDetail(detailModal.confirmation)
+                                            }
+                                            className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition flex items-center gap-1.5 shadow-sm"
+                                        >
+                                            <Check className="w-4 h-4" />
+                                            <span>Setujui</span>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                handleRejectFromDetail(detailModal.confirmation)
+                                            }
+                                            className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold transition flex items-center gap-1.5 shadow-sm"
+                                        >
+                                            <X className="w-4 h-4" />
+                                            <span>Tolak</span>
+                                        </button>
+                                    </>
+                                )}
+                                <button
+                                    type="button"
+                                    onClick={closeDetailModal}
+                                    className="px-5 py-2 rounded-xl bg-slate-200 dark:bg-white/10 hover:bg-slate-300 dark:hover:bg-white/15 text-slate-800 dark:text-white text-xs font-semibold transition"
+                                >
+                                    Tutup
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
