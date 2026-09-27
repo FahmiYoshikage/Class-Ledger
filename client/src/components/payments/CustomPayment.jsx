@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { DollarSign, Plus, X, Gift, TrendingUp } from 'lucide-react';
 import { paymentsAPI } from '../../services/api';
+import Portal from '../common/Portal';
 
 const CustomPayment = ({ onPaymentAdded }) => {
     const [showModal, setShowModal] = useState(false);
@@ -79,7 +80,8 @@ const CustomPayment = ({ onPaymentAdded }) => {
 
             {/* Modal */}
             {showModal && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50 backdrop-animate">
+                <Portal>
+                    <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50 backdrop-animate">
                     <div className="bg-white dark:bg-[#1e1e22] border border-slate-200 dark:border-white/[0.12] rounded-2xl max-w-md w-full shadow-2xl modal-animate text-slate-900 dark:text-white">
                         {/* Header */}
                         <div className="p-6 border-b border-slate-200 dark:border-white/10">
@@ -243,6 +245,7 @@ const CustomPayment = ({ onPaymentAdded }) => {
                         </form>
                     </div>
                 </div>
+                </Portal>
             )}
         </>
     );

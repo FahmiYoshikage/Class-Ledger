@@ -45,7 +45,7 @@ html:not(.dark) body {
 /* Slide up with fade */
 @keyframes slideUp {
     from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
+    to { opacity: 1; transform: none; }
 }
 
 /* Slide down for dropdowns/modals */
@@ -318,7 +318,7 @@ html:not(.dark) input[type="date"]::-webkit-calendar-picker-indicator {
 
 /* Smooth page transitions */
 .page-transition {
-    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: fadeIn 0.3s ease-out both;
 }
 
 /* ===================== SPECIAL EFFECTS ===================== */

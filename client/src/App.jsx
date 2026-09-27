@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 // xlsx, file-saver, jspdf, jspdf-autotable di-import secara dynamic
 // di dalam fungsi export untuk mengurangi memory build (~400MB hemat)
 import {
@@ -24,6 +25,8 @@ import {
     CalendarDays,
     MessageCircle,
     Settings as SettingsIcon,
+    QrCode,
+    ArrowRight,
 } from 'lucide-react';
 import Settings from './components/settings/Settings';
 import ReceiptModal from './components/payments/ReceiptModal';
@@ -40,9 +43,13 @@ import CustomPayment from './components/payments/CustomPayment';
 import NotificationManager from './components/notifications/NotificationManager';
 import DashboardAnalytics from './components/analytics/DashboardAnalytics';
 import { useAppConfig } from './context/ConfigContext';
+import { useQRPending } from './context/QRPendingContext';
+import Portal from './components/common/Portal';
 
 const App = () => {
+    const navigate = useNavigate();
     const { config, refreshConfig } = useAppConfig();
+    const { pendingCount } = useQRPending();
     const [students, setStudents] = useState([]);
     const [payments, setPayments] = useState([]);
     const [expenses, setExpenses] = useState([]);
@@ -1395,6 +1402,31 @@ const App = () => {
                 {/* Dashboard Tab */}
                 {activeTab === 'dashboard' && (
                     <div className="space-y-6">
+                        {pendingCount > 0 && (
+                            <div className="bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/25 p-4 sm:p-5 rounded-2xl glass-cyber-card flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm dark:shadow-lg dark:shadow-rose-950/20">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2.5 rounded-xl bg-rose-100 dark:bg-rose-500/15 border border-rose-300 dark:border-rose-500/30 text-rose-700 dark:text-rose-300 shrink-0">
+                                        <QrCode className="w-5 h-5 animate-pulse" />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-semibold text-slate-900 dark:text-white">
+                                            Konfirmasi Pembayaran Pending: <span className="text-rose-600 dark:text-rose-400 font-bold">{pendingCount} bukti transfer</span> menunggu verifikasi
+                                        </p>
+                                        <p className="text-xs text-slate-600 dark:text-white/50 mt-0.5">
+                                            Ada siswa yang mengunggah bukti pembayaran QRIS. Segera verifikasi agar saldo kas terupdate.
+                                        </p>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={() => navigate('/app/qr-admin')}
+                                    className="px-3.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 active:scale-95 text-white text-xs font-semibold shadow-sm transition-all shrink-0 self-end sm:self-auto flex items-center gap-1.5"
+                                >
+                                    <span>Buka QR Admin</span>
+                                    <ArrowRight className="w-3.5 h-3.5" />
+                                </button>
+                            </div>
+                        )}
+
                         {studentsWithTunggakan > 0 && (
                             <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/25 p-4 sm:p-5 rounded-2xl glass-cyber-card flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm dark:shadow-lg dark:shadow-amber-950/20">
                                 <div className="flex items-center gap-3">
@@ -2271,418 +2303,426 @@ const App = () => {
 
                 {/* Modal Add Student */}
                 {showAddStudent && (
-                    <div className="fixed inset-0 bg-black/60 dark:bg-black/70 backdrop-blur-md flex items-center justify-center p-4 z-50 backdrop-animate">
-                        <div className="bg-white dark:bg-[#1e1e22] border border-slate-200 dark:border-white/[0.12] rounded-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto modal-animate text-slate-900 dark:text-white shadow-2xl">
-                            <h3 className="text-xl font-bold mb-4 text-slate-900 dark:text-white">
-                                Tambah Siswa Baru
-                            </h3>
-                            <form onSubmit={addStudent} className="space-y-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
-                                        Nomor Absen
-                                    </label>
-                                    <input
-                                        type="number"
-                                        name="absen"
-                                        required
-                                        className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
-                                        Nama Lengkap
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        required
-                                        className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
-                                        Nama Panggilan (Opsional)
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="nickname"
-                                        placeholder="Contoh: Budi, Andi, Siti"
-                                        className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40"
-                                    />
-                                    <p className="text-xs text-slate-500 dark:text-white/60 mt-1">
-                                        Nama panggilan untuk ditampilkan di leaderboard
-                                    </p>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
-                                        Nomor WhatsApp (Opsional)
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="phoneNumber"
-                                        placeholder="08xxxxxxxxxx atau 628xxxxxxxxxx"
-                                        className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40"
-                                    />
-                                    <p className="text-xs text-slate-500 dark:text-white/60 mt-1">
-                                        Format: 08xxx atau 628xxx (tanpa spasi/strip)
-                                    </p>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <input
-                                        type="checkbox"
-                                        name="enableNotification"
-                                        id="enableNotification"
-                                        defaultChecked
-                                        className="w-4 h-4 text-indigo-600 rounded bg-slate-100 dark:bg-white/[0.04] border-slate-300 dark:border-white/[0.1]"
-                                    />
-                                    <label
-                                        htmlFor="enableNotification"
-                                        className="text-sm text-slate-700 dark:text-white/60"
-                                    >
-                                        Aktifkan notifikasi WhatsApp
-                                    </label>
-                                </div>
-                                <div className="flex gap-3">
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowAddStudent(false)}
-                                        className="flex-1 px-4 py-2 border border-slate-300 dark:border-white/[0.12] rounded-xl hover:bg-slate-100 dark:hover:bg-white/[0.07] transition text-slate-700 dark:text-white/60 font-medium"
-                                    >
-                                        Batal
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        className="flex-1 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-medium shadow-sm transition"
-                                    >
-                                        Simpan
-                                    </button>
-                                </div>
-                            </form>
+                    <Portal>
+                        <div className="fixed inset-0 bg-black/60 dark:bg-black/70 backdrop-blur-md flex items-center justify-center p-4 z-50 backdrop-animate">
+                            <div className="bg-white dark:bg-[#1e1e22] border border-slate-200 dark:border-white/[0.12] rounded-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto modal-animate text-slate-900 dark:text-white shadow-2xl">
+                                <h3 className="text-xl font-bold mb-4 text-slate-900 dark:text-white">
+                                    Tambah Siswa Baru
+                                </h3>
+                                <form onSubmit={addStudent} className="space-y-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
+                                            Nomor Absen
+                                        </label>
+                                        <input
+                                            type="number"
+                                            name="absen"
+                                            required
+                                            className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
+                                            Nama Lengkap
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            required
+                                            className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
+                                            Nama Panggilan (Opsional)
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="nickname"
+                                            placeholder="Contoh: Budi, Andi, Siti"
+                                            className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40"
+                                        />
+                                        <p className="text-xs text-slate-500 dark:text-white/60 mt-1">
+                                            Nama panggilan untuk ditampilkan di leaderboard
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
+                                            Nomor WhatsApp (Opsional)
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="phoneNumber"
+                                            placeholder="08xxxxxxxxxx atau 628xxxxxxxxxx"
+                                            className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40"
+                                        />
+                                        <p className="text-xs text-slate-500 dark:text-white/60 mt-1">
+                                            Format: 08xxx atau 628xxx (tanpa spasi/strip)
+                                        </p>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <input
+                                            type="checkbox"
+                                            name="enableNotification"
+                                            id="enableNotification"
+                                            defaultChecked
+                                            className="w-4 h-4 text-indigo-600 rounded bg-slate-100 dark:bg-white/[0.04] border-slate-300 dark:border-white/[0.1]"
+                                        />
+                                        <label
+                                            htmlFor="enableNotification"
+                                            className="text-sm text-slate-700 dark:text-white/60"
+                                        >
+                                            Aktifkan notifikasi WhatsApp
+                                        </label>
+                                    </div>
+                                    <div className="flex gap-3">
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowAddStudent(false)}
+                                            className="flex-1 px-4 py-2 border border-slate-300 dark:border-white/[0.12] rounded-xl hover:bg-slate-100 dark:hover:bg-white/[0.07] transition text-slate-700 dark:text-white/60 font-medium"
+                                        >
+                                            Batal
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            className="flex-1 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-medium shadow-sm transition"
+                                        >
+                                            Simpan
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                    </div>
+                    </Portal>
                 )}
 
                 {/* Modal Edit Student */}
                 {showEditStudent && editingStudent && (
-                    <div className="fixed inset-0 bg-black/60 dark:bg-black/70 backdrop-blur-md flex items-center justify-center p-4 z-50 backdrop-animate">
-                        <div className="bg-white dark:bg-[#1e1e22] border border-slate-200 dark:border-white/[0.12] rounded-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto modal-animate text-slate-900 dark:text-white shadow-2xl">
-                            <h3 className="text-xl font-bold mb-4 text-slate-900 dark:text-white">
-                                Edit Data Siswa
-                            </h3>
-                            <form
-                                onSubmit={updateStudent}
-                                className="space-y-4"
-                            >
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
-                                        Nomor Absen
-                                    </label>
-                                    <input
-                                        type="number"
-                                        name="absen"
-                                        defaultValue={editingStudent.absen}
-                                        required
-                                        className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
-                                        Nama Lengkap
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        defaultValue={editingStudent.name}
-                                        required
-                                        className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
-                                        Nama Panggilan (Opsional)
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="nickname"
-                                        defaultValue={
-                                            editingStudent.nickname || ''
-                                        }
-                                        placeholder="Contoh: Budi, Andi, Siti"
-                                        className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40"
-                                    />
-                                    <p className="text-xs text-slate-500 dark:text-white/60 mt-1">
-                                        Nama panggilan untuk ditampilkan di leaderboard
-                                    </p>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
-                                        Nomor WhatsApp
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="phoneNumber"
-                                        defaultValue={
-                                            editingStudent.phoneNumber || ''
-                                        }
-                                        placeholder="08xxxxxxxxxx atau 628xxxxxxxxxx"
-                                        className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40"
-                                    />
-                                    <p className="text-xs text-slate-500 dark:text-white/60 mt-1">
-                                        Format: 08xxx atau 628xxx (tanpa spasi/strip)
-                                    </p>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
-                                        Status
-                                    </label>
-                                    <select
-                                        name="status"
-                                        defaultValue={editingStudent.status}
-                                        className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white"
-                                    >
-                                        <option value="Aktif">Aktif</option>
-                                        <option value="Tidak Aktif">Tidak Aktif</option>
-                                        <option value="Alumni">Alumni</option>
-                                    </select>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <input
-                                        type="checkbox"
-                                        name="enableNotification"
-                                        id="enableNotificationEdit"
-                                        defaultChecked={
-                                            editingStudent.enableNotification !==
-                                            false
-                                        }
-                                        className="w-4 h-4 text-indigo-600 rounded bg-slate-100 dark:bg-white/[0.04] border-slate-300 dark:border-white/[0.1]"
-                                    />
-                                    <label
-                                        htmlFor="enableNotificationEdit"
-                                        className="text-sm text-slate-700 dark:text-white/60"
-                                    >
-                                        Aktifkan notifikasi WhatsApp
-                                    </label>
-                                </div>
-                                <div className="bg-indigo-50 dark:bg-indigo-500/8 border border-indigo-200 dark:border-indigo-500/15 rounded-xl p-3">
-                                    <p className="text-xs text-indigo-700 dark:text-indigo-400">
-                                        💡 <strong>Tips:</strong> Pastikan nomor
-                                        WhatsApp valid agar siswa bisa menerima
-                                        reminder pembayaran kas.
-                                    </p>
-                                </div>
-                                <div className="flex gap-3">
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            setShowEditStudent(false);
-                                            setEditingStudent(null);
-                                        }}
-                                        className="flex-1 px-4 py-2 border border-slate-300 dark:border-white/[0.12] rounded-xl hover:bg-slate-100 dark:hover:bg-white/[0.07] transition text-slate-700 dark:text-white/60 font-medium"
-                                    >
-                                        Batal
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        className="flex-1 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-medium shadow-sm transition"
-                                    >
-                                        Update
-                                    </button>
-                                </div>
-                            </form>
+                    <Portal>
+                        <div className="fixed inset-0 bg-black/60 dark:bg-black/70 backdrop-blur-md flex items-center justify-center p-4 z-50 backdrop-animate">
+                            <div className="bg-white dark:bg-[#1e1e22] border border-slate-200 dark:border-white/[0.12] rounded-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto modal-animate text-slate-900 dark:text-white shadow-2xl">
+                                <h3 className="text-xl font-bold mb-4 text-slate-900 dark:text-white">
+                                    Edit Data Siswa
+                                </h3>
+                                <form
+                                    onSubmit={updateStudent}
+                                    className="space-y-4"
+                                >
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
+                                            Nomor Absen
+                                        </label>
+                                        <input
+                                            type="number"
+                                            name="absen"
+                                            defaultValue={editingStudent.absen}
+                                            required
+                                            className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
+                                            Nama Lengkap
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            defaultValue={editingStudent.name}
+                                            required
+                                            className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
+                                            Nama Panggilan (Opsional)
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="nickname"
+                                            defaultValue={
+                                                editingStudent.nickname || ''
+                                            }
+                                            placeholder="Contoh: Budi, Andi, Siti"
+                                            className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40"
+                                        />
+                                        <p className="text-xs text-slate-500 dark:text-white/60 mt-1">
+                                            Nama panggilan untuk ditampilkan di leaderboard
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
+                                            Nomor WhatsApp
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="phoneNumber"
+                                            defaultValue={
+                                                editingStudent.phoneNumber || ''
+                                            }
+                                            placeholder="08xxxxxxxxxx atau 628xxxxxxxxxx"
+                                            className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40"
+                                        />
+                                        <p className="text-xs text-slate-500 dark:text-white/60 mt-1">
+                                            Format: 08xxx atau 628xxx (tanpa spasi/strip)
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
+                                            Status
+                                        </label>
+                                        <select
+                                            name="status"
+                                            defaultValue={editingStudent.status}
+                                            className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white"
+                                        >
+                                            <option value="Aktif">Aktif</option>
+                                            <option value="Tidak Aktif">Tidak Aktif</option>
+                                            <option value="Alumni">Alumni</option>
+                                        </select>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <input
+                                            type="checkbox"
+                                            name="enableNotification"
+                                            id="enableNotificationEdit"
+                                            defaultChecked={
+                                                editingStudent.enableNotification !==
+                                                false
+                                            }
+                                            className="w-4 h-4 text-indigo-600 rounded bg-slate-100 dark:bg-white/[0.04] border-slate-300 dark:border-white/[0.1]"
+                                        />
+                                        <label
+                                            htmlFor="enableNotificationEdit"
+                                            className="text-sm text-slate-700 dark:text-white/60"
+                                        >
+                                            Aktifkan notifikasi WhatsApp
+                                        </label>
+                                    </div>
+                                    <div className="bg-indigo-50 dark:bg-indigo-500/8 border border-indigo-200 dark:border-indigo-500/15 rounded-xl p-3">
+                                        <p className="text-xs text-indigo-700 dark:text-indigo-400">
+                                            💡 <strong>Tips:</strong> Pastikan nomor
+                                            WhatsApp valid agar siswa bisa menerima
+                                            reminder pembayaran kas.
+                                        </p>
+                                    </div>
+                                    <div className="flex gap-3">
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setShowEditStudent(false);
+                                                setEditingStudent(null);
+                                            }}
+                                            className="flex-1 px-4 py-2 border border-slate-300 dark:border-white/[0.12] rounded-xl hover:bg-slate-100 dark:hover:bg-white/[0.07] transition text-slate-700 dark:text-white/60 font-medium"
+                                        >
+                                            Batal
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            className="flex-1 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-medium shadow-sm transition"
+                                        >
+                                            Update
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                    </div>
+                    </Portal>
                 )}
 
                 {/* Modal Add Payment */}
                 {showPayment && (
-                    <div className="fixed inset-0 bg-black/60 dark:bg-black/70 backdrop-blur-md flex items-center justify-center p-4 z-50 backdrop-animate">
-                        <div className="bg-white dark:bg-[#1e1e22] border border-slate-200 dark:border-white/[0.12] rounded-2xl modal-animate max-w-md w-full p-6 text-slate-900 dark:text-white shadow-2xl">
-                            <h3 className="text-xl font-bold mb-4 text-slate-900 dark:text-white">
-                                Tambah Pembayaran
-                            </h3>
-                            <form onSubmit={addPayment} className="space-y-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
-                                        Siswa
-                                    </label>
-                                    <select
-                                        name="student"
-                                        required
-                                        className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white"
-                                    >
-                                        <option value="">Pilih Siswa</option>
-                                        {students
-                                            .sort((a, b) => a.absen - b.absen)
-                                            .map((student) => (
-                                                <option
-                                                    key={student._id}
-                                                    value={student._id}
-                                                >
-                                                    {student.absen} -{' '}
-                                                    {student.name}
-                                                </option>
-                                            ))}
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
-                                        Jumlah
-                                    </label>
-                                    <input
-                                        type="number"
-                                        name="amount"
-                                        defaultValue={config.weeklyAmount || 2000}
-                                        required
-                                        className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
-                                        Tanggal
-                                    </label>
-                                    <input
-                                        type="date"
-                                        name="date"
-                                        defaultValue={
-                                            new Date()
-                                                .toISOString()
-                                                .split('T')[0]
-                                        }
-                                        required
-                                        className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
-                                        Metode
-                                    </label>
-                                    <select
-                                        name="method"
-                                        className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white"
-                                    >
-                                        <option>Tunai</option>
-                                        <option>Transfer</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
-                                        Catatan (opsional)
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="note"
-                                        className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40"
-                                    />
-                                </div>
-                                <div className="flex gap-3">
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPayment(false)}
-                                        className="flex-1 px-4 py-2 border border-slate-300 dark:border-white/[0.12] rounded-xl hover:bg-slate-100 dark:hover:bg-white/[0.07] transition text-slate-700 dark:text-white/60 font-medium"
-                                    >
-                                        Batal
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        className="flex-1 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-medium shadow-sm transition"
-                                    >
-                                        Simpan
-                                    </button>
-                                </div>
-                            </form>
+                    <Portal>
+                        <div className="fixed inset-0 bg-black/60 dark:bg-black/70 backdrop-blur-md flex items-center justify-center p-4 z-50 backdrop-animate">
+                            <div className="bg-white dark:bg-[#1e1e22] border border-slate-200 dark:border-white/[0.12] rounded-2xl modal-animate max-w-md w-full p-6 text-slate-900 dark:text-white shadow-2xl">
+                                <h3 className="text-xl font-bold mb-4 text-slate-900 dark:text-white">
+                                    Tambah Pembayaran
+                                </h3>
+                                <form onSubmit={addPayment} className="space-y-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
+                                            Siswa
+                                        </label>
+                                        <select
+                                            name="student"
+                                            required
+                                            className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white"
+                                        >
+                                            <option value="">Pilih Siswa</option>
+                                            {students
+                                                .sort((a, b) => a.absen - b.absen)
+                                                .map((student) => (
+                                                    <option
+                                                        key={student._id}
+                                                        value={student._id}
+                                                    >
+                                                        {student.absen} -{' '}
+                                                        {student.name}
+                                                    </option>
+                                                ))}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
+                                            Jumlah
+                                        </label>
+                                        <input
+                                            type="number"
+                                            name="amount"
+                                            defaultValue={config.weeklyAmount || 2000}
+                                            required
+                                            className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
+                                            Tanggal
+                                        </label>
+                                        <input
+                                            type="date"
+                                            name="date"
+                                            defaultValue={
+                                                new Date()
+                                                    .toISOString()
+                                                    .split('T')[0]
+                                            }
+                                            required
+                                            className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
+                                            Metode
+                                        </label>
+                                        <select
+                                            name="method"
+                                            className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white"
+                                        >
+                                            <option>Tunai</option>
+                                            <option>Transfer</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
+                                            Catatan (opsional)
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="note"
+                                            className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40"
+                                        />
+                                    </div>
+                                    <div className="flex gap-3">
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPayment(false)}
+                                            className="flex-1 px-4 py-2 border border-slate-300 dark:border-white/[0.12] rounded-xl hover:bg-slate-100 dark:hover:bg-white/[0.07] transition text-slate-700 dark:text-white/60 font-medium"
+                                        >
+                                            Batal
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            className="flex-1 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-medium shadow-sm transition"
+                                        >
+                                            Simpan
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                    </div>
+                    </Portal>
                 )}
 
                 {/* Modal Add Expense */}
                 {showExpense && (
-                    <div className="fixed inset-0 bg-black/60 dark:bg-black/70 backdrop-blur-md flex items-center justify-center p-4 z-50 backdrop-animate">
-                        <div className="bg-white dark:bg-[#1e1e22] border border-slate-200 dark:border-white/[0.12] rounded-2xl max-w-md w-full p-6 modal-animate text-slate-900 dark:text-white shadow-2xl">
-                            <h3 className="text-xl font-bold mb-4 text-slate-900 dark:text-white">
-                                Tambah Pengeluaran
-                            </h3>
-                            <form onSubmit={addExpense} className="space-y-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
-                                        Keperluan
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="purpose"
-                                        required
-                                        className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
-                                        Jumlah
-                                    </label>
-                                    <input
-                                        type="number"
-                                        name="amount"
-                                        required
-                                        className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
-                                        Tanggal
-                                    </label>
-                                    <input
-                                        type="date"
-                                        name="date"
-                                        defaultValue={
-                                            new Date()
-                                                .toISOString()
-                                                .split('T')[0]
-                                        }
-                                        required
-                                        className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
-                                        Kategori
-                                    </label>
-                                    <select
-                                        name="category"
-                                        className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white"
-                                    >
-                                        <option>Kebersihan</option>
-                                        <option>Acara</option>
-                                        <option>Perlengkapan</option>
-                                        <option>Lain-lain</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
-                                        Disetujui Oleh
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="approvedBy"
-                                        required
-                                        className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40"
-                                    />
-                                </div>
-                                <div className="flex gap-3">
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowExpense(false)}
-                                        className="flex-1 px-4 py-2 border border-slate-300 dark:border-white/[0.12] rounded-xl hover:bg-slate-100 dark:hover:bg-white/[0.07] transition text-slate-700 dark:text-white/60 font-medium"
-                                    >
-                                        Batal
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        className="flex-1 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-medium shadow-sm transition"
-                                    >
-                                        Simpan
-                                    </button>
-                                </div>
-                            </form>
+                    <Portal>
+                        <div className="fixed inset-0 bg-black/60 dark:bg-black/70 backdrop-blur-md flex items-center justify-center p-4 z-50 backdrop-animate">
+                            <div className="bg-white dark:bg-[#1e1e22] border border-slate-200 dark:border-white/[0.12] rounded-2xl max-w-md w-full p-6 modal-animate text-slate-900 dark:text-white shadow-2xl">
+                                <h3 className="text-xl font-bold mb-4 text-slate-900 dark:text-white">
+                                    Tambah Pengeluaran
+                                </h3>
+                                <form onSubmit={addExpense} className="space-y-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
+                                            Keperluan
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="purpose"
+                                            required
+                                            className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
+                                            Jumlah
+                                        </label>
+                                        <input
+                                            type="number"
+                                            name="amount"
+                                            required
+                                            className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
+                                            Tanggal
+                                        </label>
+                                        <input
+                                            type="date"
+                                            name="date"
+                                            defaultValue={
+                                                new Date()
+                                                    .toISOString()
+                                                    .split('T')[0]
+                                            }
+                                            required
+                                            className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
+                                            Kategori
+                                        </label>
+                                        <select
+                                            name="category"
+                                            className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white"
+                                        >
+                                            <option>Kebersihan</option>
+                                            <option>Acara</option>
+                                            <option>Perlengkapan</option>
+                                            <option>Lain-lain</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-white/60 mb-1">
+                                            Disetujui Oleh
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="approvedBy"
+                                            required
+                                            className="w-full px-3 py-2.5 bg-slate-50 dark:bg-white/[0.06] border border-slate-300 dark:border-white/[0.1] rounded-xl focus:ring-2 focus:ring-indigo-400/25 focus:border-indigo-500 dark:focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40"
+                                        />
+                                    </div>
+                                    <div className="flex gap-3">
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowExpense(false)}
+                                            className="flex-1 px-4 py-2 border border-slate-300 dark:border-white/[0.12] rounded-xl hover:bg-slate-100 dark:hover:bg-white/[0.07] transition text-slate-700 dark:text-white/60 font-medium"
+                                        >
+                                            Batal
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            className="flex-1 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-medium shadow-sm transition"
+                                        >
+                                            Simpan
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                    </div>
+                    </Portal>
                 )}
 
                 {/* Digital Receipt Modal */}

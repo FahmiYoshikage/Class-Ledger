@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-route
 import { AuthProvider } from './context/AuthContext.jsx';
 import { ThemeProvider } from './context/ThemeContext.jsx';
 import { ConfigProvider, useAppConfig } from './context/ConfigContext.jsx';
+import { QRPendingProvider } from './context/QRPendingContext.jsx';
 import SetupWizard from './components/setup/SetupWizard.jsx';
 import App from './App.jsx';
 import Login from './components/core/Login.jsx';
@@ -69,7 +70,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             <ConfigProvider>
                 <ThemeProvider>
                     <AuthProvider>
-                        <SetupGuard>
+                        <QRPendingProvider>
+                            <SetupGuard>
                             <Routes>
                                 {/* First Setup Wizard Route */}
                                 <Route path="/setup" element={<SetupWizard />} />
@@ -129,7 +131,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                                 <Route path="*" element={<NotFoundPage />} />
                             </Routes>
                         </SetupGuard>
-                    </AuthProvider>
+                    </QRPendingProvider>
+                </AuthProvider>
                 </ThemeProvider>
             </ConfigProvider>
         </BrowserRouter>

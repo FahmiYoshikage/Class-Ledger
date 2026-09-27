@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import Portal from '../common/Portal';
 import {
     MessageCircle,
     Send,
@@ -209,7 +210,8 @@ const SendFinancialReportModal = ({ isOpen, onClose, onSuccess }) => {
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in overflow-y-auto">
+        <Portal>
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in overflow-y-auto">
             <div className="relative w-full max-w-2xl my-auto rounded-3xl bg-white dark:bg-zinc-950/95 border border-slate-200 dark:border-emerald-500/30 shadow-2xl shadow-slate-900/10 dark:shadow-emerald-950/50 flex flex-col overflow-hidden animate-scale-up">
                 {/* Glowing top line */}
                 <div className="h-1 w-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-500 shadow-md shadow-emerald-500/50" />
@@ -542,7 +544,8 @@ const SendFinancialReportModal = ({ isOpen, onClose, onSuccess }) => {
                     </button>
                 </div>
             </div>
-        </div>
+            </div>
+        </Portal>
     );
 };
 

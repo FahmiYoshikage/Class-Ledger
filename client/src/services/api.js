@@ -176,5 +176,16 @@ export const backupAPI = {
     getStats: () => api.get('/backup/stats'),
 };
 
+// QR Payment API
+export const qrPaymentAPI = {
+    getActive: () => api.get('/qr-payment/active'),
+    getList: () => api.get('/qr-payment/list'),
+    getPending: () => api.get('/qr-payment/confirmations/pending'),
+    getPendingCount: () => api.get('/qr-payment/pending-count'),
+    getAll: (params) => api.get('/qr-payment/confirmations/all', { params }),
+    approve: (id, data) => api.post(`/qr-payment/approve/${id}`, data),
+    reject: (id, data) => api.post(`/qr-payment/reject/${id}`, data),
+};
+
 export { api };
 export default api;

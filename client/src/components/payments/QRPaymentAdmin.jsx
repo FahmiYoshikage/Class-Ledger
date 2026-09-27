@@ -1,6 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import api from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import { useQRPending } from '../../context/QRPendingContext';
+import Portal from '../common/Portal';
 import {
     Eye,
     Download,
@@ -92,6 +94,7 @@ const METHOD_GUIDES = {
 
 function QRPaymentAdmin() {
     const { user } = useAuth();
+    const { refreshPendingCount } = useQRPending();
     const reviewerName = user?.fullName || user?.username || 'Admin';
 
     const [activeTab, setActiveTab] = useState('pending'); // pending, history, manage
@@ -309,6 +312,7 @@ function QRPaymentAdmin() {
                     }`
                 );
                 fetchPendingConfirmations();
+                refreshPendingCount();
             }
         } catch (error) {
             setMessage(
@@ -362,6 +366,7 @@ function QRPaymentAdmin() {
                 );
                 closeRejectModal();
                 fetchPendingConfirmations();
+                refreshPendingCount();
             }
         } catch (error) {
             setMessage(
@@ -1072,140 +1077,143 @@ function QRPaymentAdmin() {
 
             {/* Rejection Modal */}
             {rejectModal.isOpen && rejectModal.confirmation && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-                    <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-5">
-                        <div className="flex justify-between items-start">
+                <Portal>
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+                        <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-5">
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                        <span className="text-rose-500">❌</span> Tolak Konfirmasi Pembayaran
+                                    </h3>
+                                    <p className="text-sm text-slate-500 dark:text-white/60 mt-1">
+                                        Siswa akan menerima pemberitahuan resmi via WhatsApp.
+                                    </p>
+                                </div>
+                                <button
+                                    onClick={closeRejectModal}
+                                    className="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl font-bold p-1 rounded-lg"
+                                    disabled={rejectModal.submitting}
+                                >
+                                    ✕
+                                </button>
+                            </div>
+
+                            {/* Detail Siswa & Nominal */}
+                            <div className="bg-slate-50 dark:bg-white/[0.04] p-4 rounded-xl border border-slate-200 dark:border-white/10 space-y-2">
+                                <div className="flex justify-between text-sm">
+                                    <span className="text-slate-500 dark:text-white/60">Siswa:</span>
+                                    <span className="font-semibold text-slate-900 dark:text-white">
+                                        {rejectModal.confirmation.studentId?.name || 'Siswa'}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between text-sm">
+                                    <span className="text-slate-500 dark:text-white/60">Nominal:</span>
+                                    <span className="font-bold text-rose-600 dark:text-rose-400">
+                                        Rp {rejectModal.confirmation.amount?.toLocaleString('id-ID')}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between text-sm">
+                                    <span className="text-slate-500 dark:text-white/60">No. WhatsApp Siswa:</span>
+                                    <span className="font-mono text-slate-700 dark:text-white/80">
+                                        {rejectModal.confirmation.studentId?.phoneNumber || rejectModal.confirmation.studentId?.phone ? (
+                                            <span className="text-emerald-600 dark:text-emerald-400 font-semibold">
+                                                📱 {rejectModal.confirmation.studentId?.phoneNumber || rejectModal.confirmation.studentId?.phone} (Tersedia)
+                                            </span>
+                                        ) : (
+                                            <span className="text-amber-500 font-semibold">⚠️ Tidak ada nomor WA</span>
+                                        )}
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* Quick Reason Buttons */}
                             <div>
-                                <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                                    <span className="text-rose-500">❌</span> Tolak Konfirmasi Pembayaran
-                                </h3>
-                                <p className="text-sm text-slate-500 dark:text-white/60 mt-1">
-                                    Siswa akan menerima pemberitahuan resmi via WhatsApp.
-                                </p>
+                                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-white/60 mb-2">
+                                    Pilih Alasan Cepat:
+                                </label>
+                                <div className="flex flex-wrap gap-2">
+                                    {QUICK_REJECTION_REASONS.map((reason, idx) => (
+                                        <button
+                                            key={idx}
+                                            type="button"
+                                            onClick={() =>
+                                                setRejectModal((prev) => ({
+                                                    ...prev,
+                                                    rejectionReason: reason,
+                                                }))
+                                            }
+                                            className={`text-xs px-3 py-1.5 rounded-lg border transition ${
+                                                rejectModal.rejectionReason === reason
+                                                    ? 'bg-rose-500 text-white border-rose-500 shadow-sm'
+                                                    : 'bg-slate-100 dark:bg-white/[0.05] text-slate-700 dark:text-white/80 border-slate-200 dark:border-white/10 hover:border-rose-400 dark:hover:border-rose-400'
+                                            }`}
+                                        >
+                                            {reason}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
-                            <button
-                                onClick={closeRejectModal}
-                                className="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl font-bold p-1 rounded-lg"
-                                disabled={rejectModal.submitting}
-                            >
-                                ✕
-                            </button>
-                        </div>
 
-                        {/* Detail Siswa & Nominal */}
-                        <div className="bg-slate-50 dark:bg-white/[0.04] p-4 rounded-xl border border-slate-200 dark:border-white/10 space-y-2">
-                            <div className="flex justify-between text-sm">
-                                <span className="text-slate-500 dark:text-white/60">Siswa:</span>
-                                <span className="font-semibold text-slate-900 dark:text-white">
-                                    {rejectModal.confirmation.studentId?.name || 'Siswa'}
-                                </span>
+                            {/* Input Alasan */}
+                            <div>
+                                <label className="block text-sm font-semibold text-slate-800 dark:text-white/90 mb-1">
+                                    Alasan Penolakan <span className="text-rose-500">*</span>
+                                </label>
+                                <textarea
+                                    rows={3}
+                                    value={rejectModal.rejectionReason}
+                                    onChange={(e) =>
+                                        setRejectModal((prev) => ({
+                                            ...prev,
+                                            rejectionReason: e.target.value,
+                                        }))
+                                    }
+                                    placeholder="Tulis alasan penolakan untuk siswa..."
+                                    className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-zinc-800 border border-slate-300 dark:border-white/15 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-rose-500 outline-none resize-none"
+                                    required
+                                />
                             </div>
-                            <div className="flex justify-between text-sm">
-                                <span className="text-slate-500 dark:text-white/60">Nominal:</span>
-                                <span className="font-bold text-rose-600 dark:text-rose-400">
-                                    Rp {rejectModal.confirmation.amount?.toLocaleString('id-ID')}
-                                </span>
-                            </div>
-                            <div className="flex justify-between text-sm">
-                                <span className="text-slate-500 dark:text-white/60">No. WhatsApp Siswa:</span>
-                                <span className="font-mono text-slate-700 dark:text-white/80">
-                                    {rejectModal.confirmation.studentId?.phoneNumber || rejectModal.confirmation.studentId?.phone ? (
-                                        <span className="text-emerald-600 dark:text-emerald-400 font-semibold">
-                                            📱 {rejectModal.confirmation.studentId?.phoneNumber || rejectModal.confirmation.studentId?.phone} (Tersedia)
-                                        </span>
+
+                            {/* Action Buttons */}
+                            <div className="flex gap-3 pt-2">
+                                <button
+                                    type="button"
+                                    onClick={closeRejectModal}
+                                    disabled={rejectModal.submitting}
+                                    className="flex-1 px-4 py-2.5 rounded-xl border border-slate-300 dark:border-white/15 text-slate-700 dark:text-white/80 hover:bg-slate-100 dark:hover:bg-white/[0.05] font-medium text-sm transition"
+                                >
+                                    Batal
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={submitReject}
+                                    disabled={rejectModal.submitting || !rejectModal.rejectionReason.trim()}
+                                    className="flex-1 px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-sm shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                >
+                                    {rejectModal.submitting ? (
+                                        <>
+                                            <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                                            Memproses...
+                                        </>
                                     ) : (
-                                        <span className="text-amber-500 font-semibold">⚠️ Tidak ada nomor WA</span>
+                                        'Kirim Penolakan'
                                     )}
-                                </span>
+                                </button>
                             </div>
-                        </div>
-
-                        {/* Quick Reason Buttons */}
-                        <div>
-                            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-white/60 mb-2">
-                                Pilih Alasan Cepat:
-                            </label>
-                            <div className="flex flex-wrap gap-2">
-                                {QUICK_REJECTION_REASONS.map((reason, idx) => (
-                                    <button
-                                        key={idx}
-                                        type="button"
-                                        onClick={() =>
-                                            setRejectModal((prev) => ({
-                                                ...prev,
-                                                rejectionReason: reason,
-                                            }))
-                                        }
-                                        className={`text-xs px-3 py-1.5 rounded-lg border transition ${
-                                            rejectModal.rejectionReason === reason
-                                                ? 'bg-rose-500 text-white border-rose-500 shadow-sm'
-                                                : 'bg-slate-100 dark:bg-white/[0.05] text-slate-700 dark:text-white/80 border-slate-200 dark:border-white/10 hover:border-rose-400 dark:hover:border-rose-400'
-                                        }`}
-                                    >
-                                        {reason}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Input Alasan */}
-                        <div>
-                            <label className="block text-sm font-semibold text-slate-800 dark:text-white/90 mb-1">
-                                Alasan Penolakan <span className="text-rose-500">*</span>
-                            </label>
-                            <textarea
-                                rows={3}
-                                value={rejectModal.rejectionReason}
-                                onChange={(e) =>
-                                    setRejectModal((prev) => ({
-                                        ...prev,
-                                        rejectionReason: e.target.value,
-                                    }))
-                                }
-                                placeholder="Tulis alasan penolakan untuk siswa..."
-                                className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-zinc-800 border border-slate-300 dark:border-white/15 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-rose-500 outline-none resize-none"
-                                required
-                            />
-                        </div>
-
-                        {/* Action Buttons */}
-                        <div className="flex gap-3 pt-2">
-                            <button
-                                type="button"
-                                onClick={closeRejectModal}
-                                disabled={rejectModal.submitting}
-                                className="flex-1 px-4 py-2.5 rounded-xl border border-slate-300 dark:border-white/15 text-slate-700 dark:text-white/80 hover:bg-slate-100 dark:hover:bg-white/[0.05] font-medium text-sm transition"
-                            >
-                                Batal
-                            </button>
-                            <button
-                                type="button"
-                                onClick={submitReject}
-                                disabled={rejectModal.submitting || !rejectModal.rejectionReason.trim()}
-                                className="flex-1 px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-sm shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                            >
-                                {rejectModal.submitting ? (
-                                    <>
-                                        <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-                                        Memproses...
-                                    </>
-                                ) : (
-                                    'Kirim Penolakan'
-                                )}
-                            </button>
                         </div>
                     </div>
-                </div>
+                </Portal>
             )}
 
             {/* Detail & Proof Modal for Record Inspection */}
             {detailModal.isOpen && detailModal.confirmation && (
-                <div
-                    className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/75 backdrop-blur-sm overflow-y-auto"
-                    onClick={(e) => {
-                        if (e.target === e.currentTarget) closeDetailModal();
-                    }}
-                >
+                <Portal>
+                    <div
+                        className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/75 backdrop-blur-sm overflow-y-auto"
+                        onClick={(e) => {
+                            if (e.target === e.currentTarget) closeDetailModal();
+                        }}
+                    >
                     <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-2xl max-w-4xl w-full my-auto shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
                         {/* Header */}
                         <div className="p-4 sm:p-5 border-b border-slate-200 dark:border-white/10 flex items-center justify-between bg-slate-50/70 dark:bg-white/[0.02]">
@@ -1520,6 +1528,7 @@ function QRPaymentAdmin() {
                         </div>
                     </div>
                 </div>
+                </Portal>
             )}
         </div>
     );

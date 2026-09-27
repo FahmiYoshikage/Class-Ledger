@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Portal from '../common/Portal';
 import {
     Printer,
     Share2,
@@ -134,7 +135,8 @@ _Kas Kelas Official Digital Ledger_`;
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-md overflow-y-auto">
+        <Portal>
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-md overflow-y-auto">
             <div className="relative w-full max-w-lg my-8 bg-white dark:bg-zinc-950/90 border border-slate-200 dark:border-white/10 rounded-2xl shadow-2xl overflow-hidden print:border-none print:shadow-none print:bg-white print:text-black">
                 {/* Close Button (Hidden on Print) */}
                 <button
@@ -285,6 +287,7 @@ _Kas Kelas Official Digital Ledger_`;
                 </div>
             </div>
         </div>
+    </Portal>
     );
 };
 

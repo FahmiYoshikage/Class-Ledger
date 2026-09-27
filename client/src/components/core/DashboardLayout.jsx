@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
+import { useQRPending } from '../../context/QRPendingContext';
 import {
     LogOut,
     Shield,
@@ -20,6 +21,7 @@ import {
 const DashboardLayout = () => {
     const { user, logout } = useAuth();
     const { theme, toggleTheme } = useTheme();
+    const { pendingCount } = useQRPending();
     const navigate = useNavigate();
     const location = useLocation();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -31,8 +33,8 @@ const DashboardLayout = () => {
         }
     };
 
-    const NavButton = ({ onClick, icon: Icon, label, variant = 'default', active = false }) => {
-        const base = 'flex items-center gap-1.5 px-3 py-1.5 text-[12px] sm:text-[13px] font-medium rounded-xl transition-all duration-200';
+    const NavButton = ({ onClick, icon: Icon, label, variant = 'default', active = false, badge = null }) => {
+        const base = 'relative flex items-center gap-1.5 px-3 py-1.5 text-[12px] sm:text-[13px] font-medium rounded-xl transition-all duration-200';
         const variants = {
             primary: 'text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-500/10 hover:bg-indigo-100 dark:hover:bg-indigo-500/20 border border-indigo-200 dark:border-indigo-500/20',
             danger: 'text-rose-500 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 hover:text-rose-600 dark:hover:text-rose-300 border border-transparent hover:border-rose-200 dark:hover:border-rose-500/20',
@@ -44,12 +46,17 @@ const DashboardLayout = () => {
             <button onClick={onClick} className={`${base} ${variants[variant]}`}>
                 <Icon className="w-3.5 h-3.5" />
                 <span>{label}</span>
+                {badge !== null && badge !== undefined && badge > 0 && (
+                    <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] font-black bg-rose-500 text-white shadow-sm shadow-rose-500/30 animate-pulse">
+                        {badge}
+                    </span>
+                )}
             </button>
         );
     };
 
-    const MobileNavButton = ({ onClick, icon: Icon, label, variant = 'default' }) => {
-        const base = 'w-full flex items-center gap-3 px-4 py-2.5 text-[13px] font-medium rounded-xl transition-all duration-200';
+    const MobileNavButton = ({ onClick, icon: Icon, label, variant = 'default', badge = null }) => {
+        const base = 'w-full flex items-center justify-between px-4 py-2.5 text-[13px] font-medium rounded-xl transition-all duration-200';
         const variants = {
             primary: 'text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-500/10 hover:bg-indigo-100 dark:hover:bg-indigo-500/20 border border-indigo-200 dark:border-indigo-500/20',
             danger: 'text-rose-500 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10',
@@ -63,8 +70,15 @@ const DashboardLayout = () => {
                 }}
                 className={`${base} ${variants[variant]}`}
             >
-                <Icon className="w-4 h-4" />
-                <span>{label}</span>
+                <div className="flex items-center gap-3">
+                    <Icon className="w-4 h-4" />
+                    <span>{label}</span>
+                </div>
+                {badge !== null && badge !== undefined && badge > 0 && (
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-500 text-white shadow-sm shadow-rose-500/30 animate-pulse">
+                        {badge}
+                    </span>
+                )}
             </button>
         );
     };
@@ -110,6 +124,7 @@ const DashboardLayout = () => {
                                 onClick={() => navigate('/app/qr-admin')}
                                 icon={QrCode}
                                 label="QR Admin"
+                                badge={pendingCount}
                                 active={location.pathname === '/app/qr-admin'}
                             />
                             <NavButton
@@ -175,8 +190,14 @@ const DashboardLayout = () => {
                             </button>
                             <button
                                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                                className="p-2 text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.08] rounded-xl transition-colors"
+                                className="relative p-2 text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.08] rounded-xl transition-colors"
                             >
+                                {pendingCount > 0 && (
+                                    <span className="absolute top-1.5 right-1.5 flex h-2.5 w-2.5">
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
+                                    </span>
+                                )}
                                 {mobileMenuOpen ? (
                                     <X className="w-5 h-5" />
                                 ) : (
@@ -192,7 +213,7 @@ const DashboardLayout = () => {
                             {location.pathname !== '/app/dashboard' && (
                                 <MobileNavButton onClick={() => navigate('/app/dashboard')} icon={Home} label="Dashboard" variant="primary" />
                             )}
-                            <MobileNavButton onClick={() => navigate('/app/qr-admin')} icon={QrCode} label="QR Admin" />
+                            <MobileNavButton onClick={() => navigate('/app/qr-admin')} icon={QrCode} label="QR Admin" badge={pendingCount} />
                             <MobileNavButton onClick={() => navigate('/app/backup')} icon={HardDrive} label="Backup & Restore" />
                             <MobileNavButton onClick={() => navigate('/app/audit-logs')} icon={Activity} label="Audit Logs" />
                             <MobileNavButton onClick={() => navigate('/app/sessions')} icon={Laptop} label="Sesi Aktif" />

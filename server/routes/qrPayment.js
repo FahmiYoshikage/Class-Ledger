@@ -380,6 +380,19 @@ router.get('/confirmations/pending', async (req, res) => {
     }
 });
 
+// GET /api/qr-payment/pending-count - Lightweight pending count for navbar/badge & alerts
+router.get('/pending-count', async (req, res) => {
+    try {
+        const count = await PaymentConfirmation.countDocuments({ status: 'pending' });
+        res.json({
+            success: true,
+            count,
+        });
+    } catch (error) {
+        return handleApiError(res, error, 'Gagal menghitung konfirmasi pending');
+    }
+});
+
 // GET /api/qr-payment/confirmations/all - Get all confirmations with filters (admin)
 router.get('/confirmations/all', async (req, res) => {
     try {
